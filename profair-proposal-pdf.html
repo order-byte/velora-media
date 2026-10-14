@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProFair VIP – Video Editing Proposal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* ─── PAGE / SLIDE ─── */
+  .page {
+    width: 297mm;
+    min-height: 210mm;
+    background: #fff;
+    margin: 20px auto;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    page-break-after: always;
+    position: relative;
+  }
+
+  /* ─── COVER PAGE ─── */
+  .cover {
+    background: #07090f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 210mm;
+    padding: 50px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,180,41,0.15) 0%, transparent 70%);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 70%);
+  }
+
+  .cover-content { position: relative; z-index: 1; }
+
+  .cover-badge {
+    display: inline-block;
+    background: rgba(240,180,41,0.15);
+    border: 1px solid rgba(240,180,41,0.4);
+    color: #f0b429;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    padding: 6px 20px; border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  .cover h1 {
+    font-size: 48px; font-weight: 800;
+    color: #fff; line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .cover h1 span { color: #f0b429; }
+
+  .cover-sub {
+    font-size: 16px; color: #7b8db0;
+    margin-bottom: 40px;
+  }
+
+  .cover-line {
+    width: 60px; height: 3px;
+    background: #f0b429; margin: 0 auto 40px;
+  }
+
+  .cover-meta {
+    display: flex; gap: 50px; justify-content: center;
+    margin-top: 10px;
+  }
+  .cover-meta-item { text-align: center; }
+  .cover-meta-item strong {
+    display: block; font-size: 28px; font-weight: 800;
+    color: #f0b429; line-height: 1;
+  }
+  .cover-meta-item span {
+    font-size: 10px; color: #7b8db0;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin-top: 4px; display: block;
+  }
+
+  .cover-footer {
+    position: absolute; bottom: 28px; left: 0; right: 0;
+    display: flex; justify-content: space-between;
+    padding: 0 50px;
+    font-size: 10px; color: #3d4d6a;
+  }
+
+  /* ─── SECTION HEADER ─── */
+  .section-header {
+    background: #07090f;
+    padding: 22px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .section-header h2 {
+    font-size: 20px; font-weight: 700; color: #fff;
+  }
+  .section-header .section-num {
+    font-size: 36px; font-weight: 800;
+    color: rgba(255,255,255,0.08);
+    font-variant-numeric: tabular-nums;
+  }
+  .section-tag {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: #f0b429; margin-bottom: 4px; display: block;
+  }
+
+  /* ─── PAGE CONTENT ─── */
+  .page-content { padding: 28px 40px 30px; }
+
+  /* ─── GRID LAYOUTS ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: #f8f9fb;
+    border: 1px solid #e8eaf0;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .card-icon { font-size: 20px; margin-bottom: 8px; }
+  .card h4 {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: #5a6884; margin-bottom: 6px;
+  }
+  .card p { font-size: 12px; color: #374151; line-height: 1.5; }
+
+  .tag-list { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+  .tag {
+    font-size: 9px; font-weight: 700; padding: 2px 8px;
+    border-radius: 100px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .t-gold { background: #fef3c7; color: #d97706; }
+  .t-blue { background: #dbeafe; color: #2563eb; }
+  .t-green { background: #dcfce7; color: #16a34a; }
+  .t-purple { background: #ede9fe; color: #7c3aed; }
+
+  /* ─── STATS ROW ─── */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: #e8eaf0;
+    border: 1px solid #e8eaf0; border-radius: 10px;
+    overflow: hidden; margin-top: 20px;
+  }
+  .stat-box {
+    background: #fff; padding: 20px 14px; text-align: center;
+  }
+  .stat-big {
+    font-size: 34px; font-weight: 800; color: #f0b429;
+    display: block; line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .stat-desc { font-size: 10px; color: #6b7280; margin-top: 5px; line-height: 1.4; }
+
+  /* ─── STRATEGY CARDS ─── */
+  .strategy-card {
+    background: #f8f9fb; border: 1px solid #e8eaf0;
+    border-radius: 10px; padding: 16px;
+  }
+  .strategy-num {
+    font-size: 28px; font-weight: 800; color: #e8eaf0;
+    line-height: 1; margin-bottom: 4px;
+  }
+  .strategy-card h3 {
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: #d97706; margin-bottom: 6px;
+  }
+  .strategy-card p { font-size: 11px; color: #6b7280; margin-bottom: 8px; }
+  .s-items { display: flex; flex-direction: column; gap: 3px; }
+  .s-item {
+    font-size: 10.5px; color: #374151;
+    display: flex; gap: 6px; align-items: flex-start;
+  }
+  .s-item::before { content: '→'; color: #f0b429; flex-shrink: 0; }
+
+  /* ─── SCRIPT CARDS ─── */
+  .script-head {
+    background: #07090f; border-radius: 8px 8px 0 0;
+    padding: 10px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .script-head-left {}
+  .script-label-sm { font-size: 9px; color: #5a6884; text-transform: uppercase; letter-spacing: 1.5px; }
+  .script-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .script-body-sm {
+    background: #f8f9fb; border: 1px solid #e8eaf0;
+    border-top: none; border-radius: 0 0 8px 8px; padding: 12px 16px;
+  }
+  .scene-row {
+    display: grid; grid-template-columns: 56px 1fr;
+    gap: 10px; align-items: start; padding: 6px 0;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  .scene-row:last-child { border-bottom: none; }
+  .scene-ts-sm {
+    font-size: 9px; font-weight: 700; color: #d97706;
+    background: #fef3c7; border-radius: 4px;
+    padding: 3px 5px; text-align: center;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .scene-vis { font-size: 10px; color: #9ca3af; font-style: italic; margin-bottom: 2px; }
+  .scene-vo { font-size: 11px; color: #1f2937; font-weight: 500; line-height: 1.4; }
+  .scene-note-sm {
+    font-size: 9.5px; color: #9ca3af; margin-top: 2px;
+    background: #f0f2f5; border-radius: 3px; padding: 2px 7px;
+    display: inline-block;
+  }
+
+  .script-tip-sm {
+    margin-top: 10px;
+    background: #fef9ee; border: 1px solid #fde68a;
+    border-radius: 6px; padding: 8px 12px;
+    font-size: 10.5px; color: #6b7280;
+    display: flex; gap: 7px; align-items: flex-start;
+  }
+  .script-tip-sm strong { color: #d97706; }
+
+  /* ─── PRICING ─── */
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; margin-top: 20px;
+  }
+  .p-card {
+    border: 1px solid #e8eaf0; border-radius: 12px;
+    overflow: hidden; position: relative;
+  }
+  .p-card.best { border-color: #f0b429; border-width: 2px; }
+
+  .best-tag {
+    position: absolute; top: -1px; right: 16px;
+    background: #f0b429; color: #07090f;
+    font-size: 8px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 0 0 6px 6px;
+  }
+
+  .p-head { padding: 18px 18px 12px; background: #f8f9fb; border-bottom: 1px solid #e8eaf0; }
+  .pkg-name { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #9ca3af; margin-bottom: 8px; }
+  .pkg-price { display: flex; align-items: baseline; gap: 2px; }
+  .p-sym { font-size: 18px; font-weight: 700; color: #f0b429; line-height: 1; }
+  .p-amt { font-size: 40px; font-weight: 800; color: #1a1a2e; line-height: 1; font-variant-numeric: tabular-nums; }
+  .pkg-sub { font-size: 10px; color: #9ca3af; margin-top: 6px; line-height: 1.4; }
+
+  .p-body { padding: 14px 18px; }
+  .pf { display: flex; gap: 7px; align-items: flex-start; font-size: 11px; color: #374151; margin-bottom: 6px; }
+  .pf-chk { color: #16a34a; font-weight: 700; flex-shrink: 0; }
+  .pf.hl { font-weight: 600; color: #1a1a2e; }
+
+  .pricing-note-sm {
+    margin-top: 14px; padding: 10px 14px;
+    background: #f0f9ff; border: 1px solid #bae6fd;
+    border-radius: 8px; font-size: 10.5px; color: #374151;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+
+  /* ─── TIMELINE ─── */
+  .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 16px; }
+  .tl-row {
+    display: grid; grid-template-columns: 72px 1fr;
+    gap: 14px; padding-bottom: 16px; position: relative;
+  }
+  .tl-row:not(:last-child)::after {
+    content: ''; position: absolute;
+    left: 35px; top: 34px;
+    width: 2px; height: calc(100% - 14px);
+    background: #e8eaf0;
+  }
+  .tl-left { display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 1; }
+  .tl-circle {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #fef3c7; border: 2px solid #f0b429;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: #d97706;
+  }
+  .tl-day { font-size: 9px; color: #9ca3af; text-align: center; }
+  .tl-right { padding-top: 6px; }
+  .tl-right h4 { font-size: 12px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px; }
+  .tl-right p { font-size: 11px; color: #6b7280; line-height: 1.5; }
+
+  /* ─── CTA PAGE ─── */
+  .cta-page {
+    background: #07090f; display: flex;
+    flex-direction: column; align-items: center;
+    justify-content: center; min-height: 210mm;
+    padding: 50px; text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-page::before {
+    content: ''; position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 50% 40%, rgba(240,180,41,0.1) 0%, transparent 65%);
+  }
+  .cta-content { position: relative; z-index: 1; }
+  .cta-page h2 { font-size: 36px; font-weight: 800; color: #fff; margin-bottom: 14px; line-height: 1.2; }
+  .cta-page h2 span { color: #f0b429; }
+  .cta-page p { font-size: 15px; color: #7b8db0; max-width: 50ch; margin: 0 auto 36px; }
+  .contact-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; }
+  .c-box {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 14px 24px; min-width: 160px;
+  }
+  .c-lbl { font-size: 9px; color: #5a6884; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px; }
+  .c-val { font-size: 13px; font-weight: 600; color: #f0b429; }
+  .cta-note { font-size: 10px; color: #3d4d6a; }
+
+  /* ─── PRINT ─── */
+  @media print {
+    body { background: #fff; }
+    .page {
+      margin: 0; box-shadow: none;
+      width: 297mm; min-height: 210mm;
+    }
+    .print-btn { display: none !important; }
+  }
+
+  /* ─── PRINT BUTTON ─── */
+  .print-btn {
+    position: fixed; bottom: 30px; right: 30px;
+    background: #f0b429; color: #07090f;
+    border: none; border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(240,180,41,0.4);
+    font-family: 'Inter', sans-serif;
+    z-index: 999;
+  }
+  .print-btn:hover { background: #e0a820; }
+</style>
+</head>
+<body>
+
+<!-- ════ PAGE 1: COVER ════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-content">
+      <div class="cover-badge">Video Marketing Proposal</div>
+      <h1>Level Up<br><span>ProFair VIP</span><br>With Video.</h1>
+      <div class="cover-line"></div>
+      <p class="cover-sub">A complete video content plan — scripts, strategy &amp; pricing<br>crafted specifically for profair.vip</p>
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <strong>3</strong><span>Packages</span>
+        </div>
+        <div class="cover-meta-item">
+          <strong>4</strong><span>Ad Scripts</span>
+        </div>
+        <div class="cover-meta-item">
+          <strong>$149</strong><span>Starting From</span>
+        </div>
+        <div class="cover-meta-item">
+          <strong>14</strong><span>Day Delivery</span>
+        </div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <span>Prepared by: Velora Media</span>
+      <span>profair.vip</span>
+      <span>October 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PAGE 2: PLATFORM ANALYSIS ════ -->
+<div class="page">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Section 01</span>
+      <h2>Platform Analysis — What is ProFair VIP?</h2>
+    </div>
+    <div class="section-num">01</div>
+  </div>
+  <div class="page-content">
+    <div class="grid-3" style="margin-bottom:14px;">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>Core Business</h4>
+        <p>Next-generation online gaming & sports betting platform. Premium .vip domain signals exclusive, high-value positioning.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚽</div>
+        <h4>Sports Betting</h4>
+        <p>Cricket, Football & Horse Racing with live in-play markets and real-time odds — core product of the platform.</p>
+        <div class="tag-list">
+          <span class="tag t-gold">Cricket</span>
+          <span class="tag t-blue">Football</span>
+          <span class="tag t-green">Horse Racing</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎰</div>
+        <h4>Casino Products</h4>
+        <p>Live Casino tables, Slots, and Crash Games — for players who want more than sports betting.</p>
+        <div class="tag-list">
+          <span class="tag t-purple">Live Casino</span>
+          <span class="tag t-gold">Slots</span>
+          <span class="tag t-blue">Crash Games</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon">🌏</div>
+        <h4>Target Market</h4>
+        <p>South Asian market (BD, IN, PK). Mobile-first players, age 18–40, cricket fans. Massive growth potential.</p>
+        <div class="tag-list">
+          <span class="tag t-green">Bangladesh</span>
+          <span class="tag t-gold">India</span>
+          <span class="tag t-blue">Pakistan</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">💎</div>
+        <h4>Brand Position</h4>
+        <p>Premium, next-gen, exclusive. Not just another betting site — a sophisticated VIP experience for serious players.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📣</div>
+        <h4>The Gap</h4>
+        <p>High-quality video content is the #1 driver of new player acquisition in iGaming. ProFair VIP currently has none.</p>
+      </div>
+    </div>
+
+    <div class="stats-row" style="margin-top:16px;">
+      <div class="stat-box">
+        <span class="stat-big">80%</span>
+        <div class="stat-desc">users prefer video to learn about a new platform</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-big">3×</span>
+        <div class="stat-desc">higher CTR on video ads vs. static images</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-big">64%</span>
+        <div class="stat-desc">more trust from users who see a brand video</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-big">2×</span>
+        <div class="stat-desc">faster conversions after watching a promo video</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PAGE 3: VIDEO STRATEGY ════ -->
+<div class="page">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Section 02</span>
+      <h2>Video Content Strategy — 4 Videos for ProFair VIP</h2>
+    </div>
+    <div class="section-num">02</div>
+  </div>
+  <div class="page-content">
+    <p style="color:#6b7280; font-size:12px; margin-bottom:18px;">Each video targets a different stage of the player journey — from awareness to registration. Together they form a complete marketing funnel.</p>
+    <div class="grid-2">
+      <div class="strategy-card">
+        <div class="strategy-num">01</div>
+        <h3>Brand Intro Promo</h3>
+        <p>30–45 second cinematic intro. Defines ProFair VIP's identity and energy. YouTube homepage hero & social media.</p>
+        <div class="s-items">
+          <div class="s-item">Cinematic open with stadium crowd ambiance</div>
+          <div class="s-item">Fast-cut sports + casino montage</div>
+          <div class="s-item">Platform UI showcase</div>
+          <div class="s-item">Tagline: "ProFair VIP — Play Smart. Win Big."</div>
+        </div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-num">02</div>
+        <h3>Cricket Betting Ad</h3>
+        <p>20-second high-energy ad targeting cricket fans. IPL, Asia Cup & World Cup season. Facebook & Instagram.</p>
+        <div class="s-items">
+          <div class="s-item">Live match footage + real-time odds animation</div>
+          <div class="s-item">Fast-cut sports highlights style</div>
+          <div class="s-item">Bonus offer: "100% on First Deposit"</div>
+          <div class="s-item">Hard CTA: "Bet Live Now"</div>
+        </div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-num">03</div>
+        <h3>Casino & Slots Promo</h3>
+        <p>15-second neon hype reel for the casino section. Reels, TikTok, YouTube Shorts. Instant hook in first 2 seconds.</p>
+        <div class="s-items">
+          <div class="s-item">Slot spins + "BIG WIN" animation</div>
+          <div class="s-item">Crash game graph rocketing up</div>
+          <div class="s-item">Live dealer close-up</div>
+          <div class="s-item">Tagline: "Your Next Big Win Starts Here"</div>
+        </div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-num">04</div>
+        <h3>Registration Bonus Ad</h3>
+        <p>15-second conversion ad purely designed to drive sign-ups. Best used for retargeting warm audiences.</p>
+        <div class="s-items">
+          <div class="s-item">3-step sign-up process shown visually</div>
+          <div class="s-item">100% welcome bonus call-out graphic</div>
+          <div class="s-item">Countdown urgency timer</div>
+          <div class="s-item">CTA: "Register Now — Claim Your Bonus"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PAGE 4: SCRIPTS 1 & 2 ════ -->
+<div class="page">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Section 03</span>
+      <h2>Ad Scripts — Scene-by-Scene Breakdown</h2>
+    </div>
+    <div class="section-num">03</div>
+  </div>
+  <div class="page-content">
+    <div class="grid-2">
+
+      <!-- Script 1 -->
+      <div>
+        <div class="script-head">
+          <div class="script-head-left">
+            <div class="script-label-sm">Script 01</div>
+            <div class="script-name">Brand Intro — "The Game Has Changed"</div>
+          </div>
+          <div class="tag-list">
+            <span class="tag t-gold">30 sec</span>
+            <span class="tag t-blue">YouTube</span>
+          </div>
+        </div>
+        <div class="script-body-sm">
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:00–0:03</div>
+            <div>
+              <div class="scene-vis">Black screen, stadium crowd builds in background.</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:03–0:08</div>
+            <div>
+              <div class="scene-vis">Text animates on dark screen.</div>
+              <div class="scene-vo">ON SCREEN: "The Game Has Changed."</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:08–0:18</div>
+            <div>
+              <div class="scene-vis">Fast montage: cricket ball → goal → cards → slots → dice → live dealer → phone with live odds.</div>
+              <div class="scene-vo">VO: "Cricket. Football. Live Casino. Crash Games. Everything you love — in one premium platform."</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:18–0:24</div>
+            <div>
+              <div class="scene-vis">Platform UI screen recording — live betting dashboard.</div>
+              <div class="scene-vo">VO: "Real-time odds. Instant withdrawals. VIP treatment every time you play."</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:24–0:30</div>
+            <div>
+              <div class="scene-vis">Gold light pulse. Logo animates in.</div>
+              <div class="scene-vo">VO: "ProFair VIP. Play Smart. Win Big." | ON SCREEN: "profair.vip — Join Now"</div>
+            </div>
+          </div>
+          <div class="script-tip-sm">
+            <span>💡</span><span><strong>Music:</strong> Cinematic EDM build-up, ~128 BPM. High energy, no lyrics.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Script 2 -->
+      <div>
+        <div class="script-head">
+          <div class="script-head-left">
+            <div class="script-label-sm">Script 02</div>
+            <div class="script-name">Cricket Ad — "Your Match. Your Bet. Live."</div>
+          </div>
+          <div class="tag-list">
+            <span class="tag t-gold">20 sec</span>
+            <span class="tag t-green">Facebook/IG</span>
+          </div>
+        </div>
+        <div class="script-body-sm">
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:00–0:03</div>
+            <div>
+              <div class="scene-vis">Cricket ball slow-mo, stadium crowd, heartbeat sound fades in.</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:03–0:08</div>
+            <div>
+              <div class="scene-vis">Bold text sequence, each line appears &amp; fades (0.8s each).</div>
+              <div class="scene-vo">ON SCREEN: "IPL. World Cup." → "Big Matches." → "BIGGER Wins."</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:08–0:14</div>
+            <div>
+              <div class="scene-vis">Phone screen: ProFair app open on live match. Odds updating. Win notification pops.</div>
+              <div class="scene-vo">VO: "Bet live on every ball. Watch your odds change in real-time. Cash out anytime."</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:14–0:18</div>
+            <div>
+              <div class="scene-vis">Big "100% WELCOME BONUS" text + countdown timer graphic.</div>
+              <div class="scene-vo">ON SCREEN: "100% Bonus on First Deposit — Today Only"</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:18–0:20</div>
+            <div>
+              <div class="scene-vo">ON SCREEN: "ProFair VIP | profair.vip | Sign Up Free →"</div>
+            </div>
+          </div>
+          <div class="script-tip-sm">
+            <span>💡</span><span><strong>Run during:</strong> IPL, Asia Cup, T20 World Cup. Target males 18–35 in BD/IN/PK.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════ PAGE 5: SCRIPTS 3 & 4 ════ -->
+<div class="page">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Section 03 (cont.)</span>
+      <h2>Ad Scripts — Casino & Registration Ads</h2>
+    </div>
+    <div class="section-num">03</div>
+  </div>
+  <div class="page-content">
+    <div class="grid-2">
+
+      <!-- Script 3 -->
+      <div>
+        <div class="script-head">
+          <div class="script-head-left">
+            <div class="script-label-sm">Script 03</div>
+            <div class="script-name">Casino & Slots — "Feel the Rush"</div>
+          </div>
+          <div class="tag-list">
+            <span class="tag t-purple">15 sec</span>
+            <span class="tag t-gold">Reels/TikTok</span>
+          </div>
+        </div>
+        <div class="script-body-sm">
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:00–0:02</div>
+            <div>
+              <div class="scene-vis">Neon lights flash. Cards fan out in slow-mo. Bass-heavy music drops instantly.</div>
+              <div class="scene-note-sm">Hook lands in first 1.5 sec for algorithm</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:02–0:07</div>
+            <div>
+              <div class="scene-vis">Ultra-fast montage (0.4s each): slots spin → "BIG WIN" → crash graph rockets → live dealer smiles → chips → dice.</div>
+              <div class="scene-vo">VO: "Slots. Crash. Live Casino. All in one. All on ProFair VIP."</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:07–0:12</div>
+            <div>
+              <div class="scene-vis">Slow-motion confetti explosion. Golden coins rain down. "YOU WON!" graphic.</div>
+              <div class="scene-vo">ON SCREEN: "Your next big win starts here."</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:12–0:15</div>
+            <div>
+              <div class="scene-vo">ProFair logo flash. ON SCREEN: "Play Now → profair.vip"</div>
+            </div>
+          </div>
+          <div class="script-tip-sm">
+            <span>💡</span><span><strong>Style:</strong> Dark bg, neon purples + golds. Las Vegas x Cyberpunk. Heavy bass trap music.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Script 4 -->
+      <div>
+        <div class="script-head">
+          <div class="script-head-left">
+            <div class="script-label-sm">Script 04</div>
+            <div class="script-name">Registration Ad — "3 Steps to Your Bonus"</div>
+          </div>
+          <div class="tag-list">
+            <span class="tag t-green">15 sec</span>
+            <span class="tag t-blue">Retargeting</span>
+          </div>
+        </div>
+        <div class="script-body-sm">
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:00–0:03</div>
+            <div>
+              <div class="scene-vis">Bold text on dark gold gradient. Number counter animation.</div>
+              <div class="scene-vo">ON SCREEN: "It takes 3 steps." (large, centered)</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:03–0:10</div>
+            <div>
+              <div class="scene-vis">Phone screen step-by-step: Step 1 — tap "Sign Up". Step 2 — enter details. Step 3 — bonus credited.</div>
+              <div class="scene-vo">VO: "Step 1 — Sign up free. Step 2 — Make your deposit. Step 3 — Get 100% bonus, instantly."</div>
+              <div class="scene-note-sm">Each step has bold number overlay with check animation</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:10–0:13</div>
+            <div>
+              <div class="scene-vis">Countdown timer: "Offer expires in 24:00:00" with pulsing animation.</div>
+              <div class="scene-vo">ON SCREEN: "Limited Time — Claim Your Bonus Now" | VO: "But hurry — this won't last forever."</div>
+            </div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-ts-sm">0:13–0:15</div>
+            <div>
+              <div class="scene-vo">ProFair logo. ON SCREEN: "JOIN NOW — profair.vip"</div>
+            </div>
+          </div>
+          <div class="script-tip-sm">
+            <span>💡</span><span><strong>Usage:</strong> Show to users who already saw Script 01 or 02 but haven't registered yet.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════ PAGE 6: PRICING ════ -->
+<div class="page">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Section 04</span>
+      <h2>Packages &amp; Pricing — All Prices in USD</h2>
+    </div>
+    <div class="section-num">04</div>
+  </div>
+  <div class="page-content">
+    <p style="color:#6b7280; font-size:12px; margin-bottom:4px;">Every package includes: concept, editing, motion graphics, voiceover guidance & final export in all formats. Payment: 50% upfront, 50% on delivery.</p>
+    <div class="pricing-grid">
+
+      <div class="p-card">
+        <div class="p-head">
+          <div class="pkg-name">Starter</div>
+          <div class="pkg-price">
+            <span class="p-sym">$</span><span class="p-amt">149</span>
+          </div>
+          <p class="pkg-sub">1 short promo video. Ideal for testing a single channel or campaign.</p>
+        </div>
+        <div class="p-body">
+          <div class="pf hl"><span class="pf-chk">✓</span> 1 Video (15–30 seconds)</div>
+          <div class="pf"><span class="pf-chk">✓</span> 1 Script from our library</div>
+          <div class="pf"><span class="pf-chk">✓</span> Motion graphics & text animation</div>
+          <div class="pf"><span class="pf-chk">✓</span> Logo reveal & CTA end card</div>
+          <div class="pf"><span class="pf-chk">✓</span> 2 revision rounds</div>
+          <div class="pf"><span class="pf-chk">✓</span> Delivery in 5–7 days</div>
+          <div class="pf"><span class="pf-chk">✓</span> Export: MP4 1080p + 9:16 version</div>
+        </div>
+      </div>
+
+      <div class="p-card best">
+        <div class="best-tag">Most Popular</div>
+        <div class="p-head">
+          <div class="pkg-name">Growth</div>
+          <div class="pkg-price">
+            <span class="p-sym">$</span><span class="p-amt">349</span>
+          </div>
+          <p class="pkg-sub">3 targeted ads — brand, sports & casino. Best value for a full launch campaign.</p>
+        </div>
+        <div class="p-body">
+          <div class="pf hl"><span class="pf-chk">✓</span> 3 Videos (Scripts 01, 02 & 03)</div>
+          <div class="pf hl"><span class="pf-chk">✓</span> Custom scripts tailored to ProFair</div>
+          <div class="pf"><span class="pf-chk">✓</span> Full motion graphics suite</div>
+          <div class="pf"><span class="pf-chk">✓</span> Brand colors & logo integration</div>
+          <div class="pf"><span class="pf-chk">✓</span> 3 revision rounds per video</div>
+          <div class="pf"><span class="pf-chk">✓</span> Delivery in 7–10 days</div>
+          <div class="pf"><span class="pf-chk">✓</span> All formats: 16:9, 9:16, 1:1</div>
+          <div class="pf"><span class="pf-chk">✓</span> FB, Instagram & YouTube ready</div>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-head">
+          <div class="pkg-name">Premium</div>
+          <div class="pkg-price">
+            <span class="p-sym">$</span><span class="p-amt">599</span>
+          </div>
+          <p class="pkg-sub">Complete video suite. All 4 scripts + bonus social media cut-downs for every platform.</p>
+        </div>
+        <div class="p-body">
+          <div class="pf hl"><span class="pf-chk">✓</span> All 4 Videos (complete script set)</div>
+          <div class="pf hl"><span class="pf-chk">✓</span> + 4 bonus 10-sec social cut-downs</div>
+          <div class="pf"><span class="pf-chk">✓</span> Premium motion graphics & VFX</div>
+          <div class="pf"><span class="pf-chk">✓</span> Custom sound design + music</div>
+          <div class="pf"><span class="pf-chk">✓</span> Unlimited revisions (within scope)</div>
+          <div class="pf"><span class="pf-chk">✓</span> Delivery in 10–14 days</div>
+          <div class="pf"><span class="pf-chk">✓</span> All formats + TikTok/Shorts</div>
+          <div class="pf"><span class="pf-chk">✓</span> Source files (AE/Premiere)</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="pricing-note-sm">
+      <span>ℹ️</span>
+      <span><strong>Custom Quote Available:</strong> Need a longer brand film, custom animated intro, or a full campaign? We quote any scope on request. Bulk discounts available for 5+ videos.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PAGE 7: TIMELINE + CTA ════ -->
+<div class="page">
+  <div class="section-header">
+    <div>
+      <span class="section-tag">Section 05</span>
+      <h2>Delivery Timeline — From Briefing to Ready-to-Run Ads</h2>
+    </div>
+    <div class="section-num">05</div>
+  </div>
+  <div class="page-content" style="padding-bottom:20px;">
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-circle">1</div>
+              <div class="tl-day">Day 1</div>
+            </div>
+            <div class="tl-right">
+              <h4>Briefing & Kickoff</h4>
+              <p>Client confirms package and shares brand assets (logo, colors, platform screenshots). Script finalized and approved.</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-circle">2</div>
+              <div class="tl-day">Day 2–3</div>
+            </div>
+            <div class="tl-right">
+              <h4>Asset Collection & First Cut</h4>
+              <p>Stock footage, screen recordings & graphics sourced. First rough cut assembled for each video.</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-circle">3</div>
+              <div class="tl-day">Day 4–5</div>
+            </div>
+            <div class="tl-right">
+              <h4>Motion Graphics & Sound</h4>
+              <p>Text animations, logo reveals, transitions, music & sound effects added. Videos polished to near-final state.</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-circle">4</div>
+              <div class="tl-day">Day 6–7</div>
+            </div>
+            <div class="tl-right">
+              <h4>Client Review & Revisions</h4>
+              <p>Preview links sent. Feedback collected and revisions applied within 24 hours.</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-left">
+              <div class="tl-circle">5</div>
+              <div class="tl-day">Day 7–14</div>
+            </div>
+            <div class="tl-right">
+              <h4>Final Export & Delivery</h4>
+              <p>All finals exported in every format (16:9, 9:16, 1:1) and delivered via Google Drive. Ready to upload and run.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; padding-top:4px;">
+        <div class="card" style="background:#07090f; border-color:rgba(255,255,255,0.1);">
+          <h4 style="color:#f0b429;">Why Choose Velora Media?</h4>
+          <div class="s-items" style="margin-top:10px;">
+            <div class="s-item" style="color:#dde4f2;">Specialized in iGaming & betting platform videos</div>
+            <div class="s-item" style="color:#dde4f2;">Scripts written by experienced marketers</div>
+            <div class="s-item" style="color:#dde4f2;">South Asian market expertise (BD, IN, PK)</div>
+            <div class="s-item" style="color:#dde4f2;">Fast turnaround — 5 to 14 days</div>
+            <div class="s-item" style="color:#dde4f2;">All formats for every platform included</div>
+            <div class="s-item" style="color:#dde4f2;">Unlimited revisions on Premium package</div>
+          </div>
+        </div>
+        <div class="card" style="text-align:center; border-color:#f0b429; background:#fefce8;">
+          <div style="font-size:11px; color:#92400e; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; font-weight:700;">Ready to Get Started?</div>
+          <div style="font-size:13px; color:#1a1a2e; margin-bottom:4px; font-weight:600;">📧 aammiinnuurr6782@gmail.com</div>
+          <div style="font-size:11px; color:#6b7280;">Reply to this proposal to book your package</div>
+        </div>
+        <div style="background:#f8f9fb; border:1px solid #e8eaf0; border-radius:10px; padding:14px; font-size:10.5px; color:#6b7280; line-height:1.6;">
+          <strong style="color:#1a1a2e; display:block; margin-bottom:4px;">Payment Terms</strong>
+          50% advance to start production. 50% balance on delivery of final files. Accepted: bKash, Bank Transfer, USDT, PayPal.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Print Button (hidden in print) -->
+<button class="print-btn" onclick="window.print()">⬇ Save as PDF</button>
+
+</body>
+</html>
