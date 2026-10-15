@@ -1,0 +1,8 @@
+node_modules/
+out/
+raw/
+sfx/
+work/
+public/media/
+*.log
+*.f32

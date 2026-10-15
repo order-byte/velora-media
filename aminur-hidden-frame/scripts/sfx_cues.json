@@ -1,0 +1,817 @@
+{
+ "_doc": "Sound design cue sheet. id = Mixkit sound id (mixkit.co, free license, no attribution). hit = timeline second where the sound's peak (align=peak) or onset (align=onset) or file start (align=start) lands. gain in dB. off/dur trim the source (seconds). fadeIn/fadeOut in seconds.",
+ "cues": [
+  {
+   "beat": "hook",
+   "id": 2299,
+   "hit": 0.02,
+   "align": "peak",
+   "gain": -9,
+   "note": "sub hit on the very first frame"
+  },
+  {
+   "beat": "hook",
+   "id": 3013,
+   "hit": 0.0,
+   "align": "start",
+   "gain": -15,
+   "dur": 1.85,
+   "fadeOut": 0.25,
+   "note": "projector spins up under the hook"
+  },
+  {
+   "beat": "hook",
+   "id": 2356,
+   "hit": 0.4,
+   "align": "peak",
+   "gain": -9,
+   "note": "ONE pops"
+  },
+  {
+   "beat": "hook",
+   "id": 2997,
+   "hit": 0.66,
+   "align": "peak",
+   "gain": -8,
+   "note": "cursor click"
+  },
+  {
+   "beat": "hook",
+   "id": 1438,
+   "hit": 0.68,
+   "align": "peak",
+   "gain": -3,
+   "note": "shutter on FRAME"
+  },
+  {
+   "beat": "hook",
+   "id": 2357,
+   "hit": 1.0,
+   "align": "peak",
+   "gain": -11,
+   "note": "IN THIS VIDEO label"
+  },
+  {
+   "beat": "hook",
+   "id": 772,
+   "hit": 1.26,
+   "align": "peak",
+   "gain": -9,
+   "note": "punch-in"
+  },
+  {
+   "beat": "find",
+   "id": 1457,
+   "hit": 1.87,
+   "align": "onset",
+   "gain": -13,
+   "note": "drop to B/W"
+  },
+  {
+   "beat": "find",
+   "id": 2847,
+   "hit": 1.87,
+   "align": "onset",
+   "gain": -8,
+   "note": "scanner sweep"
+  },
+  {
+   "beat": "find",
+   "id": 2299,
+   "hit": 2.29,
+   "align": "peak",
+   "gain": -6,
+   "note": "DIKHAO"
+  },
+  {
+   "beat": "find",
+   "id": 2356,
+   "hit": 2.29,
+   "align": "peak",
+   "gain": -10
+  },
+  {
+   "beat": "name",
+   "id": 1530,
+   "hit": 2.95,
+   "align": "peak",
+   "gain": -7,
+   "note": "sticker slaps onto yellow"
+  },
+  {
+   "beat": "name",
+   "id": 2303,
+   "hit": 3.22,
+   "align": "peak",
+   "gain": -6,
+   "note": "AMINUR stamp"
+  },
+  {
+   "beat": "name",
+   "id": 1365,
+   "hit": 3.22,
+   "align": "peak",
+   "gain": -8
+  },
+  {
+   "beat": "name",
+   "id": 2357,
+   "hit": 3.92,
+   "align": "peak",
+   "gain": -9,
+   "note": "VIDEO EDITOR label"
+  },
+  {
+   "beat": "name",
+   "id": 1111,
+   "hit": 4.3,
+   "align": "peak",
+   "gain": -4,
+   "note": "cursor selects label"
+  },
+  {
+   "beat": "frames",
+   "id": 1444,
+   "hit": 5.0,
+   "align": "start",
+   "off": 0.0,
+   "dur": 0.6,
+   "gain": -7,
+   "fadeOut": 0.12,
+   "note": "film strip runs"
+  },
+  {
+   "beat": "frames",
+   "id": 1430,
+   "hit": 5.02,
+   "align": "peak",
+   "gain": -6
+  },
+  {
+   "beat": "frames",
+   "id": 772,
+   "hit": 5.6,
+   "align": "peak",
+   "gain": -9,
+   "note": "punch to face"
+  },
+  {
+   "beat": "frames",
+   "id": 273,
+   "hit": 5.62,
+   "align": "onset",
+   "gain": -15,
+   "note": "skill bar fills"
+  },
+  {
+   "beat": "frames",
+   "id": 216,
+   "hit": 6.4,
+   "align": "peak",
+   "gain": -4,
+   "note": "GAME coin"
+  },
+  {
+   "beat": "frames",
+   "id": 2069,
+   "hit": 6.44,
+   "align": "peak",
+   "gain": -9,
+   "note": "+1"
+  },
+  {
+   "beat": "movies",
+   "id": 2617,
+   "hit": 7.27,
+   "align": "peak",
+   "gain": -6
+  },
+  {
+   "beat": "movies",
+   "id": 2301,
+   "hit": 7.71,
+   "align": "peak",
+   "gain": -6,
+   "note": "30s"
+  },
+  {
+   "beat": "movies",
+   "id": 2908,
+   "hit": 8.78,
+   "align": "peak",
+   "gain": -9,
+   "note": "letterbox slams in"
+  },
+  {
+   "beat": "movies",
+   "id": 1441,
+   "hit": 8.74,
+   "align": "start",
+   "off": 2.0,
+   "dur": 1.26,
+   "gain": -17,
+   "fadeIn": 0.05,
+   "fadeOut": 0.2,
+   "note": "projector rattle"
+  },
+  {
+   "beat": "movies",
+   "id": 2900,
+   "hit": 9.33,
+   "align": "start",
+   "off": 4.3,
+   "dur": 0.9,
+   "gain": -6,
+   "fadeIn": 0.01,
+   "fadeOut": 0.3,
+   "note": "movie logo boom on MOVIE"
+  },
+  {
+   "beat": "numbers",
+   "id": 2531,
+   "hit": 10.0,
+   "align": "start",
+   "off": 1.0,
+   "dur": 0.5,
+   "gain": -12,
+   "fadeOut": 0.08,
+   "note": "numbers typing in"
+  },
+  {
+   "beat": "numbers",
+   "id": 2299,
+   "hit": 10.06,
+   "align": "peak",
+   "gain": -8,
+   "note": "BORING stamp"
+  },
+  {
+   "beat": "numbers",
+   "id": 1365,
+   "hit": 10.06,
+   "align": "peak",
+   "gain": -9
+  },
+  {
+   "beat": "numbers",
+   "id": 2617,
+   "hit": 10.58,
+   "align": "peak",
+   "gain": -10
+  },
+  {
+   "beat": "numbers",
+   "id": 1105,
+   "hit": 11.3,
+   "align": "peak",
+   "gain": -4,
+   "note": "story cards / page turn"
+  },
+  {
+   "beat": "numbers",
+   "id": 1530,
+   "hit": 11.3,
+   "align": "peak",
+   "gain": -9
+  },
+  {
+   "beat": "numbers",
+   "id": 3102,
+   "hit": 11.44,
+   "align": "peak",
+   "gain": -8,
+   "note": "tape"
+  },
+  {
+   "beat": "tenmin",
+   "id": 2574,
+   "hit": 12.56,
+   "align": "peak",
+   "gain": -10,
+   "note": "player UI"
+  },
+  {
+   "beat": "tenmin",
+   "id": 1063,
+   "hit": 12.56,
+   "align": "start",
+   "dur": 0.44,
+   "gain": -13,
+   "fadeOut": 0.06,
+   "note": "clock ticking"
+  },
+  {
+   "beat": "tenmin",
+   "id": 1096,
+   "hit": 13.0,
+   "align": "start",
+   "off": 0.3,
+   "dur": 0.48,
+   "gain": -5,
+   "fadeIn": 0.02,
+   "fadeOut": 0.06,
+   "note": "fast forward"
+  },
+  {
+   "beat": "tenmin",
+   "id": 2595,
+   "hit": 13.033,
+   "align": "peak",
+   "gain": -15,
+   "note": "the hidden frame (a tiny tick, for the sharp-eared)"
+  },
+  {
+   "beat": "tenmin",
+   "id": 2870,
+   "hit": 13.45,
+   "align": "peak",
+   "gain": -6,
+   "note": "2:00"
+  },
+  {
+   "beat": "tenmin",
+   "id": 2299,
+   "hit": 13.45,
+   "align": "peak",
+   "gain": -8
+  },
+  {
+   "beat": "tenmin",
+   "id": 772,
+   "hit": 13.77,
+   "align": "peak",
+   "gain": -11
+  },
+  {
+   "beat": "ads",
+   "id": 2356,
+   "hit": 14.68,
+   "align": "peak",
+   "gain": -8,
+   "note": "Ad UI"
+  },
+  {
+   "beat": "ads",
+   "id": 704,
+   "hit": 14.98,
+   "align": "peak",
+   "gain": -3,
+   "dur": 0.5,
+   "fadeOut": 0.1,
+   "note": "record scratch freeze"
+  },
+  {
+   "beat": "notads",
+   "id": 1111,
+   "hit": 15.76,
+   "align": "peak",
+   "gain": -4,
+   "note": "click Skip Ad"
+  },
+  {
+   "beat": "notads",
+   "id": 2951,
+   "hit": 15.8,
+   "align": "peak",
+   "gain": -8,
+   "note": "ad glitches out"
+  },
+  {
+   "beat": "notads",
+   "id": 2301,
+   "hit": 15.95,
+   "align": "peak",
+   "gain": -8,
+   "note": "AD"
+  },
+  {
+   "beat": "notads",
+   "id": 1530,
+   "hit": 16.16,
+   "align": "peak",
+   "gain": -8,
+   "note": "strike"
+  },
+  {
+   "beat": "notads",
+   "id": 772,
+   "hit": 16.68,
+   "align": "peak",
+   "gain": -11
+  },
+  {
+   "beat": "delivered",
+   "id": 1530,
+   "hit": 17.85,
+   "align": "peak",
+   "gain": -8
+  },
+  {
+   "beat": "delivered",
+   "id": 2997,
+   "hit": 17.95,
+   "align": "peak",
+   "gain": -15
+  },
+  {
+   "beat": "delivered",
+   "id": 2997,
+   "hit": 18.15,
+   "align": "peak",
+   "gain": -15
+  },
+  {
+   "beat": "delivered",
+   "id": 2997,
+   "hit": 18.4,
+   "align": "peak",
+   "gain": -15
+  },
+  {
+   "beat": "delivered",
+   "id": 1998,
+   "hit": 18.28,
+   "align": "start",
+   "dur": 0.6,
+   "gain": -9,
+   "fadeOut": 0.1,
+   "note": "counter rolls"
+  },
+  {
+   "beat": "delivered",
+   "id": 1999,
+   "hit": 18.86,
+   "align": "peak",
+   "gain": -8,
+   "note": "2,000+"
+  },
+  {
+   "beat": "delivered",
+   "id": 2299,
+   "hit": 18.86,
+   "align": "peak",
+   "gain": -9
+  },
+  {
+   "beat": "delivered",
+   "id": 2357,
+   "hit": 18.94,
+   "align": "peak",
+   "gain": -10
+  },
+  {
+   "beat": "team",
+   "id": 2354,
+   "hit": 20.33,
+   "align": "peak",
+   "gain": -6,
+   "note": "client message"
+  },
+  {
+   "beat": "team",
+   "id": 2357,
+   "hit": 20.69,
+   "align": "peak",
+   "gain": -7
+  },
+  {
+   "beat": "team",
+   "id": 2354,
+   "hit": 21.0,
+   "align": "peak",
+   "gain": -6
+  },
+  {
+   "beat": "team",
+   "id": 2303,
+   "hit": 21.8,
+   "align": "peak",
+   "gain": -6,
+   "note": "60+"
+  },
+  {
+   "beat": "team",
+   "id": 2951,
+   "hit": 21.8,
+   "align": "peak",
+   "gain": -13
+  },
+  {
+   "beat": "team",
+   "id": 772,
+   "hit": 22.52,
+   "align": "peak",
+   "gain": -12
+  },
+  {
+   "beat": "everyframe",
+   "id": 1457,
+   "hit": 23.25,
+   "align": "onset",
+   "gain": -13
+  },
+  {
+   "beat": "everyframe",
+   "id": 1441,
+   "hit": 23.25,
+   "align": "start",
+   "off": 5.0,
+   "dur": 2.17,
+   "gain": -11,
+   "fadeIn": 0.03,
+   "fadeOut": 0.15,
+   "note": "projector, frame by frame"
+  },
+  {
+   "beat": "everyframe",
+   "id": 1438,
+   "hit": 24.09,
+   "align": "peak",
+   "gain": -5
+  },
+  {
+   "beat": "everyframe",
+   "id": 1430,
+   "hit": 24.47,
+   "align": "peak",
+   "gain": -5
+  },
+  {
+   "beat": "everyframe",
+   "id": 1133,
+   "hit": 24.75,
+   "align": "peak",
+   "gain": -4
+  },
+  {
+   "beat": "found",
+   "id": 2617,
+   "hit": 25.42,
+   "align": "peak",
+   "gain": -6
+  },
+  {
+   "beat": "found",
+   "id": 2582,
+   "hit": 25.81,
+   "align": "peak",
+   "gain": -11,
+   "note": "autofocus blink"
+  },
+  {
+   "beat": "found",
+   "id": 2582,
+   "hit": 25.92,
+   "align": "peak",
+   "gain": -13
+  },
+  {
+   "beat": "dm",
+   "id": 3120,
+   "hit": 26.4,
+   "align": "peak",
+   "gain": -6,
+   "note": "DM card slides up"
+  },
+  {
+   "beat": "dm",
+   "id": 2354,
+   "hit": 26.47,
+   "align": "peak",
+   "gain": -6
+  },
+  {
+   "beat": "dm",
+   "id": 2533,
+   "hit": 26.95,
+   "align": "peak",
+   "gain": -12
+  },
+  {
+   "beat": "dm",
+   "id": 2533,
+   "hit": 27.01,
+   "align": "peak",
+   "gain": -13
+  },
+  {
+   "beat": "dm",
+   "id": 2533,
+   "hit": 27.07,
+   "align": "peak",
+   "gain": -12
+  },
+  {
+   "beat": "dm",
+   "id": 2357,
+   "hit": 27.13,
+   "align": "peak",
+   "gain": -6,
+   "note": "sent"
+  },
+  {
+   "beat": "nahimila",
+   "id": 2964,
+   "hit": 27.83,
+   "align": "peak",
+   "gain": -9,
+   "note": "error pop-up"
+  },
+  {
+   "beat": "nahimila",
+   "id": 1110,
+   "hit": 27.83,
+   "align": "peak",
+   "gain": -11
+  },
+  {
+   "beat": "nahimila",
+   "id": 950,
+   "hit": 28.4,
+   "align": "peak",
+   "gain": -11,
+   "note": "shake"
+  },
+  {
+   "beat": "editor",
+   "id": 701,
+   "hit": 28.93,
+   "align": "peak",
+   "gain": -8
+  },
+  {
+   "beat": "editor",
+   "id": 2301,
+   "hit": 28.95,
+   "align": "peak",
+   "gain": -9
+  },
+  {
+   "beat": "editor",
+   "id": 2303,
+   "hit": 29.46,
+   "align": "peak",
+   "gain": -5,
+   "note": "EDITOR"
+  },
+  {
+   "beat": "editor",
+   "id": 788,
+   "hit": 29.46,
+   "align": "start",
+   "off": 2.12,
+   "dur": 1.1,
+   "gain": -8,
+   "fadeIn": 0.01,
+   "fadeOut": 0.4
+  },
+  {
+   "beat": "twice",
+   "id": 2356,
+   "hit": 31.02,
+   "align": "peak",
+   "gain": -8,
+   "note": "play button"
+  },
+  {
+   "beat": "twice",
+   "id": 772,
+   "hit": 31.04,
+   "align": "peak",
+   "gain": -12,
+   "note": "punch on VIDEOS"
+  },
+  {
+   "beat": "twice",
+   "id": 2617,
+   "hit": 31.53,
+   "align": "peak",
+   "gain": -11
+  },
+  {
+   "beat": "twice",
+   "id": 2301,
+   "hit": 32.09,
+   "align": "peak",
+   "gain": -8,
+   "note": "B/W hit on PEOPLE"
+  },
+  {
+   "beat": "twice",
+   "id": 1092,
+   "hit": 32.68,
+   "align": "onset",
+   "gain": -6,
+   "dur": 0.6,
+   "fadeOut": 0.08,
+   "note": "rewind to frame 1"
+  },
+  {
+   "beat": "twice",
+   "id": 2299,
+   "hit": 32.82,
+   "align": "peak",
+   "gain": -9,
+   "note": "2x"
+  },
+  {
+   "beat": "twice",
+   "id": 2582,
+   "hit": 33.25,
+   "align": "peak",
+   "gain": -10
+  },
+  {
+   "beat": "service",
+   "id": 1530,
+   "hit": 33.66,
+   "align": "peak",
+   "gain": -6
+  },
+  {
+   "beat": "service",
+   "id": 1365,
+   "hit": 33.78,
+   "align": "peak",
+   "gain": -8,
+   "note": "01"
+  },
+  {
+   "beat": "service",
+   "id": 1365,
+   "hit": 34.08,
+   "align": "peak",
+   "gain": -8,
+   "note": "02"
+  },
+  {
+   "beat": "service",
+   "id": 1365,
+   "hit": 34.46,
+   "align": "peak",
+   "gain": -8,
+   "note": "03"
+  },
+  {
+   "beat": "service",
+   "id": 1368,
+   "hit": 34.6,
+   "align": "peak",
+   "gain": -14,
+   "note": "typewriter bell"
+  },
+  {
+   "beat": "bio",
+   "id": 3120,
+   "hit": 35.9,
+   "align": "peak",
+   "gain": -7,
+   "note": "profile card"
+  },
+  {
+   "beat": "bio",
+   "id": 2356,
+   "hit": 36.15,
+   "align": "peak",
+   "gain": -8
+  },
+  {
+   "beat": "bio",
+   "id": 957,
+   "hit": 36.78,
+   "align": "peak",
+   "gain": -9,
+   "note": "bio highlight"
+  },
+  {
+   "beat": "end",
+   "id": 2897,
+   "hit": 37.38,
+   "align": "start",
+   "off": 3.95,
+   "dur": 1.5,
+   "gain": -4,
+   "fadeIn": 0.01,
+   "fadeOut": 0.5,
+   "note": "end card boom"
+  },
+  {
+   "beat": "end",
+   "id": 2299,
+   "hit": 37.8,
+   "align": "peak",
+   "gain": -6,
+   "note": "isi video se"
+  },
+  {
+   "beat": "end",
+   "id": 1092,
+   "hit": 38.45,
+   "align": "onset",
+   "gain": -9,
+   "dur": 0.48,
+   "fadeOut": 0.06,
+   "note": "rewinds into the loop"
+  }
+ ]
+}

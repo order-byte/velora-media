@@ -1,0 +1,121 @@
+{
+ "source": "raw/raw.mp4",
+ "fps": 30,
+ "clips": [
+  {
+   "id": "hook",
+   "in": 7.85,
+   "out": 9.75,
+   "text": "I hid one frame in this video."
+  },
+  {
+   "id": "find",
+   "in": 11.06,
+   "out": 12.1,
+   "text": "Dhoondh ke dikhao."
+  },
+  {
+   "id": "name",
+   "in": 19.43,
+   "out": 21.55,
+   "text": "I'm Aminur, a video editor."
+  },
+  {
+   "id": "frames",
+   "in": 23.0,
+   "out": 25.25,
+   "text": "Frames? Woh toh mera game hai."
+  },
+  {
+   "id": "movies",
+   "in": 28.08,
+   "out": 30.8,
+   "text": "I make 30-second reels feel like a movie."
+  },
+  {
+   "id": "numbers",
+   "in": 32.43,
+   "out": 34.55,
+   "text": "Boring numbers feel like stories."
+  },
+  {
+   "id": "tenmin",
+   "in": 39.39,
+   "out": 41.8,
+   "text": "10-minute videos feel like 2 minutes."
+  },
+  {
+   "id": "ads",
+   "in": 42.79,
+   "out": 43.32,
+   "freeze": 0.35,
+   "text": "Aur ads?"
+  },
+  {
+   "id": "notads",
+   "in": 43.32,
+   "out": 45.78,
+   "text": "Woh ads hi nahi lagta hai. Kuch aur hi lagta hai."
+  },
+  {
+   "id": "delivered",
+   "in": 53.62,
+   "out": 55.85,
+   "text": "I delivered over 2,000 videos."
+  },
+  {
+   "id": "team",
+   "in": 90.7,
+   "out": 93.9,
+   "text": "And my team is currently handling 60+ clients."
+  },
+  {
+   "id": "everyframe",
+   "in": 98.01,
+   "out": 100.18,
+   "text": "Aur har ek... frame by frame."
+  },
+  {
+   "id": "found",
+   "in": 101.98,
+   "out": 102.93,
+   "text": "Found it?"
+  },
+  {
+   "id": "dm",
+   "in": 104.74,
+   "out": 106.17,
+   "text": "DM me what it says."
+  },
+  {
+   "id": "nahimila",
+   "in": 108.15,
+   "out": 109.22,
+   "text": "Nahi mila na?"
+  },
+  {
+   "id": "editor",
+   "in": 111.14,
+   "out": 112.85,
+   "text": "Tabhi toh editor main hoon."
+  },
+  {
+   "id": "twice",
+   "in": 123.09,
+   "out": 126.05,
+   "text": "I make videos people watch twice."
+  },
+  {
+   "id": "service",
+   "in": 132.38,
+   "out": 134.62,
+   "text": "So if you need my service then"
+  },
+  {
+   "id": "bio",
+   "in": 135.24,
+   "out": 136.68,
+   "text": "contact number in my bio."
+  }
+ ]
+}
