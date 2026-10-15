@@ -2,6 +2,8 @@
 
 **দৈর্ঘ্য:** ৪৫–৪৮ সেকেন্ড · **ভাষা:** পুরোটা ইংলিশ (US অডিয়েন্স) · **ফরম্যাট:** 9:16 vertical master + 16:9 cut-down
 
+> প্রতিটা লাইন কীভাবে বলবেন, American রেফারেন্স অডিওসহ: [voiceover-guide.md](voiceover-guide.md)
+
 ## কনসেপ্ট
 
 ভিডিওর শুরুটা একটা স্বীকারোক্তি দিয়ে: *"Every video you love is lying to you."* এরপর একটা polished ভিডিওকে ভেঙে দেখানো হবে তার ভেতরে কতগুলো cut, কতগুলো layer আর কী কী color grade লুকিয়ে আছে। এরপর twist: *"That's not lying. That's editing."* আর এই "পর্দার পেছনের লোকটা" হলেন আপনি।
