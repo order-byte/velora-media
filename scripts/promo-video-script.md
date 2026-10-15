@@ -1,140 +1,224 @@
-# Velora Media: Promo Video Script
+# Aminur: Promo Video Script ("The Lie")
 
-**Length:** 45–48 seconds
-**Format:** 9:16 vertical master (Reels / Shorts / TikTok), with a 16:9 cut-down for YouTube and LinkedIn
-**Language & audience:** English only, aimed at US creators, coaches, and brands. Use a native American English voiceover.
-**Goal:** Within 3 seconds, the viewer should know that you're a video editor and that you can make *their* videos better.
-**Core idea:** The video proves the claim while making it. The hook is a before-and-after, and the ending points out that the viewer just watched an ad all the way through.
+**দৈর্ঘ্য:** ৪৫–৪৮ সেকেন্ড · **ভাষা:** পুরোটা ইংলিশ (US অডিয়েন্স) · **ফরম্যাট:** 9:16 vertical master + 16:9 cut-down
 
----
+## কনসেপ্ট
 
-## Voiceover only (for recording)
+ভিডিওর শুরুটা একটা স্বীকারোক্তি দিয়ে: *"Every video you love is lying to you."* এরপর একটা polished ভিডিওকে ভেঙে দেখানো হবে তার ভেতরে কতগুলো cut, কতগুলো layer আর কী কী color grade লুকিয়ে আছে। এরপর twist: *"That's not lying. That's editing."* আর এই "পর্দার পেছনের লোকটা" হলেন আপনি।
 
-> *Your content isn't the problem...*
-> **...your editing is.**
->
-> Viewers decide in seconds. Slow cuts. Flat sound. No rhythm. Gone.
->
-> I'm [Your Name], from Velora Media. I turn raw footage into videos people actually finish.
->
-> Reels that hook. YouTube videos that hold. Motion graphics that make ideas click. Ads that sell.
->
-> Over two thousand videos delivered. Sixty-plus clients. And every edit treated like it's going on my own channel.
->
-> Notice something? You just watched an ad all the way through.
-> That's editing.
->
-> You hit record. I'll make it unskippable. Send me your footage. Link below.
-
-About 93 words. At a confident pace, with music-only gaps in the demo section, it runs about 45 seconds.
+পুরো ভিডিওটা একটাই আইডিয়ার ওপর দাঁড়িয়ে: **ভালো এডিটিং চোখে পড়ে না।** শেষ লাইনে হুকটা আবার ফিরে আসে (*"Let's make your next video… lie a little."*), তাই ভিডিওটা মনে থেকে যায়।
 
 ---
 
-## Scene-by-scene
+## চিহ্নের মানে
 
-### 1. HOOK: 0:00–0:04
-
-| | |
+| চিহ্ন | মানে |
 |---|---|
-| **Visual** | **0:00–0:02:** A raw, ungraded, slightly shaky talking-head or B-roll clip. Flat lighting, plain white default subtitle, dead audio. Make it look deliberately boring. **0:02–0:04:** A record-scratch or glitch transition into the *same clip, fully edited*: color graded, punch-in zoom, animated captions, light leak, sound design. |
-| **VO** | *(flat, quiet)* "Your content isn't the problem..." → *(full energy, on the cut)* "...**your editing is.**" |
-| **On-screen text** | "YOUR EDITING IS." in big kinetic type that slams in on the beat |
-| **SFX / Music** | Silence or room tone, then a record scratch, then a **bass hit / music drop** on "editing is" |
-
-> Why it works: the hook makes the claim and shows the proof in the same 4 seconds. A viewer who sees that before-and-after already knows what you sell.
-
----
-
-### 2. PAIN: 0:04–0:09
-
-| | |
-|---|---|
-| **Visual** | Phone mockup. A thumb swipes past dull videos one after another. A motion-graphic **retention graph** nosedives, and a "viewer count" ticks down. |
-| **VO** | "Viewers decide in seconds. Slow cuts. Flat sound. No rhythm. **Gone.**" |
-| **On-screen text** | Each phrase pops on its word: `SLOW CUTS` → `FLAT SOUND` → `NO RHYTHM` → `GONE` (the last one glitches out) |
-| **SFX / Music** | Swipe whooshes on each scroll; the music thins out, then stops dead on "Gone." |
+| `/` | ছোট বিরতি (আধা সেকেন্ড) |
+| `//` | লম্বা বিরতি (পুরো ১ সেকেন্ড) |
+| **bold** | এই শব্দে জোর দিন |
+| ↘ | লাইনের শেষে গলা নিচে নামবে (confident statement) |
+| ↗ | গলা উপরে উঠবে (প্রশ্নের মতো) |
 
 ---
 
-### 3. WHO YOU ARE: 0:09–0:14
+## শুধু ভয়েসওভার (teleprompter-এর জন্য)
 
-| | |
-|---|---|
-| **Visual** | Music kicks back in. You at your editing setup, *or* a screen recording of a busy timeline if you're faceless. A split-screen wipe shows raw → edited. **Velora Media logo reveal.** |
-| **VO** | "I'm [Your Name], from Velora Media. I turn raw footage into videos people actually **finish**." |
-| **On-screen text** | `VELORA MEDIA` · lower third: `Video Editor · Motion Designer` |
-| **SFX / Music** | Riser into the logo, then a clean hit on the reveal |
+```
+Every video you love... is lying to you.
 
----
+That one-take talking head? Forty-two cuts.
+That spontaneous reel? Nineteen layers.
+That perfect sunset? ...It was gray.
 
-### 4. DEMO REEL (motion graphics): 0:14–0:28
+That's not lying. That's editing.
+I'm Aminur. The guy behind the curtain.
 
-Every cut lands on the beat. Each segment gets an animated label so the viewer knows exactly which service they're looking at.
+I make thirty-second reels feel like movies.
+Boring numbers feel like stories.
+Ten-minute videos feel like two.
+And ads... feel like they're not ads.
 
-| Time | Visual | Label | VO |
-|---|---|---|---|
-| 0:14–0:17 | Vertical reel: fast cuts, word-by-word animated captions, zoom punches | `SHORT-FORM` | "Reels that hook." |
-| 0:17–0:20 | 16:9 frame slides in: B-roll layering, J-cuts, sound design, color grade | `YOUTUBE` | "YouTube videos that hold." |
-| 0:20–0:24 | Kinetic typography, an infographic building itself, a logo animation | `MOTION GRAPHICS` | "Motion graphics that make ideas click." |
-| 0:24–0:27 | Product shot with a dynamic text overlay and an animated CTA button | `ADS` | "Ads that sell." |
-| 0:27–0:28 | Rapid-fire flash of 8–10 different past projects (6–8 frames each) | none | *(music only)* |
+Over two thousand videos. Sixty-plus clients.
+And their viewers never noticed me.
+That's the point.
 
-**SFX / Music:** The music is at full energy here. Each label gets a small whoosh or click, and the flash montage builds into the next section.
+You film it. I'll make it look effortless.
+Let's make your next video... lie a little.
+```
 
----
-
-### 5. PROOF: 0:28–0:36
-
-| | |
-|---|---|
-| **Visual** | The last montage frame shrinks into a **grid of thumbnails**, then the camera pulls back to reveal a huge wall of hundreds of thumbnails (it reads as "2,000"). A big counter rolls from `0` up to `2,000+`. Hard cut, and a second counter rolls up to `60+`. |
-| **VO** | "Over two thousand videos delivered. Sixty-plus clients. And every edit treated like it's going on **my own channel**." |
-| **On-screen text** | `2,000+ VIDEOS DELIVERED` · `60+ CLIENTS` |
-| **SFX / Music** | Counter ticking sound, then an impact hit when each number lands |
-| **Optional** | Client logos or 1–2 short testimonial quotes, **only with the clients' permission** |
+মোট প্রায় ৯০ শব্দ। বিরতিসহ পড়তে মোটামুটি ৪৫–৪৮ সেকেন্ড লাগবে।
 
 ---
 
-### 6. CALLBACK: 0:36–0:41
+## সিন ধরে ধরে: লাইন, কীভাবে বলবেন, কী দেখাবেন
 
-| | |
-|---|---|
-| **Visual** | Everything stops. Clean, minimal frame. A progress bar for *this video* sits at the bottom, almost full. |
-| **VO** | *(calm, almost a whisper, close to the mic)* "Notice something? You just watched an ad all the way through." *(beat)* "**That's editing.**" |
-| **On-screen text** | `You watched the whole thing.` → `That's editing.` |
-| **SFX / Music** | **Near silence.** Pull the music out completely. This contrast is the second big moment of the video. |
+### সিন ১: হুক (০:০০–০:০৩)
 
-> Why it works: the hook said "your editing is the problem," and the ending proves good editing kept them watching. The viewer finishes with proof instead of a promise.
+**লাইন:**
+> Every video you **love** // is **lying** to you. ↘
 
----
+**কীভাবে বলবেন:**
+- **সুর:** নিচু গলায়, ধীরে, খুব কাছ থেকে বলার মতো করে, যেন বন্ধুর কানে একটা গোপন কথা বলছেন। পুরোপুরি ফিসফিস নয়, তবে প্রায় সেরকম।
+- মাইক মুখের খুব কাছে রাখুন (৩–৪ ইঞ্চি দূরে), যাতে গলাটা ভারী আর কাছের শোনায়।
+- "love"-এর পরে পুরো ১ সেকেন্ড থামুন। এই নীরবতাটুকুই দর্শকের কৌতূহল জাগাবে।
+- "lying to you"-এর শেষে গলা নিচে নামান। প্রশ্নের মতো যেন না শোনায়।
+- **ক্যামেরায় থাকলে:** মুখ সিরিয়াস রাখুন, চোখ সরাসরি লেন্সে, একটু সামনে ঝুঁকে থাকুন।
 
-### 7. CTA: 0:41–0:47
-
-| | |
-|---|---|
-| **Visual** | Music drops back in at full energy. End card with the logo animating in, plus contact details. |
-| **VO** | "You hit record. **I'll make it unskippable.** Send me your footage. Link below." |
-| **On-screen text** | `YOU HIT RECORD.` → `I'LL MAKE IT UNSKIPPABLE.` → **VELORA MEDIA** · `[website / email / IG handle]` · `DM "EDIT" to start` |
-| **SFX / Music** | Final hit on the logo, then a short tail-out |
+**ভিজ্যুয়াল:** শুরুটা হবে আপনার কাজের সবচেয়ে সুন্দর একটা ক্লিপ দিয়ে, যেটা দেখতে feed-এর সাধারণ একটা ভিডিওর মতো লাগে। "lying to you" বলার সঙ্গে সঙ্গে ফ্রেমটা freeze হবে, তারপর কাচ ভাঙার মতো **crack** আর RGB-split glitch।
+**টেক্সট:** `EVERY VIDEO YOU LOVE IS LYING TO YOU.`
+**সাউন্ড:** হালকা মিউজিক চলবে, "lying"-এ glass-crack SFX পড়বে, তারপর মিউজিক পুরো থেমে যাবে।
 
 ---
 
-## Alternate hooks (for A/B testing)
+### সিন ২: রিভিল (০:০৩–০:১১)
 
-Swap these in for Scene 1 if you want to test what performs best:
+**লাইন:**
+> That one-take talking head? ↗ / **Forty-two** cuts. ↘
+> That spontaneous reel? ↗ / **Nineteen** layers. ↘
+> That perfect sunset? ↗ // ...It was **gray**. ↘
 
-1. **Same-footage hook:** "Same footage. Two completely different videos. The only difference? The edit." (Split screen: raw on the left, edited on the right.)
-2. **Scroll-time hook:** "You give a video two seconds before you scroll. Watch what I can do with two seconds." (Then 2 seconds of the most intense edit in your portfolio.)
-3. **Stats-first hook:** "Two thousand videos. Sixty-plus clients. One thing I've learned: nobody scrolls past a great edit."
+**কীভাবে বলবেন:**
+- **সুর:** এবার স্পিড একটু বাড়বে, গলাটা হবে playful। এমনভাবে বলুন যেন কারো সিক্রেট ফাঁস করে দিচ্ছেন আর নিজেও মজা পাচ্ছেন।
+- প্রশ্নের অংশে গলা উপরে তুলুন ↗, উত্তরটা ছোট আর punchy রাখুন, আর শেষে গলা নামান ↘।
+- সংখ্যাগুলো আলাদা আলাদা করে, স্পষ্ট করে বলুন।
+- **"It was gray":** এটা জোকের লাইন। "sunset?"-এর পরে লম্বা বিরতি নিন, তারপর একদম **deadpan** গলায় বলুন: ফ্ল্যাট, কোনো এনার্জি ছাড়া, প্রায় বিরক্তির সুরে। এই contrast থেকেই হাসিটা আসবে।
+
+**ভিজ্যুয়াল (মোশন গ্রাফিক্স):**
+- ভাঙা ফ্রেমটা 3D **exploded view**-তে খুলে যাবে: footage, captions, color, SFX waveform আর B-roll লেয়ারগুলো আলাদা হয়ে শূন্যে ভাসবে।
+- "Forty-two cuts": টাইমলাইনের স্ক্রিনশটে cut-মার্কারগুলো একে একে জ্বলে উঠবে, পাশে কাউন্টার `42 CUTS`।
+- "Nineteen layers": লেয়ারগুলো একটার উপর একটা স্ট্যাক হবে, কাউন্টার `19 LAYERS`।
+- "It was gray": সূর্যাস্তের ক্লিপের উপর একটা before/after স্লাইডার ধীরে টানা হবে, যাতে নিচের ধূসর raw footage দেখা যায়।
+
+**সাউন্ড:** প্রতিটা সংখ্যায় একটা ছোট "tick" আর হালকা ভিনাইল-ক্র্যাকল, আর ব্যাকগ্রাউন্ডে মৃদু টেনশন-টোন।
+
+> ⚠️ **গুরুত্বপূর্ণ:** 42 আর 19 সংখ্যা দুটো উদাহরণ মাত্র। আপনার **নিজের আসল একটা প্রজেক্ট** খুলে cut আর layer গুনে নিন, আর সেই সংখ্যাগুলোই বলুন ও স্ক্রিনে দেখান। আসল টাইমলাইনের স্ক্রিনশট দিলে বিশ্বাসযোগ্যতা অনেক বেড়ে যায়।
+>
+> সূর্যাস্তের before/after footage না থাকলে এই লাইনগুলোর যেকোনোটা ব্যবহার করতে পারেন:
+> - *"That crisp audio? // ...Recorded next to a highway."*
+> - *"That clean studio? // ...It was his kitchen."*
 
 ---
 
-## Production notes
+### সিন ৩: Twist আর পরিচয় (০:১১–০:১৬)
 
-- **Burn in captions.** Most people watch feed videos on mute, so the on-screen text has to tell the whole story without the audio.
-- **Show your best 10% of work.** The demo section only works with the most eye-catching clips you have. Leave out the average ones.
-- **Music:** pick one track with two clear drops, one at 0:02 (the hook cut) and one at 0:41 (the CTA). Clear the license first.
-- **Voice:** use a native US English voice, either your own or a hired voice actor (Fiverr/Voices.com) or an AI voice like ElevenLabs. Aim for a conversational, confident tone, not a radio-announcer read.
-- **VO energy:** energetic for scenes 1–5, quiet and close to the mic for scene 6, confident for scene 7. That contrast is what holds attention.
-- **Use only true claims.** This script only uses the figures you gave: 2,000+ videos and 60+ clients. Don't add any other number unless it's verified.
-- **Placeholders to fill:** `[Your Name]`, contact details, and the CTA keyword.
+**লাইন:**
+> That's **not** lying. ↘ / That's **editing**. ↘
+> I'm **Aminur**. / The guy behind the curtain.
+
+**কীভাবে বলবেন:**
+- **"That's not lying":** ধীরে, দৃঢ়ভাবে, নিচু গলায়।
+- **"That's editing":** হাসিমুখে, আত্মবিশ্বাস আর গর্ব নিয়ে। রেকর্ড করার সময় সত্যিই হাসুন, তাহলে হাসিটা গলায় শোনা যাবে।
+- **"I'm Aminur":** উষ্ণ আর স্বাভাবিক সুরে, কোনো হাইপ বা চিৎকার ছাড়া, যেন কফি শপে নতুন কারো সাথে পরিচয় হচ্ছে। নামটা একটু ধীরে, স্পষ্ট করে বলুন (আ-মি-নুর), কারণ US অডিয়েন্স নামটা প্রথমবার শুনছে।
+- **"The guy behind the curtain":** একটু রহস্যময়, মুচকি হাসি দিয়ে। (এটা *Wizard of Oz*-এর রেফারেন্স, US অডিয়েন্স সহজেই ধরতে পারবে।)
+
+**ভিজ্যুয়াল:** "That's editing"-এ ভাসমান লেয়ারগুলো এক ঝটকায় জোড়া লেগে আবার polished ভিডিওটা তৈরি হয়ে যাবে। তারপর ক্যামেরা পেছনে সরে দেখাবে ভিডিওটা আসলে আপনার মনিটরে চলছে, আর আপনি ডেস্কে বসে ক্যামেরার দিকে ঘুরছেন। "behind the curtain"-এ একটা পর্দা সরে যাওয়ার transition।
+**টেক্সট (lower third):** `AMINUR · Video Editor`
+**সাউন্ড:** "That's editing"-এ **মিউজিক ড্রপ**, মানে পুরো এনার্জিতে বিট ঢুকবে।
+
+---
+
+### সিন ৪: ডেমো রিল (০:১৬–০:২৯)
+
+**লাইন:**
+> I make thirty-second reels / feel like **movies**. ↘
+> Boring numbers / feel like **stories**. ↘
+> Ten-minute videos / feel like **two**. ↘
+> And ads... // feel like they're **not** ads. ↘
+
+**কীভাবে বলবেন:**
+- এখানে মিউজিক পুরো এনার্জিতে থাকবে। **আপনার গলা বিটের সাথে চলবে।** প্রতিটা লাইনের শেষ শব্দ (movies, stories, two) ঠিক বিটের উপর পড়া চাই।
+- **এনার্জি:** উঁচু কিন্তু চিৎকার নয়। ছন্দময় আর আত্মবিশ্বাসী সুরে বলুন, যেন একটা rhythm-এ কথা বলছেন।
+- প্রথম তিন লাইন একই প্যাটার্নে যাবে: প্রথম অংশ সমান সুরে, শেষ শব্দে জোর দিয়ে গলা নামান।
+- **শেষ লাইনটা ("And ads…") আলাদা:** হঠাৎ ধীর হয়ে যান। "ads"-এর পরে বিরতি নিন, তারপর মুচকি হাসি দিয়ে, চোখ টিপে বলার ভঙ্গিতে "feel like they're **not** ads" বলুন। "not"-এ জোর দিন।
+
+**ভিজ্যুয়াল (প্রতিটা লাইনে একটা transformation):**
+
+| লাইন | যা দেখাবেন | লেবেল |
+|---|---|---|
+| reels → movies | vertical reel-এর উপর-নিচে cinematic letterbox bar স্লাইড করে ঢুকবে, সঙ্গে film grain আর cinematic grade | `SHORT-FORM` |
+| numbers → stories | একটা বোরিং স্প্রেডশিটের সংখ্যা ভেঙে animated infographic আর kinetic type হয়ে যাবে | `MOTION GRAPHICS` |
+| ten minutes → two | YouTube প্লেয়ারে `10:00` লেখাটা সংকুচিত হয়ে `2:00` হবে, progress bar দ্রুত ছুটবে, আর পেছনে আপনার YouTube এডিটের মন্টাজ চলবে | `YOUTUBE` |
+| ads → not ads | ভিডিওর কোণের "Sponsored" ট্যাগটা আঙুলের টোকায় উড়ে যাবে, নিচ থেকে একটা slick product ভিডিও বেরিয়ে আসবে | `ADS` |
+
+**সাউন্ড:** প্রতিটা লেবেলে ছোট whoosh বা click। "not ads"-এর আগের বিরতিতে মিউজিক আধা সেকেন্ড থামবে, তারপর আবার ঢুকবে।
+
+---
+
+### সিন ৫: প্রুফ (০:২৯–০:৩৮)
+
+**লাইন:**
+> Over **two thousand** videos. ↘ / **Sixty-plus** clients. ↘
+> And their viewers / never noticed me. ↘ //
+> That's the point. ↘
+
+**কীভাবে বলবেন:**
+- **সংখ্যাগুলো:** ধীরে, স্থির গলায় বলুন। গর্ব থাকবে কিন্তু গলা শান্ত। বড় সংখ্যা শান্তভাবে বললে বেশি বিশ্বাসযোগ্য শোনায়, আর চিৎকার করে বললে সেলসম্যানের মতো লাগে।
+- প্রতিটা সংখ্যার পরে ছোট বিরতি দিন, যাতে স্ক্রিনের কাউন্টার অ্যানিমেশন শেষ হওয়ার সময় পায়।
+- **"never noticed me":** নরম আর একটু নিচু গলায়, প্রায় নিজের সাথে কথা বলার মতো।
+- লম্বা বিরতি।
+- **"That's the point":** হাসিমুখে, ছোট আর নিশ্চিত সুরে। এটা হুকের "invisible editing" আইডিয়ার উত্তর।
+
+**ভিজ্যুয়াল:** শেষ ডেমো ক্লিপটা ছোট হতে হতে হাজারো thumbnail-এর একটা বিশাল দেয়ালের অংশ হয়ে যাবে। কাউন্টার `0 → 2,000+` গুনবে, হার্ড কাট দিয়ে `60+ CLIENTS` আসবে। "never noticed me"-এ thumbnail দেয়ালের মধ্যে কোথাও ছোট্ট করে আপনার একটা ছবি লুকানো থাকবে, *Where's Waldo* স্টাইলে, আর একটা cursor গিয়ে সেটাকে খুঁজে বের করবে।
+**টেক্সট:** `2,000+ VIDEOS DELIVERED` · `60+ CLIENTS`
+**সাউন্ড:** কাউন্টারে tick-tick শব্দ, আর প্রতিটা সংখ্যা থামার মুহূর্তে একটা impact hit।
+**অপশনাল:** ক্লায়েন্টের লোগো বা ছোট testimonial, **শুধু তাদের অনুমতি নিয়ে**।
+
+---
+
+### সিন ৬: CTA (০:৩৮–০:৪৭)
+
+**লাইন:**
+> You film it. ↘ / I'll make it look **effortless**. ↘
+> Let's make your next video... // **lie** a little. ↘
+
+**কীভাবে বলবেন:**
+- **"You film it…":** সরাসরি ক্যামেরার দিকে তাকিয়ে, আমন্ত্রণের সুরে বলুন। গলা হবে friendly আর confident, যেন হ্যান্ডশেক করছেন।
+- **"Let's make your next video…":** "video"-এর পরে বিরতি নিন। তারপর **"lie a little"** বলুন নিচু গলায়, মুচকি হেসে, শেষে চোখ টিপে (wink)। এটা পুরো ভিডিওর সবচেয়ে বেশি মনে থাকা লাইন, তাই তাড়াহুড়ো করবেন না।
+
+**ভিজ্যুয়াল:** পরিষ্কার একটা ফ্রেমে আপনি ক্যামেরার দিকে তাকিয়ে আছেন (ফেসলেস হলে শুধু টেক্সট)। "lie a little"-এ হুকের সেই কাচ-ভাঙা crack আবার দেখা যাবে, কিন্তু এবার উল্টো দিকে জোড়া লেগে যাবে, যা হুকের একটা visual callback।
+**এন্ড কার্ড:** `AMINUR` · `Video Editor` · `[website / email / IG handle]` · `DM "EDIT" to start`
+**সাউন্ড:** শেষ লাইনের পরে **ফাইনাল মিউজিক হিট**, তারপর ছোট একটা tail-out।
+
+> চাইলে নিরাপদ বিকল্প হিসেবে শেষ লাইনটা এরকম করতে পারেন: *"Let's make your next video… impossible to ignore."*
+
+---
+
+## পুরো ভিডিওর এনার্জি ম্যাপ
+
+```
+০:০০ ── গোপন, ফিসফিসে        (হুক)
+০:০৩ ── playful, দ্রুত         (রিভিল)
+০:১১ ── দৃঢ় → উষ্ণ            (twist আর পরিচয়)
+০:১৬ ── উঁচু, ছন্দময়           (ডেমো: বিটের সাথে)
+০:২৯ ── শান্ত, আত্মবিশ্বাসী     (প্রুফ)
+০:৩৮ ── friendly → wink       (CTA)
+```
+
+এনার্জির এই ওঠানামাটাই দর্শককে শেষ পর্যন্ত ধরে রাখবে। পুরো ভিডিও একই এনার্জিতে বললে ১৫ সেকেন্ডের পরে মানুষ স্ক্রল করে চলে যাবে।
+
+---
+
+## রেকর্ডিং টিপস
+
+1. **দাঁড়িয়ে রেকর্ড করুন।** বসে বললে গলায় এনার্জি কম আসে।
+2. **প্রতিটা লাইন ৩ বার করে রেকর্ড করুন:** একবার শান্ত, একবার মাঝারি, একবার বেশি এনার্জিতে। পরে এডিটের সময় সেরাটা বেছে নিন।
+3. **হাসির লাইনে সত্যিই হাসুন।** মাইকে হাসি শোনা যায়, বিশেষ করে "That's editing", "That's the point" আর "lie a little"-এ।
+4. **Accent নকল করার দরকার নেই।** US অডিয়েন্স accent-এর চেয়ে clarity আর confidence বেশি খেয়াল করে। দ্রুত বলার চেয়ে ধীরে আর স্পষ্ট করে বলা ভালো।
+5. **কয়েকটা শব্দের উচ্চারণ (চাইলে US স্টাইলে বলতে পারেন):**
+   - *editing* → **এ**-ডি-ডিং (মাঝের t নরম হয়ে d-এর মতো)
+   - *forty* → **ফোর**-ডি
+   - *little* → **লি**-ড্‌ল
+   - *spontaneous* → স্পন-**টে**-নি-আস
+   - *effortless* → **এ**-ফার্ট-লেস
+6. **হুক আর "never noticed me" লাইন** রেকর্ড করুন মাইকের খুব কাছ থেকে। বাকি লাইনগুলো স্বাভাবিক দূরত্বে (৬–৮ ইঞ্চি)।
+
+---
+
+## যা বসাতে হবে
+
+- [ ] সিন ২-এ নিজের আসল প্রজেক্টের cut আর layer সংখ্যা
+- [ ] সূর্যাস্তের before/after footage, অথবা বিকল্প লাইনের যেকোনো একটা
+- [ ] এন্ড কার্ডের কন্টাক্ট (website / email / IG)
+- [ ] ক্লায়েন্টের লোগো বা testimonial, শুধু অনুমতি থাকলে
+- [ ] মিউজিক ট্র্যাক (লাইসেন্স করা), যেটায় দুটো পরিষ্কার ড্রপ আছে: একটা ০:১১-এ ("That's editing"), আরেকটা ০:৪৭-এ (শেষ হিট)
