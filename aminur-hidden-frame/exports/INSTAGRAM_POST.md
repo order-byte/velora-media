@@ -1,6 +1,6 @@
 # Instagram posting kit: "I hid one frame in this video"
 
-Upload file: `aminur_hidden_frame_INSTAGRAM.mp4` (Instagram master). Cover: `aminur_hidden_frame_cover.jpg`.
+Upload file: `aminur_hidden_frame.mp4` (Instagram master: 14 Mbps H.264 High, BT.709, CFR 30 fps, 320k AAC, no moving grain). Cover: `aminur_hidden_frame_cover.jpg`.
 
 ## Caption (copy as is)
 

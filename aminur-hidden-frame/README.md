@@ -4,7 +4,7 @@ Promo reel for Aminur (video editor), built to the "Creative Brief × Moodboard"
 9:16, 1080×1920, 30 fps, 38.9 s, H.264. Captions burned in, premium filmic grade, dark-stage design system, beat-synced music bed + sound design.
 
 **Final files:** [`exports/`](exports/)
-- `aminur_hidden_frame.mp4`: the reel
+- `aminur_hidden_frame.mp4`: the reel, Instagram master (see `INSTAGRAM_POST.md` for caption, hashtags and upload steps)
 - `aminur_hidden_frame_cover.jpg`: cover frame
 - `aminur_hidden_frame.srt`: captions
 
