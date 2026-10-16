@@ -1,6 +1,6 @@
 """Place a music track against the edit so its bars land on the cut's big moments.
 
-Usage: python music_align.py <beats.json> <duration_s> <out.json> [analysis.json]
+Usage: python music_align.py <beats.json> <duration_s> <out.json> [analysis.json] [max_src_end_run1] [max_src_end_run2]
 The edit uses the music in two runs: 0 -> 14.98 s (stops dead on the record-scratch freeze) and
 15.38 -> end. For each run every bar start in the track is tried as the anchor:
   run 1: the bar lands on the name reveal at 2.9 s (the hook before it plays low-passed),
@@ -16,6 +16,9 @@ beats = np.array(json.load(open(sys.argv[1])), float)
 track_dur = float(sys.argv[2])
 out = sys.argv[3]
 ana = json.load(open(sys.argv[4])) if len(sys.argv) > 4 else {}
+# optional limits on how far into the track each run may reach (e.g. to stay clear of a vocal-like stab)
+max_end = [float(sys.argv[5]) if len(sys.argv) > 5 else track_dur - 0.3,
+           float(sys.argv[6]) if len(sys.argv) > 6 else track_dur - 0.3]
 period = float(np.median(np.diff(beats)))
 phase = ana.get("downbeat_phase_hint", 0)
 bars = beats[phase::4]
@@ -36,11 +39,11 @@ def beat_err(src_t):
     return float(np.min(np.abs(cands - src_t))) if len(cands) else period
 
 
-def place(run, exclude_before=0.0):
+def place(run, limit):
     best = None
     for b in bars:
         src0 = b - (run["anchor"] - run["start"])
-        if src0 < 0 or src0 + (run["end"] - run["start"]) > track_dur - 0.3 or b < exclude_before:
+        if src0 < 0 or src0 + (run["end"] - run["start"]) > limit:
             continue
         score = 0.0
         for h, w in run["hits"].items():
@@ -53,8 +56,8 @@ def place(run, exclude_before=0.0):
     return best
 
 
-r1 = place(RUN1)
-r2 = place(RUN2)
+r1 = place(RUN1, max_end[0])
+r2 = place(RUN2, max_end[1])
 res = {
     "period_s": round(period, 4),
     "bpm": round(60 / period, 2),
@@ -69,5 +72,12 @@ for run, (sc, src0, _) in ((RUN1, r1), (RUN2, r2)):
         if run["start"] <= tl < run["end"]:
             grid.append(round(float(tl), 4))
 res["timeline_beats"] = grid
+bars_tl = []
+for run, (sc, src0, _) in ((RUN1, r1), (RUN2, r2)):
+    for bt in bars:
+        tl = run["start"] + (bt - src0)
+        if run["start"] <= tl < run["end"]:
+            bars_tl.append(round(float(tl), 4))
+res["timeline_bars"] = bars_tl
 json.dump(res, open(out, "w"), indent=1)
 print(json.dumps({k: v for k, v in res.items() if k != "timeline_beats"}))

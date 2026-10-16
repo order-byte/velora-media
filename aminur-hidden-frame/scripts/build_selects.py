@@ -11,9 +11,15 @@ edl = json.load(open(edl_path))
 fps = edl["fps"]
 tmp = os.path.join(out, "clips")
 os.makedirs(tmp, exist_ok=True)
-GRADE = ("eq=contrast=1.07:saturation=0.78:gamma=0.98,"
-         "colorbalance=rs=0.04:gs=0.0:bs=-0.05:rm=0.03:bm=-0.03:rh=0.02:bh=-0.02,"
-         "curves=all='0/0.035 0.5/0.5 1/0.97'")
+# Cinematic grade ("moody low-key", picked by a judge from three looks). The raw is 10-bit HDR HLG
+# (BT.2020), so it is first tone-mapped to SDR BT.709, then graded through a 65^3 LUT, denoised on
+# 16-bit, sharpened (CAS, luma only), dithered back to 8-bit, with a light vignette.
+LUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "grade", "look3_final.cube")
+GRADE = ("zscale=t=linear:npl=203,format=gbrpf32le,zscale=p=bt709,"
+         "tonemap=tonemap=hable:desat=0:peak=4.9,zscale=t=bt709,format=gbrpf32le,"
+         f"lut3d=file='{os.path.abspath(LUT)}':interp=tetrahedral,"
+         "zscale=m=bt709:r=tv,format=yuv420p16le,hqdn3d=1.2:1.6:3:4,cas=strength=0.4:planes=1,"
+         "zscale=d=error_diffusion,format=yuv420p,vignette=angle=0.28:eval=init:dither=1")
 t, timeline, listing = 0.0, [], []
 for i, c in enumerate(edl["clips"]):
     # snap to whole frames so video and audio cut on the same boundary
@@ -26,6 +32,7 @@ for i, c in enumerate(edl["clips"]):
     clip = os.path.join(tmp, f"{i:02d}_{c['id']}.mov")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{a:.4f}", "-t", f"{dur:.4f}", "-i", raw,
                     "-vf", vf, "-af", af, "-r", str(fps), "-c:v", "libx264", "-preset", "medium", "-crf", "14",
+                    "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                     "-c:a", "pcm_s16le", "-ar", "48000", "-ac", "2", clip], check=True)
     listing.append(f"file '{clip}'")
     total = dur + freeze

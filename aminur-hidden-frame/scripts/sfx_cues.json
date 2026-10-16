@@ -860,5 +860,40 @@
    "fadeOut": 0.06,
    "note": "rewinds into the loop"
   }
- ]
+ ],
+ "music": {
+  "_doc": "Music bed: 'Daylight Robbery' by Michael Ramir C. (Mixkit id 1136, Mixkit Stock Music Free License). Placed by music_align.py: run 1 lands the track's 8.03 s lift on the name reveal (2.9 s); run 2 re-enters on a bar at 15.38 s and stays inside the first 29 s of the track (a vocal-like stab starts around 29.5 s).",
+  "file": "1136.mp3",
+  "source_url": "https://mixkit.co/free-stock-music/hip-hop/",
+  "gain": -2.0,
+  "duck": {
+   "threshold": 0.06,
+   "ratio": 3,
+   "attack": 10,
+   "release": 300
+  },
+  "segments": [
+   {
+    "at": 0.0,
+    "src": 5.134,
+    "dur": 14.98,
+    "fadeIn": 0.005,
+    "fadeOut": 0.01,
+    "tapeStop": 0.3,
+    "lowpass": {
+     "from": 320,
+     "to": 19000,
+     "t0": 2.55,
+     "t1": 2.9
+    }
+   },
+   {
+    "at": 15.3833,
+    "src": 4.063,
+    "dur": 23.55,
+    "fadeIn": 0.004,
+    "fadeOut": 0.8
+   }
+  ]
+ }
 }

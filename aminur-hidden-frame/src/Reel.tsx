@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame } from "remotion";
+import { BARS as MUSIC_BARS, BEATS as MUSIC_BEATS } from "./beats";
 import { clipAt } from "./data";
 import {
   Captions,
@@ -745,23 +746,32 @@ const Service: React.FC<BeatProps> = ({ t, f }) => {
 };
 
 // ============ END CARD: "Shuruaat… isi video se." ============
-const EndCard: React.FC<BeatProps> = ({ t }) => (
-  <>
-    <AbsoluteFill style={{ background: C.black }} />
-    <PopWord t={t} t0={37.38} style={{ left: 64, top: 620, ...display(170, C.white) }}>
-      Shuruaat…
-    </PopWord>
-    <PopWord t={t} t0={37.78} from={0.4} style={{ left: 50, top: 820, ...display(170, C.ink) }}>
-      <Label rotate={-3}>isi video se.</Label>
-    </PopWord>
-    <div style={{ position: "absolute", left: 64, top: 1360, ...text(32, C.gray2, 700), letterSpacing: "0.32em", opacity: prog(t, 37.6, 0.25) }}>
-      AMINUR · VIDEO EDITOR
-    </div>
-    <div style={{ position: "absolute", left: 64, top: 1420, ...text(28, C.gray2, 600), letterSpacing: "0.12em", opacity: prog(t, 38.1, 0.25) }}>
-      ↺ watch again · find the frame
-    </div>
-  </>
-);
+// Bookends the hook: same sprockets, same giant ? in the same place, text on the hook's lines,
+// so when Instagram loops the reel the end flows straight back into frame 1.
+const EndCard: React.FC<BeatProps> = ({ t, f }) => {
+  const q = clamp(pop(t, 37.36, 0.2));
+  const flicker = 0.9 + 0.1 * rnd(f + 11);
+  return (
+    <>
+      <AbsoluteFill style={{ background: C.black }} />
+      <div style={{ position: "absolute", left: 600, top: 150, ...display(980, C.yellow), lineHeight: 1, opacity: flicker, transform: `scale(${lerp(0.6, 1 + 0.025 * Math.sin(t * 8), q)}) rotate(8deg)`, transformOrigin: "50% 60%" }}>?</div>
+      <AbsoluteFill style={{ background: "radial-gradient(ellipse 72% 52% at 50% 36%, rgba(0,0,0,0) 38%, rgba(0,0,0,0.82) 100%)" }} />
+      <Sprockets offset={(f * 35) % 140} />
+      <PopWord t={t} t0={37.4} style={{ left: 130, top: 1040, ...display(150, C.white) }}>
+        Shuruaat…
+      </PopWord>
+      <PopWord t={t} t0={37.78} from={0.4} style={{ left: 112, top: 1196, ...display(170, C.ink) }}>
+        <Label rotate={-2}>isi video se.</Label>
+      </PopWord>
+      <div style={{ position: "absolute", left: 130, top: 1452, ...text(40, C.white, 800), letterSpacing: "0.22em", opacity: prog(t, 37.9, 0.2) }}>
+        AMINUR · VIDEO EDITOR
+      </div>
+      <div style={{ position: "absolute", left: 130, top: 1506, ...text(30, C.gray2, 700), letterSpacing: "0.1em", opacity: prog(t, 38.15, 0.2) }}>
+        ↺ watch again · find the frame
+      </div>
+    </>
+  );
+};
 
 // ============ THE HIDDEN FRAME (exactly one frame long) ============
 const Hidden: React.FC<{ f: number }> = ({ f }) => (
@@ -838,6 +848,17 @@ const impactAt = (t: number) => {
   return { x: (rnd(hit * 100 + n) - 0.5) * 30 * k, y: (rnd(hit * 77 + n * 3) - 0.5) * 30 * k, flash: 0.32 * Math.max(0, 1 - (t - hit) / 0.1) };
 };
 
+// Picture breathes with the music: a small zoom kick on every beat, a bigger one on each bar's downbeat.
+// Off during the muffled hook (music hasn't dropped yet) and the record-scratch freeze.
+const beatPulse = (t: number) => {
+  if (t < 2.9 || within(t, 14.98, 15.38)) return 1;
+  const last = (arr: number[]) => arr.filter((b) => b <= t + 1e-4).pop();
+  const b = last(MUSIC_BEATS);
+  const bar = last(MUSIC_BARS);
+  const kick = (at: number | undefined, amt: number) => (at === undefined || t - at > 0.16 ? 0 : amt * (1 - (t - at) / 0.16) ** 2);
+  return 1 + kick(b, 0.007) + kick(bar, 0.014);
+};
+
 export const Reel: React.FC = () => {
   const [handle] = useState(() => delayRender("Loading fonts"));
   useEffect(() => {
@@ -860,7 +881,7 @@ export const Reel: React.FC = () => {
         <AbsoluteFill style={{ transform: `translate(${impactAt(t).x}px, ${impactAt(t).y}px)` }}>
           <EndCard t={t} f={f} />
         </AbsoluteFill>
-        <FrameCounter frame={f} />
+        <FrameCounter frame={f} scramble />
       </AbsoluteFill>
     );
   }
@@ -871,7 +892,7 @@ export const Reel: React.FC = () => {
   const hit = impactAt(t);
   return (
     <AbsoluteFill style={{ background: C.black, overflow: "hidden" }}>
-      <AbsoluteFill style={{ transform: `translate(${hit.x}px, ${hit.y}px) scale(${hit.x || hit.y ? 1.03 : 1})` }}>
+      <AbsoluteFill style={{ transform: `translate(${hit.x}px, ${hit.y}px) scale(${(hit.x || hit.y ? 1.03 : 1) * beatPulse(t)})` }}>
         <Beat t={t} f={f} />
       </AbsoluteFill>
       {hit.flash > 0 ? <AbsoluteFill style={{ background: C.white, opacity: hit.flash }} /> : null}
