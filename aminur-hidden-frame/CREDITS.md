@@ -35,5 +35,5 @@ Free License (commercial use, no attribution required). The files are not redist
 - librosa (beat tracking), Demucs (vocal check) and pyloudnorm for the music analysis and mix balance.
 
 ## Grade
-`grade/look3_final.cube`: the "moody low-key" look, built from the HLG source by a colour agent and refined
-by a judge (`grade/refine_lut.py` with `grade/refine_params.json` shows the final adjustment).
+"Soft cream" aesthetic look, built with FFmpeg filters in `scripts/build_selects.py` (HLG tone-map, hue-selective
+saturation, curves, colour balance, gentle glow, CAS sharpening).

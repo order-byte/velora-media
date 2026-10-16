@@ -1,6 +1,0 @@
-{"tone_x":[0,0.04,0.10,0.20,0.30,0.45,0.60,0.75,0.90,1.0],
- "tone_y":[0,0.042,0.112,0.225,0.333,0.488,0.633,0.772,0.910,1.0],
- "chroma_follow":0.5,
- "skin_h":58,"skin_sigma":14,"skin_Llo":[0.30,0.42],"skin_Lhi":[0.80,0.88],
- "skin_target_C":0.085,"skin_even":0.6,"skin_sat":1.05,
- "skin_hue_target":52,"skin_hue_pull":0.4}

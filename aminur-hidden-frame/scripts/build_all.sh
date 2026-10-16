@@ -6,7 +6,7 @@ set -euo pipefail
 RAW="${1:-raw/raw.mp4}"
 mkdir -p work out public/media sfx music
 
-# 1. cut the selects from the EDL: HLG->SDR tone-map + cinematic LUT grade (grade/look3_final.cube) + cleaned voice
+# 1. cut the selects from the EDL: HLG->SDR tone-map + soft aesthetic grade + cleaned voice
 python3 scripts/build_selects.py "$RAW" scripts/edl.json work
 
 # 2. person matte (Robust Video Matting) -> alpha cut-out layer for text-behind-person shots

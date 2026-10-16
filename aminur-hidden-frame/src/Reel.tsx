@@ -80,7 +80,7 @@ const Sprockets: React.FC<{ offset: number; width?: number }> = ({ offset, width
 const Hook: React.FC<BeatProps> = ({ t, f }) => {
   const push = lerp(1.1, 1.2, easeInOut(prog(t, 0, 1.87)));
   const flicker = 0.88 + 0.14 * rnd(f + 3);
-  const look = `grayscale(0.82) contrast(1.32) brightness(${(0.6 * flicker).toFixed(3)})`;
+  const look = `grayscale(0.82) contrast(1.65) brightness(${(0.5 * flicker).toFixed(3)})`;
   const glitch = within(t, 0.68, 0.76) || t >= 1.74;
   const jx = glitch ? (rnd(f * 3) - 0.5) * 70 : 0;
   const qScale = 1 + 0.025 * Math.sin(t * 8);
@@ -134,7 +134,7 @@ const Find: React.FC<BeatProps> = ({ t, f }) => {
   );
   return (
     <>
-      <Footage frame={f} scale={sc} filter="grayscale(1) contrast(1.18) brightness(0.92)" />
+      <Footage frame={f} scale={sc} filter="grayscale(1) contrast(1.42) brightness(0.86)" />
       {[360, 720].map((x) => (
         <div key={x} style={{ position: "absolute", left: x, top: 0, width: 2, height: H, background: "rgba(255,255,255,0.32)" }} />
       ))}
@@ -172,7 +172,7 @@ const Name: React.FC<BeatProps> = ({ t, f }) => {
           AMINUR
         </div>
       ) : null}
-      <Footage frame={f} person scale={ps} ox={540} oy={1530} ty={BOTTOM_ANCHOR} sticker={9} filter="grayscale(1) contrast(1.12)" />
+      <Footage frame={f} person scale={ps} ox={540} oy={1530} ty={BOTTOM_ANCHOR} sticker={9} filter="grayscale(1) contrast(1.28)" />
       <PopWord t={t} t0={3.92} style={{ left: 96, top: 1300 }}>
         <div style={{ position: "relative" }}>
           <Label bg={C.black} color={C.white} rotate={-4} pad="16px 30px 20px" style={{ ...text(70, C.white, 800) }}>
@@ -383,7 +383,7 @@ const Ads: React.FC<BeatProps> = ({ t, f }) => {
   const sc = frozen ? lerp(1.0, 1.1, easeOut(prog(t, 14.98, 0.4))) : snapIn(t, 14.5);
   return (
     <>
-      <Footage frame={f} scale={sc} filter={frozen ? "grayscale(1) contrast(1.25)" : undefined} />
+      <Footage frame={f} scale={sc} filter={frozen ? "grayscale(1) contrast(1.42)" : undefined} />
       <AdUI t={t} gone={false} />
     </>
   );
@@ -499,7 +499,7 @@ const EveryFrame: React.FC<BeatProps> = ({ t, f }) => {
   return (
     <>
       <AbsoluteFill style={{ background: C.black }} />
-      <Footage frame={src} scale={zoom} ty={jit} filter="grayscale(1) contrast(1.2)" />
+      <Footage frame={src} scale={zoom} ty={jit} filter="grayscale(1) contrast(1.4) brightness(0.95)" />
       {[0, 970].map((x) => (
         <div key={x} style={{ position: "absolute", left: x, top: 0, width: 110, height: H, background: C.black }}>
           {Array.from({ length: 15 }).map((_, i) => (
@@ -630,7 +630,7 @@ const Editor: React.FC<BeatProps> = ({ t, f }) => {
           </div>
         );
       })}
-      <Footage frame={f} person scale={1.1 * snapIn(t, 28.9167)} ox={540} oy={1530} ty={BOTTOM_ANCHOR} sticker={9} filter="grayscale(1) contrast(1.15)" />
+      <Footage frame={f} person scale={1.1 * snapIn(t, 28.9167)} ox={540} oy={1530} ty={BOTTOM_ANCHOR} sticker={9} filter="grayscale(1) contrast(1.32)" />
     </>
   );
 };
@@ -664,7 +664,7 @@ const Twice: React.FC<BeatProps> = ({ t, f }) => {
   const play = within(t, 31.02, 31.53) ? clamp(pop(t, 31.02, 0.16)) : 0;
   return (
     <>
-      <Footage frame={f} scale={base * snapIn(t, at)} filter={step === 3 ? "grayscale(1) contrast(1.15)" : undefined} />
+      <Footage frame={f} scale={base * snapIn(t, at)} filter={step === 3 ? "grayscale(1) contrast(1.35)" : undefined} />
       {play > 0 ? (
         <div style={{ position: "absolute", left: 90, top: 330, width: 230, height: 230, borderRadius: 115, background: C.white, transform: `scale(${play}) rotate(-6deg)`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `8px 8px 0 ${C.black}` }}>
           <svg width="96" height="110" viewBox="0 0 96 110"><path d="M10 6 L90 55 L10 104 Z" fill={C.black} /></svg>
