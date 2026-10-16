@@ -7,6 +7,13 @@ export const C = {
   yellow: "#EEFF00", // Atomic yellow
   blue: "#065BFF", // Electric blue
   ink: "#0B0B0B",
+  // premium stage
+  stage: "#0A0A0B",
+  stage2: "#151517",
+  glass: "rgba(24,24,27,0.78)",
+  glassLight: "rgba(255,255,255,0.08)",
+  line: "rgba(255,255,255,0.16)",
+  muted: "#A1A1A6",
 };
 
 // Europa Grotesk SH Bold role (big hits, numbers). Stand-in: Inter Tight 800/900 (OFL).

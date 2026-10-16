@@ -11,19 +11,21 @@ edl = json.load(open(edl_path))
 fps = edl["fps"]
 tmp = os.path.join(out, "clips")
 os.makedirs(tmp, exist_ok=True)
-# "Soft cream" aesthetic grade. The raw is 10-bit HDR HLG (BT.2020): light denoise on the 10-bit
-# source, tone-map to SDR BT.709 (mobius, soft highlight roll-off), neon-green wall light muted to sage,
-# skin calmed from orange to peach, soft faded curve, warm highlights / slightly cool shadows,
-# a gentle glow (blurred screen layer at 7%) and mild CAS sharpening.
+# Premium natural grade. The raw is 10-bit HDR HLG (BT.2020): light denoise on the 10-bit source,
+# hable tone-map to SDR BT.709 (keeps contrast and holds the highlights on the face), the neon-green
+# wall light pulled down to a deep emerald, skin calmed from orange, the lilac shirt calmed so the
+# blue F1-car mic and the face lead, a gentle S-curve, warm highlights / cool shadows, a soft
+# vignette for depth, then local contrast (large-radius unsharp) + CAS for crisp detail.
 GRADE = ("hqdn3d=1.2:1.6:3:4,"
          "zscale=t=linear:npl=203,format=gbrpf32le,zscale=p=bt709,"
-         "tonemap=tonemap=mobius:param=0.3:desat=0,zscale=t=bt709:m=bt709:r=tv,format=gbrp,"
-         "huesaturation=saturation=-0.72:colors=g+c:strength=15,"
-         "huesaturation=saturation=-0.16:hue=-2:colors=r+y:strength=10,"
-         "curves=all='0/0.05 0.25/0.27 0.5/0.52 0.75/0.76 1/0.93',"
-         "colorbalance=rs=-0.02:bs=0.03:rh=0.03:gh=0.01:bh=-0.03,eq=saturation=0.95,"
-         "split[g0][g1];[g1]gblur=sigma=30[g2];[g0][g2]blend=all_mode=screen:all_opacity=0.07,"
-         "format=yuv420p,cas=strength=0.3:planes=1")
+         "tonemap=tonemap=hable:desat=0:peak=4.9,zscale=t=bt709:m=bt709:r=tv,format=gbrp,"
+         "huesaturation=saturation=-0.45:hue=6:colors=g+c:strength=15,"
+         "huesaturation=saturation=-0.2:hue=-3:colors=r+y:strength=10,"
+         "huesaturation=saturation=-0.32:colors=m:strength=12,"
+         "curves=all='0/0 0.1/0.09 0.5/0.56 0.85/0.9 1/0.97',"
+         "colorbalance=rs=-0.015:bs=0.02:rh=0.025:gh=0.008:bh=-0.02,eq=saturation=1.03:brightness=0.035,"
+         "vignette=angle=0.2:eval=init,"
+         "format=yuv420p,unsharp=13:13:0.45:5:5:0,cas=strength=0.45:planes=1")
 t, timeline, listing = 0.0, [], []
 for i, c in enumerate(edl["clips"]):
     # snap to whole frames so video and audio cut on the same boundary

@@ -35,5 +35,5 @@ Free License (commercial use, no attribution required). The files are not redist
 - librosa (beat tracking), Demucs (vocal check) and pyloudnorm for the music analysis and mix balance.
 
 ## Grade
-"Soft cream" aesthetic look, built with FFmpeg filters in `scripts/build_selects.py` (HLG tone-map, hue-selective
-saturation, curves, colour balance, gentle glow, CAS sharpening).
+Premium filmic look, built with FFmpeg filters in `scripts/build_selects.py` (HLG → BT.709 with a Hable tone-map,
+light denoise, hue-selective saturation, filmic curves, colour balance, vignette, unsharp + CAS sharpening).
