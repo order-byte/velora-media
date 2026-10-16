@@ -21,6 +21,7 @@ import {
   lerp,
   pop,
   prog,
+  rnd,
   text,
   within,
 } from "./lib";
@@ -54,54 +55,70 @@ const loadFonts = () => {
 
 type BeatProps = { t: number; f: number };
 
+// The matte ends where the table hides his body (source y ~1530). Cut-out stickers are pushed down
+// by this much so that hard edge always sits below the bottom of the frame instead of mid-shot.
+const BOTTOM_ANCHOR = 405;
+
 // quick snap-zoom at the start of every clip so jump cuts read as intentional
 const snapIn = (t: number, start: number) => 1 + 0.05 * (1 - easeOut(prog(t, start, 0.13)));
 
-// ============ 00 HOOK: "I hid one frame in this video." (words pop in around the shot) ============
+// ============ 00 HOOK: "I hid one frame in this video." (low-key, redacted, a giant ? behind him) ============
+// Sprocket bands for the film-gate look (hook + frame-by-frame beat).
+const Sprockets: React.FC<{ offset: number; width?: number }> = ({ offset, width = 92 }) => (
+  <>
+    {[0, W - width].map((x) => (
+      <div key={x} style={{ position: "absolute", left: x, top: 0, width, height: H, background: C.black, overflow: "hidden" }}>
+        {Array.from({ length: 16 }).map((_, i) => (
+          <span key={i} style={{ position: "absolute", left: width / 2 - 19, top: i * 140 - 140 + offset, width: 38, height: 56, borderRadius: 8, background: "#2A2A2A" }} />
+        ))}
+      </div>
+    ))}
+  </>
+);
+
 const Hook: React.FC<BeatProps> = ({ t, f }) => {
-  const cardX = 150;
-  const cardY = 500;
-  const cardW = 780;
-  const cardH = 760;
-  const s = 0.98;
-  const punch = t >= 1.24 ? lerp(1.07, 1, easeOut(prog(t, 1.24, 0.22))) : 1;
-  const sel = prog(t, 0.68, 0.14);
-  const cur = easeInOut(prog(t, 0.3, 0.36));
+  const push = lerp(1.1, 1.2, easeInOut(prog(t, 0, 1.87)));
+  const flicker = 0.88 + 0.14 * rnd(f + 3);
+  const look = `grayscale(0.82) contrast(1.32) brightness(${(0.6 * flicker).toFixed(3)})`;
+  const glitch = within(t, 0.68, 0.76) || t >= 1.74;
+  const jx = glitch ? (rnd(f * 3) - 0.5) * 70 : 0;
+  const qScale = 1 + 0.025 * Math.sin(t * 8);
+  const redact = within(t, 0.4, 0.68);
+  const typed = "IN THIS VIDEO.".slice(0, Math.max(0, Math.floor((t - 0.96) / 0.028)));
   return (
     <>
-      <Paper />
-      <div
-        style={{
-          position: "absolute",
-          left: cardX,
-          top: cardY,
-          width: cardW,
-          height: cardH,
-          overflow: "hidden",
-          border: `12px solid ${C.white}`,
-          boxShadow: `16px 16px 0 ${C.black}`,
-          transform: `rotate(-2deg) scale(${punch})`,
-        }}
-      >
-        <div style={{ position: "absolute", left: -(540 * s - cardW / 2), top: -(560 * s - cardH / 2), width: W, height: H, transform: `scale(${s})`, transformOrigin: "0 0" }}>
-          <Footage frame={f} />
-        </div>
-      </div>
-      {t >= 0.68 ? <Selection x={cardX - 18} y={cardY - 18} w={cardW + 36} h={cardH + 36} tag="1 FRAME · HIDDEN" p={sel} /> : null}
-      <div style={{ position: "absolute", left: 64, top: 292, display: "flex", gap: 36, ...display(165, C.black) }}>
+      <AbsoluteFill style={{ background: C.black }} />
+      <AbsoluteFill style={{ transform: `translateX(${jx}px)` }}>
+        <Footage frame={f} scale={push} filter={look} />
+        <div style={{ position: "absolute", left: 600, top: 150, ...display(980, C.yellow), lineHeight: 1, transform: `scale(${qScale}) rotate(8deg)`, transformOrigin: "50% 60%" }}>?</div>
+        <Footage frame={f} scale={push} person filter={look} />
+      </AbsoluteFill>
+      <AbsoluteFill style={{ background: "radial-gradient(ellipse 72% 52% at 50% 36%, rgba(0,0,0,0) 38%, rgba(0,0,0,0.82) 100%)" }} />
+      <Sprockets offset={(f * 35) % 140} />
+      {glitch
+        ? [0, 1, 2].map((i) => (
+            <div key={i} style={{ position: "absolute", left: 0, top: 240 + rnd(f * 5 + i) * 1300, width: W, height: 4 + rnd(f + i * 9) * 16, background: i === 1 ? C.yellow : "rgba(255,255,255,0.7)" }} />
+          ))
+        : null}
+      <div style={{ position: "absolute", left: 130, top: 1040, display: "flex", gap: 30, ...display(150, C.white) }}>
         <PopInline t={t} t0={-0.2}>I</PopInline>
         <PopInline t={t} t0={0.14}>HID</PopInline>
         <PopInline t={t} t0={0.4}>ONE</PopInline>
       </div>
-      <PopWord t={t} t0={0.68} from={0.4} style={{ left: 56, top: 1300, ...display(255, C.ink) }}>
-        <Label rotate={-2}>FRAME</Label>
-      </PopWord>
-      <PopWord t={t} t0={1.0} style={{ left: 560, top: 452, transform: "rotate(4deg)" }}>
-        <Label bg={C.black} color={C.white} rotate={0} pad="10px 18px 12px" style={{ ...text(40, C.white, 800), letterSpacing: "0.02em" }}>
-          IN THIS VIDEO.
-        </Label>
-      </PopWord>
-      <Cursor x={lerp(980, 820, cur)} y={lerp(1560, 1180, cur)} pressed={within(t, 0.66, 0.76)} />
+      {redact ? (
+        <div style={{ position: "absolute", left: 120, top: 1196, width: 760, height: 214, background: C.yellow, opacity: rnd(f) < 0.15 ? 0.55 : 1, display: "flex", alignItems: "center", justifyContent: "center", transform: "rotate(-2deg)" }}>
+          <span style={{ ...text(46, C.ink, 800), letterSpacing: "0.5em" }}>REDACTED</span>
+        </div>
+      ) : null}
+      {t >= 0.68 ? (
+        <div style={{ position: "absolute", left: 112, top: 1190, ...display(250, C.ink), transform: `translateX(${glitch ? (rnd(f + 1) - 0.5) * 40 : 0}px) scale(${lerp(1.18, 1, easeOut(prog(t, 0.68, 0.12)))})` }}>
+          <Label rotate={-2}>FRAME</Label>
+        </div>
+      ) : null}
+      <div style={{ position: "absolute", left: 130, top: 1452, ...text(56, C.white, 800), letterSpacing: "0.14em" }}>
+        {typed}
+        {t >= 0.96 && Math.floor(t * 6) % 2 === 0 ? <span style={{ color: C.yellow }}>▍</span> : null}
+      </div>
     </>
   );
 };
@@ -139,22 +156,22 @@ const Find: React.FC<BeatProps> = ({ t, f }) => {
 // ============ 02 NAME: "I am Aminur, a video editor." (name behind a B/W cut-out on yellow) ============
 const Name: React.FC<BeatProps> = ({ t, f }) => {
   const st = 2.9;
-  const ps = 0.82 * snapIn(t, st);
+  const ps = 1.04 * snapIn(t, st);
   const nameP = pop(t, 3.22, 0.18);
   const cur = easeInOut(prog(t, 3.95, 0.3));
   const clicked = t >= 4.3;
   return (
     <>
       <Paper tint={C.yellow} />
-      <PopWord t={t} t0={2.9} style={{ left: 70, top: 296, ...text(56, C.ink, 800) }}>
+      <PopWord t={t} t0={2.9} style={{ left: 70, top: 330, ...text(60, C.ink, 800) }}>
         I AM
       </PopWord>
       {t >= 3.22 ? (
-        <div style={{ position: "absolute", left: 0, width: W, top: 352, textAlign: "center", ...display(262, C.ink), transform: `scale(${lerp(1.35, 1, clamp(nameP))})`, opacity: clamp(prog(t, 3.22, 0.04)) }}>
+        <div style={{ position: "absolute", left: 0, width: W, top: 410, textAlign: "center", ...display(262, C.ink), transform: `scale(${lerp(1.35, 1, clamp(nameP))})`, opacity: clamp(prog(t, 3.22, 0.04)) }}>
           AMINUR
         </div>
       ) : null}
-      <Footage frame={f} person scale={ps} ox={540} oy={1530} sticker={9} filter="grayscale(1) contrast(1.12)" />
+      <Footage frame={f} person scale={ps} ox={540} oy={1530} ty={BOTTOM_ANCHOR} sticker={9} filter="grayscale(1) contrast(1.12)" />
       <PopWord t={t} t0={3.92} style={{ left: 96, top: 1300 }}>
         <div style={{ position: "relative" }}>
           <Label bg={C.black} color={C.white} rotate={-4} pad="16px 30px 20px" style={{ ...text(70, C.white, 800) }}>
@@ -415,16 +432,16 @@ const Delivered: React.FC<BeatProps> = ({ t, f }) => {
           </div>
         );
       })}
-      <Footage frame={f} person scale={0.92 * snapIn(t, 17.8167)} ox={540} oy={1530} sticker={9} />
+      <Footage frame={f} person scale={1.0 * snapIn(t, 17.8167)} ox={540} oy={1530} ty={BOTTOM_ANCHOR} sticker={9} />
       {t >= 18.28 ? (
-        <div style={{ position: "absolute", left: 50, top: 1110, transform: `scale(${lerp(1.25, 1, clamp(pop(t, 18.28, 0.16)))})`, transformOrigin: "left center" }}>
+        <div style={{ position: "absolute", left: 50, top: 290, transform: `scale(${lerp(1.25, 1, clamp(pop(t, 18.28, 0.16)))})`, transformOrigin: "left center" }}>
           <Label rotate={-3} style={{ ...display(250, C.ink), fontVariantNumeric: "tabular-nums" }}>
             {n.toLocaleString("en-US")}
             {plus ? "+" : ""}
           </Label>
         </div>
       ) : null}
-      <PopWord t={t} t0={18.92} style={{ left: 90, top: 1370 }}>
+      <PopWord t={t} t0={18.92} style={{ left: 80, top: 560 }}>
         <Label bg={C.black} color={C.white} rotate={-3} pad="10px 22px 14px" style={{ ...text(66, C.white, 800) }}>VIDEOS DELIVERED</Label>
       </PopWord>
     </>
@@ -612,7 +629,7 @@ const Editor: React.FC<BeatProps> = ({ t, f }) => {
           </div>
         );
       })}
-      <Footage frame={f} person scale={snapIn(t, 28.9167)} ox={540} oy={1530} sticker={9} filter="grayscale(1) contrast(1.15)" />
+      <Footage frame={f} person scale={1.1 * snapIn(t, 28.9167)} ox={540} oy={1530} ty={BOTTOM_ANCHOR} sticker={9} filter="grayscale(1) contrast(1.15)" />
     </>
   );
 };
@@ -722,7 +739,7 @@ const Service: React.FC<BeatProps> = ({ t, f }) => {
           </PopWord>
         </>
       )}
-      <Footage frame={f} person scale={0.56} ox={540} oy={1530} tx={lerp(760, 300, slide)} ty={0} sticker={9} />
+      <Footage frame={f} person scale={0.7} ox={540} oy={1530} tx={lerp(760, 270, slide)} ty={BOTTOM_ANCHOR} sticker={9} />
     </>
   );
 };
@@ -783,7 +800,7 @@ const captionOpts = (id: string, t: number) => {
       return { hide: within(t, 32.7, 33.25) };
     case "service":
     case "bio":
-      return { y: 1440, boxed: true };
+      return { y: 1170, boxed: true, left: true, width: 560 };
     default:
       return {};
   }
@@ -811,6 +828,16 @@ const BEATS: Record<string, React.FC<BeatProps>> = {
   bio: Service,
 };
 
+// Big hits: the whole frame shakes and flashes for a beat, in sync with the impact sounds.
+const IMPACTS = [0.68, 3.22, 8.78, 9.33, 10.06, 18.86, 21.8, 29.46, 32.81, 37.8];
+const impactAt = (t: number) => {
+  const hit = IMPACTS.find((h) => t >= h && t < h + 0.2);
+  if (hit === undefined) return { x: 0, y: 0, flash: 0 };
+  const k = 1 - (t - hit) / 0.2;
+  const n = Math.round((t - hit) * FPS);
+  return { x: (rnd(hit * 100 + n) - 0.5) * 30 * k, y: (rnd(hit * 77 + n * 3) - 0.5) * 30 * k, flash: 0.32 * Math.max(0, 1 - (t - hit) / 0.1) };
+};
+
 export const Reel: React.FC = () => {
   const [handle] = useState(() => delayRender("Loading fonts"));
   useEffect(() => {
@@ -830,7 +857,9 @@ export const Reel: React.FC = () => {
   if (f >= SELECTS_FRAMES) {
     return (
       <AbsoluteFill style={{ background: C.black, overflow: "hidden" }}>
-        <EndCard t={t} f={f} />
+        <AbsoluteFill style={{ transform: `translate(${impactAt(t).x}px, ${impactAt(t).y}px)` }}>
+          <EndCard t={t} f={f} />
+        </AbsoluteFill>
         <FrameCounter frame={f} />
       </AbsoluteFill>
     );
@@ -839,11 +868,15 @@ export const Reel: React.FC = () => {
   const Beat = BEATS[clip.id];
   const rewinding = clip.id === "twice" && within(t, 32.7, 33.25);
   const counterFrame = rewinding ? Math.round(lerp(981, 0, easeIn(prog(t, 32.7, 0.55)))) : f;
+  const hit = impactAt(t);
   return (
     <AbsoluteFill style={{ background: C.black, overflow: "hidden" }}>
-      <Beat t={t} f={f} />
+      <AbsoluteFill style={{ transform: `translate(${hit.x}px, ${hit.y}px) scale(${hit.x || hit.y ? 1.03 : 1})` }}>
+        <Beat t={t} f={f} />
+      </AbsoluteFill>
+      {hit.flash > 0 ? <AbsoluteFill style={{ background: C.white, opacity: hit.flash }} /> : null}
       <Captions t={t} opts={captionOpts(clip.id, t)} />
-      {clip.id !== "everyframe" ? <FrameCounter frame={counterFrame} /> : null}
+      {clip.id !== "everyframe" ? <FrameCounter frame={counterFrame} scramble={clip.id === "hook"} /> : null}
     </AbsoluteFill>
   );
 };

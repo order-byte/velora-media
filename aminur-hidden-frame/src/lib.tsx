@@ -15,6 +15,12 @@ export const within = (t: number, a: number, b: number) => t >= a && t < b;
 // 0 -> 1 pop with overshoot, starting at t0
 export const pop = (t: number, t0: number, d = 0.16) => (t < t0 ? 0 : backOut(prog(t, t0, d)));
 
+// deterministic pseudo-random in [0,1) (renders must be repeatable frame by frame)
+export const rnd = (n: number) => {
+  const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+};
+
 // ---------- footage ----------
 // Face sits around (540, 640) in the source frame; zooms pivot there.
 export const FACE = { x: 540, y: 640 };
@@ -172,7 +178,7 @@ export const Label: React.FC<{
 );
 
 // ---------- captions ----------
-type CaptionOpts = { y?: number; hide?: boolean; accent?: string | null; boxed?: boolean };
+type CaptionOpts = { y?: number; hide?: boolean; accent?: string | null; boxed?: boolean; left?: boolean; width?: number };
 
 export const Captions: React.FC<{ t: number; opts?: CaptionOpts }> = ({ t, opts }) => {
   if (opts?.hide) return null;
@@ -184,12 +190,12 @@ export const Captions: React.FC<{ t: number; opts?: CaptionOpts }> = ({ t, opts 
     <div
       style={{
         position: "absolute",
-        left: 70,
-        right: 70,
+        left: opts?.left ? 64 : 70,
+        ...(opts?.width ? { width: opts.width } : { right: 70 }),
         top: y,
         display: "flex",
         flexWrap: "wrap",
-        justifyContent: "center",
+        justifyContent: opts?.left ? "flex-start" : "center",
         alignItems: "center",
         columnGap: 20,
         rowGap: 6,
@@ -230,7 +236,7 @@ export const Captions: React.FC<{ t: number; opts?: CaptionOpts }> = ({ t, opts 
 };
 
 // ---------- frame counter (runs the whole reel; part of the hunt) ----------
-export const FrameCounter: React.FC<{ frame: number; dark?: boolean }> = ({ frame, dark }) => (
+export const FrameCounter: React.FC<{ frame: number; dark?: boolean; scramble?: boolean }> = ({ frame, dark, scramble }) => (
   <div
     style={{
       position: "absolute",
@@ -248,7 +254,7 @@ export const FrameCounter: React.FC<{ frame: number; dark?: boolean }> = ({ fram
     }}
   >
     <span style={{ width: 12, height: 12, borderRadius: 6, background: dark ? C.black : C.white, display: "inline-block" }} />
-    FRAME {String(frame + 1).padStart(4, "0")}
+    FRAME {scramble ? [0, 1, 2, 3].map((i) => (rnd(frame * 7 + i) < 0.35 ? "?" : String(Math.floor(rnd(frame * 13 + i * 5) * 10)))).join("") : String(frame + 1).padStart(4, "0")}
     <span style={{ opacity: 0.55 }}>/ {TOTAL_FRAMES}</span>
   </div>
 );
