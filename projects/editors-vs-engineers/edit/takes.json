@@ -1,0 +1,25 @@
+{
+  "_note": "start_at / end_at override a cut by hand where speech runs together. Takes used from the raw shoot, in play order. 'win' is a window in the original iPhone file (seconds) and 'say' is exactly what is spoken inside it; 'keep' picks which of those words (0-based, inclusive) make the cut. 'gap' is the silence before the piece on the new timeline.",
+  "pieces": [
+    {"id": "p01", "win": [7.0, 10.5],    "say": "editors are making more than engineers", "keep": [0, 5], "gap": 0.00},
+    {"id": "p02", "win": [16.5, 19.6],   "say": "editors editors are hell", "keep": [1, 3], "gap": 0.16},
+    {"id": "p03", "win": [24.5, 28.0],   "say": "a lot of editors making more than a doctor", "keep": [0, 8], "gap": 0.12},
+    {"id": "p04", "win": [33.5, 37.0],   "say": "so editing is a", "keep": [0, 0], "gap": 4.30, "end_at": 34.80, "_why": "drawn-out Sooo ends at the energy dip"},
+    {"id": "p05", "win": [36.9, 39.7],   "say": "editing is itself", "keep": [0, 2], "gap": 0.20},
+    {"id": "p06", "win": [40.8, 42.5],   "say": "is going", "keep": [0, 1], "gap": 0.06},
+    {"id": "p07", "win": [42.7, 44.9],   "say": "get bigger and bigger", "keep": [0, 3], "gap": 0.06},
+    {"id": "p08", "win": [47.3, 49.3],   "say": "so you can trust", "keep": [0, 3], "gap": 0.22},
+    {"id": "p09", "win": [57.8, 62.3],   "say": "now that you chose the right path you just have to move forward go with it", "keep": [1, 15], "gap": 0.06},
+    {"id": "p10", "win": [75.9, 78.7],   "say": "first you'll start with freelancing or", "keep": [0, 4], "gap": 0.22},
+    {"id": "p11", "win": [84.2, 86.3],   "say": "or contracts", "keep": [0, 0], "gap": 0.06},
+    {"id": "p12", "win": [88.1, 91.9],   "say": "contracts then soon you can turn it into an agency", "keep": [0, 9], "gap": 0.04},
+    {"id": "p13", "win": [105.6, 108.6], "say": "and once you", "keep": [0, 2], "gap": 0.22},
+    {"id": "p14", "win": [118.5, 121.28], "say": "you turn yourself into a business just remember that", "keep": [1, 8], "gap": 0.04, "end_at": 121.07, "_why": "runs straight into off-script 'I mean...'"},
+    {"id": "p15", "win": [125.9, 130.0], "say": "we feel that we can do a lot of things alone", "keep": [0, 10], "gap": 0.18},
+    {"id": "p16", "win": [143.3, 147.0], "say": "we can do a bunch of things", "keep": [0, 6], "gap": 0.14},
+    {"id": "p17", "win": [150.0, 152.1], "say": "but this is", "keep": [0, 0], "gap": 0.14},
+    {"id": "p18", "win": [175.6, 182.7], "say": "that is not the case you always need a team around you and you need a team of good players who are ready to do things", "keep": [0, 25], "gap": 0.10},
+    {"id": "p19", "win": [196.9, 199.5], "say": "the way they should be done", "keep": [0, 5], "gap": 0.12},
+    {"id": "p20", "win": [189.7, 192.7], "say": "they should be done and they're motivated enough", "keep": [4, 7], "gap": 0.10}
+  ]
+}
