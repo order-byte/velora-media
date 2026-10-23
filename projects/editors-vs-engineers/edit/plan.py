@@ -29,7 +29,7 @@ def build(tl):
     hell = W("p02", "hell")
     s2 = hell - 0.13
     s3 = piece_end("p03") + 0.50
-    s4 = s3 + 3.79                                  # the music break keeps reel 1's exact length
+    s4 = W("p04", "so") - 0.10                      # back on camera as "So" starts (break ~reel 1's length)
     s5 = W("p05", "editing") + 0.52
     s6 = W("p08", "so") - 0.03
     s7 = W("p10", "you") + 0.18
@@ -74,45 +74,84 @@ def build(tl):
             if v1 - v0 > 0.3 and n1 - n0 > 0.3:
                 s["anchors"].insert(1, (v0 + 0.17, n0 + 0.17))
 
-    def w(piece, word, nth=0, style="reg", text=None):
-        return dict(text=text or word, t=W(piece, word, nth), style=style)
-
-    cards = [
-        dict(start=s4, end=s5, lines=[[dict(text="SO", t=s4 + 0.06, style="so")]]),
-        dict(start=s7, end=W("p11", "go"),
-             lines=[[w("p10", "you"), w("p10", "just")],
-                    [w("p10", "have"), w("p10", "to"), w("p10", "move")],
-                    [w("p10", "forward", style="key")]]),
-        dict(start=W("p11", "go"), end=s8,
-             lines=[[w("p11", "go", text="Go", style="big"), w("p11", "with", style="big"), w("p11", "it", style="big")]]),
-        dict(start=s9, end=W("p17", "into"),
-             lines=[[w("p16", "and", text="And"), w("p16", "once"), w("p16", "you")],
-                    [w("p17", "turn"), w("p17", "yourself")]]),
-        dict(start=W("p17", "into"), end=W("p18", "just"),
-             lines=[[w("p17", "into"), w("p17", "a")], [w("p17", "business", text="BUSINESS", style="key")]]),
-        dict(start=W("p18", "just"), end=s10,
-             lines=[[w("p18", "just")], [w("p18", "remember"), w("p18", "that")]]),
-        dict(start=s11, end=W("p21", "but"),
-             lines=[[w("p20", "we", text="We"), w("p20", "can"), w("p20", "do"), w("p20", "a")],
-                    [w("p20", "bunch"), w("p20", "of"), w("p20", "things")]]),
-        dict(start=W("p21", "but"), end=s12,
-             lines=[[w("p21", "but", style="big"), w("p21", "this", style="big")]]),
-        dict(start=s13, end=W("p26", "who"),
-             lines=[[w("p24", "and"), w("p24", "you"), w("p24", "need"), w("p24", "a")],
-                    [w("p24", "team", text="TEAM", style="key")],
-                    [w("p25", "of"), w("p25", "good"), w("p25", "players")]]),
-        dict(start=W("p26", "who"), end=W("p27", "the"),
-             lines=[[w("p26", "who"), w("p26", "are"), w("p26", "ready")],
-                    [w("p26", "to"), w("p26", "do"), w("p26", "things")]]),
-        dict(start=W("p27", "the"), end=W("p28", "and"),
-             lines=[[w("p27", "the"), w("p27", "way"), w("p27", "they")],
-                    [w("p27", "should"), w("p27", "be"), w("p27", "done")]]),
-        dict(start=W("p28", "and"), end=end,
-             lines=[[w("p28", "and"), w("p28", "they"), w("p28", "are")],
-                    [w("p28", "motivated", text="MOTIVATED", style="key")],
-                    [w("p28", "enough")]]),
-    ]
+    cards = caption_cards(spans, seg)
     return seg, cards, end
+
+
+KEYWORDS = {"forward": "forward", "business": "BUSINESS", "team": "TEAM", "motivated": "MOTIVATED"}
+
+
+def _lines(words, max_words=4, max_chars=20):
+    """Break a run of ordinary words into balanced short lines."""
+    n = len(words)
+    if not n:
+        return []
+    k = 1
+    while True:
+        size = -(-n // k)
+        chunks = [words[i:i + size] for i in range(0, n, size)]
+        if all(len(c) <= max_words and sum(len(w["text"]) for w in c) + len(c) - 1 <= max_chars for c in chunks):
+            return chunks
+        k += 1
+
+
+def caption_cards(spans, seg):
+    """Every spoken word, the way pro reels caption: phrases split at real pauses, each phrase
+    cut evenly into cards of a few words on balanced lines, keywords big and yellow on their own
+    line inside the card. The torn-paper segment is left alone (its HELL / EDITORS / DOCTORS
+    graphics are the captions there); over the opening bar chart captions sit at the top."""
+    paper = next(s["t"] for s in seg if s["kind"] == "paper")
+    bars = next(s["t"] for s in seg if s["kind"] == "bars")
+    words = [dict(w) for sp in spans for w in sp["words"] if not (paper[0] - 0.05 <= w["t"] < paper[1])]
+    phrases, cur = [], []
+    for i, w in enumerate(words):
+        if cur and w["t"] - cur[-1]["end"] > 0.25:
+            phrases.append(cur)
+            cur = []
+        cur.append(w)
+    phrases.append(cur)
+
+    cards = []
+    for ph in phrases:
+        toks = []
+        for w in ph:
+            word = w["w"].lower()
+            if word in KEYWORDS:
+                toks.append(dict(text=KEYWORDS[word], t=w["t"], end=w["end"], style="key"))
+            elif word == "so" and len(ph) == 1:
+                toks.append(dict(text="SO", t=w["t"], end=w["end"], style="so"))
+            else:
+                toks.append(dict(text=word, t=w["t"], end=w["end"], style="reg"))
+        normal = [t for t in toks if t["style"] == "reg"]
+        has_key = any(t["style"] == "key" for t in toks)
+        n_cards = max(1, -(-len(normal) // (7 if has_key else 6)))
+        per = -(-len(normal) // n_cards)
+        # walk the phrase, starting a new card every `per` ordinary words (keywords ride along)
+        groups, g, count = [], [], 0
+        for t in toks:
+            if t["style"] == "reg" and count == per:
+                groups.append(g)
+                g, count = [], 0
+            g.append(t)
+            count += t["style"] == "reg"
+        groups.append(g)
+        for g in groups:
+            lines, run = [], []
+            for t in g:
+                if t["style"] == "key":
+                    lines += _lines(run)
+                    run = []
+                    lines.append([t])
+                else:
+                    run.append(t)
+            lines += _lines(run)
+            cards.append(dict(start=g[0]["t"] - 0.1, end=None, last=max(t["end"] for t in g), lines=lines,
+                              y=0.17 if g[0]["t"] < bars[1] else 0.68))
+    for c, nxt in zip(cards, cards[1:] + [None]):
+        hold = c["last"] + 0.5
+        c["end"] = min(nxt["start"] - 0.02, hold if nxt["start"] - c["last"] > 0.8 else nxt["start"]) if nxt else hold
+        c["end"] = max(c["end"], c["last"] + 0.1)
+    return cards
 
 
 def v1_time(seg, t):

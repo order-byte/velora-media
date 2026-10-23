@@ -172,7 +172,7 @@ class Compositor:
         if self.holdout is not None:
             a = np.maximum(a, self.holdout)
         # matte edge: tiny choke + soften so hair doesn't fringe
-        a = cv2.GaussianBlur(np.clip((a - 0.04) / 0.92, 0, 1), (0, 0), 0.8)
+        a = cv2.GaussianBlur(np.clip((a - 0.03) / 0.95, 0, 1), (0, 0), 0.5)
         f = decontaminate(f, a)
         skin = skin_mask(f, a)
         if hm is not None:
@@ -183,7 +183,7 @@ class Compositor:
         raw = f.copy()
         f = despill(f, a)
         # iPhone footage is crisper than the room plate's lens: take the edge off so they match
-        f = cv2.GaussianBlur(f, (0, 0), 0.7)
+        f = cv2.GaussianBlur(f, (0, 0), 0.5)
         # the phone footage is far more saturated than the reference: calm it before the look
         l = (f @ np.array([0.2126, 0.7152, 0.0722], np.float32))[..., None]
         f = (l + (f - l) * self.sat) * self.exposure
@@ -205,7 +205,7 @@ class Compositor:
         g, a = self.speaker(frame, alpha, hands)
         # light wrap: the room's blurred light bleeds over the outer edge of the speaker
         rim = np.clip(a * (1 - cv2.GaussianBlur(a, (0, 0), 6)) * 3, 0, 1)[..., None]
-        g = g * (1 - 0.35 * rim) + self.plate_soft * 0.35 * rim
+        g = g * (1 - 0.18 * rim) + self.plate_soft * 0.18 * rim
         a3 = a[..., None]
         out = g * a3 + self.plate * (1 - a3)
         # one shared grain pass so plate and speaker match

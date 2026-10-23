@@ -23,8 +23,9 @@ STYLES = {
     "key": ("PlayfairDisplay-Italic-900.ttf", 176, "yellow"),
     "so": ("PlayfairDisplay-Italic-700.ttf", 190, "white"),
 }
-REVEAL = 0.16      # seconds for a word to settle
-CENTER_Y = 0.715   # caption block centre, fraction of frame height (below the chin)
+REVEAL = 0.14      # seconds for a word to settle
+LEAD = 0.07        # a word starts appearing this much before it is spoken
+CENTER_Y = 0.68    # caption block centre: below the chin, clear of Instagram's bottom UI
 
 
 def _font(name, size):
@@ -102,7 +103,7 @@ class CaptionTrack:
             line_boxes.append((line, sprites, size, space, width, asc))
         heights = [b[2] * (0.78 if b[2] > 140 else 0.90) for b in line_boxes]
         total = sum(heights)
-        y = CENTER_Y * H - total / 2
+        y = card.get("y", CENTER_Y) * H - total / 2
         for (line, sprites, size, space, width, asc), lh in zip(line_boxes, heights):
             x = W / 2 - width / 2
             baseline = y + lh * 0.86
@@ -119,7 +120,7 @@ class CaptionTrack:
                 continue
             fade_out = np.clip((card["end"] - t) / 0.08, 0, 1)
             for w, (rgba, pad, adv, size, _asc), x, y in placed:
-                k = (t - w["t"]) / REVEAL
+                k = (t - (w["t"] - LEAD)) / REVEAL
                 if k <= 0:
                     continue
                 k = min(k, 1.0)

@@ -102,7 +102,7 @@ class Renderer:
         self.monitor = self._monitor_quads(tr["monitor"])
         self.bars = BarChart(t_out=self.seg[0]["t"][1] - 0.62)
         self.user_ref = cfg["user_head"]          # median head top / centre of our speaker in reel framing
-        self.joins = [sp["out"][0] for sp in self.tl.spans[1:]]
+        self.joins = [sp["out"][1] for sp in self.tl.spans[:-1]]   # the cut happens as a take ends
         self.paths = {}
 
     # ---------- helpers ----------

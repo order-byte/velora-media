@@ -22,7 +22,12 @@ class Timeline:
         self.words = [w for sp in self.spans for w in sp["words"]]
 
     def span_at(self, t):
-        return max(bisect.bisect_right(self.starts, t) - 1, 0)
+        k = max(bisect.bisect_right(self.starts, t) - 1, 0)
+        # in the pause after a take, cut to the next take's quiet lead-in: the outgoing take
+        # often carries on with a restart or an off-script word on camera
+        if k + 1 < len(self.spans) and t >= self.spans[k]["out"][1]:
+            k += 1
+        return k
 
     def src_time(self, t):
         sp = self.spans[self.span_at(t)]
