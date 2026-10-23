@@ -68,6 +68,11 @@ def build(tl):
     for s in seg:
         if "v1" in s and "anchors" not in s:
             s["anchors"] = [(s["v1"][0], s["t"][0]), (s["v1"][1], s["t"][1])]
+        if s["kind"] == "broll":
+            # reel 1's own entry transition (flashes, whips) plays at its original speed
+            (v0, n0), (v1, n1) = s["anchors"][0], s["anchors"][1]
+            if v1 - v0 > 0.3 and n1 - n0 > 0.3:
+                s["anchors"].insert(1, (v0 + 0.17, n0 + 0.17))
 
     def w(piece, word, nth=0, style="reg", text=None):
         return dict(text=text or word, t=W(piece, word, nth), style=style)
