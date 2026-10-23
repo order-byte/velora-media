@@ -94,11 +94,35 @@ def shirt_mask(raw, a, skin, holdout=None):
     rows = np.linspace(0, 1, H, dtype=np.float32)[:, None]
     below_chin = np.clip((rows - 0.585) / 0.02, 0, 1)
     strong_skin = np.clip((cr - 150) / 8, 0, 1) * np.clip((104 - cb) / 8, 0, 1)
-    m = np.clip((y - 90) / 20, 0, 1) * (1 - strong_skin) * below_chin * np.clip(a * 1.5 - 0.4, 0, 1)
+    # hands on the purple-fill side have shirt-like chroma but are darker than the fabric
+    shade_skin = np.clip(skin * 2, 0, 1) * np.clip((172 - y) / 12, 0, 1)
+    not_skin = (1 - strong_skin) * (1 - shade_skin)
+    m = np.clip((y - 90) / 20, 0, 1) * not_skin * below_chin * np.clip(a * 1.5 - 0.4, 0, 1)
     if holdout is not None:
         m *= 1 - np.clip(holdout * 2, 0, 1)
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((7, 7), np.uint8))
     return cv2.GaussianBlur(m, (0, 0), 4)
+
+
+FINGERS = [(0, 1, 2, 3, 4), (5, 6, 7, 8), (9, 10, 11, 12), (13, 14, 15, 16), (17, 18, 19, 20)]
+PALM = (0, 1, 5, 9, 13, 17)
+
+
+def hand_mask(hands, w=W, h=H):
+    """0..1 mask from MediaPipe hand landmarks (normalised): palm polygon plus fingers."""
+    m = np.zeros((h, w), np.float32)
+    for hand in hands or []:
+        pts = np.array(hand, np.float32) * [w, h]
+        size = np.linalg.norm(pts[0] - pts[9])
+        cv2.fillConvexPoly(m, cv2.convexHull(pts[list(PALM)].astype(np.int32)), 1.0)
+        th = max(int(size * 0.34), 6)
+        for chain in FINGERS:
+            cv2.polylines(m, [pts[list(chain)].astype(np.int32)], False, 1.0, th)
+        for i in (4, 8, 12, 16, 20):
+            cv2.circle(m, tuple(pts[i].astype(int)), th // 2 + 2, 1.0, -1)
+    if m.any():
+        m = cv2.GaussianBlur(cv2.dilate(m, np.ones((9, 9), np.uint8)), (0, 0), 5)
+    return m
 
 
 def skin_match(g, w):
@@ -139,17 +163,23 @@ class Compositor:
         self.sat, self.exposure, self.warm = sat, exposure, warm
         self.rng = np.random.default_rng(seed)
 
-    def speaker(self, frame, alpha):
-        """The graded, cut-out speaker in the reel framing: (rgb float 0..1, alpha float 0..1)."""
+    def speaker(self, frame, alpha, hands=None):
+        """The graded, cut-out speaker in the reel framing: (rgb float 0..1, alpha float 0..1).
+        hands: optional 0..1 mask of the hands (same framing as `frame`)."""
         f = zoom(frame, self.z, self.cx, self.cy).astype(np.float32) / 255
         a = zoom(alpha, self.z, self.cx, self.cy, cv2.INTER_LINEAR).astype(np.float32) / 255
+        hm = None if hands is None else zoom(hands, self.z, self.cx, self.cy, cv2.INTER_LINEAR) * np.clip(a * 1.5 - 0.3, 0, 1)
         if self.holdout is not None:
             a = np.maximum(a, self.holdout)
         # matte edge: tiny choke + soften so hair doesn't fringe
         a = cv2.GaussianBlur(np.clip((a - 0.04) / 0.92, 0, 1), (0, 0), 0.8)
         f = decontaminate(f, a)
         skin = skin_mask(f, a)
+        if hm is not None:
+            skin = np.maximum(skin, hm)
         shirt = shirt_mask(f, a, skin, self.holdout)
+        if hm is not None:
+            shirt = shirt * (1 - hm)
         raw = f.copy()
         f = despill(f, a)
         # iPhone footage is crisper than the room plate's lens: take the edge off so they match
@@ -171,8 +201,8 @@ class Compositor:
         # the t-shirt keeps the colour it has in the raw footage
         return g * (1 - shirt[..., None]) + raw * shirt[..., None], a
 
-    def __call__(self, frame, alpha):
-        g, a = self.speaker(frame, alpha)
+    def __call__(self, frame, alpha, hands=None):
+        g, a = self.speaker(frame, alpha, hands)
         # light wrap: the room's blurred light bleeds over the outer edge of the speaker
         rim = np.clip(a * (1 - cv2.GaussianBlur(a, (0, 0), 6)) * 3, 0, 1)[..., None]
         g = g * (1 - 0.35 * rim) + self.plate_soft * 0.35 * rim

@@ -24,7 +24,7 @@ import plan  # noqa: E402
 from barchart import BarChart  # noqa: E402
 from captions import CaptionTrack  # noqa: E402
 from clean_plate import push_pull  # noqa: E402
-from composite import Compositor, zoom  # noqa: E402
+from composite import Compositor, hand_mask, zoom  # noqa: E402
 from path_graphic import PathGraphic  # noqa: E402
 from timeline import Timeline  # noqa: E402
 
@@ -91,6 +91,7 @@ class Renderer:
         self.hold = cv2.imread(cfg["holdout"], cv2.IMREAD_GRAYSCALE)
         self.comp = Compositor(room, None)
         self.reframe = self._reframes(json.load(open(cfg["span_heads"])))
+        self.hands = json.load(open(cfg["hands"]))["frames"] if cfg.get("hands") else None
         self.paper = cv2.cvtColor(cv2.imread(cfg["paper_plate"]), cv2.COLOR_BGR2RGB).astype(np.float32) / 255
         self.sel = Reader(cfg["selects"])
         self.sel_a = Reader(cfg["selects_alpha"], "gray")
@@ -150,11 +151,14 @@ class Renderer:
     def _fetch(self, idx, k):
         f = self.sel.get(idx)
         a = np.maximum(self.sel_a.get(idx), self.hold)
+        hm = hand_mask(self.hands[min(idx, len(self.hands) - 1)]) if self.hands else None
         m = self.reframe.get(k)
         if m is not None:
             f = cv2.warpAffine(f, m, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
             a = cv2.warpAffine(a, m, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-        return f, a
+            if hm is not None:
+                hm = cv2.warpAffine(hm, m, (W, H), flags=cv2.INTER_LINEAR, borderValue=0)
+        return f, a, hm
 
     def _speaker_frame(self, t):
         return self._fetch(self.tl.select_frame(t), self.tl.span_at(t))
@@ -163,8 +167,7 @@ class Renderer:
         return self.v1.get(int(round(tau * V1_FPS))).astype(np.float32) / 255
 
     def _aroll(self, t, seg):
-        f, a = self._speaker_frame(t)
-        img = self.comp(f, a).astype(np.float32) / 255
+        img = self.comp(*self._speaker_frame(t)).astype(np.float32) / 255
         # across a join between takes, morph from the outgoing take into the incoming one
         j = next((b for b in self.joins if abs(t - b) < MORPH / 2 and seg["t"][0] + 0.05 < b < seg["t"][1] - 0.05), None)
         if j is not None:
@@ -221,8 +224,7 @@ class Renderer:
         bg = bg * (1 - k) + fillsrc * k
 
         # our speaker, cut out and graded, following the original speaker's move
-        f, a = self._speaker_frame(t)
-        g, al = self.comp.speaker(f, a)
+        g, al = self.comp.speaker(*self._speaker_frame(t))
         tr = self.person.get(n) or self.person[min(self.person, key=lambda j: abs(j - n))]
         target_top, target_cx = tr["top"] - 0.015, tr["cx"]
         if tau > 4.13:                              # exit: slide down out of frame
@@ -252,8 +254,7 @@ class Renderer:
         keys = sorted(self.monitor)
         j = min(keys, key=lambda k: abs(k - n))
         quad, sharp = self.monitor[j]
-        f, a = self._speaker_frame(t)
-        content = self.comp(f, a).astype(np.float32) / 255
+        content = self.comp(*self._speaker_frame(t)).astype(np.float32) / 255
         src = np.float32([[0, 0], [W, 0], [W, H], [0, H]])
         M = cv2.getPerspectiveTransform(src, quad)
         warped = cv2.warpPerspective(content, M, (W, H), flags=cv2.INTER_AREA)
