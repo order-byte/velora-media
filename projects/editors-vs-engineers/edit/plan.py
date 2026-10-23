@@ -61,7 +61,7 @@ def build(tl):
              anchors=[(11.22, s5), (12.20, W("p06", "going")), (12.70, W("p07", "get")),
                       (13.50, W("p07", "bigger", 1)), (13.72, s6)]),
         # the montage's last flash (15.81) is the original speaker himself: leave it out
-        dict(kind="broll", t=[s6, s7], v1=[13.72, 15.80]),
+        dict(kind="broll", t=[s6, s7], v1=[13.72, 15.77]),
         dict(kind="aroll", t=[s7, s8]),
         dict(kind="broll", t=[s8, s9], v1=[18.23, 22.90],
              anchors=[(18.23, s8), (19.20, W("p10", "freelancing")), (20.00, W("p12", "contracts")),
