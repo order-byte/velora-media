@@ -3,7 +3,8 @@
 Every segment of reel 1 (its cut list, in reel-1 seconds) is mapped onto the
 new timeline by anchoring it to the word it was cut on, so each graphic lands on
 the same word it did in the original. B-roll inside a segment is time-warped
-piecewise between those word anchors.
+piecewise between those word anchors. Reel 1's photo montage is replaced by our
+own "right path" animation.
 """
 import re
 
@@ -22,13 +23,6 @@ def build(tl):
         w = hits[nth]
         return w["end"] if end else w["t"]
 
-    def at_src(piece, src_t):
-        """Output time of a source moment inside a piece (for words the aligner could not place)."""
-        for sp in spans:
-            if sp["piece"] == piece and sp["src"][0] <= src_t <= sp["src"][1]:
-                return sp["out"][0] + (src_t - sp["src"][0]) / tl.speed
-        raise KeyError(piece)
-
     def piece_end(piece):
         return max(sp["out"][1] for sp in spans if sp["piece"] == piece)
 
@@ -38,15 +32,14 @@ def build(tl):
     s4 = s3 + 3.79                                  # the music break keeps reel 1's exact length
     s5 = W("p05", "editing") + 0.52
     s6 = W("p08", "so") - 0.03
-    s7 = W("p09", "you", 1) + 0.18
-    s8 = W("p10", "first") + 0.12
-    s9 = W("p13", "and") + 0.25
-    that14 = at_src("p14", 120.85)
-    s10 = that14 + 0.35
-    s11 = W("p16", "we") - 0.08
-    s12 = W("p18", "that") + 0.12
-    s13 = W("p18", "and") - 0.02
-    end = piece_end("p20") + 0.45
+    s7 = W("p10", "you") + 0.18
+    s8 = W("p12", "first") + 0.12
+    s9 = W("p16", "and") + 0.25
+    s10 = W("p18", "that") + 0.35
+    s11 = W("p20", "we") - 0.08
+    s12 = W("p21", "is") - 0.04
+    s13 = W("p24", "and") - 0.02
+    end = piece_end("p28") + 0.45
 
     seg = [
         dict(kind="bars", t=[0.0, s2], entrance=True),
@@ -60,12 +53,12 @@ def build(tl):
         dict(kind="monitor", t=[s5, s6], v1=[11.22, 13.72],
              anchors=[(11.22, s5), (12.20, W("p06", "going")), (12.70, W("p07", "get")),
                       (13.50, W("p07", "bigger", 1)), (13.72, s6)]),
-        # the montage's last flash (15.81) is the original speaker himself: leave it out
-        dict(kind="broll", t=[s6, s7], v1=[13.72, 15.77]),
+        dict(kind="path", t=[s6, s7], t_trust=W("p08", "trust") - s6, t_choose=W("p09", "choose") - s6,
+             t_right=W("p09", "right") - s6),
         dict(kind="aroll", t=[s7, s8]),
         dict(kind="broll", t=[s8, s9], v1=[18.23, 22.90],
-             anchors=[(18.23, s8), (19.20, W("p10", "freelancing")), (20.00, W("p12", "contracts")),
-                      (21.10, W("p12", "soon")), (22.40, W("p12", "agency")), (22.90, s9)]),
+             anchors=[(18.23, s8), (19.20, W("p12", "freelancing")), (20.00, W("p13", "contracts")),
+                      (21.10, W("p14", "soon")), (22.40, W("p15", "agency")), (22.90, s9)]),
         dict(kind="aroll", t=[s9, s10]),
         dict(kind="broll", t=[s10, s11], v1=[25.57, 27.70]),
         dict(kind="aroll", t=[s11, s12]),
@@ -81,37 +74,38 @@ def build(tl):
 
     cards = [
         dict(start=s4, end=s5, lines=[[dict(text="SO", t=s4 + 0.06, style="so")]]),
-        dict(start=s7, end=W("p09", "go"),
-             lines=[[w("p09", "you", 1), w("p09", "just")],
-                    [w("p09", "have"), w("p09", "to"), w("p09", "move")],
-                    [w("p09", "forward", style="key")]]),
-        dict(start=W("p09", "go"), end=s8,
-             lines=[[w("p09", "go", text="Go", style="big"), w("p09", "with", style="big"), w("p09", "it", style="big")]]),
-        dict(start=s9, end=W("p14", "into"),
-             lines=[[w("p13", "and", text="And"), w("p13", "once"), w("p13", "you")],
-                    [w("p14", "turn"), w("p14", "yourself")]]),
-        dict(start=W("p14", "into"), end=W("p14", "just"),
-             lines=[[w("p14", "into"), w("p14", "a")], [w("p14", "business", text="BUSINESS", style="key")]]),
-        dict(start=W("p14", "just"), end=s10,
-             lines=[[w("p14", "just")], [w("p14", "remember"), dict(text="that", t=that14, style="reg")]]),
-        dict(start=s11, end=W("p17", "but"),
-             lines=[[w("p16", "we", text="We"), w("p16", "can"), w("p16", "do"), w("p16", "a")],
-                    [w("p16", "bunch"), w("p16", "of"), w("p16", "things")]]),
-        dict(start=W("p17", "but"), end=s12, lines=[[w("p17", "but", style="big")]]),
-        dict(start=s13, end=W("p18", "who"),
-             lines=[[w("p18", "and"), w("p18", "you", 2), w("p18", "need", 1), w("p18", "a", 1)],
-                    [w("p18", "team", 1, text="TEAM", style="key")],
-                    [w("p18", "of"), w("p18", "good"), w("p18", "players")]]),
-        dict(start=W("p18", "who"), end=W("p19", "the"),
-             lines=[[w("p18", "who"), w("p18", "are"), w("p18", "ready")],
-                    [w("p18", "to"), w("p18", "do"), w("p18", "things")]]),
-        dict(start=W("p19", "the"), end=W("p20", "and"),
-             lines=[[w("p19", "the"), w("p19", "way"), w("p19", "they")],
-                    [w("p19", "should"), w("p19", "be"), w("p19", "done")]]),
-        dict(start=W("p20", "and"), end=end,
-             lines=[[w("p20", "and"), w("p20", "they're")],
-                    [w("p20", "motivated", text="MOTIVATED", style="key")],
-                    [w("p20", "enough")]]),
+        dict(start=s7, end=W("p11", "go"),
+             lines=[[w("p10", "you"), w("p10", "just")],
+                    [w("p10", "have"), w("p10", "to"), w("p10", "move")],
+                    [w("p10", "forward", style="key")]]),
+        dict(start=W("p11", "go"), end=s8,
+             lines=[[w("p11", "go", text="Go", style="big"), w("p11", "with", style="big"), w("p11", "it", style="big")]]),
+        dict(start=s9, end=W("p17", "into"),
+             lines=[[w("p16", "and", text="And"), w("p16", "once"), w("p16", "you")],
+                    [w("p17", "turn"), w("p17", "yourself")]]),
+        dict(start=W("p17", "into"), end=W("p18", "just"),
+             lines=[[w("p17", "into"), w("p17", "a")], [w("p17", "business", text="BUSINESS", style="key")]]),
+        dict(start=W("p18", "just"), end=s10,
+             lines=[[w("p18", "just")], [w("p18", "remember"), w("p18", "that")]]),
+        dict(start=s11, end=W("p21", "but"),
+             lines=[[w("p20", "we", text="We"), w("p20", "can"), w("p20", "do"), w("p20", "a")],
+                    [w("p20", "bunch"), w("p20", "of"), w("p20", "things")]]),
+        dict(start=W("p21", "but"), end=s12,
+             lines=[[w("p21", "but", style="big"), w("p21", "this", style="big")]]),
+        dict(start=s13, end=W("p26", "who"),
+             lines=[[w("p24", "and"), w("p24", "you"), w("p24", "need"), w("p24", "a")],
+                    [w("p24", "team", text="TEAM", style="key")],
+                    [w("p25", "of"), w("p25", "good"), w("p25", "players")]]),
+        dict(start=W("p26", "who"), end=W("p27", "the"),
+             lines=[[w("p26", "who"), w("p26", "are"), w("p26", "ready")],
+                    [w("p26", "to"), w("p26", "do"), w("p26", "things")]]),
+        dict(start=W("p27", "the"), end=W("p28", "and"),
+             lines=[[w("p27", "the"), w("p27", "way"), w("p27", "they")],
+                    [w("p27", "should"), w("p27", "be"), w("p27", "done")]]),
+        dict(start=W("p28", "and"), end=end,
+             lines=[[w("p28", "and"), w("p28", "they"), w("p28", "are")],
+                    [w("p28", "motivated", text="MOTIVATED", style="key")],
+                    [w("p28", "enough")]]),
     ]
     return seg, cards, end
 

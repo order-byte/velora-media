@@ -22,13 +22,27 @@ import plan  # noqa: E402
 from timeline import Timeline  # noqa: E402
 
 SR = 48000
+# voice polish: warmth, less 3 kHz harshness, clarity + air, de-ess, even level
+VOICE_CHAIN = ",".join([
+    "highpass=f=70:poles=2",
+    "afftdn=nr=6:nf=-55:tn=1",
+    "equalizer=f=130:t=q:w=0.8:g=3",
+    "equalizer=f=280:t=q:w=1.0:g=-3",
+    "equalizer=f=1800:t=q:w=1.0:g=2",
+    "equalizer=f=3200:t=q:w=1.0:g=-3",
+    "equalizer=f=5500:t=q:w=1.2:g=1.5",
+    "treble=g=3:f=9000",
+    "deesser=i=0.25:m=0.5:f=0.5",
+    "acompressor=threshold=-21dB:ratio=3:attack=4:release=70:knee=4:makeup=2",
+    "alimiter=limit=0.89:attack=3:release=40",
+])
 # reel 1's cut list: segment k of the plan is reel-1 [CUTS[k], CUTS[k+1]]
 CUTS = [0.0, 2.17, 6.05, 9.84, 11.22, 13.72, 16.06, 18.23, 22.90, 25.57, 27.70, 29.53, 31.99, 37.58]
 
 
-def load(path, ch):
-    raw = subprocess.check_output(["ffmpeg", "-v", "error", "-i", path, "-f", "f32le", "-ac", str(ch),
-                                   "-ar", str(SR), "-"])
+def load(path, ch, af=None):
+    raw = subprocess.check_output(["ffmpeg", "-v", "error", "-i", path] + (["-af", af] if af else []) +
+                                  ["-f", "f32le", "-ac", str(ch), "-ar", str(SR), "-"])
     return np.frombuffer(raw, np.float32).reshape(-1, ch).copy()
 
 
@@ -69,7 +83,7 @@ def main():
     segs, _, end = plan.build(tl)
     bed = load(bed_path, 2)
     voc = load(voc_path, 2)
-    voice = load(voice_path, 1)[:, 0]
+    voice = load(voice_path, 1, VOICE_CHAIN)[:, 0]
 
     # bed, segment by segment
     xf = int(0.04 * SR)

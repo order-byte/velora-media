@@ -25,12 +25,13 @@ from barchart import BarChart  # noqa: E402
 from captions import CaptionTrack  # noqa: E402
 from clean_plate import push_pull  # noqa: E402
 from composite import Compositor, zoom  # noqa: E402
+from path_graphic import PathGraphic  # noqa: E402
 from timeline import Timeline  # noqa: E402
 
 W, H = 1080, 1920
 FPS = 24000 / 1001
 V1_FPS = 11987 / 500
-PUNCH = 1.07          # alternate punch-in on every jump cut in the talking-head shots
+MORPH = 0.25          # seconds of optical-flow blend across every join between takes
 RIM = (212 / 255, 54 / 255, 62 / 255)
 
 
@@ -65,7 +66,7 @@ class Reader:
             if self.ch == 1:
                 frame = frame[..., 0]
             self.cache[self.i] = frame
-            if len(self.cache) > 12:
+            if len(self.cache) > 96:     # morph cuts need both takes at once; they sit ~2 s apart
                 self.cache.pop(min(self.cache))
         return self.cache.get(n, frame if frame is not None else self.cache[max(self.cache)])
 
@@ -86,8 +87,10 @@ class Renderer:
         self.seg, cards, self.end = plan.build(self.tl)
         self.caps = CaptionTrack(cards)
         room = cv2.cvtColor(cv2.imread(cfg["room_plate"]), cv2.COLOR_BGR2RGB)
-        hold = cv2.imread(cfg["holdout"], cv2.IMREAD_GRAYSCALE)
-        self.comp = Compositor(room, hold)
+        # the can is merged into the matte here, then moves with each take's reframing
+        self.hold = cv2.imread(cfg["holdout"], cv2.IMREAD_GRAYSCALE)
+        self.comp = Compositor(room, None)
+        self.reframe = self._reframes(json.load(open(cfg["span_heads"])))
         self.paper = cv2.cvtColor(cv2.imread(cfg["paper_plate"]), cv2.COLOR_BGR2RGB).astype(np.float32) / 255
         self.sel = Reader(cfg["selects"])
         self.sel_a = Reader(cfg["selects_alpha"], "gray")
@@ -98,6 +101,8 @@ class Renderer:
         self.monitor = self._monitor_quads(tr["monitor"])
         self.bars = BarChart(t_out=self.seg[0]["t"][1] - 0.62)
         self.user_ref = cfg["user_head"]          # median head top / centre of our speaker in reel framing
+        self.joins = [sp["out"][0] for sp in self.tl.spans[1:]]
+        self.paths = {}
 
     # ---------- helpers ----------
     def _monitor_quads(self, mon):
@@ -130,9 +135,29 @@ class Renderer:
             out[i] = (np.array([tl_, tr_, br_, bl_], np.float32), sharp[i])
         return out
 
+    def _reframes(self, heads):
+        """Per take: a small move/scale that puts the head where it sits in the median take,
+        so joins between takes don't jump."""
+        ref = heads["ref"]
+        out = {}
+        for r in heads["spans"]:
+            s = 1 + 0.6 * (ref["headw"] / r["headw"] - 1)
+            cx, cy = r["cx"] * W, (r["top"] + 0.10) * H
+            tx_, ty_ = cx + 0.85 * (ref["cx"] * W - cx), cy + 0.85 * ((ref["top"] + 0.10) * H - cy)
+            out[r["span"]] = np.float32([[s, 0, tx_ - s * cx], [0, s, ty_ - s * cy]])
+        return out
+
+    def _fetch(self, idx, k):
+        f = self.sel.get(idx)
+        a = np.maximum(self.sel_a.get(idx), self.hold)
+        m = self.reframe.get(k)
+        if m is not None:
+            f = cv2.warpAffine(f, m, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+            a = cv2.warpAffine(a, m, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+        return f, a
+
     def _speaker_frame(self, t):
-        i = self.tl.select_frame(t)
-        return self.sel.get(i), self.sel_a.get(i)
+        return self._fetch(self.tl.select_frame(t), self.tl.span_at(t))
 
     def _v1(self, tau):
         return self.v1.get(int(round(tau * V1_FPS))).astype(np.float32) / 255
@@ -140,8 +165,15 @@ class Renderer:
     def _aroll(self, t, seg):
         f, a = self._speaker_frame(t)
         img = self.comp(f, a).astype(np.float32) / 255
-        if self.tl.span_at(t) % 2:
-            img = zoom(img, PUNCH, 0.5, 0.40)
+        # across a join between takes, morph from the outgoing take into the incoming one
+        j = next((b for b in self.joins if abs(t - b) < MORPH / 2 and seg["t"][0] + 0.05 < b < seg["t"][1] - 0.05), None)
+        if j is not None:
+            k = self.joins.index(j) + 1
+            w = (t - (j - MORPH / 2)) / MORPH
+            w = w * w * (3 - 2 * w)
+            A = self.comp(*self._fetch(self.tl.select_frame_in_span(k - 1, t), k - 1)).astype(np.float32) / 255
+            B = self.comp(*self._fetch(self.tl.select_frame_in_span(k, t), k)).astype(np.float32) / 255
+            img = morph(A, B, w)
         if seg.get("entrance"):
             k = (t - seg["t"][0]) / 0.16
             if k < 1:
@@ -164,6 +196,11 @@ class Renderer:
             img = self._paper(t, plan.v1_time(seg, t))
         elif kind == "monitor":
             img = self._monitor(t, plan.v1_time(seg, t), seg)
+        elif kind == "path":
+            key = seg["t"][0]
+            if key not in self.paths:
+                self.paths[key] = PathGraphic(seg["t"][1] - seg["t"][0], seg["t_trust"], seg["t_choose"], seg["t_right"])
+            img = self.paths[key].render(t - seg["t"][0])
         img = self.caps.render(t, img)
         return (np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)
 
@@ -241,6 +278,20 @@ class Renderer:
         mask = mask * (1 - cv2.GaussianBlur(yellow, (0, 0), 1.5))
         m3 = mask[..., None]
         return warped * m3 + bg * (1 - m3)
+
+
+def morph(A, B, w):
+    """Optical-flow morph between two frames of the same shot (a 'morph cut')."""
+    s = 0.25
+    ga = cv2.cvtColor((cv2.resize(A, None, fx=s, fy=s) * 255).astype(np.uint8), cv2.COLOR_RGB2GRAY)
+    gb = cv2.cvtColor((cv2.resize(B, None, fx=s, fy=s) * 255).astype(np.uint8), cv2.COLOR_RGB2GRAY)
+    fl = cv2.calcOpticalFlowFarneback(ga, gb, None, 0.5, 4, 21, 4, 7, 1.5, 0)
+    fl = cv2.resize(fl, (W, H)) / s
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    wa = cv2.remap(A, xx - w * fl[..., 0], yy - w * fl[..., 1], cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    wb = cv2.remap(B, xx + (1 - w) * fl[..., 0], yy + (1 - w) * fl[..., 1], cv2.INTER_LINEAR,
+                   borderMode=cv2.BORDER_REPLICATE)
+    return wa * (1 - w) + wb * w
 
 
 def render(cfg, out, start, end):

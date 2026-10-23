@@ -49,6 +49,87 @@ def despill(rgb, a):
     return np.stack([r2, g, b2], -1)
 
 
+def decontaminate(f, a):
+    """Unmix the shoot's wall colour out of semi-transparent edge pixels (hair, shoulders).
+
+    The wall behind each edge pixel is estimated by a normalised blur of the
+    fully-background pixels around it; the foreground colour then follows from
+    I = a*F + (1-a)*B.
+    """
+    small = (W // 8, H // 8)
+    bgw = cv2.resize(np.clip(1 - a * 1.6, 0, 1), small, interpolation=cv2.INTER_AREA)
+    num = cv2.GaussianBlur(cv2.resize(f, small, interpolation=cv2.INTER_AREA) * bgw[..., None], (0, 0), 6)
+    den = cv2.GaussianBlur(bgw, (0, 0), 6)[..., None]
+    bg = cv2.resize(num / np.maximum(den, 1e-4), (W, H), interpolation=cv2.INTER_LINEAR)
+    edge = (a > 0.03) & (a < 0.97)
+    a3 = np.maximum(a, 0.03)[..., None]
+    fg = np.clip((f - (1 - a3) * bg) / a3, 0, 1)
+    return np.where(edge[..., None], fg, f)
+
+
+# reel 2's on-camera skin (OpenCV float Lab: L 0-100, a/b around 0)
+SKIN_TARGET = np.array([66.0, 14.0, 27.0], np.float32)   # reel 2 measured 60.3/10.6/26.3; brighter, a touch rosier
+
+
+def skin_mask(raw, a):
+    """Skin in the original footage: both the orange-lit side and the purple-filled side
+    of the face, plus neck and hands; not hair, beard, shirt or the wall."""
+    u8 = (np.clip(raw, 0, 1) * 255).astype(np.uint8)
+    ycc = cv2.cvtColor(u8, cv2.COLOR_RGB2YCrCb).astype(np.float32)
+    y, cr, cb = ycc[..., 0], ycc[..., 1], ycc[..., 2]
+    # the orange key light pushes the lit cheek to Cr ~190 / Cb ~40, the purple fill side sits near Cr 138
+    m = (np.clip((cr - 132) / 7, 0, 1) * np.clip((205 - cr) / 8, 0, 1) *
+         np.clip((128 - cb) / 6, 0, 1) * np.clip((y - 38) / 15, 0, 1))
+    m *= np.clip(a * 1.5 - 0.4, 0, 1)
+    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    return cv2.GaussianBlur(m, (0, 0), 3)
+
+
+def shirt_mask(raw, a, skin, holdout=None):
+    """The light t-shirt in the original footage: the speaker below the chin, minus the
+    strongly orange skin of hands and arms, dark bits and the can."""
+    u8 = (np.clip(raw, 0, 1) * 255).astype(np.uint8)
+    ycc = cv2.cvtColor(u8, cv2.COLOR_RGB2YCrCb).astype(np.float32)
+    y, cr, cb = ycc[..., 0], ycc[..., 1], ycc[..., 2]
+    rows = np.linspace(0, 1, H, dtype=np.float32)[:, None]
+    below_chin = np.clip((rows - 0.585) / 0.02, 0, 1)
+    strong_skin = np.clip((cr - 150) / 8, 0, 1) * np.clip((104 - cb) / 8, 0, 1)
+    m = np.clip((y - 90) / 20, 0, 1) * (1 - strong_skin) * below_chin * np.clip(a * 1.5 - 0.4, 0, 1)
+    if holdout is not None:
+        m *= 1 - np.clip(holdout * 2, 0, 1)
+    m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((7, 7), np.uint8))
+    return cv2.GaussianBlur(m, (0, 0), 4)
+
+
+def skin_match(g, w):
+    """Give the skin reel 2's look: one warm tone across the face, brighter, softer light."""
+    if w.sum() < 50:
+        return g
+    lab = cv2.cvtColor(np.clip(g, 0, 1), cv2.COLOR_RGB2LAB)
+    small = (W // 6, H // 6)
+    ws = cv2.resize(w, small, interpolation=cv2.INTER_AREA)
+    den = np.maximum(cv2.GaussianBlur(ws, (0, 0), 5), 1e-4)
+
+    def low(ch):
+        x = cv2.GaussianBlur(cv2.resize(ch, small, interpolation=cv2.INTER_AREA) * ws, (0, 0), 5) / den
+        return cv2.resize(x, (W, H), interpolation=cv2.INTER_LINEAR)
+
+    out = []
+    # per channel: how much of the large-scale light shape to keep, and how much to lift the
+    # fine detail (lips, cheeks, brows) so the face keeps its life after the tone shift
+    for c, keep, detail, tgt in ((0, 0.55, 1.0, SKIN_TARGET[0]), (1, 0.35, 2.0, SKIN_TARGET[1]),
+                                 (2, 0.35, 1.5, SKIN_TARGET[2])):
+        ch = lab[..., c]
+        lo = low(ch)
+        mean_lo = float((lo * w).sum() / w.sum())
+        new = (ch - lo) * detail + tgt + (lo - mean_lo) * keep
+        out.append(ch * (1 - w) + new * w)
+    L = out[0]
+    Lb = cv2.bilateralFilter(L.astype(np.float32), 9, 6, 5)          # gentle skin smoothing
+    out[0] = L * (1 - 0.2 * w) + Lb * 0.2 * w
+    return np.clip(cv2.cvtColor(np.stack(out, -1).astype(np.float32), cv2.COLOR_LAB2RGB), 0, 1)
+
+
 class Compositor:
     def __init__(self, plate, holdout=None, z=1.15, cx=0.5, cy=0.45, seed=11, sat=0.56, exposure=0.85, warm=1.0):
         self.plate = plate.astype(np.float32) / 255
@@ -66,7 +147,13 @@ class Compositor:
             a = np.maximum(a, self.holdout)
         # matte edge: tiny choke + soften so hair doesn't fringe
         a = cv2.GaussianBlur(np.clip((a - 0.04) / 0.92, 0, 1), (0, 0), 0.8)
+        f = decontaminate(f, a)
+        skin = skin_mask(f, a)
+        shirt = shirt_mask(f, a, skin, self.holdout)
+        raw = f.copy()
         f = despill(f, a)
+        # iPhone footage is crisper than the room plate's lens: take the edge off so they match
+        f = cv2.GaussianBlur(f, (0, 0), 0.7)
         # the phone footage is far more saturated than the reference: calm it before the look
         l = (f @ np.array([0.2126, 0.7152, 0.0722], np.float32))[..., None]
         f = (l + (f - l) * self.sat) * self.exposure
@@ -80,7 +167,9 @@ class Compositor:
         lum = (px @ np.array([0.2126, 0.7152, 0.0722], np.float32))[:, None]
         px = px + np.clip(0.55 - lum, 0, None) * np.array([0.09, 0.035, -0.02], np.float32) * self.warm
         g[m] = px
-        return g, a
+        g = skin_match(g, skin)
+        # the t-shirt keeps the colour it has in the raw footage
+        return g * (1 - shirt[..., None]) + raw * shirt[..., None], a
 
     def __call__(self, frame, alpha):
         g, a = self.speaker(frame, alpha)

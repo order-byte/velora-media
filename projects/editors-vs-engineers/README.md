@@ -19,7 +19,7 @@ colour follow reel 2 (timelinecutsco).
 ## Pipeline
 
 1. `align_takes.py` forced-aligns the spoken words of each chosen take (wav2vec2).
-2. `build_voice.py` cuts the takes on word edges, squeezes long pauses, plays at 1.1x, writes `voice.wav` + `edl.json`.
+2. `build_voice.py` cuts the takes on word edges, squeezes long pauses, plays faster (1.2x, formant-preserving), writes `voice.wav` + `edl.json`.
 3. `matte.py` cuts the speaker out (Robust Video Matting, ONNX) of the selects clip.
 4. `clean_plate.py` rebuilds reel 2's empty room; `track_reel1.py` tracks reel 1's speaker and editor monitor.
 5. `render_reel.py` renders every frame from `edit/plan.py`: talking head in the room (`composite.py`),

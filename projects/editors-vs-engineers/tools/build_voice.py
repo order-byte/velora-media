@@ -119,7 +119,9 @@ def main():
         w.setsampwidth(2)
         w.setframerate(sr)
         w.writeframes((np.clip(v, -1, 1) * 32767).astype(np.int16).tobytes())
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", natural, "-af", f"atempo={speed}",
+    # Rubber Band keeps formants, so the faster voice still sounds like the same person
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", natural, "-af",
+                    f"rubberband=tempo={speed}:formant=preserved:pitchq=quality:window=short",
                     os.path.join(out, "voice.wav")], check=True)
     for sp in edl:
         sp["out"] = [round(x / speed, 3) for x in sp["out"]]

@@ -40,5 +40,14 @@ class Timeline:
         best = min(self.ranges, key=lambda r: abs(r["src"][0] - s0))
         return best["sel_frame"] + best["frames"] - 1
 
+    def select_frame_in_span(self, k, t):
+        """Selects frame for output time t as if span k were still (or already) playing:
+        used to blend across a join."""
+        src = self.spans[k]["src"][0] + (t - self.spans[k]["out"][0]) * self.speed
+        best = min(self.ranges, key=lambda r: 0 if r["src"][0] <= src < r["src"][1] else
+                   min(abs(src - r["src"][0]), abs(src - r["src"][1])))
+        i = int(round((src - best["src"][0]) * self.fps))
+        return best["sel_frame"] + min(max(i, 0), best["frames"] - 1)
+
     def piece_at(self, t):
         return self.spans[self.span_at(t)]["piece"]
