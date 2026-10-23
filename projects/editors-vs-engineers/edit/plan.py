@@ -147,6 +147,11 @@ def caption_cards(spans, seg):
             lines += _lines(run)
             cards.append(dict(start=g[0]["t"] - 0.1, end=None, last=max(t["end"] for t in g), lines=lines,
                               y=0.17 if g[0]["t"] < bars[1] else 0.68))
+    # cream-coloured scenes (smileys, skills, the right-path animation) get dark captions
+    light_bg = [s["t"] for s in seg if s["kind"] == "path" or (s["kind"] == "broll" and s["v1"][0] > 15)]
+    for c in cards:
+        mid = (c["start"] + c["last"]) / 2
+        c["theme"] = "dark" if any(a <= mid < b for a, b in light_bg) else "light"
     for c, nxt in zip(cards, cards[1:] + [None]):
         hold = c["last"] + 0.5
         c["end"] = min(nxt["start"] - 0.02, hold if nxt["start"] - c["last"] > 0.8 else nxt["start"]) if nxt else hold

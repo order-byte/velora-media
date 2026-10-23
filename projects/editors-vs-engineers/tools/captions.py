@@ -32,8 +32,9 @@ def _font(name, size):
     return ImageFont.truetype(os.path.join(FONT_DIR, name), size)
 
 
-def _sprite(text, style):
-    """RGBA sprite of one word with its shadow (and glow for keywords)."""
+def _sprite(text, style, theme="light"):
+    """RGBA sprite of one word with its shadow (and glow for keywords).
+    theme "dark": ink-coloured words with a soft light halo, for the cream B-roll scenes."""
     fname, size, fill = STYLES[style]
     font = _font(fname, size)
     l, _, r, _ = font.getbbox(text, anchor="ls")
@@ -53,7 +54,10 @@ def _sprite(text, style):
         w = nw
     m = np.asarray(mask).astype(np.float32) / 255
 
-    if fill == "yellow":
+    if theme == "dark":
+        ink = (205, 140, 0) if fill == "yellow" else (24, 22, 20)
+        col = np.full((h, w, 3), ink, np.float32)
+    elif fill == "yellow":
         g = np.linspace(0, 1, h, dtype=np.float32)[:, None]
         col = np.stack([np.full_like(g, 255) * np.ones((1, w)),
                         (246 - 50 * g) * np.ones((1, w)),
@@ -62,11 +66,15 @@ def _sprite(text, style):
         col = np.full((h, w, 3), 255, np.float32)
 
     shadow = np.asarray(mask.filter(ImageFilter.GaussianBlur(9))).astype(np.float32) / 255
-    shadow = np.roll(np.roll(shadow, 7, 0), 4, 1) * 0.62
     rgba = np.zeros((h, w, 4), np.float32)
+    if theme == "dark":
+        # light halo instead of a drop shadow
+        rgba[..., :3] = 250
+        rgba[..., 3] = np.clip(np.asarray(mask.filter(ImageFilter.GaussianBlur(7))).astype(np.float32) / 255 * 1.6, 0, 0.85)
+    else:
+        rgba[..., 3] = np.roll(np.roll(shadow, 7, 0), 4, 1) * 0.62
     # shadow first, then optional glow, then the letters
-    rgba[..., 3] = shadow
-    if fill == "yellow":
+    if fill == "yellow" and theme != "dark":
         glow = np.asarray(mask.filter(ImageFilter.GaussianBlur(18))).astype(np.float32) / 255 * 0.45
         a = glow + rgba[..., 3] * (1 - glow)
         rgba[..., :3] = (np.array([255, 214, 0], np.float32) * glow[..., None]) / np.maximum(a, 1e-6)[..., None]
@@ -84,10 +92,10 @@ class CaptionTrack:
         self.cache = {}
         self.layouts = [self._layout(c) for c in cards]
 
-    def _get(self, text, style):
-        k = (text, style)
+    def _get(self, text, style, theme="light"):
+        k = (text, style, theme)
         if k not in self.cache:
-            self.cache[k] = _sprite(text, style)
+            self.cache[k] = _sprite(text, style, theme)
         return self.cache[k]
 
     def _layout(self, card):
@@ -95,7 +103,7 @@ class CaptionTrack:
         placed, y = [], 0.0
         line_boxes = []
         for line in card["lines"]:
-            sprites = [self._get(w["text"], w["style"]) for w in line]
+            sprites = [self._get(w["text"], w["style"], card.get("theme", "light")) for w in line]
             size = max(s[3] for s in sprites)
             asc = max(s[4] for s in sprites)
             space = size * 0.24
