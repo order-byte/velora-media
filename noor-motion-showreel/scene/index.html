@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Noor Motion Showreel</title>
+<link rel="stylesheet" href="scene.css">
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="bgGrid"></div>
+  <div id="glows"></div>
+  <svg id="waves" width="1920" height="1080" viewBox="0 0 1920 1080">
+    <defs>
+      <filter id="neon" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="6" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <path id="wave1" d="M -40 120 C 260 40, 520 210, 840 120 S 1400 -10, 1960 70" />
+    <path id="wave2" d="M 1180 1120 C 1360 980, 1560 1040, 1700 900 S 1880 760, 1990 800" />
+  </svg>
+
+  <div id="camera"><div id="world"></div></div>
+
+  <div id="chrome"><i></i><i></i><i></i></div>
+  <div id="flash"></div>
+  <div id="vignette"></div>
+  <div id="grain"></div>
+  <div id="fade"></div>
+</div>
+<script src="scene.js"></script>
+</body>
+</html>
