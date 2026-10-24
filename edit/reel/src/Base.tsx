@@ -4,10 +4,33 @@ import { SUBS, FPS, C, inter, serif, CLIPS, norm } from "./lib";
 
 /** Face sits at ~(420,760) in source pixels; zoom around it and lift it to the upper third. */
 const ORIGIN = "420px 760px";
-const ZOOMS = [1.24, 1.38];
+const ZOOMS = [1.16, 1.28];
 
 /** Extra emphasis punches (seconds) -> quick zoom bump */
 export const PUNCHES: number[] = [];
+/** Windows (seconds) where graphics sit in the top band: slide the talking head down so they never cover the face */
+export const SHIFTS: [number, number][] = [];
+/** Black & white windows (seconds) */
+export const GRAY: [number, number][] = [];
+/** Moments the talking head comes back from a cutaway: zoom-blur re-entry */
+export const ENTERS: number[] = [];
+const grayAt = (t: number) => {
+  let v = 0;
+  for (const [a, b] of GRAY) v = Math.max(v, interpolate(t, [a - 0.05, a + 0.05, b - 0.12, b + 0.18], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));
+  return v;
+};
+const enterAt = (t: number) => {
+  let v = 0;
+  for (const e of ENTERS) { const d = t - e; if (d >= 0 && d < 0.3) v = Math.max(v, interpolate(d, [0, 0.22], [1, 0], { easing: Easing.bezier(0.16, 1, 0.3, 1), extrapolateRight: "clamp" })); }
+  return v;
+};
+const shiftAt = (t: number) => {
+  let v = 0;
+  for (const [a, b] of SHIFTS) {
+    v = Math.max(v, interpolate(t, [a - 0.12, a + 0.1, b - 0.1, b + 0.12], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.cubic) }));
+  }
+  return v * 130;
+};
 
 export const zoomAt = (t: number) => {
   const i = Math.max(0, SUBS.findIndex((s) => t >= s.oStart && t < s.oEnd));
@@ -28,14 +51,18 @@ export const zoomAt = (t: number) => {
 export const Talking: React.FC<{ raw?: boolean; muted?: boolean; offset?: number }> = ({ raw, muted, offset = 0 }) => {
   const frame = useCurrentFrame();
   const t = (frame + offset) / FPS;
-  const z = raw ? 1 : zoomAt(t);
+  const en = raw ? 0 : enterAt(t);
+  const z = raw ? 1 : zoomAt(t) + en * 0.16;
+  const dy = raw ? 0 : -60 + shiftAt(t);
+  const g = raw ? 0 : grayAt(t);
+  const filt = [g > 0.01 ? `grayscale(${g}) contrast(${1 + 0.12 * g})` : "", en > 0.02 ? `blur(${en * 16}px)` : ""].join(" ").trim();
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: "#000" }}>
       <OffthreadVideo
-        src={staticFile(raw ? "base_raw.mp4" : "base.mp4")}
+        src={staticFile(raw ? "base_raw.mp4" : "base_blur.mp4")}
         muted={muted}
         startFrom={offset}
-        style={{ position: "absolute", width: 1080, height: 1920, transformOrigin: ORIGIN, transform: raw ? "none" : `translateY(-90px) scale(${z})` }}
+        style={{ position: "absolute", width: 1080, height: 1920, transformOrigin: ORIGIN, transform: raw ? "none" : `translateY(${dy}px) scale(${z})`, filter: filt || undefined }}
       />
     </div>
   );
@@ -100,10 +127,10 @@ export const Captions: React.FC<{ hide: [number, number][]; darkIn?: [number, nu
   const ch = CHUNKS.find((c) => t >= c.s - 0.04 && t < c.e);
   if (!ch) return null;
   const dark = darkIn.some(([a, b]) => t >= a && t < b);
-  const y = (yIn.find((r) => t >= r.from && t < r.to) || { y: 1235 }).y;
+  const y = (yIn.find((r) => t >= r.from && t < r.to) || { y: 1390 }).y;
   const em = EMPH[ch.clip] || {};
   return (
-    <div style={{ position: "absolute", left: 70, right: 70, top: y, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0 18px" }}>
+    <div style={{ position: "absolute", left: 50, right: 50, top: y, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0 18px" }}>
       {ch.words.map((w, i) => {
         const k = norm(w.w);
         const e = em[k];
@@ -115,7 +142,7 @@ export const Captions: React.FC<{ hide: [number, number][]; darkIn?: [number, nu
         return (
           <span key={i} style={{
             fontFamily: isSerif ? serif : inter, fontStyle: isSerif ? "italic" : "normal",
-            fontWeight: isSerif ? 400 : 800, fontSize: isSerif ? 92 : 70, lineHeight: 1.12, letterSpacing: isSerif ? "0" : "-0.02em",
+            fontWeight: isSerif ? 400 : 800, fontSize: isSerif ? 100 : 76, lineHeight: 1.12, letterSpacing: isSerif ? "0" : "-0.02em",
             color: color(e, dark), opacity: spoken ? 1 : 0.0,
             transform: `scale(${0.7 + 0.3 * pop}) translateY(${(1 - pop) * 14}px)`, display: "inline-block",
             textShadow: dark ? "none" : e === "green" ? `0 0 28px rgba(61,255,143,0.55), 0 4px 18px rgba(0,0,0,0.6)` : "0 4px 22px rgba(0,0,0,0.55), 0 2px 4px rgba(0,0,0,0.5)",

@@ -4,7 +4,8 @@ import {
   C, inter, serif, mono, FPS, fr, ease, useSpring, Fill, Pill, StyleTag, SUBS,
   ICam, IScissors, IMoon, ICheck, IX, IDown, IFlame, IBattery, IStopwatch, ISend, IHeart, IMsg, IUser, IBolt, ITrend, IFilm, IPin, ICursor, IPhone, IMail, IMic,
 } from "./lib";
-import { Talking, Captions } from "./Base";
+import { Talking } from "./Base";
+import { Captions2 } from "./Captions2";
 
 /* ------------------------------------------------ shared pieces */
 export const VideoCard: React.FC<{ src: string; x: number; y: number; w: number; h: number; r?: number; rot?: number; delay?: number; filter?: string; startFrom?: number; rate?: number; shadow?: boolean }> = ({
@@ -42,7 +43,7 @@ const Paper: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
   <AbsoluteFill style={{ background: `radial-gradient(120% 80% at 50% 30%, #FBFAF7 0%, ${C.paper} 60%, #E7E3DB 100%)` }}>{children}</AbsoluteFill>
 );
 const Dark: React.FC<{ children?: React.ReactNode; glow?: string }> = ({ children, glow = "rgba(168,85,247,0.28)" }) => (
-  <AbsoluteFill style={{ background: `radial-gradient(90% 60% at 50% 38%, ${glow} 0%, #0c0a10 62%, #060508 100%)` }}>{children}</AbsoluteFill>
+  <AbsoluteFill style={{ background: `radial-gradient(90% 60% at 50% 38%, ${glow} 0%, rgba(12,10,16,0) 62%), radial-gradient(120% 90% at 50% 40%, #0c0a10 0%, #060508 100%)`, backgroundColor: "#08070b" }}>{children}</AbsoluteFill>
 );
 
 export const Grain: React.FC<{ opacity?: number }> = ({ opacity = 0.18 }) => {
@@ -86,15 +87,16 @@ export const Hero: React.FC<{ text: string; y?: number; size?: number; font?: "s
 export const SlotNumber: React.FC<{ value: string; size: number; color: string; glow?: string; land: number }> = ({ value, size, color, glow, land }) => {
   const f = useCurrentFrame();
   return (
-    <div style={{ display: "inline-flex", fontFamily: inter, fontWeight: 900, fontSize: size, lineHeight: 1, letterSpacing: "-0.05em", color, textShadow: glow ? `0 0 50px ${glow}, 0 0 120px ${glow}` : undefined }}>
+    <div style={{ display: "inline-flex", fontFamily: inter, fontWeight: 900, fontSize: size, lineHeight: 1, letterSpacing: "-0.05em", color, filter: glow ? `drop-shadow(0 0 22px ${glow}) drop-shadow(0 0 60px ${glow})` : undefined }}>
       {value.split("").map((ch, i) => {
         if (!/[0-9]/.test(ch)) return <span key={i}>{ch}</span>;
         const target = Number(ch) + 30;
         const endF = land + i * 4;
         const pos = interpolate(f, [0, endF], [0, target], { extrapolateRight: "clamp", easing: Easing.bezier(0.15, 0.85, 0.25, 1) });
-        const blur = Math.min(10, Math.abs(interpolate(f, [endF - 6, endF], [10, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })));
+        const blur = Math.min(3.5, Math.abs(interpolate(f, [endF - 6, endF], [3.5, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })));
+        const mask = "linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%)";
         return (
-          <span key={i} style={{ display: "inline-block", height: size, overflow: "hidden", position: "relative", width: size * 0.62 }}>
+          <span key={i} style={{ display: "inline-block", height: size, overflow: "hidden", position: "relative", width: size * 0.62, WebkitMaskImage: f < endF ? mask : undefined, maskImage: f < endF ? mask : undefined }}>
             <span style={{ position: "absolute", left: 0, top: -(pos % 10) * size, filter: `blur(${f < endF ? blur : 0}px)` }}>
               {Array.from({ length: 11 }, (_, k) => <div key={k} style={{ height: size }}>{k % 10}</div>)}
             </span>
@@ -135,7 +137,7 @@ export const HookSplit: React.FC<{ cut: number; words: { w: string; f: number; c
       {/* headline */}
       <div style={{ position: "absolute", top: 190, left: 40, right: 40, textAlign: "center", opacity: 1 - p }}>
         {words.map((w, i) => {
-          const a = interpolate(f, [w.f - 1, w.f + 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(2.2)) });
+          const a = interpolate(f, [w.f - 1, w.f + 4], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
           return <span key={i} style={{ display: "inline-block", margin: "0 12px", fontFamily: inter, fontWeight: 900, fontSize: 92, letterSpacing: "-0.04em", color: w.c || "#fff", opacity: a, transform: `scale(${0.5 + 0.5 * a})`, textShadow: w.c === C.green ? `0 0 30px ${C.green}` : "0 6px 30px rgba(0,0,0,0.6)" }}>{w.w}</span>;
         })}
       </div>
@@ -182,13 +184,13 @@ export const PainEdit: React.FC<{ raatF: number }> = ({ raatF }) => {
   const label = `${((h24 + 11) % 12) + 1}:${String(m).padStart(2, "0")} ${h24 >= 12 ? "PM" : "AM"}`;
   return (
     <AbsoluteFill style={{ background: "#05060c" }}>
-      <OffthreadVideo src={staticFile("broll/edit_rear.mp4")} muted style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.6) saturate(0.6) contrast(1.1)" }} />
-      <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(20,24,80,0.55) 0%, rgba(10,10,30,0.15) 45%, rgba(5,5,15,0.7) 100%)" }} />
+      <OffthreadVideo src={staticFile("broll/edit_rear.mp4")} muted style={{ width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(1) brightness(0.62) contrast(1.15)" }} />
+      <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.7) 100%)" }} />
       <div style={{ position: "absolute", top: 170, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 22 }}>
         <Pill delay={2} size={44}><IScissors size={44} color={C.purple} /> EDIT</Pill>
         <Pill delay={raatF - 2} size={44}><IMoon size={44} color={C.amber} /> ALL NIGHT</Pill>
       </div>
-      <div style={{ position: "absolute", top: 380, left: 0, right: 0, textAlign: "center", fontFamily: mono, fontWeight: 700, fontSize: 150, color: "#fff", letterSpacing: "-0.02em", textShadow: "0 0 40px rgba(120,140,255,0.6)" }}>{label}</div>
+      <div style={{ position: "absolute", top: 380, left: 0, right: 0, textAlign: "center", fontFamily: mono, fontWeight: 700, fontSize: 150, color: "#fff", letterSpacing: "-0.02em", textShadow: "0 0 40px rgba(255,255,255,0.35)" }}>{label}</div>
     </AbsoluteFill>
   );
 };
@@ -267,7 +269,7 @@ export const OfferBrand: React.FC<{ nameF: number; pkgF: number; offset: number 
   const logo = useSpring(2, { damping: 10, stiffness: 150, mass: 0.7 });
   const name = "Aminur Rex Team";
   const hl = ease(f, pkgF + 10, pkgF + 22);
-  const pkgIn = (k: number) => interpolate(f, [pkgF + k * 4, pkgF + k * 4 + 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.8)) });
+  const pkgIn = (k: number) => interpolate(f, [pkgF + k * 4, pkgF + k * 4 + 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   return (
     <Paper>
       <div style={{ position: "absolute", top: 150, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -459,13 +461,13 @@ export const DemoMotion: React.FC = () => {
         {icons.map((Ic, i) => {
           const a = (i / icons.length) * Math.PI * 2 + f / 18;
           const r = i % 2 ? 420 : 300;
-          const s = interpolate(f, [2 + i * 2, 10 + i * 2], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(2)) });
+          const s = interpolate(f, [2 + i * 2, 10 + i * 2], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
           return <div key={i} style={{ position: "absolute", left: Math.cos(a) * r - 50, top: Math.sin(a) * r - 50, width: 100, height: 100, borderRadius: 30, background: i % 2 ? C.purple : "#fff", display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${s})`, boxShadow: "0 12px 30px rgba(0,0,0,0.4)" }}><Ic size={54} color={i % 2 ? "#fff" : C.ink} /></div>;
         })}
       </div>
       <div style={{ position: "absolute", top: 820, left: 0, right: 0, textAlign: "center", fontFamily: inter, fontWeight: 900, fontSize: 170, letterSpacing: "-0.05em", color: "#fff" }}>
         {word.split("").map((ch, i) => {
-          const a = interpolate(f, [i * 2, i * 2 + 9], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.6)) });
+          const a = interpolate(f, [i * 2, i * 2 + 9], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
           const dx = (random(`x${i}`) - 0.5) * 900, dy = (random(`y${i}`) - 0.5) * 900;
           return <span key={i} style={{ display: "inline-block", transform: `translate(${dx * (1 - a)}px, ${dy * (1 - a)}px) rotate(${(1 - a) * 90}deg)`, opacity: a }}>{ch}</span>;
         })}
@@ -484,7 +486,7 @@ export const DemoFaceless: React.FC = () => {
       <OffthreadVideo src={staticFile("broll/hands_typing.mp4")} muted style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) contrast(1.1) saturate(0.7)" }} />
       <div style={{ position: "absolute", top: 800, left: 60, right: 60, textAlign: "center" }}>
         {words.map((w, i) => {
-          const a = interpolate(f, [w.t, w.t + 5], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(2)) });
+          const a = interpolate(f, [w.t, w.t + 5], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
           return <span key={i} style={{ display: "inline-block", margin: "0 16px", fontFamily: inter, fontWeight: 900, fontSize: 140, letterSpacing: "-0.05em", color: w.c || "#fff", opacity: a, transform: `scale(${0.6 + 0.4 * a})` }}>{w.w}</span>;
         })}
       </div>
@@ -548,11 +550,11 @@ export const ScrollStop: React.FC<{ stopF: number }> = ({ stopF }) => {
 export const Invoices: React.FC<{ drops: number[]; killF: number }> = ({ drops, killF }) => {
   const f = useCurrentFrame();
   const away = ease(f, killF + 4, killF + 14, 0, 1, Easing.in(Easing.cubic));
-  const stamp = interpolate(f, [killF, killF + 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(2.4)) });
+  const stamp = interpolate(f, [killF, killF + 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   return (
     <Paper>
       {drops.map((d, i) => {
-        const a = interpolate(f, [d, d + 7], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.6)) });
+        const a = interpolate(f, [d, d + 7], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
         const rot = [-6, 4, -3, 7][i % 4];
         return (
           <div key={i} style={{
@@ -608,7 +610,7 @@ export const CreatorsOrbit: React.FC<{ offset: number; countEnd: number }> = ({ 
         {Array.from({ length: 10 }, (_, i) => {
           const a = (i / 10) * Math.PI * 2 - Math.PI / 2 + f / 60;
           const show = i < n;
-          const s = show ? interpolate(f, [4 + ((countEnd - 4) * i) / 10, 10 + ((countEnd - 4) * i) / 10], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(2.2)) }) : 0;
+          const s = show ? interpolate(f, [4 + ((countEnd - 4) * i) / 10, 10 + ((countEnd - 4) * i) / 10], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) }) : 0;
           return (
             <div key={i} style={{ position: "absolute", left: Math.cos(a) * 330 - 58, top: Math.sin(a) * 330 - 58, width: 116, height: 116, borderRadius: "50%", background: "#1d1a24", border: `6px solid ${rings[i % 5]}`, display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${s})` }}>
               <IUser size={58} color="#fff" />
@@ -631,7 +633,7 @@ export const Slots: React.FC = () => {
       </div>
       <div style={{ position: "absolute", top: 380, left: 0, right: 0, display: "grid", gridTemplateColumns: "repeat(5, 150px)", gap: 24, justifyContent: "center" }}>
         {Array.from({ length: 30 }, (_, i) => {
-          const s = interpolate(f, [i * 0.8, i * 0.8 + 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(2)) });
+          const s = interpolate(f, [i * 0.8, i * 0.8 + 6], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
           const taken = i < 10;
           const pulse = taken ? 0 : (Math.sin(f / 5 + i * 0.6) + 1) / 2;
           return (
@@ -764,7 +766,7 @@ export const EditorReveal: React.FC<{ offset: number; captionsHide: [number, num
       </div>
       <div style={{ position: "absolute", left: 540 - 540 * sc, top: 110 * p, width: 1080, height: 1920, transform: `scale(${sc})`, transformOrigin: "0 0", borderRadius: 30 / sc * p, overflow: "hidden", boxShadow: p > 0.1 ? "0 0 0 4px #2a2533" : "none" }}>
         <Talking muted offset={offset} />
-        <Captions hide={captionsHide} offset={offset} />
+        <Captions2 hide={captionsHide} offset={offset} />
       </div>
       <div style={{ position: "absolute", left: 30, right: 30, top: 1180, height: 600, opacity: tl, transform: `translateY(${(1 - tl) * 120}px)` }}>
         {[{ n: "V2", c: "#8a6a2a" }, { n: "V1", c: "#6a4a7e" }, { n: "A1", c: "#2f6b55" }, { n: "A2", c: "#2e5a7a" }].map((tr, k) => (

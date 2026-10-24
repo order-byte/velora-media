@@ -40,10 +40,10 @@ export const C = {
   amber: "#FFB938",
 };
 
-export const useSpring = (delayFrames = 0, config: any = { damping: 14, stiffness: 160, mass: 0.7 }) => {
+/** smooth expo-out entrance 0→1 over ~12 frames (no overshoot) */
+export const useSpring = (delayFrames = 0, _config?: any) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  return spring({ frame: frame - delayFrames, fps, config });
+  return interpolate(frame - delayFrames, [0, 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
 };
 export const ease = (frame: number, a: number, b: number, from = 0, to = 1, e = Easing.bezier(0.22, 1, 0.36, 1)) =>
   interpolate(frame, [a, b], [from, to], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: e });
@@ -62,7 +62,7 @@ export const Pill: React.FC<{ delay?: number; children: React.ReactNode; bg?: st
       display: "inline-flex", alignItems: "center", gap: size * 0.35, padding: `${size * 0.38}px ${size * 0.62}px`, borderRadius: 999,
       background: bg, color, fontFamily: inter, fontWeight: 700, fontSize: size, letterSpacing: "-0.01em",
       boxShadow: "0 18px 50px rgba(0,0,0,0.28), inset 0 0 0 1.5px rgba(255,255,255,0.12)", backdropFilter: "blur(18px)",
-      transform: `scale(${0.6 + 0.4 * s}) translateY(${(1 - s) * 30}px)`, opacity: Math.min(1, s * 1.4), ...style,
+      transform: `scale(${0.9 + 0.1 * s}) translateY(${(1 - s) * 30}px)`, opacity: Math.min(1, s * 1.4), filter: s < 0.98 ? `blur(${(1 - s) * 10}px)` : undefined, ...style,
     }}>{children}</div>
   );
 };
