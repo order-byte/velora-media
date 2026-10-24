@@ -5,7 +5,7 @@ Each segment becomes a folder of 30 fps JPEG frames (1120x630). The vertical
 NeuralHive ad is centred over a blurred, darkened copy of itself so it fills a
 16:9 card without cropping its text.
 
-usage: python3 prepare_clips.py <sources.json> <out_dir>
+usage: python3 prepare_clips.py <sources.json> <out_dir> [clip_id,clip_id...]
 
 sources.json maps the work ids below to video paths, e.g.
   {"commas": ".../5UxnBbskneaPT7WI.mp4", "nano": ".../NanoSyllabus_Promo_Draft1_16x9.mp4",
@@ -26,10 +26,10 @@ SEGMENTS = {
     "g1_neural": ("neural", 25.4),
     "g1_nano": ("nano", 16.2),
     # grid 2 - UI ANIMATION
-    "g2_nano": ("nano", 21.0),
+    "g2_nano": ("nano", 22.6),
     "g2_commas": ("commas", 30.0),
     "g2_fortknox": ("fortknox", 57.5),
-    "g2_neural": ("neural", 9.0),
+    "g2_neural": ("neural", 10.6),
     # grid 3 - EXPLAINERS
     "g3_fortknox": ("fortknox", 19.5),
     "g3_neural": ("neural", 15.5),
@@ -54,7 +54,10 @@ def vf_for(work):
 def main():
     sources = json.load(open(sys.argv[1]))
     out = sys.argv[2]
+    only = set(sys.argv[3].split(",")) if len(sys.argv) > 3 else None
     for clip, (work, start) in SEGMENTS.items():
+        if only and clip not in only:
+            continue
         d = os.path.join(out, clip)
         os.makedirs(d, exist_ok=True)
         subprocess.run(
