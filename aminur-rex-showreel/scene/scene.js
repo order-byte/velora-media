@@ -77,6 +77,7 @@
 
   const world = $("#world"), camera = $("#camera"), bg = $("#bg"), bgGrid = $("#bgGrid"), glows = $("#glows");
   const waves = $("#waves"), chrome = $("#chrome"), flash = $("#flash"), fade = $("#fade"), grain = $("#grain");
+  const overlay = $("#overlay");
 
   function applyCamera(c) {
     world.style.transform =
@@ -546,17 +547,18 @@
   // ================================================================ 8 — end card
   const outro = (() => {
     const root = mk("div", "sec", world);
+    // the handle and tagline live in the flat overlay: Chromium's 3D sorting against the
+    // swinging avatar dropped tiles of the text when they shared the 3D scene
+    const flat = mk("div", "flat", overlay);
     const ava = popAvatar(root, 360);
     ava._ring.style.boxShadow = "0 0 0 2px rgba(200,243,29,0.6), 0 0 70px rgba(200,243,29,0.45)";
     ava._img.style.filter = "none";
-    const handle = mk("div", "o handle", root, "@aminur_rex");
-    const glowCopy = mk("div", "o handle", root, "@aminur_rex");
-    glowCopy.style.color = "#a8dc00";
-    const tag = mk("div", "o tagline", root, "2,000+ VIDEOS DELIVERED &nbsp;·&nbsp; DMs OPEN");
+    const handle = mk("div", "o handle", flat, "@aminur_rex");
+    const tag = mk("div", "o tagline", flat, "2,000+ VIDEOS DELIVERED &nbsp;·&nbsp; DMs OPEN");
     const spark = mk("div", "o", root);
     spark.style.cssText += "width:4px;height:240px;border-radius:4px;background:linear-gradient(180deg,transparent,#efffb0 70%,#fff);box-shadow:0 0 18px #c8f31d,0 0 40px #a8dc00";
     const burst = mk("div", "o", root);
-    burst.style.cssText += "width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(240,255,200,.9),rgba(200,243,29,.35) 35%,transparent 70%)";
+    burst.style.cssText += "width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(240,255,200,.6),rgba(200,243,29,.28) 35%,transparent 66%)";
     const smoke = [0, 1, 2].map(() => {
       const s = mk("div", "o", root);
       s.style.cssText += "width:900px;height:520px;border-radius:50%;background:radial-gradient(ellipse,rgba(245,250,235,.5),rgba(200,243,29,.14) 45%,transparent 70%)";
@@ -569,9 +571,9 @@
       const gone = P(t, 24.35, 24.95, E.inOutCubic);
       const o = (0.35 * appear + 0.65 * hit) * (1 - gone);
       tf(handle, { x: 0, y: 190, z: 0, sc: lerp(1.06, 1, hit) * lerp(1, 0.97, gone), o, blur: lerp(10, 0, appear) * (1 - hit) + gone * 6 });
-      handle.style.textShadow = `0 0 ${lerp(10, 24, hit).toFixed(1)}px rgba(200,243,29,${(0.45 + 0.45 * hit).toFixed(2)}), 0 0 ${lerp(30, 70, hit).toFixed(1)}px rgba(160,220,0,${(0.25 + 0.35 * hit).toFixed(2)})`;
+      // glow lives in text-shadow: a separate blurred copy got mis-sorted against the rotating 3D avatar
       const pulse = 0.5 + 0.5 * Math.sin((t - 23.4) * Math.PI * 2 * 0.9);
-      tf(glowCopy, { x: 0, y: 190, z: -2, sc: 1.01, o: (0.18 + 0.22 * hit * pulse) * (1 - gone), blur: 22 });
+      handle.style.textShadow = `0 0 ${lerp(10, 24, hit).toFixed(1)}px rgba(200,243,29,${(0.45 + 0.45 * hit).toFixed(2)}), 0 0 ${lerp(30, 70 + 20 * pulse, hit).toFixed(1)}px rgba(160,220,0,${(0.25 + 0.35 * hit).toFixed(2)})`;
       // the 3D avatar swings slowly so the pop-out reads as depth
       const ap = P(t, 23.18, 23.7, E.outBack);
       tf(ava, { x: 0, y: -140, z: 0, ry: lerp(-16, 12, P(t, 23.2, 24.9, E.inOutSine)), rx: 6, sc: lerp(0.5, 1, ap) * lerp(1, 0.94, gone) });
@@ -580,17 +582,19 @@
       tf(tag, { x: 0, y: 272, z: 0, o: P(t, 23.45, 23.85, E.outCubic) * (1 - gone), blur: lerp(6, 0, P(t, 23.45, 23.85)) });
       const sp = P(t, 22.95, 23.2, E.inCubic);
       tf(spark, { x: 6, y: lerp(-760, -330, sp), z: 10, o: (t > 22.95 && t < 23.22) ? 1 : 0 });
-      tf(burst, { x: 0, y: -100, z: -5, sc: lerp(0.3, 1.7, P(t, 23.18, 23.62, E.outCubic)), o: kf(t, [[23.18, 0], [23.22, 0.85], [23.72, 0, E.outCubic]]) });
+      tf(burst, { x: 0, y: -140, z: -5, sc: lerp(0.3, 1.25, P(t, 23.18, 23.62, E.outCubic)), o: kf(t, [[23.18, 0], [23.22, 0.85], [23.72, 0, E.outCubic]]) });
       smoke.forEach((s, i) => {
         const p = P(t, 24.05 + i * 0.12, 25.05, E.outCubic);
         tf(s, { x: lerp(900 - i * 120, 250 - i * 260, p), y: 300 - i * 70 + wob(t, 0.3, i * 0.3, 20), z: 20, sc: lerp(0.7, 1.5, p), o: kf(t, [[24.05 + i * 0.12, 0], [24.45 + i * 0.12, 0.8], [25.05, 0.3]]), blur: 30 });
       });
-      applyCamera({ x: 0, y: 0, z: kf(t, [[22.6, -40], [25.05, 60, E.lin]]), rx: 0, ry: 0, blur: 0 });
+      const camZ = kf(t, [[22.6, -40], [25.05, 60, E.lin]]);
+      applyCamera({ x: 0, y: 0, z: camZ, rx: 0, ry: 0, blur: 0 });
+      flat.style.transform = `scale(${(1500 / (1500 - camZ)).toFixed(4)})`;
       env({ bgName: "black", fadeO: kf(t, [[22.6, 1], [22.75, 0], [24.8, 0], [25.05, 1]]) });
       orb(0, 960, 520, 1200, "rgba(200,243,29,0.13)", (0.3 + 0.7 * hit) * (1 - gone));
       noOrbs(1);
     }
-    return { root, update, range: [22.62, 25.1] };
+    return { root, extra: flat, update, range: [22.62, 25.1] };
   })();
 
   const SECTIONS = [intro, profile, software, chat, grids, outro];
@@ -613,10 +617,12 @@
     for (const s of SECTIONS) {
       const on = t >= s.range[0] && t < s.range[1];
       show(s.root, on);
+      if (s.extra) show(s.extra, on);
       if (on && !active) active = s;
     }
     if (!active) active = SECTIONS[SECTIONS.length - 1];
     show(active.root, true);
+    if (active.extra) show(active.extra, true);
     active.update(t);
     const f = Math.floor(t * 60);
     grain.style.backgroundImage = `url(${grainTiles[f % grainTiles.length]})`;

@@ -31,6 +31,9 @@ body { font-family: "Sora", "Inter", sans-serif; color: var(--white); -webkit-fo
 #waves path { fill: none; stroke: var(--lime); stroke-width: 3.2; stroke-linecap: round; filter: url(#neon); }
 
 #camera { perspective: 1500px; perspective-origin: 50% 50%; }
+/* flat layer for text that must never be depth-sorted against tilted 3D planes */
+#overlay { position: absolute; inset: 0; }
+#overlay .flat { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
 #world { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
 .o { position: absolute; left: 0; top: 0; transform-origin: 0 0; transform-style: preserve-3d; }
 .sec { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
