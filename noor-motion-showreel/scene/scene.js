@@ -210,7 +210,7 @@
       const cam = {
         x: kf(t, [[0, -60], [0.9, -40, E.outExpo], [2.9, -20, E.inOutSine], [3.85, TX + 10, E.inOutCubic]]),
         y: kf(t, [[0, 10], [0.9, 0, E.outExpo], [3.85, TY, E.inOutCubic]]),
-        z: kf(t, [[0, -160], [0.9, 0, E.outExpo], [2.9, 50, E.inOutSine], [3.85, 330, E.inOutCubic], [4.45, 1500, E.inExpo]]),
+        z: kf(t, [[0, -160], [0.9, 0, E.outExpo], [2.9, 50, E.inOutSine], [3.85, 330, E.inOutCubic], [4.45, 1120, E.inExpo]]),
         rx: kf(t, [[0, 12], [0.9, 9, E.outExpo], [2.9, 6.5, E.inOutSine], [3.85, 3, E.inOutCubic]]),
         ry: kf(t, [[0, -20], [0.9, -11, E.outExpo], [2.9, -6, E.inOutSine], [3.85, -2, E.inOutCubic]]),
         rz: kf(t, [[0, -2.5], [0.9, -1.2, E.outExpo], [3.85, 0]]),

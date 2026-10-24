@@ -19,16 +19,32 @@ function args() {
   return o;
 }
 
-async function worker(id, jobs, opt) {
+async function openPage(id, opt) {
   const browser = await chromium.launch({ args: ["--force-color-profile=srgb", "--disable-lcd-text", "--font-render-hinting=none"] });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   page.on("pageerror", (e) => console.error(`[w${id}] page error:`, e.message));
   const url = pathToFileURL(path.join(__dirname, "..", "scene", "index.html")).href + "?clips=" + encodeURIComponent(pathToFileURL(opt.clips).href);
   await page.goto(url);
+  return { browser, page };
+}
+
+async function worker(id, jobs, opt) {
+  let { browser, page } = await openPage(id, opt);
   let done = 0;
   for (const job of jobs) {
-    await page.evaluate((t) => window.__render(t), job.t);
-    await page.screenshot({ path: job.file, type: "png", animations: "disabled", caret: "initial" });
+    // a stuck frame must not take the whole render down: retry on a fresh browser
+    for (let attempt = 1; ; attempt++) {
+      try {
+        await page.evaluate((t) => window.__render(t), job.t);
+        await page.screenshot({ path: job.file, type: "png", animations: "disabled", caret: "initial", timeout: 120000 });
+        break;
+      } catch (e) {
+        console.error(`[w${id}] t=${job.t.toFixed(3)} attempt ${attempt} failed: ${e.message.split("\n")[0]}`);
+        await browser.close().catch(() => {});
+        if (attempt >= 3) throw e;
+        ({ browser, page } = await openPage(id, opt));
+      }
+    }
     done++;
     if (done % 50 === 0) console.log(`[w${id}] ${done}/${jobs.length}`);
   }
