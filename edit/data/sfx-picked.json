@@ -1,0 +1,198 @@
+{
+ "whoosh_cine": {
+  "id": "1491",
+  "title": "Cinematic whoosh fast transition"
+ },
+ "whoosh_fast": {
+  "id": "1486",
+  "title": "Fast whoosh transition"
+ },
+ "whoosh_air": {
+  "id": "1492",
+  "title": "Air woosh"
+ },
+ "sweep_fast": {
+  "id": "168",
+  "title": "Fast sweep transition"
+ },
+ "sweep_air": {
+  "id": "1484",
+  "title": "Fast air sweep transition"
+ },
+ "sweep_fast2": {
+  "id": "1468",
+  "title": "Fast sweeping transition"
+ },
+ "whoosh_fast2": {
+  "id": "2290",
+  "title": "Fast whoosh transition"
+ },
+ "swoosh_short": {
+  "id": "3115",
+  "title": "Short wind swoosh"
+ },
+ "impact_zoom": {
+  "id": "2180",
+  "title": "Quick zoom impact"
+ },
+ "impact_deep": {
+  "id": "788",
+  "title": "Cinematic whoosh deep impact"
+ },
+ "impact_logo": {
+  "id": "2150",
+  "title": "Movie logo intro impact"
+ },
+ "impact_big": {
+  "id": "790",
+  "title": "Big cinematic impact"
+ },
+ "hit_fast": {
+  "id": "1279",
+  "title": "Exciting fast hit"
+ },
+ "bass_short": {
+  "id": "685",
+  "title": "Short bass hit"
+ },
+ "bass_future": {
+  "id": "724",
+  "title": "Futuristic bass hit"
+ },
+ "riser": {
+  "id": "563",
+  "title": "Cinematic drama riser"
+ },
+ "pop_long": {
+  "id": "2364",
+  "title": "Long pop"
+ },
+ "pop_hard": {
+  "id": "2354",
+  "title": "Hard pop click"
+ },
+ "pop_light": {
+  "id": "2357",
+  "title": "Explainer video pops whoosh light pop"
+ },
+ "pop_dry": {
+  "id": "2925",
+  "title": "Dry pop up notification alert"
+ },
+ "click_tech": {
+  "id": "2568",
+  "title": "Modern technology select"
+ },
+ "click_tone": {
+  "id": "1113",
+  "title": "Cool interface click tone"
+ },
+ "click_check": {
+  "id": "2569",
+  "title": "Modern click box check"
+ },
+ "click_select": {
+  "id": "900",
+  "title": "Select click"
+ },
+ "click_double": {
+  "id": "1109",
+  "title": "Fast double click on mouse"
+ },
+ "shutter": {
+  "id": "1430",
+  "title": "Camera shutter click"
+ },
+ "shutter_digital": {
+  "id": "1440",
+  "title": "Camera digital shutter"
+ },
+ "typing": {
+  "id": "2532",
+  "title": "Typing on a laptop keyboard"
+ },
+ "typing_fast": {
+  "id": "2535",
+  "title": "Fast keyboard typing"
+ },
+ "key_single": {
+  "id": "2541",
+  "title": "Hard single key press in a laptop"
+ },
+ "slot_payout": {
+  "id": "1989",
+  "title": "Slot machine payout alarm"
+ },
+ "coin_win": {
+  "id": "2000",
+  "title": "Coin win notification"
+ },
+ "coins_clink": {
+  "id": "1999",
+  "title": "Clinking coins"
+ },
+ "money_drop": {
+  "id": "1936",
+  "title": "Money bag drop"
+ },
+ "notif_positive": {
+  "id": "2867",
+  "title": "Positive notification"
+ },
+ "notif_msg": {
+  "id": "933",
+  "title": "Message pop alert"
+ },
+ "notif_bubble": {
+  "id": "951",
+  "title": "Bubble pop up alert notification"
+ },
+ "notif_correct": {
+  "id": "2358",
+  "title": "Correct answer tone"
+ },
+ "glitch_quick": {
+  "id": "1030",
+  "title": "Virtual quick glitch"
+ },
+ "glitch_break": {
+  "id": "2946",
+  "title": "Digital glitch break"
+ },
+ "glitch_text": {
+  "id": "1022",
+  "title": "Intro text glitch"
+ },
+ "glitch_small": {
+  "id": "2566",
+  "title": "Small electric glitch"
+ },
+ "tick_timer": {
+  "id": "1047",
+  "title": "Ticking timer"
+ },
+ "tick_single": {
+  "id": "1046",
+  "title": "Clock ticker single"
+ },
+ "tick_counter": {
+  "id": "1062",
+  "title": "Ticking counter"
+ },
+ "bells_up": {
+  "id": "3060",
+  "title": "Uplifting bells notification"
+ },
+ "reveal": {
+  "id": "1942",
+  "title": "Explainer video game reveal"
+ },
+ "tech_slide": {
+  "id": "2630",
+  "title": "Technology transition slide"
+ },
+ "tech_alert": {
+  "id": "3111",
+  "title": "Technology alert transition"
+ }
+}

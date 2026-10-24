@@ -1,0 +1,7 @@
+node_modules/
+edit/reel/public/
+edit/reel/out/
+preview/renders/
+*.mp4
+*.mkv
+*.wav
