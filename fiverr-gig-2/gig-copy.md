@@ -120,7 +120,7 @@ Not sure which package fits? Send me your product link before you order and I'll
 
 | Slot | File |
 |---|---|
-| Video | `aminur-hifi-saas-reel.mp4` |
+| Video | `aminur-hifi-saas-reel.mp4` (31 s, 1080p, 21.7 MB; Fiverr limit is 75 s and 50 MB) |
 | Image 1 (thumbnail) | `gig2-image-1-thumbnail.jpg` |
 | Image 2 | `gig2-image-2-packages.jpg` |
 | Image 3 | `gig2-image-3-what-hifi-means.jpg` |

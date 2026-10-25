@@ -9,7 +9,7 @@ Hassan (mhassansr)-এর SaaS gig দেখে বানানো দ্বি�
 | `media/gig2-image-1-thumbnail.jpg` | Image 1: thumbnail, কালো premium লুক + আসল UI |
 | `media/gig2-image-2-packages.jpg` | Image 2: FEATURE SPOT / PRODUCT STORY / LAUNCH FILM |
 | `media/gig2-image-3-what-hifi-means.jpg` | Image 3: 4K master থেকে আসল zoom |
-| `media/aminur-hifi-saas-reel.mp4` | Gig ভিডিও (Hassan-এর gig ভিডিও পাওয়ার পর মিউজিক/SFX মিলিয়ে ফাইনাল হবে) |
+| `media/aminur-hifi-saas-reel.mp4` | Gig ভিডিও: ৩১ সেকেন্ড, 1080p, ২১.৭ MB, মিউজিক Techno Fest Vibes (Mixkit), −14 LUFS |
 | `gig-copy.md` | Title, প্যাকেজ, description, FAQ, requirements, tags |
 | `claude-chrome-prompt.md` | Claude in Chrome-এ paste করার prompt |
 | `build/` | ইমেজ আর ভিডিও বানানোর স্ক্রিপ্ট |
@@ -21,9 +21,10 @@ Hassan (mhassansr)-এর SaaS gig দেখে বানানো দ্বি�
 3. Fiverr-এ aminur_rex দিয়ে লগইন করে Claude extension-এ `claude-chrome-prompt.md`-এর বক্সের লেখা paste করো।
 4. Claude সব ভরবে, Publish-এর আগে থেমে summary দেখাবে। ঠিক থাকলে লিখো **"publish"**।
 
-## যা বাকি
+## Sound আর মিউজিক
 
-- **Hassan-এর gig ভিডিও লাগবে।** Fiverr captcha দিয়ে আমাকে ব্লক করে। ভিডিওটা সাউন্ডসহ screen-record বা ডাউনলোড করে Google Drive লিংক দিলে ওর মিউজিক আর SFX মেপে ঠিক ওরকম বানানো হবে।
+- **মিউজিক:** "Techno Fest Vibes" by Alejandro Magaña (Mixkit)। ফ্রি commercial license, credit লাগবে না। বিস্তারিত `MUSIC-LICENSE.md`-এ।
+- **Sound effects:** v1 (Commas)-এর আসল whoosh, impact, riser, pop, click।
 
 ## Publish করার আগে দেখে নাও
 
