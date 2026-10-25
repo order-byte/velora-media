@@ -1,11 +1,12 @@
 import React from "react";
 import { AbsoluteFill, Img, OffthreadVideo, staticFile, useCurrentFrame, interpolate, Easing, random } from "remotion";
 import {
-  C, inter, serif, mono, FPS, fr, ease, useSpring, Fill, Pill, StyleTag, SUBS,
+  C, inter, serif, mono, FPS, fr, ease, useSpring, Fill, Pill, StyleTag, SUBS, SCN,
   ICam, IScissors, IMoon, ICheck, IX, IDown, IFlame, IBattery, IStopwatch, ISend, IHeart, IMsg, IUser, IBolt, ITrend, IFilm, IPin, ICursor, IPhone, IMail, IMic,
 } from "./lib";
 import { Talking } from "./Base";
 import { Captions2 } from "./Captions2";
+import { Captions4 } from "./Captions4";
 
 /* ------------------------------------------------ shared pieces */
 export const VideoCard: React.FC<{ src: string; x: number; y: number; w: number; h: number; r?: number; rot?: number; delay?: number; filter?: string; startFrom?: number; rate?: number; shadow?: boolean }> = ({
@@ -377,10 +378,10 @@ export const DemoTalking: React.FC<{ offset: number }> = ({ offset }) => {
     <AbsoluteFill>
       <Talking muted offset={offset} />
       <RecFrame />
-      <div style={{ position: "absolute", top: 1120, left: 0, right: 0, textAlign: "center", fontFamily: inter, fontWeight: 900, fontStyle: "italic", fontSize: 130, lineHeight: 0.95, letterSpacing: "-0.04em", textTransform: "uppercase" }}>
+      {!SCN.minimal && <div style={{ position: "absolute", top: 1120, left: 0, right: 0, textAlign: "center", fontFamily: inter, fontWeight: 900, fontStyle: "italic", fontSize: 130, lineHeight: 0.95, letterSpacing: "-0.04em", textTransform: "uppercase" }}>
         <div style={{ color: "#fff", transform: `scale(${a})`, textShadow: "0 8px 30px rgba(0,0,0,0.6)" }}>Talking</div>
         <div style={{ color: C.purple, transform: `scale(${b})`, textShadow: "0 8px 30px rgba(0,0,0,0.6)" }}>Head</div>
-      </div>
+      </div>}
       <StyleTag n="01" label="TALKING HEAD" />
     </AbsoluteFill>
   );
@@ -400,8 +401,8 @@ export const DemoPodcast: React.FC = () => {
       <div style={{ position: "absolute", top: 900, left: 0, right: 0, height: 140, display: "flex", alignItems: "center", justifyContent: "center", gap: 7, background: "linear-gradient(180deg, transparent, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.85) 60%, transparent)" }}>
         {bars.map((h, i) => <div key={i} style={{ width: 12, height: h, borderRadius: 6, background: i % 5 === 0 ? C.purple : "#fff" }} />)}
       </div>
-      <div style={{ position: "absolute", left: 60, top: 790 }}><Pill size={34} delay={3}><IMic size={34} color={C.purple} /> HOST</Pill></div>
-      <div style={{ position: "absolute", right: 60, top: 1080 }}><Pill size={34} delay={6}><IMic size={34} color={C.green} /> GUEST</Pill></div>
+      {!SCN.minimal && <div style={{ position: "absolute", left: 60, top: 790 }}><Pill size={34} delay={3}><IMic size={34} color={C.purple} /> HOST</Pill></div>}
+      {!SCN.minimal && <div style={{ position: "absolute", right: 60, top: 1080 }}><Pill size={34} delay={6}><IMic size={34} color={C.green} /> GUEST</Pill></div>}
       <StyleTag n="02" label="PODCAST CLIPS" />
     </AbsoluteFill>
   );
@@ -443,8 +444,8 @@ export const DemoCine: React.FC = () => {
       <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,60,80,0.25), rgba(255,140,60,0.12))", mixBlendMode: "soft-light" }} />
       <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: bars, background: "#000" }} />
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: bars, background: "#000" }} />
-      <div style={{ position: "absolute", top: 860, left: 0, right: 0, textAlign: "center", fontFamily: serif, fontStyle: "italic", fontSize: 180, color: "#fff",
-        letterSpacing: `${interpolate(f, [0, 36], [0.25, 0.02], { extrapolateRight: "clamp" })}em`, opacity: ease(f, 4, 16), textShadow: "0 10px 40px rgba(0,0,0,0.5)" }}>cinematic</div>
+      {!SCN.minimal && <div style={{ position: "absolute", top: 860, left: 0, right: 0, textAlign: "center", fontFamily: serif, fontStyle: "italic", fontSize: 180, color: "#fff",
+        letterSpacing: `${interpolate(f, [0, 36], [0.25, 0.02], { extrapolateRight: "clamp" })}em`, opacity: ease(f, 4, 16), textShadow: "0 10px 40px rgba(0,0,0,0.5)" }}>cinematic</div>}
       <StyleTag n="04" label="CINEMATIC VLOG" />
     </AbsoluteFill>
   );
@@ -484,12 +485,12 @@ export const DemoFaceless: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: "#000" }}>
       <OffthreadVideo src={staticFile("broll/hands_typing.mp4")} muted style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.45) contrast(1.1) saturate(0.7)" }} />
-      <div style={{ position: "absolute", top: 800, left: 60, right: 60, textAlign: "center" }}>
+      {!SCN.minimal && <div style={{ position: "absolute", top: 800, left: 60, right: 60, textAlign: "center" }}>
         {words.map((w, i) => {
           const a = interpolate(f, [w.t, w.t + 5], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
           return <span key={i} style={{ display: "inline-block", margin: "0 16px", fontFamily: inter, fontWeight: 900, fontSize: 140, letterSpacing: "-0.05em", color: w.c || "#fff", opacity: a, transform: `scale(${0.6 + 0.4 * a})` }}>{w.w}</span>;
         })}
-      </div>
+      </div>}
       <StyleTag n="06" label="FACELESS STORY" />
     </AbsoluteFill>
   );
@@ -657,20 +658,20 @@ export const CommentSheet: React.FC<{ typeF: number }> = ({ typeF }) => {
   const sent = f > typeF + 14;
   const tap = interpolate(f, [typeF + 12, typeF + 16, typeF + 22], [1, 0.85, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <div style={{ position: "absolute", left: 40, right: 40, top: 1040 + (1 - s) * 900, height: 560, borderRadius: 48, background: "#fff", boxShadow: "0 -20px 80px rgba(0,0,0,0.4)", padding: "26px 44px" }}>
-      <div style={{ width: 90, height: 10, borderRadius: 5, background: "#ddd", margin: "0 auto 26px" }} />
-      <div style={{ textAlign: "center", fontFamily: inter, fontWeight: 800, fontSize: 44, color: C.ink }}>Comments</div>
-      <div style={{ marginTop: 40, textAlign: "center", fontFamily: inter, fontWeight: 700, fontSize: 52, color: C.ink }}>
+    <div style={{ position: "absolute", left: 40, right: 40, top: 1040 + (1 - s) * 900, height: 560, borderRadius: 48, background: "#1c1c1e", boxShadow: "0 -20px 80px rgba(0,0,0,0.4)", padding: "26px 44px" }}>
+      <div style={{ width: 90, height: 10, borderRadius: 5, background: "#48484a", margin: "0 auto 26px" }} />
+      <div style={{ textAlign: "center", fontFamily: inter, fontWeight: 800, fontSize: 44, color: "#fff" }}>Comments</div>
+      <div style={{ marginTop: 40, textAlign: "center", fontFamily: inter, fontWeight: 700, fontSize: 52, color: "#fff" }}>
         Comment <span style={{ color: C.purple }}>"EDIT"</span> to get the package
       </div>
       {sent && (
         <div style={{ marginTop: 30, display: "flex", alignItems: "center", gap: 20, opacity: ease(f, typeF + 14, typeF + 20) }}>
           <div style={{ width: 70, height: 70, borderRadius: "50%", background: "#e9e4ef", display: "flex", alignItems: "center", justifyContent: "center" }}><IUser size={40} color="#8a8292" /></div>
-          <div style={{ fontFamily: inter, fontSize: 44 }}><b>you</b> <span style={{ color: C.purple, fontWeight: 800 }}>EDIT</span></div>
+          <div style={{ fontFamily: inter, fontSize: 44, color: "#fff" }}><b>you</b> <span style={{ color: C.purple, fontWeight: 800 }}>EDIT</span></div>
         </div>
       )}
       <div style={{ position: "absolute", left: 44, right: 44, bottom: 40, display: "flex", alignItems: "center", gap: 20 }}>
-        <div style={{ flex: 1, height: 100, borderRadius: 50, border: "3px solid #e3dde8", display: "flex", alignItems: "center", padding: "0 34px", fontFamily: inter, fontWeight: 800, fontSize: 50, color: C.ink }}>
+        <div style={{ flex: 1, height: 100, borderRadius: 50, border: "3px solid #3a3a3c", display: "flex", alignItems: "center", padding: "0 34px", fontFamily: inter, fontWeight: 800, fontSize: 50, color: "#fff" }}>
           {sent ? <span style={{ color: "#aaa", fontWeight: 500 }}>Add a comment…</span> : <>{word.slice(0, n)}<span style={{ opacity: f % 12 < 6 ? 1 : 0, color: C.purple }}>|</span></>}
         </div>
         <div style={{ width: 100, height: 100, borderRadius: "50%", background: C.purple, display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${tap})` }}><ISend size={50} color="#fff" /></div>
@@ -766,7 +767,7 @@ export const EditorReveal: React.FC<{ offset: number; captionsHide: [number, num
       </div>
       <div style={{ position: "absolute", left: 540 - 540 * sc, top: 110 * p, width: 1080, height: 1920, transform: `scale(${sc})`, transformOrigin: "0 0", borderRadius: 30 / sc * p, overflow: "hidden", boxShadow: p > 0.1 ? "0 0 0 4px #2a2533" : "none" }}>
         <Talking muted offset={offset} />
-        <Captions2 hide={captionsHide} offset={offset} />
+        {SCN.minimal ? <Captions4 hide={captionsHide} offset={offset} /> : <Captions2 hide={captionsHide} offset={offset} />}
       </div>
       <div style={{ position: "absolute", left: 30, right: 30, top: 1180, height: 600, opacity: tl, transform: `translateY(${(1 - tl) * 120}px)` }}>
         {[{ n: "V2", c: "#8a6a2a" }, { n: "V1", c: "#6a4a7e" }, { n: "A1", c: "#2f6b55" }, { n: "A2", c: "#2e5a7a" }].map((tr, k) => (

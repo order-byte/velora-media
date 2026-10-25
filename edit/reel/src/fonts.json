@@ -46,5 +46,29 @@
   "style": "normal",
   "weight": "700",
   "file": "fonts/JetBrainsMono-normal-700.woff2"
+ },
+ {
+  "family": "Montserrat",
+  "style": "normal",
+  "weight": "400",
+  "file": "fonts/Montserrat-normal-400.woff2"
+ },
+ {
+  "family": "Montserrat",
+  "style": "normal",
+  "weight": "500",
+  "file": "fonts/Montserrat-normal-500.woff2"
+ },
+ {
+  "family": "Montserrat",
+  "style": "normal",
+  "weight": "700",
+  "file": "fonts/Montserrat-normal-700.woff2"
+ },
+ {
+  "family": "Montserrat",
+  "style": "normal",
+  "weight": "800",
+  "file": "fonts/Montserrat-normal-800.woff2"
  }
 ]

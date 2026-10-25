@@ -4,7 +4,7 @@ import { SUBS, FPS, C, inter, serif, CLIPS, norm } from "./lib";
 
 /** Face sits at ~(420,760) in source pixels; zoom around it and lift it to the upper third. */
 const ORIGIN = "420px 760px";
-const ZOOMS = [1.16, 1.28];
+export const CFG = { src: "base_blur.mp4", zooms: [1.16, 1.28] };
 
 /** Extra emphasis punches (seconds) -> quick zoom bump */
 export const PUNCHES: number[] = [];
@@ -35,7 +35,7 @@ const shiftAt = (t: number) => {
 export const zoomAt = (t: number) => {
   const i = Math.max(0, SUBS.findIndex((s) => t >= s.oStart && t < s.oEnd));
   const sb = SUBS[i] || SUBS[SUBS.length - 1];
-  const base = ZOOMS[i % 2];
+  const base = CFG.zooms[i % 2];
   const k = (t - sb.oStart) / Math.max(0.1, sb.oEnd - sb.oStart);
   const push = 0.025 * k; // slow push-in through each cut
   // short settle at each cut: start 4% tighter, ease back in 5 frames
@@ -59,7 +59,7 @@ export const Talking: React.FC<{ raw?: boolean; muted?: boolean; offset?: number
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: "#000" }}>
       <OffthreadVideo
-        src={staticFile(raw ? "base_raw.mp4" : "base_blur.mp4")}
+        src={staticFile(raw ? "base_raw.mp4" : CFG.src)}
         muted={muted}
         startFrom={offset}
         style={{ position: "absolute", width: 1080, height: 1920, transformOrigin: ORIGIN, transform: raw ? "none" : `translateY(${dy}px) scale(${z})`, filter: filt || undefined }}

@@ -67,9 +67,12 @@ export const Pill: React.FC<{ delay?: number; children: React.ReactNode; bg?: st
   );
 };
 
+/** Global switch: minimal (pro) look hides decorative labels */
+export const SCN = { minimal: false };
 /** Section label like "01 · TALKING HEAD" */
 export const StyleTag: React.FC<{ n: string; label: string; light?: boolean }> = ({ n, label, light }) => {
   const s = useSpring(0);
+  if (SCN.minimal) return null;
   return (
     <div style={{ position: "absolute", top: 210, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
       <div style={{
