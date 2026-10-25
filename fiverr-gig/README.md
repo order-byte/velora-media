@@ -6,7 +6,7 @@ Motionpeak-এর SaaS explainer gig দেখে বানানো। সব �
 
 | ফাইল | কী |
 |---|---|
-| `media/aminur-showreel-gig-video.mp4` | Gig ভিডিও: ৫৩.৫ সেকেন্ড, 1920×1080, 30 fps, ৩৭ MB। Fiverr limit: ৭৫ সেকেন্ড, ৫০ MB |
+| `media/aminur-showreel-gig-video.mp4` | Gig ভিডিও: ৫৩.৫ সেকেন্ড, 1920×1080, 30 fps, ৩৮ MB, মিউজিক Rising Forest। Fiverr limit: ৭৫ সেকেন্ড, ৫০ MB |
 | `media/gig-image-1-thumbnail.jpg` | Image 1: thumbnail (search-এ এটাই দেখা যায়) |
 | `media/gig-image-2-recent-work.jpg` | Image 2: recent client work |
 | `media/gig-image-3-how-we-work.jpg` | Image 3: no middlemen + ৪ ধাপের প্রসেস |
@@ -29,9 +29,11 @@ Motionpeak-এর SaaS explainer gig দেখে বানানো। সব �
 
 ## Sound আর মিউজিক
 
-- **Sound effects:** v1 (Commas Affiliate Center) থেকে আসল whoosh, impact, riser, pop, click কেটে নেওয়া। তাই sound ঠিক v1-এর মতো।
-- **মিউজিক:** নিজেদের বানানো original track: 128.6 BPM, F minor, energetic house ধাঁচের। কোনো copyright বা credit লাগবে না। প্রতিটা কাট beat-এর উপর পড়ে (১ beat = ১৪ frame)।
-- Loudness: −14 LUFS, true peak −1 dB (YouTube/Fiverr স্ট্যান্ডার্ড)।
+- **মিউজিক:** "Rising Forest" by Diego Nava (Mixkit, House, 124 BPM)। Mixkit Stock Music Free License: online ads, social video, website-এ commercial ব্যবহার চলবে, credit লাগবে না। বিস্তারিত `MUSIC-LICENSE.md`-এ।
+- ট্র্যাকটা rubberband দিয়ে 128.6 BPM-এ আনা হয়েছে (+3.7%, pitch একই), তারপর bar ধরে কাটা: intro → drop → breakdown → drop → শেষ hit। প্রতিটা kick ভিডিওর কাটের ±৮ ms-এর মধ্যে পড়ে।
+- আরও ২টা অপশন তৈরি আছে: "Techno Fest Vibes" (Alejandro Magaña) আর "Cat Walk" (Arulo)। বদলাতে চাইলে বলো, শুধু অডিও বদলাতে হবে।
+- **Sound effects:** v1 (Commas Affiliate Center) থেকে আসল whoosh, impact, riser, pop, click কেটে নেওয়া, মিউজিকের ২-৪ dB উপরে।
+- Loudness: −14 LUFS, peak −1.6 dB।
 
 ## Publish করার আগে দেখে নাও
 

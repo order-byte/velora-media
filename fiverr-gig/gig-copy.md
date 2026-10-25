@@ -132,7 +132,7 @@ Questions the buyer answers after ordering:
 
 | Slot | File |
 |---|---|
-| Video | `aminur-showreel-gig-video.mp4` (53.5 s, 1080p, 37 MB; Fiverr limit is 75 s and 50 MB) |
+| Video | `aminur-showreel-gig-video.mp4` (53.5 s, 1080p, 38 MB; Fiverr limit is 75 s and 50 MB) |
 | Image 1 (thumbnail) | `gig-image-1-thumbnail.jpg` |
 | Image 2 | `gig-image-2-recent-work.jpg` |
 | Image 3 | `gig-image-3-how-we-work.jpg` |

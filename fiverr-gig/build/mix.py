@@ -64,7 +64,7 @@ def main():
         m = min(len(seg), n - i0)
         sfx[i0:i0 + m] += seg[:m] * c["gain"]
     # SFX bus +5 dB over its source level, music bed a touch under so hits read clearly
-    mix = mus * 0.72 + sfx * 1.4
+    mix = mus * 0.72 + sfx * float(__import__("os").environ.get("SFX_GAIN", "1.4"))
     peak = np.abs(mix).max()
     mix = mix / peak * 0.95
     wavfile.write(out, SR, mix.astype(np.float32))
