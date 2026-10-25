@@ -2,6 +2,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame, interpolate, Easing } from "remotion";
 import { inter, serif, ICam, IScissors, ICheck, IX, IUser, ISend, IMic, IFilm, IBolt, ITrend, IHeart, ICursor, IPhone, IMail } from "./lib";
 import META from "./sfx-meta.json";
+import TRACK from "./track.json";
 
 /* =============================== timing (seconds, from the cut's transcript) */
 export const FINAL_DUR = 65.0;
@@ -30,40 +31,49 @@ const CAM_RAW: Key[] = [
   [55.9, 1.24, 0, -20], [59.0, 1.3, 0, -40],
   [62.2, 1.2, 0, -10], [62.27, 1.12, 0, 30], [65, 1.2, 0, 0],
 ];
-// keep the shot close to the original framing: gentle push-ins, small punches
-const CAM: Key[] = CAM_RAW.map(([t, s, x, y]) => [t, 1 + (s - 1) * 0.38, x * 0.4, y * 0.4]);
+// zoom keyframes (scale only); position comes from the face-tracking camera below
+const CAM: Key[] = CAM_RAW.map(([t, sc]) => [t, 1.12 + (sc - 1.2) * 0.5, 0, 0]);
 const camAt = (t: number) => {
   let i = CAM.findIndex((c) => c[0] > t); if (i === -1) i = CAM.length; const a = CAM[Math.max(0, i - 1)], b = CAM[Math.min(CAM.length - 1, i)];
   if (a === b) return a;
   const p = interpolate(t, [a[0], b[0]], [0, 1], { easing: b[0] - a[0] < 0.2 ? EX : IO, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  return [t, a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p, a[3] + (b[3] - a[3]) * p] as Key;
+  return [t, a[1] + (b[1] - a[1]) * p, 0, 0] as Key;
 };
-const ORIGIN = "430px 820px";
-const camStyle = (t: number, depth = 1): React.CSSProperties => {
-  const [, s, x, y] = camAt(t);
+/* CapCut-style camera tracking: the frame follows the face (face stays locked), with a little handheld life.
+   TRACK = smoothed face position per frame + that shot's rest position. The set moves a bit less (parallax). */
+const LOCK = 0.9;
+const camStyle = (frame: number, depth = 1): React.CSSProperties => {
+  const t = frame / F;
+  const [fx, fy, f0x, f0y] = (TRACK as number[][])[Math.min(TRACK.length - 1, Math.max(0, frame))];
+  const s = camAt(t)[1];
+  const TAU = Math.PI * 2;
+  let tx = LOCK * (f0x - fx) + 5 * Math.sin(TAU * 0.23 * t) + 3 * Math.sin(TAU * 0.61 * t + 1.3);
+  let ty = LOCK * (f0y - fy) + 4 * Math.sin(TAU * 0.19 * t + 0.7) + 2.5 * Math.sin(TAU * 0.53 * t + 2.1);
+  const rot = 0.3 * Math.sin(TAU * 0.17 * t + 0.4);
+  const m = 14; // keep the frame edges covered
+  tx = Math.max(-(1080 - fx) * (s - 1) + m, Math.min(fx * (s - 1) - m, tx));
+  ty = Math.max(-(1920 - fy) * (s - 1) + m, Math.min(fy * (s - 1) - m, ty));
   const sd = 1 + (s - 1) * depth;
-  const drift = Math.sin(t * 0.5) * 6 * depth;
-  return { transformOrigin: ORIGIN, transform: `translate(${x * depth + drift}px, ${y * depth}px) scale(${sd})` };
+  return { transformOrigin: `${fx}px ${fy}px`, transform: `translate(${tx * depth}px, ${ty * depth}px) rotate(${rot * depth}deg) scale(${sd})` };
 };
 
-/* =============================== layers */
+/* =============================== layers (natural colour: no grade, the creator grades it) */
 const Plate: React.FC = () => {
-  const f = useCurrentFrame(); const t = f / F;
+  const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: "#0d1a10" }}>
-      <AbsoluteFill style={camStyle(t, 0.55)}>
-        <Img src={staticFile("plate.png")} style={{ width: 1080, height: 1920, filter: "brightness(0.82) saturate(0.88) sepia(0.12)" }} />
+      <AbsoluteFill style={camStyle(f, 0.8)}>
+        <Img src={staticFile("plate4.png")} style={{ width: 1080, height: 1920 }} />
       </AbsoluteFill>
-      <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.35) 100%)" }} />
     </AbsoluteFill>
   );
 };
 const Subject: React.FC = () => {
-  const f = useCurrentFrame(); const t = f / F;
+  const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
-      <AbsoluteFill style={camStyle(t, 1)}>
-        <OffthreadVideo src={staticFile("subject.webm")} transparent muted style={{ width: 1080, height: 1920 }} />
+      <AbsoluteFill style={camStyle(f, 1)}>
+        <OffthreadVideo src={staticFile("subject_raw.webm")} transparent muted style={{ width: 1080, height: 1920 }} />
       </AbsoluteFill>
     </AbsoluteFill>
   );
@@ -459,12 +469,19 @@ const Sound: React.FC = () => (
 const SCENES = { shoot: [4.15, 8.4], search: [13.45, 17.3], styles: [23.55, 32.0] } as const;
 const HIDE: [number, number][] = [[...SCENES.shoot], [...SCENES.search], [...SCENES.styles], [55.85, 57.15], [59.05, 62.2]] as any;
 
+export const FinalClean: React.FC = () => (
+  <AbsoluteFill style={{ background: "#000" }}>
+    <Plate />
+    <Subject />
+    <Audio src={staticFile("voice.m4a")} />
+  </AbsoluteFill>
+);
+
 export const Final: React.FC = () => (
   <AbsoluteFill style={{ background: "#000" }}>
     <Plate />
     {BIGS.map((b, i) => <Seq key={i} a={b.t} b={b.e} name={`big ${b.text}`}><BigWord b={b} /></Seq>)}
     <Subject />
-    <Finish />
 
     <Seq a={34.0} b={38.65} name="format chips"><FormatChips /></Seq>
     <Seq a={41.35} b={44.8} name="invoices"><Invoices /></Seq>
