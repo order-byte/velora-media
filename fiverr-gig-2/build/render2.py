@@ -79,8 +79,8 @@ def shot(start, n, src, t, cam, **o):
 closeups = [
     (5, 27.0, (1.70, 0.47, 0.53, 1.22, 0.52, 0.52), "UI ANIMATION  ·  NANOSYLLABUS"),
     (1, 18.2, (1.30, 0.30, 0.40, 1.08, 0.50, 0.45), "PRODUCT DEMO  ·  COMMAS"),
-    (1, 32.5, (1.00, 0.50, 0.50, 1.32, 0.64, 0.44), "DATA UI  ·  COMMAS"),
-    (5, 20.4, (1.55, 0.50, 0.50, 1.12, 0.50, 0.50), "FEATURE SPOT  ·  NANOSYLLABUS"),
+    (1, 21.0, (1.00, 0.50, 0.50, 1.30, 0.36, 0.46), "DATA UI  ·  COMMAS"),
+    (5, 41.0, (1.45, 0.50, 0.48, 1.10, 0.50, 0.50), "FEATURE SPOT  ·  NANOSYLLABUS"),
 ]
 for k, (s, t, cam, label) in enumerate(closeups):
     shot(b(2) + k * BAR, BAR, s, t, cam, label=label, punch=(k == 0), flash=(k == 0))
