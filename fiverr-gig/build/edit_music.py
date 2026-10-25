@@ -1,4 +1,4 @@
-"""Cut a produced track to the reel's 28-bar structure at 128.5714 BPM.
+"""Cut a produced track to a reel's bar structure at 128.5714 BPM (STRUCTURE env, default gig 1).
 
 usage: edit_music.py TRACK.mp3 OUT.wav REPORT.json
 
@@ -15,7 +15,10 @@ from scipy import signal
 SR = 48000
 TARGET_BPM = 1800 / 14  # 14 frames per beat at 30 fps
 BAR_T = 4 * 60 / TARGET_BPM
-N_BARS = 28
+import os
+# sections in reel order; STRUCTURE="build:2,drop:4,break:2,drop:6,outro:2" for gig 2
+STRUCT = [(k, int(n)) for k, n in (x.split(":") for x in os.environ.get("STRUCTURE", "build:4,drop:8,break:4,drop:8,outro:4").split(","))]
+N_BARS = sum(n for _, n in STRUCT)
 TAIL = 1.2
 OUT_DUR = N_BARS * BAR_T + TAIL
 
@@ -134,14 +137,25 @@ def main():
     # if only one drop, take drop B from the next 8 loud bars after drop A
     if d2 == d1 and d1 + 16 <= nbar - 4 and E[d1 + 8:d1 + 16].mean() > hi_level - 3:
         d2 = d1 + 8
-    plan = {"intro_build": (d1 - 4, 4), "drop_a": (d1, 8), "breakdown": (d2 - 4, 4), "drop_b": (d2, 8)}
-    # outro: last 4 loud bars before the track's ending, plus its natural tail
-    import os
-    if os.environ.get("PLAN_OVERRIDE"):
-        plan.update({k: tuple(v) for k, v in json.loads(os.environ["PLAN_OVERRIDE"]).items()})
+    # build/break take the bars right before the next drop; the outro takes the last loud bars
     loud_bars = [i for i in range(nbar) if E[i] > hi_level - 6]
     end_bar = min(loud_bars[-1] + 1, nbar)
-    plan["outro"] = (end_bar - 4, 4)
+    plan, order = {}, []
+    drop_pts = [d1, d2]
+    di = 0
+    for si, (kind, n) in enumerate(STRUCT):
+        name = f"{si}_{kind}"
+        order.append(name)
+        if kind in ("build", "break"):
+            plan[name] = (drop_pts[min(di, 1)] - n, n)
+        elif kind == "drop":
+            plan[name] = (drop_pts[min(di, 1)], n)
+            di += 1
+        else:
+            plan[name] = (end_bar - n, n)
+    outro_name = order[-1]
+    if os.environ.get("PLAN_OVERRIDE"):
+        plan.update({k: tuple(v) for k, v in json.loads(os.environ["PLAN_OVERRIDE"]).items()})
 
     sosk = signal.butter(2, 150 / (SR / 2), "lowpass", output="sos")
     ylo = signal.sosfilt(sosk, ymono)
@@ -166,7 +180,6 @@ def main():
             return 0.0
         return float(offs[int(np.argmax(sc))]) - 0.004  # 4 ms = measured bias of an on-grid kick
 
-    order = ["intro_build", "drop_a", "breakdown", "drop_b", "outro"]
     offsets = {nm: seg_offset(*plan[nm]) for nm in order}
     out_n = int(round(OUT_DUR * SR))
     res = np.zeros((out_n, 2), np.float32)
@@ -179,7 +192,7 @@ def main():
         a, b = a + sh, b + sh
         pre = int(0.006 * SR)
         a -= pre
-        if nm == "outro":
+        if nm == outro_name:
             b = min(len(y), b + int(TAIL * SR) + xf)
             natural = end_bar + 2 > nbar or E[min(end_bar + 1, nbar - 1)] < hi_level - 15
         seg = y[max(a, 0):b].copy()
@@ -187,13 +200,13 @@ def main():
             seg = np.concatenate([np.zeros((-a, 2), np.float32), seg])
         dst = int(round(pos_bar * BAR_T * SR)) - pre
         seg[:xf] *= np.linspace(0, 1, xf)[:, None] if dst > 0 else 1
-        if nm != "outro":
+        if nm != outro_name:
             seg[-xf:] *= np.linspace(1, 0, xf)[:, None]
         if dst < 0:
             seg = seg[-dst:]
             dst = 0
         m = min(len(seg), out_n - dst)
-        if nm == "outro" and not natural:
+        if nm == outro_name and not natural:
             # final hit: first beat of the outro's last bar, ringing out under a reverb tail
             ha, _ = bar_slice(b0 + n - 1, 1)
             ha += sh
@@ -223,7 +236,9 @@ def main():
         res[dst:dst + m] += seg[:m]
         pos_bar += n
     if os.environ.get("FILTER_BREAKDOWN"):
-        b12, b16 = int(round(12 * BAR_T * SR)), int(round(16 * BAR_T * SR))
+        bk = [i for i, (k, _) in enumerate(STRUCT) if k == "break"][0]
+        start_bar = sum(n for _, n in STRUCT[:bk])
+        b12, b16 = int(round(start_bar * BAR_T * SR)), int(round((start_bar + STRUCT[bk][1]) * BAR_T * SR))
         seg = res[b12:b16].astype(np.float64)
         outseg = np.zeros_like(seg)
         zi = None
