@@ -1,0 +1,176 @@
+{
+  "open_hit": {
+    "src_start": 0.0,
+    "src_end": 0.2,
+    "duration": 0.2,
+    "peak_db": -16.7
+  },
+  "swell_zips": {
+    "src_start": 0.2,
+    "src_end": 1.72,
+    "duration": 1.52,
+    "peak_db": -0.0
+  },
+  "swell_glitch": {
+    "src_start": 1.72,
+    "src_end": 3.7,
+    "duration": 1.98,
+    "peak_db": -6.7
+  },
+  "swell_short": {
+    "src_start": 3.7,
+    "src_end": 4.76,
+    "duration": 1.06,
+    "peak_db": -8.1
+  },
+  "impact": {
+    "src_start": 4.76,
+    "src_end": 5.95,
+    "duration": 1.19,
+    "peak_db": -2.3
+  },
+  "swell_ticks": {
+    "src_start": 5.95,
+    "src_end": 7.95,
+    "duration": 2.0,
+    "peak_db": -8.0
+  },
+  "swell_zips2": {
+    "src_start": 7.95,
+    "src_end": 10.45,
+    "duration": 2.5,
+    "peak_db": -1.0
+  },
+  "pop": {
+    "src_start": 10.5,
+    "src_end": 11.3,
+    "duration": 0.8,
+    "peak_db": -14.6
+  },
+  "pulses": {
+    "src_start": 11.58,
+    "src_end": 12.45,
+    "duration": 0.87,
+    "peak_db": -11.0
+  },
+  "swell_long": {
+    "src_start": 12.45,
+    "src_end": 16.55,
+    "duration": 4.1,
+    "peak_db": -8.0
+  },
+  "swell_e": {
+    "src_start": 16.6,
+    "src_end": 18.25,
+    "duration": 1.65,
+    "peak_db": -3.1
+  },
+  "ping1": {
+    "src_start": 18.27,
+    "src_end": 19.25,
+    "duration": 0.98,
+    "peak_db": -7.3
+  },
+  "ping2": {
+    "src_start": 19.3,
+    "src_end": 20.25,
+    "duration": 0.95,
+    "peak_db": -7.3
+  },
+  "ping3": {
+    "src_start": 20.27,
+    "src_end": 21.55,
+    "duration": 1.28,
+    "peak_db": -11.8
+  },
+  "dclick": {
+    "src_start": 21.6,
+    "src_end": 21.86,
+    "duration": 0.26,
+    "peak_db": -7.6
+  },
+  "ping4": {
+    "src_start": 22.2,
+    "src_end": 23.4,
+    "duration": 1.2,
+    "peak_db": -10.3
+  },
+  "swell_f": {
+    "src_start": 23.75,
+    "src_end": 26.0,
+    "duration": 2.25,
+    "peak_db": -1.1
+  },
+  "swell_g": {
+    "src_start": 26.0,
+    "src_end": 28.3,
+    "duration": 2.3,
+    "peak_db": -2.8
+  },
+  "glitch_hit": {
+    "src_start": 28.6,
+    "src_end": 28.86,
+    "duration": 0.26,
+    "peak_db": -10.2
+  },
+  "click_ping": {
+    "src_start": 29.18,
+    "src_end": 29.75,
+    "duration": 0.57,
+    "peak_db": -15.3
+  },
+  "rattle": {
+    "src_start": 30.3,
+    "src_end": 30.64,
+    "duration": 0.34,
+    "peak_db": -9.9
+  },
+  "dclick2": {
+    "src_start": 31.1,
+    "src_end": 31.44,
+    "duration": 0.34,
+    "peak_db": -7.1
+  },
+  "click_ping2": {
+    "src_start": 32.33,
+    "src_end": 32.98,
+    "duration": 0.65,
+    "peak_db": -7.1
+  },
+  "swell_h": {
+    "src_start": 33.0,
+    "src_end": 35.18,
+    "duration": 2.18,
+    "peak_db": -3.0
+  },
+  "sparkle_zip": {
+    "src_start": 35.14,
+    "src_end": 35.4,
+    "duration": 0.26,
+    "peak_db": -10.0
+  },
+  "swell_pulses": {
+    "src_start": 35.2,
+    "src_end": 37.5,
+    "duration": 2.3,
+    "peak_db": -3.2
+  },
+  "glitch_j": {
+    "src_start": 37.5,
+    "src_end": 38.32,
+    "duration": 0.82,
+    "peak_db": -13.1
+  },
+  "chime": {
+    "src_start": 39.04,
+    "src_end": 39.52,
+    "duration": 0.48,
+    "peak_db": -8.2
+  },
+  "outro": {
+    "src_start": 39.5,
+    "src_end": 43.6,
+    "duration": 4.1,
+    "peak_db": -2.3
+  }
+}

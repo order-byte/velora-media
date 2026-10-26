@@ -1,0 +1,17 @@
+{
+  "name": "sprout-promo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Promo ad for the Sprout baby tracker app, rendered from an HTML/GSAP timeline.",
+  "scripts": {
+    "icons": "node scripts/build_icons.js",
+    "stills": "node scripts/render.js --stills",
+    "cues": "node scripts/render.js --cues",
+    "render": "node scripts/render.js"
+  },
+  "dependencies": {
+    "@fontsource/inter": "5.2.5",
+    "gsap": "3.13.0",
+    "lucide-static": "0.468.0"
+  }
+}

@@ -1,0 +1,3 @@
+node_modules/
+output/*
+!output/sprout-promo.mp4
