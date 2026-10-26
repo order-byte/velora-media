@@ -1,12 +1,19 @@
-/* Sprout promo — a 1920x1080 motion piece driven by one paused GSAP timeline.
- * window.PROMO.seek(t) renders the frame at time t; PROMO.cues lists the sound
- * effects (by name, from ../sfx) that the audio build places on the timeline. */
+/* Sprout promo — a motion piece driven by one paused GSAP timeline.
+ * 1920x1080 by default; ?format=portrait lays the same timeline out at 1080x1920
+ * (Instagram Reels). window.PROMO.seek(t) renders the frame at time t; PROMO.cues
+ * lists the sound effects (by name, from ../sfx) that the audio build places. */
 (() => {
   const INK = '#12141c', GREY = '#8a8fa3', BLUE = '#3b4fe8', NAVY = '#0f1430';
   const YEL = '#f7c84a', GREEN = '#2dcb8a', PINK = '#ed93b1';
   const DUR = 55.5, FPS = 60;
 
+  const qs = new URLSearchParams(location.search);
+  const PORT = qs.get('format') === 'portrait';
+  const SW = PORT ? 1080 : 1920, SH = PORT ? 1920 : 1080;
+  const pv = (land, port) => (PORT ? port : land);   // pick a value per format
+
   const stage = document.getElementById('stage');
+  Object.assign(stage.style, { width: `${SW}px`, height: `${SH}px` });
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
   // Overshooting eases would drive blur() negative, which CSS rejects (the element
   // then keeps a stale blur). Run the filter part of such tweens on a plain ease.
@@ -37,6 +44,12 @@
   const icon = (name, size = 32, color = 'currentColor', sw = 2) =>
     `<svg class="ico" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
   const place = (e, x = 0, y = 0, extra = {}) => gsap.set(e, { xPercent: -50, yPercent: -50, x, y, ...extra });
+  // centre of `el` relative to the centre of its positioned ancestor `anc` (layout px, no transforms)
+  const relCenter = (el, anc) => {
+    let x = el.offsetWidth / 2, y = el.offsetHeight / 2, n = el;
+    while (n && n !== anc) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    return [x - anc.offsetWidth / 2, y - anc.offsetHeight / 2];
+  };
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const ease = (k) => gsap.parseEase('power2.inOut')(clamp(k, 0, 1));
   const lerpColor = (a, b, k) => {
@@ -54,6 +67,7 @@
   }
 
   // Text with [accent] runs, split into per-character spans for blur reveals.
+  // "|" starts a new line.
   function text(spec, parent, o = {}) {
     const d = h('div', 'txt', null, parent);
     Object.assign(d.style, {
@@ -61,10 +75,15 @@
       color: o.color || INK, letterSpacing: o.ls || '-0.035em',
     });
     const chars = [], accents = [];
-    spec.split(/(\[[^\]]*\])/).filter(Boolean).forEach((part) => {
+    const lines = spec.split('|');
+    const runs = lines.flatMap((line) => {
+      const host = lines.length > 1 ? h('div', 'line', null, d) : d;
+      return line.split(/(\[[^\]]*\])/).filter(Boolean).map((part) => [host, part]);
+    });
+    runs.forEach(([host, part]) => {
       const acc = part.startsWith('[');
       const s = acc ? part.slice(1, -1) : part;
-      const span = h('span', acc ? 'acc' : 'plain', null, d);
+      const span = h('span', acc ? 'acc' : 'plain', null, host);
       const mine = [];
       s.split(/( )/).forEach((tok) => {
         if (tok === ' ') { span.appendChild(document.createTextNode(' ')); return; }
@@ -96,13 +115,15 @@
       ease: 'power2.in', stagger: o.stagger ?? 0.008, immediateRender: false,
     }, t);
   }
+  // enter/leave keep whatever base scale place() gave the element
   function enter(e, t, o = {}) {
     const x = gsap.getProperty(e, 'x'), y = gsap.getProperty(e, 'y');
-    tl.fromTo(e, { autoAlpha: 0, x: x + (o.dx ?? 0), y: y + (o.dy ?? 70), scale: o.scale ?? 0.94, filter: `blur(${o.blur ?? 14}px)` },
-      { autoAlpha: 1, x, y, scale: 1, filter: 'blur(0px)', duration: o.dur ?? 0.7, ease: o.ease || 'power3.out' }, t);
+    const s0 = e._base ?? (e._base = gsap.getProperty(e, 'scaleX'));
+    tl.fromTo(e, { autoAlpha: 0, x: x + (o.dx ?? 0), y: y + (o.dy ?? 70), scale: (o.scale ?? 0.94) * s0, filter: `blur(${o.blur ?? 14}px)` },
+      { autoAlpha: 1, x, y, scale: s0, filter: 'blur(0px)', duration: o.dur ?? 0.7, ease: o.ease || 'power3.out' }, t);
   }
   function leave(e, t, o = {}) {
-    tl.to(e, { autoAlpha: 0, y: `+=${o.dy ?? 0}`, x: `+=${o.dx ?? 0}`, scale: o.scale ?? 1.04, filter: `blur(${o.blur ?? 14}px)`, duration: o.dur ?? 0.4, ease: 'power2.in', immediateRender: false }, t);
+    tl.to(e, { autoAlpha: 0, y: `+=${o.dy ?? 0}`, x: `+=${o.dx ?? 0}`, scale: (o.scale ?? 1.04) * (e._base ?? 1), filter: `blur(${o.blur ?? 14}px)`, duration: o.dur ?? 0.4, ease: 'power2.in', immediateRender: false }, t);
   }
 
   // ---------- reusable art ----------
@@ -136,10 +157,10 @@
   // ---------- backgrounds ----------
   const bgLight = h('div', 'layer', null, stage); bgLight.id = 'bg-light';
   const blobs = [
-    { c: 'rgba(150,178,255,0.55)', s: 1100, x: -260, y: -380 },  // blue, top-left
-    { c: 'rgba(160,160,250,0.55)', s: 1100, x: 1500, y: -420 },  // violet, top-right
-    { c: 'rgba(220,240,150,0.55)', s: 1200, x: -380, y: 520 },   // soft lime, bottom-left
-    { c: 'rgba(247,200,74,0.18)', s: 900, x: 1300, y: 700 },     // sprout yellow, bottom-right
+    { c: 'rgba(150,178,255,0.55)', s: 1100, x: pv(-260, -420), y: pv(-380, -320) },  // blue, top-left
+    { c: 'rgba(160,160,250,0.55)', s: 1100, x: pv(1500, 520), y: pv(-420, -260) },   // violet, top-right
+    { c: 'rgba(220,240,150,0.55)', s: 1200, x: pv(-380, -560), y: pv(520, 1180) },   // soft lime, bottom-left
+    { c: 'rgba(247,200,74,0.18)', s: 900, x: pv(1300, 460), y: pv(700, 1400) },      // sprout yellow, bottom-right
   ].map((b) => {
     const e = h('div', 'blob', null, bgLight, {
       width: `${b.s}px`, height: `${b.s}px`, left: `${b.x}px`, top: `${b.y}px`,
@@ -179,12 +200,13 @@
       return { e, a };
     });
     const orb = h('div', 'orb', icon('sprout', 120, '#fff', 2.2), s); place(orb);
-    const R = 400, RY = 330;
+    const R = pv(400, 330), RY = pv(330, 560);
+    const [cx, cy] = pv([-470, -330], [-300, -640]);
     tiles.forEach(({ e, a }, i) => {
       const fx = Math.cos(a) * R, fy = Math.sin(a) * RY;
       const rot = (a * 180) / Math.PI + 90 + (i % 2 ? 8 : -8);
       // start as a tight cluster above-left, then fan out into the ring
-      tl.fromTo(e, { xPercent: -50, yPercent: -50, x: -470 + (i % 3) * 40, y: -330 + Math.floor(i / 3) * 34, scale: 0.22, rotation: rot - 60, autoAlpha: 0, filter: 'blur(6px)' },
+      tl.fromTo(e, { xPercent: -50, yPercent: -50, x: cx + (i % 3) * 40, y: cy + Math.floor(i / 3) * 34, scale: 0.22, rotation: rot - 60, autoAlpha: 0, filter: 'blur(6px)' },
         { autoAlpha: 1, duration: 0.18, ease: 'none' }, 0.05 + i * 0.02);
       tl.to(e, { x: fx, y: fy, scale: 1, rotation: rot, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' }, 0.32 + i * 0.045);
       tl.to(e, { x: fx * 1.9, y: fy * 1.9, rotation: rot + 30, scale: 0.8, autoAlpha: 0, filter: 'blur(18px)', duration: 0.5, ease: 'power3.in' }, 1.72 + (i % 4) * 0.02);
@@ -201,14 +223,15 @@
   // =====================================================================
   {
     const s = scene(2.05, 4.42, content);
-    [[-640, -250, -6], [620, -260, 5], [-660, 250, 4], [640, 270, -5]].forEach(([x, y, r], i) => {
+    pv([[-640, -250, -6], [620, -260, 5], [-660, 250, 4], [640, 270, -5]],
+      [[-300, -600, -6], [300, -540, 5], [-300, 560, 4], [300, 620, -5]]).forEach(([x, y, r], i) => {
       const n = h('div', 'note', '<b style="width:88%"></b><b style="width:70%"></b><b style="width:92%"></b><b style="width:60%"></b><b style="width:80%"></b>', s);
       place(n, x, y, { rotation: r });
       tl.fromTo(n, { autoAlpha: 0, filter: 'blur(12px)', scale: 0.9 }, { autoAlpha: 0.75, filter: 'blur(1.5px)', scale: 1, duration: 0.8 }, 2.1 + i * 0.08);
       tl.to(n, { x: x * 1.06, y: y * 1.06, rotation: r * 1.3, duration: 2.4, ease: 'none' }, 2.1);
     });
-    const a = text('For too long,', s, { size: 66, color: '#6b7085', y: -46 });
-    const b = text('baby tracking has worked the [same way.]', s, { size: 66, y: 40 });
+    const a = text('For too long,', s, { size: pv(66, 80), color: '#6b7085', y: pv(-46, -140) });
+    const b = text(pv('baby tracking has worked the [same way.]', 'baby tracking has|worked the [same way.]'), s, { size: pv(66, 80), y: pv(40, 40) });
     reveal(a, 2.18, { stagger: 0.035 });
     reveal(b, 2.72, { stagger: 0.028 });
     sfx('swell_e', 2.0, 0.75);
@@ -229,24 +252,25 @@
       const end = i < cuts.length - 1 ? cuts[i + 1].t : 6.55;
       const s = scene(c.t, end, content);
       h('div', 'layer', null, s, { background: c.bg });
-      [-262, 0, 262].forEach((y, r) => {
-        const row = h('div', 'mrow', '<b></b>'.repeat(9), s, { top: `${540 + y - 60}px` });
+      pv([-262, 0, 262], [-786, -524, -262, 0, 262, 524, 786]).forEach((y, r) => {
+        const row = h('div', 'mrow', '<b></b>'.repeat(9), s, { top: `${SH / 2 + y - 60}px` });
         row.querySelectorAll('b').forEach((b) => { b.style.background = c.bar; });
-        const dir = r === 1 ? 1 : -1, base = dir > 0 ? -1400 : -300 - r * 150;
+        const dir = r % 2 ? 1 : -1, base = dir > 0 ? -1400 : -300 - r * 150;
         hooks.push((t) => { row.style.transform = `translateX(${base + dir * (t - 4.4) * 420}px)`; });
       });
       // clear a gap around the pill in the middle row
-      const gap = h('div', 'abs', null, s, { width: '760px', height: '150px', background: c.bg, borderRadius: '30px' }); place(gap);
+      const ps = pv(1, 1.3);   // pill scale
+      const gap = h('div', 'abs', null, s, { width: '760px', height: '150px', background: c.bg, borderRadius: '30px' }); place(gap, 0, 0, { scale: ps });
       if (c.ring) {
         [1, 2].forEach((k) => {
           const r = h('div', 'ring', null, s, { width: `${560 + k * 90}px`, height: `${150 + k * 90}px`, borderRadius: `${75 + k * 45}px` }); place(r);
-          tl.fromTo(r, { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.45, ease: 'power2.out' }, c.t + 0.04 * k);
+          tl.fromTo(r, { scale: 0.7 * ps, autoAlpha: 0 }, { scale: ps, autoAlpha: 1, duration: 0.45, ease: 'power2.out' }, c.t + 0.04 * k);
         });
       }
       const p = c.pill;
       const pill = h('div', 'mpill', `${icon(p.ic, 40, p.fg, 2.4)}<span>${p.label}</span>`, s, { background: p.bg, color: p.fg, border: `3px solid ${p.border}` });
       place(pill);
-      tl.fromTo(pill, { scale: 0.86, filter: 'blur(8px)' }, { scale: 1, filter: 'blur(0px)', duration: 0.28, ease: 'back.out(2)' }, c.t);
+      tl.fromTo(pill, { scale: 0.86 * ps, filter: 'blur(8px)' }, { scale: ps, filter: 'blur(0px)', duration: 0.28, ease: 'back.out(2)' }, c.t);
       tl.fromTo(s, { scale: 1.06 }, { scale: 1, duration: end - c.t, ease: 'power2.out' }, c.t);
     });
     sfx('glitch_hit', 4.42 - 0.09, 1.0);
@@ -260,8 +284,8 @@
   // =====================================================================
   {
     const s = scene(6.55, 9.42, content);
-    const a = text("But looking after them shouldn't be about", s, { size: 66, y: -28 });
-    const b = text('remembering everything.', s, { size: 50, color: GREY, y: 52 });
+    const a = text(pv("But looking after them shouldn't be about", "But looking after them|shouldn't be about"), s, { size: pv(66, 80), y: pv(-28, -76) });
+    const b = text('remembering everything.', s, { size: pv(50, 60), color: GREY, y: pv(52, 78) });
     reveal(a, 6.62, { stagger: 0.026 });
     reveal(b, 7.95, { stagger: 0.03 });
     conceal(a, 8.85, { stagger: 0.006 });
@@ -275,7 +299,7 @@
   // =====================================================================
   {
     const s = scene(9.4, 11.32, content);
-    const a = text('It should be about [understanding] them.', s, { size: 72, accent: ['ffffff', 'ffffff'] });
+    const a = text(pv('It should be about [understanding] them.', 'It should be about|[understanding] them.'), s, { size: pv(72, 88), accent: ['ffffff', 'ffffff'] });
     const acc = a.accents[0].span;
     const box = h('div', 'hl-box', null, acc, { width: 'calc(100% + 12px)', transformOrigin: '0 50%' });
     acc.classList.add('hl-wrap');
@@ -299,10 +323,10 @@
   // =====================================================================
   {
     const s = scene(11.3, 16.75, content);
-    tl.fromTo([barTop, barBot], { height: 0 }, { height: 112, duration: 0.45, ease: 'power3.inOut' }, 11.22);
+    tl.fromTo([barTop, barBot], { height: 0 }, { height: pv(112, 190), duration: 0.45, ease: 'power3.inOut' }, 11.22);
     tl.to([barTop, barBot], { height: 0, duration: 0.5, ease: 'power3.inOut' }, 16.4);
 
-    const q = text('What if every [feed and nap] was', s, { size: 72, y: 0 });
+    const q = text(pv('What if every [feed and nap] was', 'What if every|[feed and nap] was'), s, { size: pv(72, 88), y: 0 });
     const br = h('div', 'bracket', '<i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>', s);
     const qEnd = reveal(q, 11.5, { stagger: 0.032 });
     // bracket hugs the text as it types on (measured after layout, see init())
@@ -311,7 +335,8 @@
       const padX = 26, padY = 16;
       const full = q.el.offsetWidth + padX * 2, start = 150;
       gsap.set(br, { xPercent: 0, yPercent: -50, x: -full / 2, y: 0, width: full, height: q.el.offsetHeight + padY * 2 });
-      tl.fromTo(br, { width: start }, { width: full, duration: qEnd - 11.5 - 0.25, ease: 'none' }, 11.5);
+      // two centred lines don't type on left-to-right, so the portrait frame stays full size
+      if (!PORT) tl.fromTo(br, { width: start }, { width: full, duration: qEnd - 11.5 - 0.25, ease: 'none' }, 11.5);
     });
     conceal(q, 13.02, { stagger: 0.005 });
     tl.to(br, { autoAlpha: 0, scale: 0.9, filter: 'blur(10px)', duration: 0.3, ease: 'power2.in' }, 13.05);
@@ -321,7 +346,7 @@
     const lines = [
       ['logged in [one tap,]', 13.3], ['[easy] to understand,', 14.2], ['even [predictable,]', 15.1], ['one day [at a time?]', 15.98],
     ].map(([spec, t], i, arr) => {
-      const T = text(spec, s, { size: 62, y: -290 });
+      const T = text(spec, s, { size: pv(62, 76), y: pv(-290, -620) });
       reveal(T, t, { stagger: 0.026 });
       if (i < arr.length - 1) conceal(T, arr[i + 1][0] ? arr[i + 1][1] - 0.24 : t + 1, { stagger: 0.004, dur: 0.24 });
       else conceal(T, 16.45, { stagger: 0.004, dur: 0.28 });
@@ -338,15 +363,22 @@
           <div class="chip" id="chip-mixed">Mixed</div><div class="chip">Dry</div>
         </div>
       </div>`, s, { width: '440px', height: '300px' });
-    place(A, -520, 70);
+    // landscape: three cards in a row; portrait: stacked, a little larger
+    const sc = pv(1, 1.15);
+    const [ax, ay] = pv([-520, 70], [0, -290]);
+    place(A, ax, ay, { scale: sc });
     const mixed = A.querySelector('#chip-mixed');
     const cur = h('div', 'cursor', CURSOR, s); place(cur, -380, 330);
     enter(A, 13.35, { dy: 90 });
     // cursor tip sits ~18px left / 20px up from the element centre
-    tl.fromTo(cur, { autoAlpha: 0, x: -300, y: 380 }, { autoAlpha: 1, x: -600, y: 162, duration: 0.5, ease: 'power3.out' }, 13.5);
-    tl.to(cur, { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 13.95);
+    const tapA = ([tx, ty]) => {
+      tl.fromTo(cur, { autoAlpha: 0, x: tx + 318, y: ty + 238 }, { autoAlpha: 1, x: tx + 18, y: ty + 20, duration: 0.5, ease: 'power3.out' }, 13.5);
+      tl.to(cur, { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 13.95);
+      tl.to(cur, { autoAlpha: 0, x: tx + 58, y: ty + 78, duration: 0.3 }, 14.4);
+    };
+    if (PORT) deferred.push(() => { const [rx, ry] = relCenter(mixed, A); tapA([ax + rx * sc, ay + ry * sc]); });
+    else tapA([-618, 142]);
     tl.to(mixed, { backgroundColor: BLUE, color: '#fff', duration: 0.12, ease: 'none' }, 13.97);
-    tl.to(cur, { autoAlpha: 0, x: -560, y: 220, duration: 0.3 }, 14.4);
     sfx('ping1', 13.32, 0.8);
     sfx('dclick', 13.95 - 0.1, 0.8);
 
@@ -360,7 +392,7 @@
         <div style="margin-top:auto">${bars([0.55, 0.7, 0.62, 0.86, 0.74, 0.95, 0.82], 'linear-gradient(180deg,#f7c84a,#5b6cff)', 34, 22, 150)}</div>
         <div style="display:flex;gap:22px;margin-top:10px;color:#6f78a8;font-size:15px;font-weight:600">${'MTWTFSS'.split('').map((d) => `<span style="width:34px;text-align:center">${d}</span>`).join('')}</div>
       </div>`, s, { width: '440px', height: '300px' });
-    place(B, 0, 70);
+    place(B, 0, pv(70, 85), { scale: sc });
     enter(B, 14.25, { dy: 90 });
     tl.fromTo(B.querySelectorAll('.bar-v'), { scaleY: 0 }, { scaleY: 1, duration: 0.6, ease: 'power3.out', stagger: 0.05 }, 14.4);
     sfx('ping2', 14.22, 0.8);
@@ -375,16 +407,16 @@
         <div style="font-size:22px;font-weight:600;margin-top:10px;color:#6b5510">Next nap in ~40 min</div>
         <div style="height:14px;border-radius:7px;background:rgba(0,0,0,.12);margin-top:22px"><div class="napfill" style="width:0;height:100%;border-radius:7px;background:#1a1f36"></div></div>
       </div>`, s, { width: '440px', height: '300px' });
-    place(C, 520, 70);
+    place(C, pv(520, 0), pv(70, 460), { scale: sc });
     enter(C, 15.15, { dy: 90 });
     tl.fromTo(C.querySelector('.napfill'), { width: '0%' }, { width: '72%', duration: 1.0, ease: 'power2.out' }, 15.3);
     sfx('ping3', 15.12, 0.75);
 
     // collapse into the yellow card, which melts into the logo glow
-    leave(A, 15.85, { dx: 140, blur: 16, scale: 0.85, dur: 0.45 });
-    leave(B, 15.9, { dx: 80, blur: 16, scale: 0.85, dur: 0.45 });
-    tl.to(C, { x: 0, y: 40, scale: 1.08, duration: 0.6, ease: 'power3.inOut' }, 15.85);
-    tl.to(C, { scale: 0.55, borderRadius: '50%', filter: 'blur(40px)', autoAlpha: 0, duration: 0.5, ease: 'power2.in' }, 16.42);
+    leave(A, 15.85, pv({ dx: 140, blur: 16, scale: 0.85, dur: 0.45 }, { dy: 140, blur: 16, scale: 0.85, dur: 0.45 }));
+    leave(B, 15.9, pv({ dx: 80, blur: 16, scale: 0.85, dur: 0.45 }, { dy: -60, blur: 16, scale: 0.85, dur: 0.45 }));
+    tl.to(C, { x: 0, y: 40, scale: 1.08 * sc, duration: 0.6, ease: 'power3.inOut' }, 15.85);
+    tl.to(C, { scale: 0.55 * sc, borderRadius: '50%', filter: 'blur(40px)', autoAlpha: 0, duration: 0.5, ease: 'power2.in' }, 16.42);
     sfx('swell_f', 15.6, 0.55);
   }
 
@@ -416,7 +448,7 @@
   // =====================================================================
   {
     const s = scene(18.7, 20.75, content);
-    const a = text('We turn sleepless [guesswork]', s, { size: 66, y: -340 });
+    const a = text(pv('We turn sleepless [guesswork]', 'We turn sleepless|[guesswork]'), s, { size: pv(66, 80), y: pv(-340, -600) });
     reveal(a, 18.85, { stagger: 0.03 });
     conceal(a, 20.3, { stagger: 0.005 });
     const ph = h('div', 'phone', `
@@ -442,27 +474,32 @@
           ${['07:02 · Woke up', '07:30 · Nursing · L 12m', '09:15 · Nap · 1h 05m'].map((r) => `<div style="background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;font-size:17px;font-weight:500;color:#4a5070;box-shadow:0 2px 8px rgba(26,35,90,.06)">${r}</div>`).join('')}
         </div>
       </div>`, s);
-    gsap.set(ph, { xPercent: -50, yPercent: -50, x: 30, y: 400, scale: 1.45, transformPerspective: 2400, rotationX: 40, rotationZ: -18, rotationY: 6 });
-    tl.fromTo(ph, { y: 1100, autoAlpha: 0, filter: 'blur(14px)' }, { y: 400, autoAlpha: 1, filter: 'blur(0px)', duration: 1.1, ease: 'expo.out' }, 18.72);
-    tl.to(ph, { y: 330, rotationX: 34, rotationZ: -14, duration: 1.6, ease: 'none' }, 19.5);
+    const phY = pv([400, 330], [330, 250]);
+    gsap.set(ph, { xPercent: -50, yPercent: -50, x: pv(30, 0), y: phY[0], scale: pv(1.45, 1.4), transformPerspective: 2400, rotationX: pv(40, 32), rotationZ: pv(-18, -12), rotationY: 6 });
+    tl.fromTo(ph, { y: pv(1100, 1500), autoAlpha: 0, filter: 'blur(14px)' }, { y: phY[0], autoAlpha: 1, filter: 'blur(0px)', duration: 1.1, ease: 'expo.out' }, 18.72);
+    tl.to(ph, { y: phY[1], rotationX: pv(34, 26), rotationZ: pv(-14, -8), duration: 1.6, ease: 'none' }, 19.5);
     tl.to(ph, { y: -260, autoAlpha: 0, filter: 'blur(20px)', duration: 0.55, ease: 'power3.in' }, 20.2);
     sfx('swell_g', 18.55, 0.6);
 
     const s2 = scene(20.6, 23.45, content);
-    const pre = text('into', s2, { size: 56, color: GREY, y: 0 });
-    const b = text('calm, clear [answers.]', s2, { size: 76, weight: 600, y: 0 });
-    deferred.push(() => {
+    // landscape: "into" sits left of the line; portrait: above it
+    const pre = text('into', s2, { size: pv(56, 60), color: GREY, y: pv(0, -80) });
+    const b = text('calm, clear [answers.]', s2, { size: pv(76, 84), weight: 600, y: pv(0, 20) });
+    if (!PORT) deferred.push(() => {
       const wp = pre.el.offsetWidth, wb = b.el.offsetWidth, gap = 24;
       const total = wp + gap + wb;
       gsap.set(pre.el, { x: -total / 2 + wp / 2 }); gsap.set(b.el, { x: -total / 2 + wp + gap + wb / 2 });
     });
     reveal(pre, 20.66, { stagger: 0.04 });
     reveal(b, 20.85, { stagger: 0.03 });
+    const spots = pv(
+      [[-640, -250], [-300, -320], [330, -300], [640, -230], [-660, 240], [-270, 300], [310, 310], [660, 230]],
+      [[-320, -600], [-60, -420], [300, -620], [330, -340], [-330, 340], [-60, 560], [300, 600], [320, 320]]);
     const minis = [
-      [-640, -250, 'moon', NAVY, '#9fb0ff', -8], [-300, -320, 'milk', '#fff', BLUE, 6], [330, -300, 'chart-column', 'linear-gradient(145deg,#5b6cff,#3343da)', '#fff', -5],
-      [640, -230, 'calendar-days', '#161a2b', YEL, 8], [-660, 240, 'soup', 'linear-gradient(145deg,#4fe0a6,#2dcb8a)', '#06402a', 7], [-270, 300, 'droplets', 'linear-gradient(145deg,#f6b3c9,#ed93b1)', '#8e2a4c', -6],
-      [310, 310, 'sparkles', 'linear-gradient(145deg,#ffe08a,#f7c84a)', '#3d2c00', 5], [660, 230, 'timer', '#faf7ef', INK, -7],
-    ];
+      ['moon', NAVY, '#9fb0ff', -8], ['milk', '#fff', BLUE, 6], ['chart-column', 'linear-gradient(145deg,#5b6cff,#3343da)', '#fff', -5],
+      ['calendar-days', '#161a2b', YEL, 8], ['soup', 'linear-gradient(145deg,#4fe0a6,#2dcb8a)', '#06402a', 7], ['droplets', 'linear-gradient(145deg,#f6b3c9,#ed93b1)', '#8e2a4c', -6],
+      ['sparkles', 'linear-gradient(145deg,#ffe08a,#f7c84a)', '#3d2c00', 5], ['timer', '#faf7ef', INK, -7],
+    ].map((m, i) => [...spots[i], ...m]);
     // pops land on the pulses in "swell_pulses" (≈ every 0.105s from 1.0s into the clip)
     const pulse0 = 20.55 + 1.0;
     minis.forEach(([x, y, ic, bg, fg, r], i) => {
@@ -485,20 +522,23 @@
     const tag = h('div', 'tag', `${icon('moon', 34, '#3d2c00', 2.4)}Track everything`, s, { background: YEL, color: '#3d2c00' });
     place(tag);
     tl.fromTo(tag, { scale: 1.5, filter: 'blur(14px)', autoAlpha: 0 }, { scale: 1.3, filter: 'blur(0px)', autoAlpha: 1, duration: 0.45 }, 23.48);
-    tl.to(tag, { y: -360, scale: 0.85, duration: 0.6, ease: 'power3.inOut' }, 24.0);
+    tl.to(tag, { y: pv(-360, -720), scale: 0.85, duration: 0.6, ease: 'power3.inOut' }, 24.0);
     const DA = ['6f80ff', 'a9b8ff'];
     const words = [['[Sleep.]', 24.35], ['[Feeds.]', 25.15], ['[Nappies.]', 25.95], ['All in [one tap.]', 26.75]].map(([spec, t], i, arr) => {
-      const T = text(spec, s, { size: 92, weight: 600, color: '#fff', y: -200, accent: DA });
+      const T = text(spec, s, { size: 92, weight: 600, color: '#fff', y: pv(-200, -520), accent: DA });
       reveal(T, t, { stagger: 0.04 });
       conceal(T, i < arr.length - 1 ? arr[i + 1][1] - 0.25 : 28.2, { stagger: 0.01, dur: 0.25 });
       return T;
     });
-    const row = h('div', 'abs', null, s, { width: '0px', height: '0px' }); place(row, 0, 150);
+    const rowY = pv(150, -10), rowS = pv(1, 1.2);
+    const row = h('div', 'abs', null, s, { width: '0px', height: '0px' }); place(row, 0, rowY, { scale: rowS });
     const W = [330, 330, 330, 330, 240], GAP = 30;
     const full = W.reduce((a, b) => a + b) + GAP * (W.length - 1);
     const xs = []; let acc = -full / 2;
     W.forEach((w) => { xs.push(acc + w / 2); acc += w + GAP; });
-    const mk = (cls, html, i) => { const c = h('div', `card on-dark ${cls}`, html, row, { width: `${W[i]}px`, height: '240px' }); place(c, xs[i], 0); return c; };
+    // landscape: one row that re-centres as cards arrive; portrait: 2x2 grid + ring card below
+    const pos = PORT ? [[-180, -140], [180, -140], [-180, 140], [180, 140], [0, 410]] : xs.map((x) => [x, 0]);
+    const mk = (cls, html, i) => { const c = h('div', `card on-dark ${cls}`, html, row, { width: `${W[i]}px`, height: '240px' }); place(c, ...pos[i]); return c; };
     const c1 = mk('', `<div style="padding:26px 28px;color:${INK}">
         <div style="display:flex;justify-content:space-between;align-items:center"><div class="label" style="color:${BLUE}">Sleep · live</div>${icon('moon', 26, BLUE)}</div>
         <div id="sleep-timer" style="font-size:56px;font-weight:700;letter-spacing:-.03em;margin-top:22px;font-variant-numeric:tabular-nums">00:42:13</div>
@@ -532,17 +572,25 @@
     const widthOf = (k) => W.slice(0, k).reduce((a, b) => a + b) + GAP * (k - 1);
     cards.forEach((c, i) => {
       enter(c, times[i], { dy: 60, blur: 16, scale: 0.9, dur: 0.6 });
-      tl.to(row, { x: (full - widthOf(i + 1)) / 2, duration: 0.6, ease: 'power3.inOut' }, times[i] - 0.05);
+      if (!PORT) tl.to(row, { x: (full - widthOf(i + 1)) / 2, duration: 0.6, ease: 'power3.inOut' }, times[i] - 0.05);
     });
-    gsap.set(row, { x: (full - widthOf(1)) / 2 });
+    if (!PORT) gsap.set(row, { x: (full - widthOf(1)) / 2 });
     tl.fromTo(c3.querySelector('.bottlefill'), { width: '0%' }, { width: '80%', duration: 0.8, ease: 'power2.out' }, 26.1);
-    tl.to(c4.querySelector('#nappy-mixed'), { backgroundColor: PINK, color: '#4a0f26', duration: 0.12, ease: 'none' }, 27.0);
+    const chipMixed = c4.querySelector('#nappy-mixed');
+    tl.to(chipMixed, { backgroundColor: PINK, color: '#4a0f26', duration: 0.12, ease: 'none' }, 27.0);
     const cur = h('div', 'cursor', CURSOR.replace('#111', '#fff').replace('stroke="#fff"', 'stroke="#111"'), s); place(cur);
-    // point at the "Mixed" chip of the nappy card once the row has re-centred for 4 cards
-    const mixX = xs[3] + (full - widthOf(4)) / 2 - 72, mixY = 150 + 36;
-    tl.fromTo(cur, { autoAlpha: 0, x: mixX + 260, y: 440 }, { autoAlpha: 1, x: mixX + 18, y: mixY + 20, duration: 0.45, ease: 'power3.out' }, 26.55);
-    tl.to(cur, { scale: 0.82, duration: 0.07, yoyo: true, repeat: 1 }, 26.98);
-    tl.to(cur, { autoAlpha: 0, duration: 0.3 }, 27.5);
+    // point at the "Mixed" chip of the nappy card (landscape: once the row has re-centred for 4 cards)
+    const tapMixed = ([tx, ty]) => {
+      tl.fromTo(cur, { autoAlpha: 0, x: tx + 260, y: ty + 254 }, { autoAlpha: 1, x: tx + 18, y: ty + 20, duration: 0.45, ease: 'power3.out' }, 26.55);
+      tl.to(cur, { scale: 0.82, duration: 0.07, yoyo: true, repeat: 1 }, 26.98);
+      tl.to(cur, { autoAlpha: 0, duration: 0.3 }, 27.5);
+    };
+    if (PORT) {
+      deferred.push(() => {
+        const [rx, ry] = relCenter(chipMixed, c4);
+        tapMixed([(pos[3][0] + rx) * rowS, rowY + (pos[3][1] + ry) * rowS]);
+      });
+    } else tapMixed([xs[3] + (full - widthOf(4)) / 2 - 72, 150 + 36]);
     const timerEl = c1.querySelector('#sleep-timer'), nl = c2.querySelector('#nurse-l');
     const arc = c5.querySelector('#ring-arc'), num = c5.querySelector('#ring-num');
     hooks.push((t) => {
@@ -553,7 +601,7 @@
       const k = ease((t - 27.4) / 0.9), n = Math.round(14 * k);
       num.textContent = n; arc.setAttribute('stroke-dashoffset', (339.3 * (1 - (n / 16))).toFixed(1));
     });
-    tl.to(row, { autoAlpha: 0, filter: 'blur(18px)', scale: 0.95, duration: 0.4, ease: 'power2.in' }, 28.18);
+    tl.to(row, { autoAlpha: 0, filter: 'blur(18px)', scale: 0.95 * rowS, duration: 0.4, ease: 'power2.in' }, 28.18);
     tl.to(tag, { autoAlpha: 0, filter: 'blur(14px)', duration: 0.3, ease: 'power2.in' }, 28.2);
     sfx('open_hit', 23.42, 0.8);
     sfx('swell_h', 23.5, 0.55);
@@ -572,16 +620,17 @@
     const tag = h('div', 'tag', `${icon('chart-column', 34, '#fff', 2.4)}Reports`, s, { background: BLUE, color: '#fff' });
     place(tag);
     tl.fromTo(tag, { scale: 1.6, filter: 'blur(14px)', autoAlpha: 0 }, { scale: 1.4, filter: 'blur(0px)', autoAlpha: 1, duration: 0.45 }, 28.66);
-    tl.to(tag, { y: -400, scale: 0.8, duration: 0.6, ease: 'power3.inOut' }, 29.1);
+    tl.to(tag, { y: pv(-400, -740), scale: 0.8, duration: 0.6, ease: 'power3.inOut' }, 29.1);
     const heads = [['Spot the [patterns.]', 29.55], ['See the [trends.]', 30.95], ['Export in [one tap.]', 32.15]].map(([spec, t], i, arr) => {
-      const T = text(spec, s, { size: 84, weight: 600, y: -268 });
+      const T = text(spec, s, { size: 84, weight: 600, y: pv(-268, -580) });
       reveal(T, t, { stagger: 0.032 });
       conceal(T, i < arr.length - 1 ? arr[i + 1][1] - 0.25 : 33.95, { stagger: 0.006, dur: 0.25 });
       return T;
     });
+    // landscape: three columns; portrait: the same three blocks stacked
     const panel = h('div', 'card', `
-      <div style="display:flex;gap:28px;padding:28px;height:100%">
-        <div style="width:420px;border-radius:22px;background:${NAVY};color:#fff;padding:28px;display:flex;flex-direction:column">
+      <div style="display:flex;flex-direction:${pv('row', 'column')};gap:28px;padding:28px;height:100%">
+        <div style="${pv('width:420px', 'height:290px;flex:none')};border-radius:22px;background:${NAVY};color:#fff;padding:28px;display:flex;flex-direction:column">
           <div style="display:flex;justify-content:space-between;align-items:center"><div class="label" style="color:#8d96c8">Last night</div><div style="display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;color:${YEL}"><span style="width:10px;height:10px;border-radius:50%;background:${YEL}"></span>Asleep</div></div>
           <div style="font-size:64px;font-weight:700;letter-spacing:-.03em;margin-top:18px">7h 42m</div>
           <div style="margin-top:auto;display:flex;gap:6px;height:44px;align-items:stretch">
@@ -589,7 +638,7 @@
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:15px;color:#6f78a8;font-weight:600"><span>19:00</span><span>01:00</span><span>06:42</span></div>
         </div>
-        <div style="width:400px;padding:12px 4px;display:flex;flex-direction:column">
+        <div style="${pv('width:400px', 'height:390px;flex:none')};padding:12px 4px;display:flex;flex-direction:column">
           <div class="label" style="color:#a3a8c3">This week</div>
           ${[['moon', 'Sleep', '13h 20m', BLUE], ['milk', 'Feeds', '8 / day', '#b0862a'], ['droplets', 'Nappies', '6 / day', '#c2477a']].map(([ic, k, v, c]) => `
             <div class="rrow" style="display:flex;align-items:center;gap:16px;margin-top:16px;padding:16px 18px;border-radius:18px;background:#f4f5fa">
@@ -603,8 +652,9 @@
           <div style="font-size:84px;font-weight:700;letter-spacing:-.04em;color:${INK};margin-top:6px;line-height:1.1"><span id="pct">0</span><span style="color:${GREY}">%</span></div>
           <div style="margin-top:auto">${bars([0.35, 0.45, 0.42, 0.6, 0.7, 0.82, 1], BLUE, 38, 18, 150)}</div>
         </div>
-      </div>`, s, { width: '1400px', height: '540px' });
-    place(panel, 0, 160);
+      </div>`, s, pv({ width: '1400px', height: '540px' }, { width: '940px', height: '1110px' }));
+    const [pX, pY, pS] = pv([0, 160, 1], [0, 115, 0.92]);
+    place(panel, pX, pY, { scale: pS });
     enter(panel, 29.25, { dy: 120, blur: 18, scale: 0.96, dur: 0.8 });
     tl.fromTo(panel.querySelectorAll('.seg'), { scaleX: 0 }, { scaleX: 1, duration: 0.5, stagger: 0.07, ease: 'power2.out' }, 29.7);
     const rows = panel.querySelectorAll('.rrow');
@@ -620,8 +670,17 @@
     });
     const btn = panel.querySelector('#export-btn'), lab = panel.querySelector('#export-label');
     const cur = h('div', 'cursor', CURSOR, s); place(cur);
-    tl.fromTo(cur, { autoAlpha: 0, x: 380, y: 520 }, { autoAlpha: 1, x: 8, y: 382, duration: 0.6, ease: 'power3.out' }, 32.3);
-    tl.to(cur, { scale: 0.82, duration: 0.07, yoyo: true, repeat: 1 }, 32.95);
+    const tapExport = ([tx, ty]) => {
+      tl.fromTo(cur, { autoAlpha: 0, x: tx + 372, y: ty + 138 }, { autoAlpha: 1, x: tx, y: ty, duration: 0.6, ease: 'power3.out' }, 32.3);
+      tl.to(cur, { scale: 0.82, duration: 0.07, yoyo: true, repeat: 1 }, 32.95);
+      tl.to(cur, { autoAlpha: 0, duration: 0.3 }, 33.6);
+    };
+    if (PORT) {
+      deferred.push(() => {
+        const [rx, ry] = relCenter(btn, panel);
+        tapExport([pX + (rx + 30) * pS + 18, pY + ry * pS + 20]);
+      });
+    } else tapExport([8, 382]);
     tl.to(btn, { backgroundColor: BLUE, color: '#fff', scale: 0.97, duration: 0.1, ease: 'none' }, 32.97);
     tl.to(btn, { scale: 1, duration: 0.2 }, 33.08);
     hooks.push((t) => {
@@ -631,7 +690,6 @@
         lab.innerHTML = done ? `Exported ${icon('check', 22, 'currentColor', 3)}` : 'Export CSV';
       }
     });
-    tl.to(cur, { autoAlpha: 0, duration: 0.3 }, 33.6);
     tl.to(panel, { autoAlpha: 0, y: '+=60', filter: 'blur(18px)', duration: 0.42, ease: 'power2.in' }, 33.95);
     tl.to(tag, { autoAlpha: 0, filter: 'blur(14px)', duration: 0.3 }, 33.98);
     sfx('swell_long', 28.45, 0.55);
@@ -646,9 +704,10 @@
   // =====================================================================
   {
     const s = scene(34.42, 39.4, content);
-    const l1 = text('With Sprout [Premium],', s, { size: 64, y: -330 });
-    const l2 = text('turn a week of [logs]', s, { size: 64, y: -330 });
-    const l3 = text('into a [tailored daily routine.]', s, { size: 64, y: -330 });
+    const ly = pv(-330, -600), lz = pv(64, 72);
+    const l1 = text('With Sprout [Premium],', s, { size: lz, y: ly });
+    const l2 = text('turn a week of [logs]', s, { size: lz, y: ly });
+    const l3 = text(pv('into a [tailored daily routine.]', 'into a [tailored]|[daily routine.]'), s, { size: lz, y: pv(ly, ly + 40) });
     reveal(l1, 34.5, { stagger: 0.032 }); conceal(l1, 35.62, { stagger: 0.005 });
     reveal(l2, 35.85, { stagger: 0.03 }); conceal(l2, 36.75, { stagger: 0.005 });
     reveal(l3, 36.95, { stagger: 0.028 });
@@ -660,10 +719,10 @@
         <div style="font-size:17px;color:${GREY};margin-top:2px">142 entries</div>
         ${['07:02  Woke up', '07:30  Nursing · L 12m', '09:15  Nap · 1h 05m', '12:00  Solids · banana', '13:20  Nap · 1h 30m', '19:00  Bedtime'].map((r) => `<div style="font-size:18px;color:#4a5070;font-weight:500;padding:9px 0;border-bottom:1px solid #eef0f6;font-variant-numeric:tabular-nums">${r}</div>`).join('')}
       </div>`, s, { width: '400px', height: '520px' });
-    place(doc, 0, 90);
+    place(doc, 0, pv(90, 80), { scale: pv(1, 1.3) });
     enter(doc, 34.65, { dy: 120, dur: 0.8 });
-    tl.to(doc, { rotation: -3, scale: 1.02, duration: 1.6, ease: 'none' }, 35.3);
-    tl.to(doc, { scale: 0.6, autoAlpha: 0, filter: 'blur(22px)', rotation: 0, duration: 0.45, ease: 'power2.in' }, 36.65);
+    tl.to(doc, { rotation: -3, scale: 1.02 * doc._base, duration: 1.6, ease: 'none' }, 35.3);
+    tl.to(doc, { scale: 0.6 * doc._base, autoAlpha: 0, filter: 'blur(22px)', rotation: 0, duration: 0.45, ease: 'power2.in' }, 36.65);
     // schedule grid
     const cols = ['Morning', 'Midday', 'Afternoon', 'Evening'];
     const cells = [
@@ -673,10 +732,11 @@
       [['Bath', '18:20', 'out'], ['Feed', '18:40', 'blue'], ['Bedtime', '19:00', 'dark']],
     ];
     const sty = { blue: `background:${BLUE};color:#fff`, yel: `background:${YEL};color:#3d2c00`, dark: `background:#161a2b;color:#fff`, out: `background:#fff;color:${INK};box-shadow:inset 0 0 0 2px #dfe2ee` };
-    const grid = h('div', 'abs', `<div style="display:flex;gap:30px">${cols.map((c, ci) => `
-      <div style="width:290px"><div class="gl" style="font-size:18px;font-weight:600;color:${GREY};margin-bottom:14px;letter-spacing:.02em">${c}</div>
+    // landscape: four columns; portrait: two rows of two
+    const grid = h('div', 'abs', `<div style="display:flex;flex-wrap:wrap;gap:${pv('30px', '34px 36px')};width:${pv('1250px', '880px')}">${cols.map((c, ci) => `
+      <div style="width:${pv(290, 422)}px"><div class="gl" style="font-size:18px;font-weight:600;color:${GREY};margin-bottom:14px;letter-spacing:.02em">${c}</div>
       ${cells[ci].map(([k, v, st]) => `<div class="gcell" style="${sty[st]};height:74px;border-radius:18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;padding:0 20px;font-size:22px;font-weight:600">${icon(st === 'dark' ? 'moon' : st === 'yel' ? 'milk' : st === 'blue' ? 'sun' : 'smile', 22, 'currentColor')}<span>${k}</span><span style="margin-left:auto;opacity:.75;font-variant-numeric:tabular-nums">${v}</span></div>`).join('')}</div>`).join('')}</div>`, s);
-    place(grid, 0, 110, { scale: 1.1 });
+    place(grid, 0, pv(110, 130), { scale: pv(1.1, 1.08) });
     const gc = grid.querySelectorAll('.gcell');
     tl.fromTo(grid.querySelectorAll('.gl'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, stagger: 0.08 }, 36.95);
     // pills drop in on the rhythmic pulses
@@ -684,7 +744,7 @@
     order.forEach((idx, k) => {
       tl.fromTo(gc[idx], { autoAlpha: 0, scale: 0.7, y: -30, filter: 'blur(10px)' }, { autoAlpha: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 0.45, ease: 'back.out(1.8)' }, 37.0 + k * 0.075);
     });
-    tl.to(grid, { scale: 1.03, duration: 1.6, ease: 'none' }, 37.4);
+    tl.to(grid, { scale: pv(1.03, 1.11), duration: 1.6, ease: 'none' }, 37.4);
     tl.to(grid, { autoAlpha: 0, filter: 'blur(18px)', y: '+=40', duration: 0.42, ease: 'power2.in' }, 38.98);
     sfx('swell_h', 34.3, 0.55);
     sfx('swell_zips', 36.3, 0.45);
@@ -697,10 +757,16 @@
   // =====================================================================
   {
     const s = scene(39.4, 42.75, content);
-    const l1 = text('Predictions.', s, { size: 72, weight: 600, align: 'left', x: -560, y: -300 });
-    const l2 = text('Routines.', s, { size: 72, weight: 600, align: 'left', x: -560, y: -300 });
-    const l3 = text('All [connected.]', s, { size: 84, weight: 600, y: -300 });
-    deferred.push(() => { gsap.set(l2.el, { x: -560 + l1.el.offsetWidth + 24 }); });
+    const ty = pv(-300, -640);
+    const l1 = text('Predictions.', s, { size: 72, weight: 600, align: 'left', x: -560, y: ty });
+    const l2 = text('Routines.', s, { size: 72, weight: 600, align: 'left', x: -560, y: ty });
+    const l3 = text('All [connected.]', s, { size: 84, weight: 600, y: ty });
+    deferred.push(() => {
+      // portrait centres the pair; landscape keeps it left-aligned
+      const x0 = PORT ? -(l1.el.offsetWidth + 24 + l2.el.offsetWidth) / 2 : -560;
+      gsap.set(l1.el, { x: x0 });
+      gsap.set(l2.el, { x: x0 + l1.el.offsetWidth + 24 });
+    });
     reveal(l1, 39.5, { stagger: 0.03 }); reveal(l2, 40.25, { stagger: 0.03 });
     conceal(l1, 40.95, { stagger: 0.005 }); conceal(l2, 41.0, { stagger: 0.005 });
     reveal(l3, 41.2, { stagger: 0.035 });
@@ -710,13 +776,23 @@
       gsap.set(k.firstChild, v ? { scaleY: 0, transformOrigin: '50% 0' } : { scaleX: 0 });
       return k;
     };
-    const kL = mkLink(), kR = mkLink(), kB = mkLink(true);
+    // portrait links are all horizontal bars rotated between node centres
+    const kL = mkLink(), kR = mkLink(), kB = mkLink(!PORT);
     const NX = 600, NY = 40, BY = 300;
-    const nodeL = h('div', 'node', `<div class="nico" style="background:${NAVY}">${icon('moon-star', 32, '#9fb0ff')}</div>Nap predictions`, s); place(nodeL, -NX, NY);
-    const nodeR = h('div', 'node', `<div class="nico" style="background:${YEL}">${icon('calendar-days', 32, '#3d2c00')}</div>Schedule creator`, s); place(nodeR, NX, NY);
-    const nodeB = h('div', 'node', `<div class="nico" style="background:${GREEN}">${icon('sparkles', 32, '#06402a')}</div>Ask Sprout AI`, s); place(nodeB, 0, BY);
-    const nodeC = h('div', 'node', `<div style="width:64px;height:74px">${LOGO_SVG}</div><span style="font-size:40px;font-weight:700;color:${BLUE};letter-spacing:-.04em">Sprout</span>`, s, { height: '120px' }); place(nodeC, 0, NY);
-    deferred.push(() => {
+    // portrait: predictions on top, Sprout in the middle, schedule + AI below
+    const P = { L: [0, -380], C: [0, -40], R: [-250, 330], B: [250, 330] }, NS = pv(1, 1.2);
+    const nodeL = h('div', 'node', `<div class="nico" style="background:${NAVY}">${icon('moon-star', 32, '#9fb0ff')}</div>Nap predictions`, s); place(nodeL, ...pv([-NX, NY], P.L), { scale: NS });
+    const nodeR = h('div', 'node', `<div class="nico" style="background:${YEL}">${icon('calendar-days', 32, '#3d2c00')}</div>Schedule creator`, s); place(nodeR, ...pv([NX, NY], P.R), { scale: NS });
+    const nodeB = h('div', 'node', `<div class="nico" style="background:${GREEN}">${icon('sparkles', 32, '#06402a')}</div>Ask Sprout AI`, s); place(nodeB, ...pv([0, BY], P.B), { scale: NS });
+    const nodeC = h('div', 'node', `<div style="width:64px;height:74px">${LOGO_SVG}</div><span style="font-size:40px;font-weight:700;color:${BLUE};letter-spacing:-.04em">Sprout</span>`, s, { height: '120px' }); place(nodeC, ...pv([0, NY], P.C), { scale: NS });
+    if (PORT) {
+      // bar from a to b, pivoting on (and growing out of) a
+      const span = (k, [ax, ay], [bx, by]) => {
+        gsap.set(k, { width: Math.hypot(bx - ax, by - ay), transformOrigin: '0 50%', xPercent: 0, yPercent: -50, x: ax, y: ay, rotation: Math.atan2(by - ay, bx - ax) * 180 / Math.PI });
+        gsap.set(k.firstChild, { transformOrigin: '0 50%' });
+      };
+      span(kL, P.L, P.C); span(kR, P.C, P.R); span(kB, P.C, P.B);
+    } else deferred.push(() => {
       const cL = -nodeC.offsetWidth / 2, cR = nodeC.offsetWidth / 2;
       const lR = -NX + nodeL.offsetWidth / 2, rL = NX - nodeR.offsetWidth / 2;
       gsap.set(kL, { width: cL - lR, xPercent: -50, yPercent: -50, x: (cL + lR) / 2, y: NY });
@@ -727,15 +803,16 @@
       gsap.set(kB, { height: bot - top, xPercent: -50, yPercent: -50, x: 0, y: (top + bot) / 2 });
     });
     enter(nodeC, 39.45, { dy: 0, scale: 0.7, dur: 0.6, ease: 'back.out(1.6)' });
-    enter(nodeL, 39.6, { dy: 0, dx: -80, dur: 0.6 });
+    enter(nodeL, 39.6, pv({ dy: 0, dx: -80, dur: 0.6 }, { dy: -80, dur: 0.6 }));
     tl.fromTo(kL, { autoAlpha: 0, scaleX: 0, transformOrigin: '0 50%' }, { autoAlpha: 1, scaleX: 1, duration: 0.5, ease: 'power2.out' }, 39.8);
-    enter(nodeR, 40.3, { dy: 0, dx: 80, dur: 0.6 });
-    tl.fromTo(kR, { autoAlpha: 0, scaleX: 0, transformOrigin: '100% 50%' }, { autoAlpha: 1, scaleX: 1, duration: 0.5, ease: 'power2.out' }, 40.5);
+    enter(nodeR, 40.3, pv({ dy: 0, dx: 80, dur: 0.6 }, { dy: 60, dx: -60, dur: 0.6 }));
+    tl.fromTo(kR, { autoAlpha: 0, scaleX: 0, transformOrigin: pv('100% 50%', '0 50%') }, { autoAlpha: 1, scaleX: 1, duration: 0.5, ease: 'power2.out' }, 40.5);
     // the "solid" fill replaces the dotted line once everything is connected
-    enter(nodeB, 40.85, { dy: 60, dur: 0.6, ease: 'back.out(1.5)' });
-    tl.fromTo(kB, { autoAlpha: 0, scaleY: 0, transformOrigin: '50% 0' }, { autoAlpha: 1, scaleY: 1, duration: 0.4, ease: 'power2.out' }, 41.0);
+    enter(nodeB, 40.85, pv({ dy: 60, dur: 0.6, ease: 'back.out(1.5)' }, { dy: 60, dx: 60, dur: 0.6, ease: 'back.out(1.5)' }));
+    if (PORT) tl.fromTo(kB, { autoAlpha: 0, scaleX: 0, transformOrigin: '0 50%' }, { autoAlpha: 1, scaleX: 1, duration: 0.4, ease: 'power2.out' }, 41.0);
+    else tl.fromTo(kB, { autoAlpha: 0, scaleY: 0, transformOrigin: '50% 0' }, { autoAlpha: 1, scaleY: 1, duration: 0.4, ease: 'power2.out' }, 41.0);
     tl.to([kL.firstChild, kR.firstChild], { scaleX: 1, duration: 0.45, ease: 'power2.inOut' }, 41.35);
-    tl.to(kB.firstChild, { scaleY: 1, duration: 0.35, ease: 'power2.inOut' }, 41.55);
+    tl.to(kB.firstChild, PORT ? { scaleX: 1, duration: 0.35, ease: 'power2.inOut' } : { scaleY: 1, duration: 0.35, ease: 'power2.inOut' }, 41.55);
     tl.to(nodeC, { boxShadow: '0 0 0 6px rgba(59,79,232,.18), 0 30px 60px -26px rgba(26,35,90,.3)', duration: 0.4 }, 41.6);
     tl.to(s, { scale: 1.04, duration: 3.2, ease: 'none' }, 39.5);
     tl.to([nodeL, nodeR, nodeB, nodeC, kL, kR, kB], { autoAlpha: 0, filter: 'blur(16px)', duration: 0.4, ease: 'power2.in' }, 42.32);
@@ -760,7 +837,7 @@
       ['#3b4fe8', 'sparkles', '#fff'], ['#161a2b', 'calendar-days', YEL], ['#ffe08a', 'sun', '#3d2c00'], ['#2a3150', 'footprints', '#c7cdea'],
     ];
     const tiles = [];
-    const COLS = 11, ROWS = 7, SX = 196, SY = 150;
+    const COLS = pv(11, 6), ROWS = pv(7, 13), SX = 196, SY = 150;
     for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
       const x = (c - (COLS - 1) / 2) * SX + (r % 2 ? 40 : -40), y = (r - (ROWS - 1) / 2) * SY;
       const [bg, ic, fg] = palette[(r * 5 + c * 7) % palette.length];
@@ -777,7 +854,7 @@
     });
     tl.fromTo(wall, { scale: 1.3 }, { scale: 1.0, duration: 2.0, ease: 'power2.out' }, 42.8);
     // dark pool behind the copy keeps it readable over the tiles
-    const pool = h('div', 'glow', null, s, { width: '1500px', height: '700px', background: 'radial-gradient(ellipse, rgba(9,11,18,0.92) 0%, rgba(9,11,18,0.7) 40%, rgba(9,11,18,0) 70%)' });
+    const pool = h('div', 'glow', null, s, { width: pv('1500px', '1150px'), height: pv('700px', '760px'), background: 'radial-gradient(ellipse, rgba(9,11,18,0.92) 0%, rgba(9,11,18,0.7) 40%, rgba(9,11,18,0) 70%)' });
     place(pool, 0, 0);
     const t1 = text('From the first [feed]', s, { size: 84, weight: 600, color: '#fff', y: -40, accent: ['f7c84a', 'ffe08a'] });
     const t2 = text('to the first [steps,]', s, { size: 84, weight: 600, color: '#fff', y: 60, accent: ['6f80ff', 'a9b8ff'] });
@@ -794,7 +871,7 @@
     const go = h('div', 'tag', `Start nap ${icon('play', 22, '#3d2c00', 2.6)}`, s, { background: YEL, color: '#3d2c00', height: '54px', fontSize: '24px', padding: '0 24px' });
     place(go, 0, 278);
     enter(go, 45.5, { dy: 20, scale: 0.8, dur: 0.45, ease: 'back.out(2)' });
-    const t3 = text('One [day] at a time.', s, { size: 80, weight: 600, color: '#fff', y: -230, accent: ['6f80ff', 'a9b8ff'] });
+    const t3 = text('One [day] at a time.', s, { size: 80, weight: 600, color: '#fff', y: pv(-230, -300), accent: ['6f80ff', 'a9b8ff'] });
     reveal(t3, 45.12, { stagger: 0.035 });
     tl.to([hero, go], { autoAlpha: 0, filter: 'blur(18px)', scale: 1.1, duration: 0.35, ease: 'power2.in' }, 46.35);
     conceal(t3, 46.3, { stagger: 0.005 });
@@ -810,13 +887,15 @@
   // =====================================================================
   {
     const s = scene(46.72, 50.05, content);
-    const small = text('Making early parenthood', s, { size: 50, color: GREY, y: -150 });
+    const small = text('Making early parenthood', s, { size: pv(50, 54), color: GREY, y: pv(-150, -250) });
     reveal(small, 46.8, { stagger: 0.025 });
-    const big = text('Easier to', s, { size: 124, weight: 700, ls: '-0.05em', align: 'left', y: 10 });
-    const alts = ['track.', 'understand.', 'enjoy.'].map((w) => text(`[${w}]`, s, { size: 124, weight: 700, ls: '-0.05em', align: 'left', y: 10 }));
+    // landscape: "Easier to <word>" on one line; portrait: the word drops to its own line
+    const bigO = { size: pv(124, 128), weight: 700, ls: '-0.05em', align: pv('left', 'center') };
+    const big = text('Easier to', s, { ...bigO, y: pv(10, -90) });
+    const alts = ['track.', 'understand.', 'enjoy.'].map((w) => text(`[${w}]`, s, { ...bigO, y: pv(10, 60) }));
     // [reveal, hide] for each swapped word; "Easier to" re-centres before each swap
     const tw = [[47.55, 48.22], [48.42, 49.0], [49.18, 49.72]];
-    deferred.push(() => {
+    if (!PORT) deferred.push(() => {
       const wb = big.el.offsetWidth, gap = 34;
       alts.forEach((a) => {
         const total = wb + gap + a.el.offsetWidth;
@@ -834,10 +913,11 @@
     });
     conceal(big, 49.7, { stagger: 0.008, dur: 0.3 });
     conceal(small, 49.7, { stagger: 0.005, dur: 0.3 });
+    const flPos = pv([[-700, -300], [-720, 260], [700, -280], [700, 270]], [[-290, -560], [-300, 420], [300, -520], [290, 470]]);
     const fl = [
-      [-700, -300, 'moon', NAVY, '#9fb0ff', -8, 46.85], [-720, 260, 'chart-column', 'linear-gradient(145deg,#5b6cff,#3343da)', '#fff', 7, 47.55],
-      [700, -280, 'milk', '#fff', BLUE, 6, 48.42], [700, 270, 'sparkles', 'linear-gradient(145deg,#ffe08a,#f7c84a)', '#3d2c00', -7, 49.18],
-    ];
+      ['moon', NAVY, '#9fb0ff', -8, 46.85], ['chart-column', 'linear-gradient(145deg,#5b6cff,#3343da)', '#fff', 7, 47.55],
+      ['milk', '#fff', BLUE, 6, 48.42], ['sparkles', 'linear-gradient(145deg,#ffe08a,#f7c84a)', '#3d2c00', -7, 49.18],
+    ].map((m, i) => [...flPos[i], ...m]);
     fl.forEach(([x, y, ic, bg, fg, r, t]) => {
       const m = h('div', 'mini', icon(ic, 50, fg, 2.2), s, { background: bg, width: '180px', height: '134px', borderRadius: '28px' });
       place(m, x, y, { rotation: r });
@@ -857,27 +937,28 @@
   {
     const s = scene(50.0, DUR + 1, content);
     const glow = h('div', 'glow', null, s, { width: '1000px', height: '1000px', background: 'radial-gradient(circle, rgba(247,200,74,0.38) 0%, rgba(240,245,170,0.2) 35%, rgba(255,255,255,0) 68%)' });
-    place(glow, 0, -90);
+    place(glow, 0, pv(-90, -170));
     tl.fromTo(glow, { scale: 0.3, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'power2.out' }, 50.0);
     const wm = h('div', 'wordmark', 'Sprout', s, { fontSize: '186px' });
-    const L = logo(s, 190); place(L.el, 0, -100);
+    const yo = pv(0, -80);   // portrait sits the lock-up a little higher
+    const L = logo(s, 190); place(L.el, 0, -100 + yo);
     growLogo(L, 50.07);
     deferred.push(() => {
       const ww = wm.offsetWidth, gap = 40, lw = 190;
       const total = lw + gap + ww, wx = -total / 2 + lw + gap + ww / 2;
-      place(wm, wx, -88);
+      place(wm, wx, -88 + yo);
       tl.to(L.el, { x: -total / 2 + lw / 2, duration: 0.75, ease: 'power3.inOut' }, 50.55);
       tl.fromTo(wm, { autoAlpha: 0, filter: 'blur(24px)', x: wx - 120 }, { autoAlpha: 1, filter: 'blur(0px)', x: wx, duration: 0.8, ease: 'power3.out' }, 50.67);
     });
-    const tg = text('Watch them [sprout.]', s, { size: 62, weight: 500, y: 92 });
+    const tg = text('Watch them [sprout.]', s, { size: pv(62, 68), weight: 500, y: 92 + yo });
     reveal(tg, 51.45, { stagger: 0.035 });
     const pill = h('div', 'urlpill', `<span>sprout.velorynlabs.co.uk</span><span class="sep"></span><span style="color:${BLUE}">Download free</span><span class="go">${icon('arrow-right', 28, '#fff', 2.6)}</span>`, s);
-    place(pill, 0, 222);
+    place(pill, 0, pv(222, 170));
     enter(pill, 52.25, { dy: 30, scale: 0.9, blur: 12, dur: 0.6 });
     const stores = h('div', 'abs', `<span style="display:flex;align-items:center;gap:10px">${icon('star', 22, YEL, 2.4)}Free on iOS &amp; Android</span>`, s, { fontSize: '24px', fontWeight: 500, color: GREY, whiteSpace: 'nowrap' });
-    place(stores, 0, 316);
+    place(stores, 0, pv(316, 266));
     enter(stores, 52.65, { dy: 16, dur: 0.6 });
-    tl.fromTo(s, { scale: 1.0 }, { scale: 1.04, duration: DUR - 50.0, ease: 'none' }, 50.0);
+    tl.fromTo(s, { scale: pv(1.0, 1.1) }, { scale: pv(1.04, 1.14), duration: DUR - 50.0, ease: 'none' }, 50.0);
     sfx('chime', 50.07 + 0.3, 0.75);
     sfx('outro', 50.45, 0.75);
     sfx('click_ping2', 52.25, 0.55);
@@ -897,7 +978,6 @@
     seek(t) { tl.seek(t, true); hooks.forEach((f) => f(t)); },
   };
 
-  const qs = new URLSearchParams(location.search);
   deferredDone.then(() => {
     if (qs.has('t')) window.PROMO.seek(parseFloat(qs.get('t')));
     if (qs.has('play')) {

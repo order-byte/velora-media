@@ -1,7 +1,17 @@
 # Sprout promo ad
 
-A 55-second, 1920×1080 / 60 fps promo for **Sprout — Baby Tracker & Care**
-(<https://sprout.velorynlabs.co.uk/>).
+A 55-second promo for **Sprout — Baby Tracker & Care**
+(<https://sprout.velorynlabs.co.uk/>), in two formats:
+
+| File | Format | Use |
+| --- | --- | --- |
+| `output/sprout-promo.mp4` | 1920×1080, 16:9, 60 fps | YouTube, website, landscape players |
+| `output/sprout-promo-9x16.mp4` | 1080×1920, 9:16, 30 fps | Instagram Reels / Stories, TikTok, Shorts |
+
+Both use the same timeline and the same soundtrack. The 9:16 version is laid out for a
+vertical frame, not cropped: long lines wrap to two lines, card rows become stacks or
+grids, the Reports panel stacks its three blocks, and the "All connected" nodes form a
+hub. Key content stays clear of the top/bottom bands Instagram covers with its own UI.
 
 - **Visual style** follows the NanoSyllabus reference ad: soft lavender/lime gradient
   background, per-letter blur-in kinetic typography with blue accent words, a colour-block
@@ -11,8 +21,6 @@ A 55-second, 1920×1080 / 60 fps promo for **Sprout — Baby Tracker & Care**
   (whoosh swells, falling zips, sub-boom impact, UI pings, mouse clicks, glitch hits,
   rhythmic pulses, chime and outro swell), re-timed to this ad's beats. Like that
   reference, there is no music bed.
-
-Final file: `output/sprout-promo.mp4`
 
 ## Story
 
@@ -56,7 +64,13 @@ node scripts/render.js                           # silent video -> output/video.
 node scripts/render.js --cues                    # SFX cue list -> output/cues.json
 python scripts/build_audio.py output/cues.json sfx output/sfx_track.wav
 ffmpeg -i output/video.mp4 -i output/sfx_track.wav -c:v copy -c:a aac -b:a 256k -shortest output/sprout-promo.mp4
+
+# 9:16 (same cues, so the same sfx_track.wav)
+node scripts/render.js --format portrait --fps 30   # -> output/video_portrait.mp4
+ffmpeg -i output/video_portrait.mp4 -i output/sfx_track.wav -c:v copy -c:a aac -b:a 256k -shortest -movflags +faststart output/sprout-promo-9x16.mp4
 ```
 
 Open `src/index.html?play` in a browser for a real-time (silent) preview, or
-`src/index.html?t=12.5` to inspect a single moment.
+`src/index.html?t=12.5` to inspect a single moment. Add `&format=portrait` (or use
+`?format=portrait&play`) for the 9:16 layout; `--format portrait --stills …` renders
+portrait stills to `output/stills_portrait/`.

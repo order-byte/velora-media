@@ -4,7 +4,8 @@
 //   node scripts/render.js --stills 1.2,5,10.5   -> output/stills/t_<t>.png
 //   node scripts/render.js --cues                -> output/cues.json (SFX placements)
 //
-// Options: --workers N (parallel pages, default 4), --fps N, --from S --to S
+// Options: --workers N (parallel pages, default 4), --fps N, --from S --to S,
+//          --format portrait (1080x1920; writes video_portrait.mp4 / stills_portrait/)
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const fs = require('fs');
@@ -12,16 +13,19 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'output');
-const PAGE = `file://${path.join(ROOT, 'src', 'index.html')}`;
 
 const args = process.argv.slice(2);
 const opt = (name, def) => {
   const i = args.indexOf(`--${name}`);
   return i < 0 ? def : (args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : true);
 };
+const PORTRAIT = opt('format') === 'portrait';
+const VIEW = PORTRAIT ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 };
+const SUFFIX = PORTRAIT ? '_portrait' : '';
+const PAGE = `file://${path.join(ROOT, 'src', 'index.html')}${PORTRAIT ? '?format=portrait' : ''}`;
 
 async function openPage(browser) {
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({ viewport: VIEW, deviceScaleFactor: 1 });
   page.on('pageerror', (e) => { console.error('page error:', e.message); process.exitCode = 1; });
   await page.goto(PAGE);
   await page.evaluate(() => window.PROMO.ready);
@@ -58,7 +62,7 @@ function encoder(file, fps) {
 
   const stills = opt('stills');
   if (stills) {
-    const dir = path.join(OUT, 'stills');
+    const dir = path.join(OUT, `stills${SUFFIX}`);
     fs.mkdirSync(dir, { recursive: true });
     const p = await openPage(browser);
     for (const t of String(stills).split(',').map(Number)) {
@@ -83,7 +87,7 @@ function encoder(file, fps) {
   await Promise.all(Array.from({ length: workers }, async (_, w) => {
     const a = f0 + w * per, b = Math.min(f1, a + per);
     if (a >= b) return;
-    const file = path.join(OUT, `seg_${w}.mp4`);
+    const file = path.join(OUT, `seg${SUFFIX}_${w}.mp4`);
     segs[w] = file;
     const p = await openPage(browser);
     const enc = encoder(file, fps);
@@ -102,11 +106,11 @@ function encoder(file, fps) {
   }));
   await browser.close();
 
-  const list = path.join(OUT, 'segments.txt');
+  const list = path.join(OUT, `segments${SUFFIX}.txt`);
   fs.writeFileSync(list, segs.filter(Boolean).map((f) => `file '${f}'`).join('\n'));
-  await new Promise((res, rej) => spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', path.join(OUT, 'video.mp4')], { stdio: 'inherit' })
+  await new Promise((res, rej) => spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', path.join(OUT, `video${SUFFIX}.mp4`)], { stdio: 'inherit' })
     .on('close', (c) => (c === 0 ? res() : rej(new Error('concat failed')))));
   segs.filter(Boolean).forEach((f) => fs.unlinkSync(f));
   fs.unlinkSync(list);
-  console.log(`rendered ${f1 - f0} frames in ${((Date.now() - t0) / 1000).toFixed(0)}s -> output/video.mp4`);
+  console.log(`rendered ${f1 - f0} frames in ${((Date.now() - t0) / 1000).toFixed(0)}s -> output/video${SUFFIX}.mp4`);
 })();

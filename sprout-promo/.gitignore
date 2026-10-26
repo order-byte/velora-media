@@ -1,3 +1,4 @@
 node_modules/
 output/*
 !output/sprout-promo.mp4
+!output/sprout-promo-9x16.mp4
