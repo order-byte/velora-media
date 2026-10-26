@@ -1,9 +1,9 @@
-# Reel Script — "₹20,000 From One 60-Sec Video, in One Day (US Client)"
+# Reel Script — "₹21,000 From One 60-Sec Video, in One Day (US Client)"
 
 **Client:** OfflineIQ (offlineiq.ai), a US company that sells private, offline AI. Their main product is **Fort Knox**, an AI hardware box that runs inside a company's own network. No cloud, no internet, and every answer is cited back to its source.
 **Format:** Instagram Reel / YouTube Short, 9:16, **~60 sec**
 **Language:** Voiceover is ~60% English, ~40% Hindi (Hindi written in Roman/English letters)
-**Structure:** Hook (one 60-sec video → ₹20,000 → one day) → "Here's the process" + rewind → Step 1 names the US company → 8 steps → payment again → CTA for Part 2
+**Structure:** Hook (one 60-sec video → ₹21,000, paid as ₹10,000 + ₹11,000 → one day) → "Here's the process" + rewind → Step 1 names the US company → 8 steps → payment again → CTA for Part 2
 
 > ⚠️ Before posting: blur the client's personal name/email, transaction ID and account numbers in every screenshot. Check your contract or NDA (or just ask the client) before showing their DM, the brief or the final video. Most clients say yes to portfolio use, but ask first.
 
@@ -17,7 +17,7 @@ On-screen text = big caption/title on screen. Captions for the VO run word-by-wo
 
 | # | Time | Visual / Shot | On-screen text | Voiceover (VO) | SFX / Edit |
 |---|------|---------------|----------------|----------------|------------|
-| **0** | 0:00–0:04 | **HOOK.** (a) 0:00–0:02.5: face cam or payment screenshot (details blurred, amount visible), hard punch-zoom 100%→130% on "₹20,000". (b) 0:02.5–0:04, on "Here's the process": VHS rewind effect plays the reel backwards fast (payment → Premiere → AE → website → DM) and lands on the DM. | **1 video · 60 sec · ₹20,000 · 1 DAY** then **Here's the process 👇** | "Ek **60-second video** se **₹20,000** kamaye — **ek din mein.** Here's the process." | Cash-register "ka-ching" on frame 1. No silence at the start. Rewind SFX + glitch on "Here's the process". |
+| **0** | 0:00–0:04 | **HOOK.** (a) 0:00–0:02.5: two payment notifications drop in one after the other: **+₹10,000**, then **+₹11,000** (~0.5s apart). They merge into a big **₹21,000** total with a hard punch-zoom 100%→130%. Details blurred, amounts visible. (b) 0:02.5–0:04, on "Here's the process": VHS rewind effect plays the reel backwards fast (payment → Premiere → AE → website → DM) and lands on the DM. | **₹10,000 + ₹11,000 = ₹21,000** then **1 video · 60 sec · 1 DAY** then **Here's the process 👇** | "Ek **60-second video** se **₹21,000** kamaye — **ek din mein.** Here's the process." | Two quick "ka-ching" sounds, one per notification (frame 1 and ~0.5s). No silence at the start. Rewind SFX + glitch on "Here's the process". |
 | **1** | 0:04–0:09 | **STEP 1 — The DM.** Phone screen recording: message notification slides in, tap, chat opens. Zoom on the client's name/first line. A **🇺🇸 USA** location tag pops in next to the company name. | **STEP 1/8 · DM from a 🇺🇸 US company** | "It started with one DM — from a **US company**, Offline IQ. Unhe apne AI product ke liye ek video chahiye tha." | Notification "ding". Slide-in from the top. Small "pop" on the 🇺🇸 tag. |
 | **2** | 0:09–0:13 | **STEP 2 — The brief.** Screen rec scrolling the brief doc. A marker/highlight animates over 3 key lines (length, audience, deadline). | **STEP 2/8 · The Brief 📝** | "Then came the brief. Rule number one — **brief ko teen baar padho.**" | Highlighter "swipe" SFX × 3, one per line. |
 | **3** | 0:13–0:20 | **STEP 3 — Website.** Screen rec: type `offlineiq.ai` in the URL bar → hero loads → slow push-in on **"Your AI. Inside your walls. Nothing leaves."** Hold on the orange "Nothing". | **STEP 3/8 · Research BEFORE editing** | "Software kholne se pehle, I went to their website. Poora pitch ek line mein tha: **'Your AI. Inside your walls. Nothing leaves.'**" | Keyboard clicks on typing. Whoosh on page load. Music dips under the quote. |
@@ -26,8 +26,10 @@ On-screen text = big caption/title on screen. Captions for the VO run word-by-wo
 | **6** | 0:36–0:42 | **STEP 6 — Premiere Pro.** PR-1 to PR-4 from the shot list. End on the export bar hitting 100%. | **STEP 6/8 · Premiere Pro** | "Then Premiere Pro — final cut, sound design, music sync. **Export.**" | Cut exactly on music beats. "Ding" when export hits 100%. |
 | **7** | 0:42–0:45 | **Delivery.** Screen rec: paste the Drive/Frame.io link in chat → hit send → "Delivered ✅". Short face-cam beat leaning back and waiting. | **Delivered ✅** | "Delivered. Now… **the wait.**" | Send "whoosh". 0.5s of near-silence: tension before step 7. |
 | **8** | 0:45–0:51 | **STEP 7 — The revision (the payoff).** Client's change-request message pops in (blurred if needed) → quick face-cam reaction (1s) → before/after split screen of the change. | **STEP 7/8 · The revision** then **Revisions don't lose clients. Slow replies do.** | "Client ne ek change maanga. No ego, quick fix, sent back. **Lesson: revisions don't lose clients — slow replies do.**" **[edit]** | Record-scratch or pop on the request. Wipe transition for before→after. Lesson line on screen in bold. |
-| **9** | 0:51–0:56 | **STEP 8 — Payment.** Same payment screenshot as the hook. Number counter animates **₹0 → ₹20,000**. Light confetti or money-burst particles. | **STEP 8/8 · PAID 💰 ₹20,000** then **1 video · 1 day** | "And then… payment received. **₹20,000. One video. One day.**" | Riser builds, then 0.3s of silence right before "₹20,000", then the impact hit + cash SFX. |
+| **9** | 0:51–0:56 | **STEP 8 — Payment (2 parts).** Screenshot 1 slides in: **₹10,000**, labelled "Payment 1". Screenshot 2 stacks on top: **₹11,000**, labelled "Payment 2". Counter animates **₹0 → ₹10,000 → ₹21,000**. Light confetti or money-burst particles. | **STEP 8/8 · PAID 💰** then **Payment 1: ₹10,000 · Payment 2: ₹11,000** then **TOTAL ₹21,000 · 1 video · 1 day** | "First payment — **₹10,000.** Phir second — **₹11,000.** Total: **₹21,000.**" | "ka-ching" on each payment. Riser builds, 0.3s of silence right before "Total", then the impact hit. |
 | **10** | 0:56–1:00 | **CTA.** Face cam, same setup as the hook, pointing down to the comments. | **Comment "CLIENT" 👇 Part 2: How I got this client** | "Ye client mila kaise? **Comment 'CLIENT'** — Part 2 mein bataunga." | Music swell, then a hard cut to black (helps the loop/replay). |
+
+**If the ₹10,000 came as an advance before you started work:** move "Payment 1" to right after Step 2 (the brief), with the VO line "Kaam start karne se pehle advance aaya — **₹10,000.**" Then Step 8 becomes "Final payment — **₹11,000.** Total: **₹21,000.**" This also shows viewers a good habit: take an advance before you start.
 
 **VO length:** ~160 words, about 55–58 sec at normal reel speed. If you run long, cut the second sentence of beat 3 first.
 
@@ -39,10 +41,10 @@ Keep the body the same and swap only the first 4 seconds. Post one as the main r
 
 | Hook | VO (0:00–0:04) | On-screen text | Why it works |
 |------|----------------|----------------|--------------|
-| **A — Result + speed (default)** | "Ek 60-second video se ₹20,000 kamaye — ek din mein. Here's the process." | 1 video · 60 sec · ₹20,000 · 1 DAY | Money + speed in one line; "Here's the process" promises the payoff, and the US company lands right after in Step 1 |
+| **A — Result + speed (default)** | "Ek 60-second video se ₹21,000 kamaye — ek din mein. Here's the process." | ₹10,000 + ₹11,000 = ₹21,000 · 1 DAY | Money + speed in one line; "Here's the process" promises the payoff, and the US company lands right after in Step 1 |
 | **B — Callout** | "Agar tum abhi bhi ₹500 per video pe edit kar rahe ho — ye 60 seconds dekh lo." | Still editing for ₹500? 👀 | Speaks straight to editors; makes them feel "this is about me" |
-| **C — Curiosity** | "Ek aisi AI company jiska AI internet use hi nahi karta — unhone mujhe ek video ke ₹20,000 diye." | AI that works WITHOUT internet?! | Strange fact + money in one line |
-| **D — Silent visual** | (No VO for the first 1s, just the "ka-ching" sound) then Hook A | ₹20,000 → for 60 seconds of video? | Stops the thumb with sound + motion before any words |
+| **C — Curiosity** | "Ek aisi AI company jiska AI internet use hi nahi karta — unhone mujhe ek video ke ₹21,000 diye." | AI that works WITHOUT internet?! | Strange fact + money in one line |
+| **D — Silent visual** | (No VO for the first 1s, just the "ka-ching" sound) then Hook A | ₹21,000 → for 60 seconds of video? | Stops the thumb with sound + motion before any words |
 
 **Hook rules for every version:** something moves on frame 1, text is on screen before the first word, no logo intro, no "Hi guys".
 
@@ -63,7 +65,7 @@ Audio: use a lav mic or the phone close to your mouth. If the room echoes, recor
 | ID | Shot | How to record |
 |----|------|---------------|
 | P-1 | The DM | Built-in screen recorder. Open the chat slowly. If the original is old, use the screenshot and animate the notification slide-in in AE. |
-| P-2 | Payment received | Screenshot of PayPal/Payoneer/Wise/bank. **Blur:** email, transaction ID, account numbers. **Keep:** amount + "received". Use the same image in beats 0 and 9. |
+| P-2 | Payments received (×2) | Two screenshots: the **₹10,000** payment and the **₹11,000** payment (PayPal/Payoneer/Wise/bank). If both show in one transaction list, screenshot that too; seeing both together is strong proof. **Blur:** email, transaction ID, account numbers. **Keep:** amount + "received" + date. Use them in beats 0 and 9. |
 
 ### C. Website and research (3 shots)
 | ID | Shot | How to record |
@@ -103,7 +105,7 @@ Audio: use a lav mic or the phone close to your mouth. If the room echoes, recor
 - **Captions:** word-by-word, bold sans (Montserrat ExtraBold / Inter Black), white with a black stroke or shadow. Highlight key words in **#C77255**, the terracotta orange from the "Nothing" highlight on Offline IQ's site. The reel then feels on-brand with the client.
 - **Step tracker:** a small pill at the top, "STEP 3/8", that updates each beat. It shows progress, so people keep watching to reach 8/8.
 - **Safe zone:** keep all text between ~250px from the top and ~420px from the bottom, and away from the right edge (IG buttons sit there).
-- **Music:** upbeat lo-fi / tech beat or a trending audio, **-18 to -22 dB** under the VO. Cut on the beats in beats 5–6. Drop to silence for 0.3s right before "₹20,000" in beat 9.
+- **Music:** upbeat lo-fi / tech beat or a trending audio, **-18 to -22 dB** under the VO. Cut on the beats in beats 5–6. Drop to silence for 0.3s right before "Total: ₹21,000" in beat 9.
 - **SFX pack:** cash register, notification ding, keyboard clicks, mouse clicks, whoosh, VHS rewind, highlighter swipe, pen scribble, riser, impact hit, record scratch.
 - **Color:** keep screen recordings neutral. Light grade on the face cam, a little warmer than the screens so you stand out.
 - **Loop:** end on a hard cut right after the CTA. The reel restarts on the payment "ka-ching", which pushes replays.
@@ -112,11 +114,11 @@ Audio: use a lav mic or the phone close to your mouth. If the room echoes, recor
 
 ## 5. POSTING PACK
 
-**Cover text:** ₹20,000 from ONE 60-sec video (in 1 day) 🇺🇸
+**Cover text:** ₹21,000 from ONE 60-sec video (in 1 day) 🇺🇸
 
 **Caption:**
 ```
-I made ₹20,000 from one 60-second video — in one day. For a US company. 🇺🇸
+I made ₹21,000 from one 60-second video — in one day. For a US company. 🇺🇸
 
 Here's the full process:
 1️⃣ The DM
@@ -126,7 +128,7 @@ Here's the full process:
 5️⃣ After Effects
 6️⃣ Premiere Pro
 7️⃣ The revision (the real lesson)
-8️⃣ Paid 💰
+8️⃣ Paid 💰 ₹10,000 + ₹11,000
 
 Comment "CLIENT" and I'll show you how I landed this client in Part 2 👇
 ```
@@ -142,7 +144,7 @@ Comment "CLIENT" and I'll show you how I landed this client in Part 2 👇
 - [ ] Client's personal name/email, transaction ID and account numbers blurred in every screenshot
 - [ ] Permission or NDA checked for the DM, the brief and the final video
 - [ ] All **[edit]** lines changed to what really happened
-- [ ] Amount and currency match your real payment screenshot (₹ / $ / ৳)
+- [ ] Amounts and currency match both payment screenshots: ₹10,000 + ₹11,000 = ₹21,000 (₹ / $ / ৳)
 - [ ] Text inside the safe zones
 - [ ] Watched once on a phone with sound **off**: does it still make sense from captions alone?
 - [ ] Hook B/C/D versions exported for Trial Reels
