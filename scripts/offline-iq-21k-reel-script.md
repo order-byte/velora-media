@@ -37,8 +37,8 @@ Numbers: say them in Hindi. ₹21,000 = *ikkees hazaar*, ₹20,000 = *bees hazaa
 3. The WhatsApp chat with the details
 4. A screen recording of offlineiq.ai (slow scroll)
 5. The ₹10,000 advance payment
-6. After Effects at work (record the screen, speed it up in the edit)
-7. The Premiere Pro timeline + export
+6. After Effects + Premiere Pro scene: no screen recording needed. The editor recreates both interfaces with the real Offline IQ video playing at 2× (see `offline-iq-editor-brief.md`)
+7. The finished Offline IQ video file (used inside that scene)
 8. The delivery message + the client's change request
 9. The ₹11,000 final payment
 
