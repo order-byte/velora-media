@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How we'll run the agency on Claude agents</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("fonts/Inter.ttf"); font-weight: 100 900; }
+  @font-face { font-family: "Hind"; src: url("fonts/HindSiliguri-Medium.ttf"); font-weight: 500; }
+  @font-face { font-family: "Hind"; src: url("fonts/HindSiliguri-SemiBold.ttf"); font-weight: 600; }
+
+  :root {
+    --bg: #0b1324; --card: #131e33; --card2: #1a2741; --line: rgba(255,255,255,0.09);
+    --text: #f3f5f9; --muted: #93a2ba; --coral: #e8805f; --teal: #3cc9b4; --amber: #f2b84b;
+    --green: #25d366; --red: #ff5f5f; --blue: #6ea8ff; --yt: #ff3b3b;
+    --ig: linear-gradient(135deg, #833ab4, #e1306c 55%, #fcaf45);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: var(--text);
+           font-family: "Inter", sans-serif; -webkit-font-smoothing: antialiased; }
+  .abs { position: absolute; }
+  .scene { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
+  i[data-i] { display: inline-block; width: 1em; height: 1em; flex: none; }
+  i[data-i] svg { width: 100%; height: 100%; display: block; }
+
+  /* background */
+  #bg { position: absolute; inset: 0; background: radial-gradient(1200px 800px at 50% 40%, #122042 0%, var(--bg) 70%); }
+  #dots { position: absolute; inset: -60px; opacity: 0.5;
+          background-image: radial-gradient(rgba(255,255,255,0.07) 1.6px, transparent 1.7px); background-size: 46px 46px; }
+  .blob { position: absolute; width: 900px; height: 900px; border-radius: 50%; }
+  .b1 { background: radial-gradient(circle, rgba(232,128,95,0.16), rgba(232,128,95,0) 65%); }
+  .b2 { background: radial-gradient(circle, rgba(60,201,180,0.12), rgba(60,201,180,0) 65%); }
+
+  /* chrome */
+  #chapter { position: absolute; left: 90px; top: 62px; display: flex; align-items: center; gap: 14px;
+             font-size: 23px; font-weight: 600; letter-spacing: 0.02em; opacity: 0; }
+  #chapter .bar { width: 34px; height: 4px; border-radius: 2px; background: var(--coral); }
+  #chapNum { color: var(--coral); font-variant-numeric: tabular-nums; }
+  #chapTitle { color: #d6deea; }
+  #handle { position: absolute; right: 90px; top: 62px; font-size: 21px; font-weight: 500; color: var(--muted); }
+  #caption { position: absolute; left: 0; right: 0; bottom: 54px; display: flex; justify-content: center; opacity: 0; }
+  #capText { font-family: "Hind", sans-serif; font-weight: 500; font-size: 35px; line-height: 1.32; color: #fff;
+             background: rgba(6, 11, 22, 0.78); border: 1px solid rgba(255,255,255,0.06);
+             padding: 9px 30px 7px; border-radius: 14px; max-width: 1560px; text-align: center; }
+  #progress { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgba(255,255,255,0.05); }
+  #progFill { height: 100%; width: 100%; background: var(--coral); transform-origin: left center; transform: scaleX(0); }
+
+  /* shared pieces */
+  .card { background: var(--card); border: 1.5px solid var(--line); border-radius: 22px;
+          box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+  .pill { display: inline-flex; align-items: center; gap: 12px; padding: 12px 24px; border-radius: 999px;
+          background: var(--card2); border: 1.5px solid var(--line); font-size: 24px; font-weight: 600; white-space: nowrap; }
+  .pill i { font-size: 26px; }
+  .h2 { font-size: 56px; font-weight: 750; line-height: 1.12; letter-spacing: -0.02em; }
+  .muted { color: var(--muted); }
+  .coral { color: var(--coral); }
+  .ic { width: 58px; height: 58px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+        font-size: 30px; flex: none; }
+  .ic.coral { background: rgba(232,128,95,0.16); color: var(--coral); }
+  .ic.teal { background: rgba(60,201,180,0.15); color: var(--teal); }
+  .ic.amber { background: rgba(242,184,75,0.15); color: var(--amber); }
+  .ic.green { background: rgba(37,211,102,0.15); color: var(--green); }
+  .ic.red { background: rgba(255,95,95,0.15); color: var(--red); }
+  .ic.blue { background: rgba(110,168,255,0.15); color: var(--blue); }
+  .ok { color: var(--green); }
+  .no { color: var(--red); }
+
+  /* intro */
+  .title { text-align: center; font-size: 96px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; }
+  .title .w { display: inline-block; }
+  .sub { text-align: center; font-size: 32px; color: var(--muted); font-weight: 500; }
+  .appicon { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 21px; font-weight: 600; color: #cfd8e6; }
+  .appicon .sq { width: 92px; height: 92px; border-radius: 26px; display: flex; align-items: center; justify-content: center;
+                 font-size: 46px; color: #fff; box-shadow: 0 14px 30px rgba(0,0,0,0.35); }
+  .sq.ig { background: var(--ig); } .sq.wa { background: var(--green); } .sq.yt { background: var(--yt); }
+  .sq.cl { background: var(--coral); }
+
+  /* today */
+  .task { display: flex; align-items: center; gap: 22px; height: 98px; padding: 0 26px; margin-bottom: 22px;
+          font-size: 30px; font-weight: 600; }
+  .task .tag { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 20px; color: var(--amber);
+               background: rgba(242,184,75,0.12); padding: 8px 14px; border-radius: 999px; }
+  .task .tag i { font-size: 22px; }
+  .revlabel { font-size: 24px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 40px; }
+  .revrow { display: flex; align-items: center; gap: 22px; margin-bottom: 38px; }
+  .revrow .rl { width: 110px; font-size: 26px; font-weight: 600; color: #cfd8e6; }
+  .revrow .track { width: 420px; height: 46px; border-radius: 12px; background: rgba(255,255,255,0.05); overflow: hidden; }
+  .revrow .fill { height: 100%; border-radius: 12px; transform-origin: left center; }
+  .revrow .val { font-size: 40px; font-weight: 750; font-variant-numeric: tabular-nums; }
+  .x50 { font-size: 92px; font-weight: 850; color: var(--coral); letter-spacing: -0.03em; }
+
+  /* platform */
+  .node { border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+          background: radial-gradient(circle at 35% 30%, #f39b7c, #d9694a 70%); box-shadow: 0 0 0 14px rgba(232,128,95,0.13),
+          0 0 0 30px rgba(232,128,95,0.06), 0 30px 70px rgba(0,0,0,0.45); font-size: 34px; font-weight: 800; }
+  .node i { font-size: 92px; }
+  .chip { display: flex; align-items: center; gap: 16px; padding: 16px 26px 16px 16px; font-size: 26px; font-weight: 650; white-space: nowrap; }
+  .chip .ic { width: 50px; height: 50px; font-size: 26px; border-radius: 14px; }
+  .plat { display: flex; align-items: center; gap: 20px; padding: 22px 28px; width: 300px; font-size: 28px; font-weight: 700; }
+  .plat .sq { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #fff; }
+  .strikeline { position: absolute; left: -10px; right: -10px; top: 50%; height: 4px; background: var(--red); border-radius: 2px; transform-origin: left center; }
+  svg.wires line { stroke: rgba(255,255,255,0.22); stroke-width: 3; stroke-linecap: round; }
+  svg.wires line.hot { stroke: rgba(232,128,95,0.75); }
+
+  /* team */
+  .agent { width: 300px; height: 206px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .agent .nm { font-size: 28px; font-weight: 750; }
+  .agent .jb { font-size: 20px; color: var(--muted); line-height: 1.3; }
+  .grp { font-size: 22px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* journey */
+  .step { position: absolute; top: 158px; width: 220px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .step .dot { width: 66px; height: 66px; border-radius: 50%; background: var(--card2); border: 2px solid var(--line);
+               display: flex; align-items: center; justify-content: center; font-size: 30px; color: var(--muted); }
+  .step .lb { font-size: 22px; font-weight: 650; color: var(--muted); }
+  .phone { width: 400px; height: 600px; border-radius: 46px; background: #0d1729; border: 2px solid rgba(255,255,255,0.12);
+           padding: 18px; box-shadow: 0 30px 80px rgba(0,0,0,0.5); overflow: hidden; }
+  .phone .top { display: flex; align-items: center; gap: 14px; padding: 14px 10px 18px; border-bottom: 1px solid var(--line); }
+  .phone .av { width: 46px; height: 46px; border-radius: 50%; background: var(--ig); }
+  .phone .who { font-size: 21px; font-weight: 700; } .phone .who small { display: block; font-size: 16px; color: var(--muted); font-weight: 500; }
+  .msgs { position: relative; height: 470px; }
+  .bub { position: absolute; max-width: 300px; padding: 14px 18px; border-radius: 22px; font-size: 21px; line-height: 1.35; }
+  .bub.in { left: 4px; background: #24314a; border-bottom-left-radius: 6px; }
+  .bub.out { right: 4px; background: linear-gradient(135deg, #7b3fe4, #c13584); border-bottom-right-radius: 6px; }
+  .bub small { display: block; font-size: 15px; opacity: 0.65; margin-top: 4px; }
+  .typing { display: flex; gap: 7px; padding: 18px 20px; }
+  .typing b { width: 10px; height: 10px; border-radius: 50%; background: #cbb5ff; display: block; }
+  .badge { display: flex; align-items: center; gap: 18px; padding: 22px 28px; font-size: 27px; font-weight: 650; }
+  .check-row { display: flex; align-items: center; gap: 16px; font-size: 25px; font-weight: 600; padding: 16px 0; border-top: 1px solid var(--line); }
+  .check-row .mk { margin-left: auto; font-size: 30px; }
+  .big-n { font-size: 84px; font-weight: 850; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .qual { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 999px; background: rgba(37,211,102,0.16);
+          color: var(--green); font-weight: 800; font-size: 24px; letter-spacing: 0.08em; }
+  .wa-win { width: 600px; height: 600px; border-radius: 28px; overflow: hidden; background: #0e1a26; border: 1.5px solid var(--line);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+  .wa-top { height: 86px; background: #075e54; display: flex; align-items: center; gap: 16px; padding: 0 26px; font-size: 24px; font-weight: 700; }
+  .wa-top .av { width: 48px; height: 48px; border-radius: 50%; background: #128c7e; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+  .wa-top small { display: block; font-size: 16px; font-weight: 500; opacity: 0.75; }
+  .lead { width: 560px; padding: 28px 30px; transform-origin: 0 0; }
+  .lead h4 { display: flex; align-items: center; gap: 12px; font-size: 26px; margin-bottom: 14px; }
+  .lead .f { display: flex; font-size: 21px; padding: 7px 0; border-top: 1px solid var(--line); }
+  .lead .f span:first-child { width: 170px; color: var(--muted); } .lead .f span:last-child { font-weight: 650; }
+  .sheet { width: 640px; overflow: hidden; }
+  .sheet .hd, .sheet .rw { display: grid; grid-template-columns: 280px 140px 1fr; padding: 16px 24px; font-size: 22px; }
+  .sheet .hd { background: rgba(255,255,255,0.05); color: var(--muted); font-weight: 700; font-size: 19px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .sheet .rw { font-weight: 600; align-items: center; }
+  .st { position: relative; height: 36px; }
+  .st span { position: absolute; left: 0; top: 0; padding: 4px 16px; border-radius: 999px; font-size: 19px; font-weight: 800; }
+  .st .new { background: rgba(110,168,255,0.16); color: var(--blue); }
+  .st .won { background: rgba(37,211,102,0.18); color: var(--green); }
+  .rowc { display: flex; align-items: center; gap: 20px; font-size: 27px; font-weight: 600; padding: 22px 0; border-top: 1px solid var(--line); }
+  .rowc .mk { margin-left: auto; font-size: 34px; }
+  .split { display: flex; height: 64px; border-radius: 16px; overflow: hidden; margin: 18px 0 14px; }
+  .split div { display: flex; align-items: center; padding-left: 20px; font-size: 22px; font-weight: 750; color: #0b1324; transform-origin: left center; }
+  .btn { display: inline-flex; align-items: center; gap: 12px; padding: 18px 34px; border-radius: 16px; font-size: 26px; font-weight: 750;
+         background: var(--coral); color: #fff; position: relative; }
+  .cursor { width: 44px; height: 44px; color: #fff; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+
+  /* strike */
+  .dots3 { display: flex; gap: 12px; } .dots3 b { width: 26px; height: 26px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.25); display: block; }
+  .dots3 b.on { background: var(--red); border-color: var(--red); }
+  .opt { display: flex; align-items: center; gap: 18px; font-size: 26px; font-weight: 600; padding: 20px 0; border-top: 1px solid var(--line); }
+  .opt .num { width: 40px; height: 40px; border-radius: 50%; background: var(--card2); display: flex; align-items: center; justify-content: center;
+              font-size: 19px; font-weight: 800; color: var(--muted); flex: none; }
+  .human { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 750; color: var(--amber);
+           background: rgba(242,184,75,0.14); padding: 8px 14px; border-radius: 999px; white-space: nowrap; }
+
+  /* content line */
+  .station { position: absolute; top: 330px; width: 260px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .station .ring { width: 136px; height: 136px; border-radius: 50%; background: var(--card); border: 2px solid var(--line);
+                   display: flex; align-items: center; justify-content: center; font-size: 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.35); }
+  .station .lb { font-size: 25px; font-weight: 700; }
+  .thumb { width: 116px; height: 156px; border-radius: 18px; background: linear-gradient(160deg, #2b3d63, #1a2741);
+           border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 44px;
+           box-shadow: 0 18px 40px rgba(0,0,0,0.5); overflow: hidden; }
+  .verdict { width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 34px; color: #fff; }
+
+  /* control */
+  .col { width: 520px; height: 480px; padding: 34px 36px; }
+  .col h3 { font-size: 29px; font-weight: 800; margin: 18px 0 20px; line-height: 1.2; }
+  .col .it { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 550; padding: 13px 0; border-top: 1px solid var(--line); }
+  .col .it i { font-size: 24px; }
+
+  /* cost */
+  .stack { display: flex; width: 1200px; height: 70px; border-radius: 18px; overflow: hidden; }
+  .stack div { height: 100%; transform-origin: left center; }
+  .legend { display: flex; gap: 40px; font-size: 23px; font-weight: 600; }
+  .legend span { display: flex; align-items: center; gap: 12px; } .legend b { width: 18px; height: 18px; border-radius: 5px; display: block; }
+
+  /* roadmap */
+  .ms { position: absolute; width: 320px; padding: 22px 24px; }
+  .ms .wk { font-size: 20px; font-weight: 800; color: var(--coral); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .ms .wt { font-size: 25px; font-weight: 700; line-height: 1.25; }
+  .ms .ws { font-size: 19px; color: var(--muted); margin-top: 8px; line-height: 1.3; }
+  .mdot { position: absolute; top: 527px; width: 26px; height: 26px; border-radius: 50%; background: var(--bg); border: 5px solid var(--coral); }
+
+  /* close */
+  .need { display: flex; align-items: center; gap: 14px; padding: 18px 26px; font-size: 25px; font-weight: 650; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"><div class="blob b1"></div><div class="blob b2"></div><div id="dots"></div></div>
+
+  <!-- INTRO -->
+  <section class="scene" id="s-intro">
+    <div class="abs" style="left:0;right:0;top:282px;display:flex;justify-content:center">
+      <div class="pill" id="i-pill"><i data-i="sparkles" class="coral"></i>Operating plan &nbsp;·&nbsp; @riyadhasan.official</div>
+    </div>
+    <h1 class="abs title" id="i-t1" style="left:0;right:0;top:382px">How we'll run the agency</h1>
+    <h1 class="abs title coral" id="i-t2" style="left:0;right:0;top:486px">on Claude agents</h1>
+    <p class="abs sub" id="i-sub" style="left:0;right:0;top:622px">A team of AI agents doing the repeatable work, day and night</p>
+    <div class="abs" style="left:0;right:0;top:712px;display:flex;justify-content:center;gap:46px">
+      <div class="appicon" id="i-a0"><div class="sq ig"><i data-i="camera"></i></div>Instagram</div>
+      <div class="appicon" id="i-a1"><div class="sq wa"><i data-i="message-circle"></i></div>WhatsApp</div>
+      <div class="appicon" id="i-a2"><div class="sq yt"><i data-i="play"></i></div>YouTube</div>
+      <div class="appicon" id="i-a3"><div class="sq cl"><i data-i="asterisk"></i></div>Claude</div>
+    </div>
+  </section>
+
+  <!-- TODAY -->
+  <section class="scene" id="s-today">
+    <h2 class="abs h2" id="t-h" style="left:130px;top:168px;width:820px">Today, almost everything<br>is done <span class="coral">by hand</span></h2>
+    <div class="abs" style="left:130px;top:360px;width:740px">
+      <div class="task card" id="t-k0"><span class="ic coral"><i data-i="message-circle"></i></span>Read every DM<span class="tag"><i data-i="hand"></i>manual</span></div>
+      <div class="task card" id="t-k1"><span class="ic coral"><i data-i="search"></i></span>Check every channel<span class="tag"><i data-i="hand"></i>manual</span></div>
+      <div class="task card" id="t-k2"><span class="ic coral"><i data-i="send"></i></span>Forward leads on WhatsApp<span class="tag"><i data-i="hand"></i>manual</span></div>
+      <div class="task card" id="t-k3"><span class="ic coral"><i data-i="wallet"></i></span>Chase payments<span class="tag"><i data-i="hand"></i>manual</span></div>
+    </div>
+    <div class="abs card" id="t-rev" style="left:1010px;top:300px;width:790px;height:440px;padding:46px 46px">
+      <div class="revlabel">Revenue per month</div>
+      <div class="revrow"><div class="rl">Today</div><div class="track"><div class="fill" id="t-b1" style="width:2.4%;background:var(--muted)"></div></div><div class="val">$2,000</div></div>
+      <div class="revrow"><div class="rl">Target</div><div class="track"><div class="fill" id="t-b2" style="width:100%;background:var(--coral)"></div></div><div class="val" id="t-v2">$2,000</div></div>
+      <div class="x50" id="t-50">50×</div>
+    </div>
+    <div class="abs" style="left:1010px;top:780px"><div class="pill" id="t-hours"><i data-i="clock" style="color:var(--amber)"></i>Not enough hours in the day</div></div>
+  </section>
+
+  <!-- PLATFORM -->
+  <section class="scene" id="s-platform">
+    <svg class="abs wires" id="p-svg" width="1920" height="1080" style="left:0;top:0"></svg>
+    <div class="abs node" id="p-node" style="left:850px;top:318px;width:220px;height:220px"><i data-i="asterisk"></i>Claude</div>
+    <div class="abs" id="p-grok" style="left:1330px;top:398px">
+      <div class="pill" style="color:#cfd8e6">Grok + a mix of other tools</div><div class="strikeline" id="p-grok-x"></div>
+    </div>
+    <div class="abs card chip" id="p-c0" style="left:210px;top:236px"><span class="ic coral"><i data-i="users"></i></span>All agents in one place</div>
+    <div class="abs card chip" id="p-c1" style="left:330px;top:452px"><span class="ic amber"><i data-i="receipt"></i></span>One bill</div>
+    <div class="abs card chip" id="p-c2" style="left:1290px;top:236px"><span class="ic teal"><i data-i="database"></i></span>Shared knowledge</div>
+    <div class="abs card chip" id="p-c3" style="left:1330px;top:452px"><span class="ic blue"><i data-i="key-round"></i></span>Keys in a vault</div>
+    <div class="abs card chip" id="p-c4" style="left:770px;top:140px"><span class="ic green"><i data-i="gauge"></i></span>Spend cap on every run</div>
+    <div class="abs card plat" id="p-ig" style="left:410px;top:742px"><span class="sq" style="background:var(--ig)"><i data-i="camera"></i></span>Instagram</div>
+    <div class="abs card plat" id="p-wa" style="left:810px;top:742px"><span class="sq" style="background:var(--green)"><i data-i="message-circle"></i></span>WhatsApp</div>
+    <div class="abs card plat" id="p-yt" style="left:1210px;top:742px"><span class="sq" style="background:var(--yt)"><i data-i="play"></i></span>YouTube</div>
+    <div class="abs" id="p-api" style="left:0;right:0;top:612px;display:flex;justify-content:center"><div class="pill" style="font-size:21px;padding:9px 18px"><i data-i="plug" style="color:var(--teal)"></i>Official API only</div></div>
+    <div class="abs" id="p-nobot" style="left:1300px;top:608px"><div class="pill" style="font-size:21px;padding:9px 18px;color:#ffd0d0;border-color:rgba(255,95,95,0.4)"><i data-i="ban" style="color:var(--red)"></i>No password-login bots</div></div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="scene" id="s-team">
+    <h2 class="abs h2" id="m-h" style="left:150px;top:150px;font-size:52px">10 agents, one team</h2>
+    <div class="abs grp coral" id="m-g0" style="left:150px;top:266px">Customer side</div>
+    <div class="abs grp" id="m-g1" style="left:150px;top:546px;color:var(--teal)">Content line</div>
+    <div class="abs grp" id="m-g2" style="left:1470px;top:266px;color:var(--amber)">Reports every evening</div>
+    <div class="abs card agent" id="m-a0" style="left:150px;top:310px"><span class="ic coral"><i data-i="message-circle"></i></span><div class="nm">DM handling</div><div class="jb">Answers DMs, qualifies leads</div></div>
+    <div class="abs card agent" id="m-a1" style="left:480px;top:310px"><span class="ic coral"><i data-i="user-plus"></i></span><div class="nm">Onboarding</div><div class="jb">Welcome, agreement, access</div></div>
+    <div class="abs card agent" id="m-a2" style="left:810px;top:310px"><span class="ic coral"><i data-i="wallet"></i></span><div class="nm">Finance</div><div class="jb">Revenue split, invoices</div></div>
+    <div class="abs card agent" id="m-a3" style="left:1140px;top:310px"><span class="ic coral"><i data-i="shield-alert"></i></span><div class="nm">Strike desk</div><div class="jb">Strike cases, deadlines</div></div>
+    <div class="abs card agent" id="m-a4" style="left:1470px;top:310px"><span class="ic amber"><i data-i="clipboard-list"></i></span><div class="nm">Manager</div><div class="jb">Daily and weekly reports</div></div>
+    <div class="abs card agent" id="m-a5" style="left:150px;top:590px"><span class="ic teal"><i data-i="search"></i></span><div class="nm">Research</div><div class="jb">Topics and trends</div></div>
+    <div class="abs card agent" id="m-a6" style="left:480px;top:590px"><span class="ic teal"><i data-i="pen-line"></i></span><div class="nm">Script</div><div class="jb">Reel and video scripts</div></div>
+    <div class="abs card agent" id="m-a7" style="left:810px;top:590px"><span class="ic teal"><i data-i="palette"></i></span><div class="nm">Design</div><div class="jb">Thumbnails and stories</div></div>
+    <div class="abs card agent" id="m-a8" style="left:1140px;top:590px"><span class="ic teal"><i data-i="badge-check"></i></span><div class="nm">Quality check</div><div class="jb">Checks before anything goes out</div></div>
+    <div class="abs card agent" id="m-a9" style="left:1470px;top:590px"><span class="ic teal"><i data-i="megaphone"></i></span><div class="nm">Social media</div><div class="jb">Publishes on Instagram</div></div>
+  </section>
+
+  <!-- JOURNEY -->
+  <section class="scene" id="s-journey">
+    <div class="abs" id="j-track" style="left:300px;top:190px;width:1320px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;transform-origin:left center"></div>
+    <div class="abs" id="j-fill" style="left:300px;top:190px;width:1320px;height:4px;background:var(--coral);border-radius:2px;transform-origin:left center"></div>
+    <div class="step" id="j-s0" style="left:190px"><div class="dot"><i data-i="message-circle"></i></div><div class="lb">DM</div></div>
+    <div class="step" id="j-s1" style="left:454px"><div class="dot"><i data-i="search"></i></div><div class="lb">Check</div></div>
+    <div class="step" id="j-s2" style="left:718px"><div class="dot"><i data-i="send"></i></div><div class="lb">Lead card</div></div>
+    <div class="step" id="j-s3" style="left:982px"><div class="dot"><i data-i="hand-coins"></i></div><div class="lb">Deal</div></div>
+    <div class="step" id="j-s4" style="left:1246px"><div class="dot"><i data-i="user-plus"></i></div><div class="lb">Onboarding</div></div>
+    <div class="step" id="j-s5" style="left:1510px"><div class="dot"><i data-i="receipt"></i></div><div class="lb">Invoice</div></div>
+
+    <!-- DM + check -->
+    <div class="abs phone" id="j-phone" style="left:470px;top:302px">
+      <div class="top"><div class="av"></div><div class="who">@riyadhasan.official<small>Instagram · Direct</small></div></div>
+      <div class="msgs">
+        <div class="bub in" id="j-m0" style="top:22px">Bhai, apnara ki kaj koren?<small>11:40 pm</small></div>
+        <div class="bub out typing" id="j-typ" style="top:128px"><b></b><b></b><b></b></div>
+        <div class="bub out" id="j-m1" style="top:128px">Walaikum assalam! Apnar channel link ta diben?<small>11:41 pm · DM agent</small></div>
+        <div class="bub in" id="j-m2" style="top:262px">youtube.com/@example-gaming<small>11:46 pm</small></div>
+        <div class="bub in" id="j-m3" style="top:350px;padding:12px"><div style="display:flex;align-items:center;gap:12px;background:#1a2741;border-radius:14px;padding:12px 16px;font-size:19px"><i data-i="image" style="font-size:28px;color:var(--muted)"></i>Studio: Monetization <b class="ok">On</b></div><small>11:51 pm</small></div>
+      </div>
+    </div>
+    <div class="abs card badge" id="j-b0" style="left:1000px;top:380px"><span class="ic coral"><i data-i="timer"></i></span>Reply in under a minute</div>
+    <div class="abs card badge" id="j-b1" style="left:1000px;top:520px"><span class="ic teal"><i data-i="clock"></i></span>24/7, even at 11:40 pm</div>
+
+    <div class="abs card" id="j-chk" style="left:1000px;top:318px;width:640px;padding:30px 36px">
+      <div class="muted" style="font-size:21px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase">Channel check</div>
+      <div style="display:flex;align-items:baseline;gap:16px;margin:6px 0 10px"><span class="big-n" id="j-subs">0</span><span class="muted" style="font-size:26px;font-weight:600">subscribers</span></div>
+      <div class="check-row" id="j-r0"><span class="ic red" style="width:46px;height:46px;font-size:24px"><i data-i="play"></i></span>100K+ subscribers <span class="muted" style="font-size:19px">YouTube API</span><span class="mk ok"><i data-i="circle-check"></i></span></div>
+      <div class="check-row" id="j-r1"><span class="ic green" style="width:46px;height:46px;font-size:24px"><i data-i="dollar-sign"></i></span>Monetized <span class="muted" style="font-size:19px">Studio screenshot</span><span class="mk ok"><i data-i="circle-check"></i></span></div>
+      <div style="margin-top:18px" id="j-q"><span class="qual"><i data-i="badge-check"></i>QUALIFIED</span></div>
+    </div>
+
+    <!-- lead card + whatsapp -->
+    <div class="abs wa-win" id="j-wa" style="left:1040px;top:300px">
+      <div class="wa-top"><div class="av"><i data-i="user-check"></i></div><div>Saheb bhai<small>Sales · WhatsApp</small></div></div>
+      <div class="abs" id="j-won" style="right:28px;top:506px"><div class="bub" style="position:static;background:#005c4b;font-size:26px;font-weight:800;padding:12px 22px">WON ✓<small style="font-weight:500">9:41 am</small></div></div>
+    </div>
+    <div class="abs card lead" id="j-lead" style="left:290px;top:318px">
+      <h4><span class="ic green" style="width:44px;height:44px;font-size:24px"><i data-i="send"></i></span>New qualified lead</h4>
+      <div class="f"><span>Channel</span><span>@example-gaming</span></div>
+      <div class="f"><span>Subscribers</span><span>135K</span></div>
+      <div class="f"><span>Niche</span><span>Gaming</span></div>
+      <div class="f"><span>Language</span><span>Bangla</span></div>
+      <div class="f"><span>Wants</span><span>Copyright work</span></div>
+      <div class="f"><span>Monetized</span><span class="ok">Yes ✓</span></div>
+      <div class="f"><span>Summary</span><span style="font-weight:500">Asked how we work, sent link and screenshot</span></div>
+    </div>
+    <div class="abs" id="j-5min" style="left:290px;top:420px"><div class="pill"><i data-i="zap" style="color:var(--amber)"></i>Sent within 5 minutes</div></div>
+    <div class="abs card badge" id="j-sales" style="left:290px;top:318px;width:640px"><span class="ic amber"><i data-i="user-check"></i></span>Sales calls stay with Saheb bhai</div>
+    <div class="abs card sheet" id="j-sheet" style="left:290px;top:490px">
+      <div style="display:flex;align-items:center;gap:12px;padding:20px 24px;font-size:23px;font-weight:700"><i data-i="sheet" style="color:var(--green);font-size:28px"></i>Leads sheet</div>
+      <div class="hd"><span>Channel</span><span>Subs</span><span>Status</span></div>
+      <div class="rw"><span>@example-gaming</span><span>135K</span><span class="st"><span class="new" id="j-new">NEW</span><span class="won" id="j-wonst">WON</span></span></div>
+    </div>
+
+    <!-- onboarding -->
+    <div class="abs card" id="j-onb" style="left:290px;top:318px;width:780px;padding:32px 40px 18px">
+      <div style="display:flex;align-items:center;gap:16px;font-size:30px;font-weight:800;margin-bottom:12px"><span class="ic coral"><i data-i="user-plus"></i></span>Onboarding</div>
+      <div class="rowc" id="j-o0"><i data-i="send" class="muted"></i>Welcome message<span class="mk ok"><i data-i="circle-check"></i></span></div>
+      <div class="rowc" id="j-o1"><i data-i="file-text" class="muted"></i>Agreement <span class="muted" style="font-size:21px">checked by a person</span><span class="mk ok"><i data-i="circle-check"></i></span></div>
+      <div class="rowc" id="j-o2"><i data-i="key-round" class="muted"></i>Access via YouTube Studio permissions<span class="mk ok"><i data-i="circle-check"></i></span></div>
+    </div>
+    <div class="abs card" id="j-lock" style="left:1150px;top:380px;width:470px;padding:40px;text-align:center">
+      <div style="display:flex;justify-content:center"><span class="ic red" style="width:96px;height:96px;font-size:52px;border-radius:28px"><i data-i="lock"></i></span></div>
+      <div style="font-size:34px;font-weight:800;margin-top:22px">Passwords: never</div>
+      <div class="muted" style="font-size:22px;margin-top:10px">No passwords, OTPs or recovery codes</div>
+    </div>
+
+    <!-- invoice -->
+    <div class="abs card" id="j-inv" style="left:470px;top:310px;width:980px;padding:38px 46px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:16px;font-size:30px;font-weight:800"><span class="ic coral"><i data-i="receipt"></i></span>Month-end invoice</div>
+        <div class="muted" style="font-size:20px">Example numbers</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:26px;font-size:24px"><span class="muted">Channel revenue <span style="font-size:19px">(YouTube Analytics)</span></span><span style="font-size:40px;font-weight:800" id="j-rev">$0</span></div>
+      <div class="split" id="j-split"><div id="j-sp0" style="width:40%;background:var(--amber)">Channel owner 40%</div><div id="j-sp1" style="width:60%;background:var(--teal)">Agency share</div></div>
+      <div style="display:flex;justify-content:space-between;font-size:24px;font-weight:700"><span>$1,000</span><span>$1,500</span></div>
+      <div style="margin-top:30px;display:flex;align-items:center;gap:22px">
+        <div class="btn" id="j-btn"><i data-i="check"></i><span id="j-btnt">Approve</span></div>
+        <span class="muted" style="font-size:22px">A person approves every invoice</span>
+      </div>
+    </div>
+    <div class="abs cursor" id="j-cur" style="left:900px;top:900px"><i data-i="mouse-pointer-2" style="width:44px;height:44px"></i></div>
+  </section>
+
+  <!-- STRIKE -->
+  <section class="scene" id="s-strike">
+    <div class="abs card" id="k-case" style="left:170px;top:280px;width:740px;padding:36px 42px">
+      <div style="display:flex;align-items:center;gap:16px;font-size:32px;font-weight:800;margin-bottom:14px"><span class="ic red"><i data-i="shield-alert"></i></span>Strike case</div>
+      <div class="opt" id="k-f0"><span class="muted" style="width:190px">Type</span>Copyright strike</div>
+      <div class="opt" id="k-f1"><span class="muted" style="width:190px">Active strikes</span><span class="dots3"><b class="on"></b><b></b><b></b></span><span class="muted" style="font-size:21px">1 of 3</span></div>
+      <div class="opt" id="k-f2"><span class="muted" style="width:190px">Expires in</span>
+        <svg width="74" height="74" viewBox="0 0 74 74" style="flex:none"><circle cx="37" cy="37" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
+          <circle id="k-ring" cx="37" cy="37" r="30" fill="none" stroke="var(--amber)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 37 37)" stroke-dasharray="188.5" stroke-dashoffset="188.5"/></svg>
+        <span style="font-size:30px;font-weight:800"><span id="k-days">0</span> days</span></div>
+      <div class="opt" id="k-f3"><span class="muted" style="width:190px">Fee</span>₹5,000 / ₹10,000</div>
+    </div>
+    <div class="abs card" id="k-opts" style="left:990px;top:280px;width:760px;padding:36px 42px">
+      <div style="font-size:30px;font-weight:800;margin-bottom:14px">Honest options</div>
+      <div class="opt" id="k-o0"><span class="num">1</span>Wait for it to expire</div>
+      <div class="opt" id="k-o1"><span class="num">2</span>Ask the claimant to retract</div>
+      <div class="opt" id="k-o2"><span class="num">3</span>Appeal</div>
+      <div class="opt" id="k-o3"><span class="num">4</span>Counter notification<span class="human" id="k-hum"><i data-i="user-check"></i>A person checks first</span></div>
+      <div class="muted" style="font-size:21px;margin-top:16px" id="k-note">No promise that a strike will be removed</div>
+    </div>
+  </section>
+
+  <!-- CONTENT LINE -->
+  <section class="scene" id="s-content">
+    <div class="abs" id="c-track" style="left:300px;top:396px;width:1320px;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;transform-origin:left center"></div>
+    <div class="station" id="c-s0" style="left:170px"><div class="ring" style="color:var(--teal)"><i data-i="search"></i></div><div class="lb">Research</div></div>
+    <div class="station" id="c-s1" style="left:500px"><div class="ring" style="color:var(--teal)"><i data-i="pen-line"></i></div><div class="lb">Script</div></div>
+    <div class="station" id="c-s2" style="left:830px"><div class="ring" style="color:var(--teal)"><i data-i="palette"></i></div><div class="lb">Design</div></div>
+    <div class="station" id="c-s3" style="left:1160px"><div class="ring" id="c-qc" style="color:var(--amber)"><i data-i="badge-check"></i></div><div class="lb">Quality check</div></div>
+    <div class="station" id="c-s4" style="left:1490px"><div class="ring" id="c-pub" style="color:#fff;background:var(--ig);border:none"><i data-i="megaphone"></i></div><div class="lb">Publish</div></div>
+    <div class="abs thumb" id="c-card" style="left:242px;top:160px"><i data-i="file-text" id="c-ci0" style="color:var(--teal)"></i></div>
+    <div class="abs verdict" id="c-x" style="left:1324px;top:316px;background:var(--red)"><i data-i="x"></i></div>
+    <div class="abs verdict" id="c-ok" style="left:1324px;top:316px;background:var(--green)"><i data-i="check"></i></div>
+    <div class="abs" id="c-live" style="left:1475px;top:560px;width:290px;display:flex;justify-content:center"><div class="pill" style="font-size:21px"><i data-i="trending-up" style="color:var(--green)"></i>Judged by DMs, not likes</div></div>
+    <div class="abs card" id="c-proof" style="left:470px;top:630px;width:980px;padding:26px 34px;display:flex;align-items:center;gap:26px">
+      <span class="ic amber"><i data-i="eye"></i></span>
+      <div style="font-size:28px;font-weight:750;flex:1">Revenue proof</div>
+      <div class="pill" id="c-real" style="color:var(--green)"><i data-i="circle-check"></i>Real screenshots</div>
+      <div class="pill" id="c-edit" style="color:var(--red)"><i data-i="circle-x"></i>Never edited</div>
+    </div>
+  </section>
+
+  <!-- CONTROL -->
+  <section class="scene" id="s-control">
+    <h2 class="abs h2" id="r-h" style="left:0;right:0;top:150px;text-align:center;font-size:50px">Agents do the work. <span class="coral">People make the calls.</span></h2>
+    <div class="abs card col" id="r-c0" style="left:140px;top:290px">
+      <span class="ic teal"><i data-i="bot"></i></span><h3>Agents do it alone</h3>
+      <div class="it"><i data-i="check" style="color:var(--teal)"></i>Standard DM replies</div>
+      <div class="it"><i data-i="check" style="color:var(--teal)"></i>Qualifying leads</div>
+      <div class="it"><i data-i="check" style="color:var(--teal)"></i>Lead cards and sheets</div>
+      <div class="it"><i data-i="check" style="color:var(--teal)"></i>Reports and reminders</div>
+      <div class="it"><i data-i="check" style="color:var(--teal)"></i>Research and first drafts</div>
+    </div>
+    <div class="abs card col" id="r-c1" style="left:700px;top:290px">
+      <span class="ic amber"><i data-i="user-check"></i></span><h3>Agent prepares,<br>a person approves</h3>
+      <div class="it"><i data-i="check" style="color:var(--amber)"></i>Client agreements</div>
+      <div class="it" id="r-money"><i data-i="check" style="color:var(--amber)"></i>Invoices and payouts</div>
+      <div class="it"><i data-i="check" style="color:var(--amber)"></i>Revenue proof posts</div>
+      <div class="it"><i data-i="check" style="color:var(--amber)"></i>Strike appeals</div>
+    </div>
+    <div class="abs card col" id="r-c2" style="left:1260px;top:290px">
+      <span class="ic coral"><i data-i="users"></i></span><h3>People only</h3>
+      <div class="it" id="r-sales"><i data-i="check" style="color:var(--coral)"></i>Sales conversations</div>
+      <div class="it"><i data-i="check" style="color:var(--coral)"></i>Pricing exceptions</div>
+      <div class="it"><i data-i="check" style="color:var(--coral)"></i>Client disputes</div>
+      <div class="it" id="r-legal"><i data-i="check" style="color:var(--coral)"></i>Anything legal</div>
+    </div>
+  </section>
+
+  <!-- COST -->
+  <section class="scene" id="s-cost">
+    <div class="abs" id="q-g0" style="left:0;right:0;top:0;height:1080px">
+      <div class="abs muted" id="q-l0" style="left:0;right:0;top:214px;text-align:center;font-size:28px;font-weight:650;letter-spacing:0.06em;text-transform:uppercase">Claude cost at the start</div>
+      <div class="abs" id="q-num" style="left:0;right:0;top:262px;text-align:center"><span style="font-size:170px;font-weight:850;letter-spacing:-0.04em" id="q-n">$0</span><span class="muted" style="font-size:44px;font-weight:650"> / month</span></div>
+      <div class="abs stack" id="q-stack" style="left:360px;top:560px">
+        <div id="q-p0" style="width:59.5%;background:var(--coral)"></div><div id="q-p1" style="width:21.4%;background:var(--teal)"></div>
+        <div id="q-p2" style="width:14.3%;background:var(--amber)"></div><div id="q-p3" style="width:4.8%;background:var(--blue)"></div>
+      </div>
+      <div class="abs legend" id="q-leg" style="left:360px;top:662px">
+        <span><b style="background:var(--coral)"></b>DM agent $100–150</span><span><b style="background:var(--teal)"></b>Content line ~$45</span>
+        <span><b style="background:var(--amber)"></b>Other agents ~$30</span><span><b style="background:var(--blue)"></b>Workspace ~$10</span>
+      </div>
+    </div>
+    <div class="abs" id="q-g1" style="left:0;right:0;top:0;height:1080px">
+      <div class="abs muted" style="left:0;right:0;top:250px;text-align:center;font-size:28px;font-weight:650;letter-spacing:0.06em;text-transform:uppercase">At $100,000 a month</div>
+      <div class="abs" id="q-revbar" style="left:360px;top:340px;width:1200px;height:130px;border-radius:22px;background:linear-gradient(90deg,#2a9d8f,var(--teal));transform-origin:left center;display:flex;align-items:center;padding-left:36px;font-size:34px;font-weight:800;color:#06211d">Revenue</div>
+      <div class="abs" id="q-sliver" style="left:1546px;top:340px;width:14px;height:130px;background:var(--coral);border-radius:0 22px 22px 0"></div>
+      <div class="abs" id="q-ptr" style="left:1380px;top:500px;width:330px;text-align:center"><div style="width:3px;height:40px;background:var(--coral);margin:0 auto 10px"></div><div class="pill" style="color:var(--coral)">Claude ≈ 1%</div></div>
+      <div class="abs" id="q-1p" style="left:0;right:0;top:660px;text-align:center;font-size:58px;font-weight:800;letter-spacing:-0.02em">About <span class="coral">1%</span> of revenue</div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="scene" id="s-roadmap">
+    <div class="abs" id="b-line" style="left:200px;top:537px;width:1520px;height:5px;background:rgba(255,255,255,0.12);border-radius:3px;transform-origin:left center"></div>
+    <div class="abs" id="b-fill" style="left:200px;top:537px;width:1520px;height:5px;background:var(--coral);border-radius:3px;transform-origin:left center"></div>
+    <div class="mdot" id="b-d0" style="left:247px"></div><div class="mdot" id="b-d1" style="left:597px"></div><div class="mdot" id="b-d2" style="left:947px"></div>
+    <div class="mdot" id="b-d3" style="left:1297px"></div><div class="mdot" id="b-d4" style="left:1647px"></div>
+    <div class="card ms" id="b-m0" style="left:100px;top:310px"><div class="wk">Week 1</div><div class="wt">Setup and accounts</div><div class="ws">Meta app, WhatsApp, sheets</div></div>
+    <div class="card ms" id="b-m1" style="left:450px;top:600px"><div class="wk">Weeks 2–3</div><div class="wt">DM agent, draft mode</div><div class="ws">A person checks every reply</div></div>
+    <div class="card ms" id="b-m2" style="left:800px;top:310px"><div class="wk">Weeks 4–5</div><div class="wt">DM agent live</div><div class="ws">Plus the daily report</div></div>
+    <div class="card ms" id="b-m3" style="left:1150px;top:600px"><div class="wk">Weeks 6–8</div><div class="wt">Onboarding, Finance, Strike desk</div></div>
+    <div class="card ms" id="b-m4" style="left:1500px;top:310px"><div class="wk">Weeks 9–12</div><div class="wt">Content line</div><div class="ws">Research to publish</div></div>
+    <div class="abs" id="b-ban" style="left:0;right:0;top:160px;display:flex;justify-content:center"><div class="pill" style="font-size:28px;padding:14px 30px"><i data-i="calendar-clock" style="color:var(--coral)"></i>12 weeks to the full system</div></div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="scene" id="s-close">
+    <div class="abs" id="z-g0" style="left:0;right:0;top:0;height:1080px">
+      <div class="abs title" id="z-t1" style="left:0;right:0;top:330px;font-size:104px">Real results.</div>
+      <div class="abs title coral" id="z-t2" style="left:0;right:0;top:450px;font-size:104px">No false promises.</div>
+      <div class="abs muted" id="z-need" style="left:0;right:0;top:640px;text-align:center;font-size:26px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase">To start, we need</div>
+      <div class="abs" style="left:0;right:0;top:700px;display:flex;justify-content:center;gap:22px">
+        <div class="card need" id="z-n0"><span class="ic coral" style="width:48px;height:48px;font-size:26px"><i data-i="camera"></i></span>Instagram + Meta access</div>
+        <div class="card need" id="z-n1"><span class="ic green" style="width:48px;height:48px;font-size:26px"><i data-i="message-circle"></i></span>A WhatsApp number</div>
+        <div class="card need" id="z-n2"><span class="ic teal" style="width:48px;height:48px;font-size:26px"><i data-i="messages-square"></i></span>~100 past DMs</div>
+        <div class="card need" id="z-n3"><span class="ic amber" style="width:48px;height:48px;font-size:26px"><i data-i="file-text"></i></span>Price list and rules</div>
+      </div>
+    </div>
+    <div class="abs" id="z-end" style="left:0;right:0;top:330px;text-align:center">
+      <div style="display:flex;justify-content:center;margin-bottom:34px"><div class="node" style="width:150px;height:150px;font-size:0"><i data-i="asterisk" style="font-size:72px"></i></div></div>
+      <div class="title" style="font-size:100px">Thank you</div>
+      <div class="sub" style="margin-top:22px">Running the agency on Claude agents &nbsp;·&nbsp; @riyadhasan.official</div>
+    </div>
+  </section>
+
+  <div id="chapter"><span class="bar"></span><span id="chapNum"></span><span id="chapTitle"></span></div>
+  <div id="handle">@riyadhasan.official</div>
+  <div id="caption"><span id="capText"></span></div>
+  <div id="progress"><div id="progFill"></div></div>
+</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script src="icons.js"></script>
+<script src="timing.js"></script>
+<script>
+const T = window.TIMING;
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+document.querySelectorAll('i[data-i]').forEach(el => { el.innerHTML = window.ICONS[el.dataset.i] || ''; });
+
+// split the big titles into words for staggered reveals
+['#i-t1', '#i-t2', '#z-t1', '#z-t2'].forEach(sel => {
+  const el = $(sel);
+  el.innerHTML = el.textContent.trim().split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
+});
+
+const SC = Object.fromEntries(T.scenes.map(s => [s.id, s]));
+const line = (sid, i) => SC[sid].lines[i];
+// time of the first word in a line containing `kw` (falls back to line start)
+function cue(sid, i, kw, which = 0) {
+  const l = line(sid, i);
+  if (!kw) return l.start;
+  const hits = l.words.filter(w => w.w.includes(kw));
+  return hits.length ? hits[Math.min(which, hits.length - 1)].s : l.start;
+}
+const lend = (sid, i) => line(sid, i).end;
+
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out', duration: 0.6 } });
+const updaters = [];
+
+function enter(sel, t, from = { y: 26 }, d = 0.65, ease = 'back.out(1.5)') {
+  const els = typeof sel === 'string' ? $$(sel) : [sel];
+  els.forEach(el => {
+    gsap.set(el, Object.assign({ autoAlpha: 0 }, from));
+    tl.to(el, { autoAlpha: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: d, ease }, Math.max(0, t));
+  });
+}
+function stagger(sels, t, step, from, d, ease) { sels.forEach((s, k) => enter(s, t + k * step, from, d, ease)); }
+const R = sel => Array.isArray(sel) ? sel.flatMap(x => typeof x === 'string' ? $$(x) : [x]) : (typeof sel === 'string' ? $$(sel) : [sel]);
+function leave(sel, t, to = {}, d = 0.4) { tl.to(R(sel), Object.assign({ autoAlpha: 0, duration: d, ease: 'power2.in' }, to), t); }
+function to(sel, t, vars) { tl.to(R(sel), vars, t); }
+function counter(el, t0, d, from, toV, fmt) {
+  const e = typeof el === 'string' ? $(el) : el;
+  updaters.push(t => {
+    const p = Math.min(1, Math.max(0, (t - t0) / d));
+    const k = 1 - Math.pow(1 - p, 3);
+    e.textContent = fmt(from + (toV - from) * k);
+  });
+}
+const money = v => '$' + Math.round(v).toLocaleString('en-US');
+
+// scene containers
+T.scenes.forEach((s, k) => {
+  const el = $('#s-' + s.id);
+  tl.to(el, { autoAlpha: 1, duration: 0.45, ease: 'power2.out' }, s.start + (k ? 0.05 : 0));
+  if (k < T.scenes.length - 1) tl.to(el, { autoAlpha: 0, duration: 0.45, ease: 'power2.in' }, s.end - 0.45);
+});
+
+// ---------- INTRO ----------
+{
+  const s = SC.intro.start;
+  enter('#i-pill', s + 0.4, { y: -20 });
+  stagger($$('#i-t1 .w'), s + 0.7, 0.09, { y: 60 }, 0.8, 'power4.out');
+  stagger($$('#i-t2 .w'), s + 1.1, 0.12, { y: 60 }, 0.8, 'power4.out');
+  enter('#i-sub', cue('intro', 1, 'এজেন্টদের') - 0.2, { y: 20 }, 0.7, 'power3.out');
+  stagger(['#i-a0', '#i-a1', '#i-a2', '#i-a3'], cue('intro', 1, 'টিম'), 0.14, { y: 40, scale: 0.7 }, 0.7);
+}
+
+// ---------- TODAY ----------
+{
+  const s = SC.today.start;
+  enter('#t-h', s + 0.2, { x: -40 }, 0.7, 'power3.out');
+  enter('#t-k0', cue('today', 0, 'ডিএম') - 0.15, { x: -60 });
+  enter('#t-k1', cue('today', 0, 'চ্যানেল') - 0.15, { x: -60 });
+  enter('#t-k2', cue('today', 0, 'লিড') - 0.15, { x: -60 });
+  enter('#t-k3', cue('today', 0, 'পেমেন্টের') - 0.15, { x: -60 });
+  enter('#t-rev', line('today', 1).start - 0.2, { x: 60 }, 0.7, 'power3.out');
+  gsap.set('#t-b1', { scaleX: 0 }); to('#t-b1', cue('today', 1, 'দুই'), { scaleX: 1, duration: 0.6 });
+  gsap.set('#t-b2', { scaleX: 0.024 });
+  const tLakh = cue('today', 1, 'লাখ');
+  to('#t-b2', tLakh - 0.3, { scaleX: 1, duration: 1.6, ease: 'power2.inOut' });
+  counter('#t-v2', tLakh - 0.3, 1.6, 2000, 100000, money);
+  enter('#t-50', tLakh + 1.2, { scale: 0.4 }, 0.7, 'back.out(2.2)');
+  enter('#t-hours', cue('today', 1, 'ঘণ্টা') - 0.3, { y: 30 });
+  to(['#t-k0', '#t-k1', '#t-k2', '#t-k3'], tLakh + 0.2, { opacity: 0.55, duration: 0.6 });
+}
+
+// ---------- PLATFORM ----------
+{
+  const s = SC.platform.start;
+  enter('#p-node', s + 0.3, { scale: 0.3 }, 0.9, 'back.out(1.7)');
+  to('#p-node', s + 1.3, { keyframes: [{ scale: 1.06, duration: 0.25 }, { scale: 1, duration: 0.35 }] });
+  const tg = cue('platform', 0, 'গ্রক');
+  enter('#p-grok', tg - 0.2, { x: 40 }, 0.5, 'power3.out');
+  gsap.set('#p-grok-x', { scaleX: 0 });
+  to('#p-grok-x', cue('platform', 0, 'জোড়াতালি') - 0.2, { scaleX: 1, duration: 0.4, ease: 'power2.inOut' });
+  to('#p-grok', cue('platform', 0, 'জোড়াতালি') + 0.5, { opacity: 0.4, duration: 0.4 });
+  leave('#p-grok', line('platform', 1).start - 0.1);
+
+  // wires from the node to every chip and platform
+  const svg = $('#p-svg');
+  const center = { x: 960, y: 428 };
+  const wire = (id, hot) => {
+    const r = $(id).getBoundingClientRect();
+    const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    const ex = r.left + r.width / 2, ey = r.top + r.height / 2;
+    ln.setAttribute('x1', center.x); ln.setAttribute('y1', center.y);
+    ln.setAttribute('x2', ex); ln.setAttribute('y2', ey);
+    if (hot) ln.setAttribute('class', 'hot');
+    svg.appendChild(ln);
+    const len = Math.hypot(ex - center.x, ey - center.y);
+    gsap.set(ln, { attr: { 'stroke-dasharray': len, 'stroke-dashoffset': len } });
+    return ln;
+  };
+  const chipCues = [cue('platform', 1, 'এজেন্ট'), cue('platform', 1, 'বিল'), cue('platform', 1, 'তথ্য'),
+                    lend('platform', 1) - 0.6, lend('platform', 1) - 0.3];
+  ['#p-c0', '#p-c1', '#p-c2', '#p-c3', '#p-c4'].forEach((id, k) => {
+    const ln = wire(id, false);
+    to(ln, chipCues[k] - 0.25, { attr: { 'stroke-dashoffset': 0 }, duration: 0.45, ease: 'power2.out' });
+    enter(id, chipCues[k], { scale: 0.6 }, 0.6, 'back.out(2)');
+  });
+  const l2 = line('platform', 2).start;
+  to(['#p-c0', '#p-c1', '#p-c2', '#p-c3', '#p-c4'], l2, { opacity: 0.35, duration: 0.5 });
+  to($$('#p-svg line'), l2, { opacity: 0.35, duration: 0.5 });
+  const platCues = [cue('platform', 2, 'ইনস্টাগ্রাম'), cue('platform', 2, 'হোয়াটসঅ্যাপ'), cue('platform', 2, 'ইউটিউবের')];
+  ['#p-ig', '#p-wa', '#p-yt'].forEach((id, k) => {
+    const ln = wire(id, true);
+    to(ln, platCues[k] - 0.2, { attr: { 'stroke-dashoffset': 0 }, duration: 0.45, ease: 'power2.out' });
+    enter(id, platCues[k], { y: 50 }, 0.6);
+  });
+  enter('#p-api', cue('platform', 2, 'অফিসিয়াল') - 0.1, { scale: 0.6 }, 0.55, 'back.out(2)');
+  enter('#p-nobot', cue('platform', 2, 'পাসওয়ার্ড') - 0.1, { x: 40 }, 0.55, 'back.out(1.6)');
+}
+
+// ---------- TEAM ----------
+{
+  const s = SC.team.start;
+  const cards = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(k => '#m-a' + k);
+  enter('#m-h', s + 0.2, { y: -24 }, 0.6, 'power3.out');
+  stagger(cards, cue('team', 0, 'দশটা') - 0.4, 0.08, { y: 50, scale: 0.85 }, 0.6, 'back.out(1.6)');
+  const hi = (id, color, t) => to(id, t, { scale: 1.05, opacity: 1, borderColor: color, boxShadow: `0 0 0 3px ${color}55, 0 24px 60px rgba(0,0,0,0.4)`, duration: 0.35 });
+  const calm = (ids, t, op) => to(ids, t, { scale: 1, opacity: op, borderColor: 'rgba(255,255,255,0.09)', boxShadow: '0 24px 60px rgba(0,0,0,0.35)', duration: 0.4 });
+
+  const l1 = line('team', 1).start;
+  calm(cards.slice(4), l1, 0.3);
+  enter('#m-g0', l1, { x: -30 }, 0.5, 'power3.out');
+  ['ডিএম', 'অনবোর্ডিং', 'ফাইন্যান্স', 'স্ট্রাইক'].forEach((kw, k) => hi(cards[k], '#e8805f', cue('team', 1, kw) - 0.1));
+
+  const l2 = line('team', 2).start;
+  calm(cards.slice(0, 5), l2, 0.3);
+  leave('#m-g0', l2, {}, 0.3);
+  enter('#m-g1', l2, { x: -30 }, 0.5, 'power3.out');
+  ['রিসার্চ', 'স্ক্রিপ্ট', 'ডিজাইন', 'কোয়ালিটি', 'সোশ্যাল'].forEach((kw, k) => hi(cards[5 + k], '#3cc9b4', cue('team', 2, kw) - 0.1));
+
+  const l3 = line('team', 3).start;
+  calm(cards.filter((_, k) => k !== 4), l3, 0.3);
+  leave('#m-g1', l3, {}, 0.3);
+  enter('#m-g2', cue('team', 3, 'ম্যানেজার'), { x: -30 }, 0.5, 'power3.out');
+  hi(cards[4], '#f2b84b', cue('team', 3, 'ম্যানেজার') - 0.1);
+  calm(cards, lend('team', 3) + 0.2, 1);
+}
+
+// ---------- JOURNEY ----------
+{
+  const J = 'journey';
+  const s = SC.journey.start;
+  const br = $('#j-btn').getBoundingClientRect();
+  const curDX = br.left + br.width * 0.45 - 900, curDY = br.top + br.height * 0.5 - 900;
+  const steps = [0, 1, 2, 3, 4, 5].map(k => '#j-s' + k);
+  gsap.set('#j-track', { scaleX: 0 }); gsap.set('#j-fill', { scaleX: 0 });
+  to('#j-track', s + 0.3, { scaleX: 1, duration: 1.4, ease: 'power2.inOut' });
+  stagger(steps, s + 0.35, 0.22, { scale: 0.4, y: 0 }, 0.55, 'back.out(2)');
+  const activate = (k, t) => {
+    to(`#j-s${k} .dot`, t, { backgroundColor: '#e8805f', borderColor: '#e8805f', color: '#ffffff', scale: 1.12, duration: 0.4 });
+    to(`#j-s${k} .lb`, t, { color: '#f3f5f9', duration: 0.4 });
+    to('#j-fill', t, { scaleX: k / 5, duration: 0.7, ease: 'power2.inOut' });
+    if (k > 0) to(`#j-s${k - 1} .dot`, t, { scale: 1, duration: 0.4 });
+  };
+
+  // step 1: DM
+  const t1 = line(J, 1).start;
+  activate(0, t1);
+  enter('#j-phone', t1 - 0.1, { y: 60 }, 0.8, 'power3.out');
+  enter('#j-m0', cue(J, 1, 'ডিএম'), { y: 20, scale: 0.9 }, 0.45);
+  const tUt = cue(J, 1, 'উত্তর');
+  enter('#j-typ', cue(J, 1, 'মিনিটের') - 0.5, { scale: 0.6 }, 0.35);
+  to('#j-typ b', cue(J, 1, 'মিনিটের') - 0.5, { keyframes: [{ y: -6, duration: 0.2 }, { y: 0, duration: 0.2 }], stagger: 0.12, repeat: 2 });
+  leave('#j-typ', tUt - 0.1, {}, 0.15);
+  enter('#j-m1', tUt, { y: 20, scale: 0.9 }, 0.45);
+  enter('#j-b0', cue(J, 1, 'মিনিটের'), { x: 50 }, 0.55);
+  enter('#j-b1', cue(J, 1, 'লিংক'), { x: 50 }, 0.55);
+
+  // step 2: check
+  const t2 = line(J, 2).start;
+  activate(1, t2);
+  leave(['#j-b0', '#j-b1'], t2 - 0.2, { x: 40 }, 0.35);
+  enter('#j-m2', t2 - 0.1, { y: 20, scale: 0.9 }, 0.45);
+  enter('#j-chk', t2 + 0.15, { x: 50 }, 0.6, 'power3.out');
+  const tSub = cue(J, 2, 'সাবস্ক্রাইবার');
+  counter('#j-subs', tSub, 1.4, 0, 135000, v => Math.round(v).toLocaleString('en-US'));
+  enter('#j-r0', cue(J, 2, 'লাখের'), { x: 30 }, 0.5);
+  enter('#j-m3', cue(J, 2, 'মনিটাইজেশনের') - 0.2, { y: 20, scale: 0.9 }, 0.45);
+  enter('#j-r1', cue(J, 2, 'দেখে'), { x: 30 }, 0.5);
+  enter('#j-q', lend(J, 2) - 0.2, { scale: 0.5 }, 0.6, 'back.out(2.4)');
+
+  // step 3: lead card to WhatsApp
+  const t3 = line(J, 3).start;
+  activate(2, t3);
+  leave(['#j-phone', '#j-chk'], t3 - 0.25, { y: -30 }, 0.4);
+  enter('#j-lead', t3 + 0.15, { x: -60 }, 0.6, 'power3.out');
+  const tWa = cue(J, 3, 'হোয়াটসঅ্যাপে');
+  enter('#j-wa', tWa - 0.5, { x: 60 }, 0.6, 'power3.out');
+  to('#j-lead', cue(J, 3, 'কার্ড') - 0.1, { x: 790, y: 100, scale: 0.86, duration: 1.0, ease: 'power3.inOut' });
+  enter('#j-5min', cue(J, 3, 'সারাংশসহ') - 0.2, { y: 30 }, 0.5);
+
+  // step 4: deal
+  const t4 = line(J, 4).start;
+  activate(3, t4);
+  leave('#j-5min', t4 - 0.1, {}, 0.3);
+  enter('#j-sales', t4 + 0.1, { x: -50 }, 0.55, 'power3.out');
+  enter('#j-sheet', cue(J, 4, 'ডিল') - 0.1, { y: 40 }, 0.55, 'power3.out');
+  enter('#j-won', cue(J, 4, 'রিপ্লাই') - 0.1, { y: 30, scale: 0.8 }, 0.5);
+  gsap.set('#j-wonst', { autoAlpha: 0, scale: 0.6 });
+  const tUp = cue(J, 4, 'আপডেট');
+  to('#j-new', tUp - 0.1, { autoAlpha: 0, scale: 0.6, duration: 0.25 });
+  to('#j-wonst', tUp, { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2.4)' });
+
+  // step 5: onboarding
+  const t5 = line(J, 5).start;
+  activate(4, t5);
+  leave(['#j-sales', '#j-sheet', '#j-wa', '#j-lead'], t5 - 0.25, { y: -30 }, 0.4);
+  enter('#j-onb', t5 + 0.15, { y: 40 }, 0.6, 'power3.out');
+  enter('#j-o0', cue(J, 5, 'ওয়েলকাম'), { x: -30 }, 0.45);
+  enter('#j-o1', cue(J, 5, 'এগ্রিমেন্ট'), { x: -30 }, 0.45);
+  enter('#j-o2', cue(J, 5, 'পারমিশন') - 0.3, { x: -30 }, 0.45);
+  enter('#j-lock', cue(J, 5, 'পাসওয়ার্ড') - 0.3, { scale: 0.7 }, 0.6, 'back.out(2)');
+
+  // step 6: invoice
+  const t6 = line(J, 6).start;
+  activate(5, t6);
+  leave(['#j-onb', '#j-lock'], t6 - 0.25, { y: -30 }, 0.4);
+  enter('#j-inv', t6 + 0.15, { y: 50 }, 0.65, 'power3.out');
+  counter('#j-rev', cue(J, 6, 'হিসাব') - 0.2, 1.2, 0, 2500, money);
+  gsap.set(['#j-sp0', '#j-sp1'], { scaleX: 0 });
+  to('#j-sp0', cue(J, 6, 'হিসাব') + 0.3, { scaleX: 1, duration: 0.6 });
+  to('#j-sp1', cue(J, 6, 'হিসাব') + 0.6, { scaleX: 1, duration: 0.6 });
+  const tAp = cue(J, 6, 'অ্যাপ্রুভ');
+  enter('#j-cur', tAp - 1.4, { x: 200, y: 120 }, 0.3, 'none');
+  to('#j-cur', tAp - 1.2, { x: curDX, y: curDY, duration: 1.0, ease: 'power2.inOut' });
+  to('#j-cur', tAp - 0.15, { keyframes: [{ scale: 0.82, duration: 0.1 }, { scale: 1, duration: 0.15 }] });
+  to('#j-btn', tAp - 0.1, { backgroundColor: '#25d366', duration: 0.3 });
+  updaters.push(t => { $('#j-btnt').textContent = t >= tAp - 0.1 ? 'Approved' : 'Approve'; });
+  to('#j-btn', tAp - 0.1, { keyframes: [{ scale: 1.08, duration: 0.15 }, { scale: 1, duration: 0.25 }] });
+}
+
+// ---------- STRIKE ----------
+{
+  const s = SC.strike.start;
+  enter('#k-case', s + 0.25, { x: -60 }, 0.65, 'power3.out');
+  stagger(['#k-f0', '#k-f1'], cue('strike', 0, 'তথ্য') - 0.3, 0.25, { x: -20 }, 0.45, 'power3.out');
+  const tN = cue('strike', 0, 'নব্বই');
+  enter('#k-f2', tN - 0.3, { x: -20 }, 0.45, 'power3.out');
+  to('#k-ring', tN, { attr: { 'stroke-dashoffset': 0 }, duration: 1.3, ease: 'power2.out' });
+  counter('#k-days', tN, 1.3, 0, 90, v => Math.round(v));
+  enter('#k-f3', tN + 0.9, { x: -20 }, 0.45, 'power3.out');
+  const tO = cue('strike', 0, 'অপশনগুলো');
+  enter('#k-opts', tO - 0.6, { x: 60 }, 0.6, 'power3.out');
+  stagger(['#k-o0', '#k-o1', '#k-o2', '#k-o3'], tO - 0.3, 0.18, { x: 30 }, 0.45, 'power3.out');
+  gsap.set('#k-note', { autoAlpha: 0 }); to('#k-note', lend('strike', 0), { autoAlpha: 1, duration: 0.5 });
+  enter('#k-hum', cue('strike', 1, 'মানুষ') - 0.2, { scale: 0.5 }, 0.5, 'back.out(2.4)');
+  to('#k-o3', line('strike', 1).start, { color: '#f2b84b', duration: 0.4 });
+}
+
+// ---------- CONTENT ----------
+{
+  const s = SC.content.start;
+  gsap.set('#c-track', { scaleX: 0 });
+  to('#c-track', s + 0.2, { scaleX: 1, duration: 1.2, ease: 'power2.inOut' });
+  stagger(['#c-s0', '#c-s1', '#c-s2', '#c-s3', '#c-s4'], s + 0.3, 0.15, { y: 40, scale: 0.8 }, 0.55, 'back.out(1.8)');
+  const X = k => 330 * k; // horizontal step between stations
+  const glow = (k, t, c) => to(`#c-s${k} .ring`, t, { keyframes: [{ scale: 1.12, boxShadow: `0 0 0 10px ${c}33, 0 20px 50px rgba(0,0,0,0.35)`, duration: 0.3 }, { scale: 1, duration: 0.4 }] });
+  enter('#c-card', cue('content', 0, 'রিসার্চ') - 0.2, { y: -40, scale: 0.6 }, 0.5, 'back.out(2)');
+  glow(0, cue('content', 0, 'রিসার্চ'), '#3cc9b4');
+  to('#c-card', cue('content', 0, 'স্ক্রিপ্ট') - 0.4, { x: X(1), duration: 0.7, ease: 'power2.inOut' });
+  glow(1, cue('content', 0, 'স্ক্রিপ্ট'), '#3cc9b4');
+  const tD = cue('content', 0, 'ডিজাইন');
+  to('#c-card', tD - 0.4, { x: X(2), duration: 0.7, ease: 'power2.inOut' });
+  glow(2, tD, '#3cc9b4');
+  to('#c-card', tD + 0.4, { background: 'linear-gradient(160deg, #e8805f, #7b3fe4)', duration: 0.5 });
+  const tQ = cue('content', 1, 'কোয়ালিটি');
+  to('#c-card', tQ - 0.4, { x: X(3), duration: 0.7, ease: 'power2.inOut' });
+  glow(3, tQ, '#f2b84b');
+  const tNo = cue('content', 1, 'না');
+  enter('#c-x', tNo - 0.1, { scale: 0.3 }, 0.4, 'back.out(3)');
+  to('#c-card', tNo + 0.25, { keyframes: [{ x: X(2) + 120, duration: 0.35, ease: 'power2.out' }, { x: X(3), duration: 0.45, ease: 'power2.inOut', delay: 0.15 }] });
+  leave('#c-x', tNo + 0.9, { scale: 0.5 }, 0.25);
+  const tP = cue('content', 1, 'পাবলিশ');
+  enter('#c-ok', tP - 0.35, { scale: 0.3 }, 0.4, 'back.out(3)');
+  to('#c-card', tP, { x: X(4), duration: 0.7, ease: 'power2.inOut' });
+  glow(4, tP + 0.5, '#e1306c');
+  leave('#c-ok', tP + 0.8, { scale: 0.5 }, 0.25);
+  enter('#c-live', tP + 0.7, { y: 20 }, 0.5);
+  enter('#c-proof', cue('content', 1, 'রেভিনিউ') - 0.2, { y: 50 }, 0.6, 'power3.out');
+  enter('#c-real', cue('content', 1, 'আসল') - 0.1, { scale: 0.6 }, 0.45, 'back.out(2.4)');
+  enter('#c-edit', cue('content', 1, 'এডিট') - 0.1, { scale: 0.6 }, 0.45, 'back.out(2.4)');
+}
+
+// ---------- CONTROL ----------
+{
+  const s = SC.control.start;
+  enter('#r-h', s + 0.2, { y: -20 }, 0.6, 'power3.out');
+  stagger(['#r-c0', '#r-c1', '#r-c2'], s + 0.5, 0.25, { y: 60 }, 0.65, 'power3.out');
+  ['#r-c0', '#r-c1', '#r-c2'].forEach((c, k) => stagger($$(c + ' .it'), s + 0.9 + k * 0.25, 0.1, { x: -16 }, 0.35, 'power2.out'));
+  const l1 = line('control', 1).start;
+  to('#r-c0', l1, { opacity: 0.4, duration: 0.4 });
+  to('#r-c2', cue('control', 1, 'সেলসের') - 0.1, { scale: 1.04, borderColor: '#e8805f', boxShadow: '0 0 0 3px rgba(232,128,95,0.35), 0 24px 60px rgba(0,0,0,0.4)', duration: 0.4 });
+  to('#r-sales', cue('control', 1, 'সেলসের'), { color: '#e8805f', duration: 0.3 });
+  to('#r-c1', cue('control', 1, 'অ্যাপ্রুভাল') - 0.1, { borderColor: '#f2b84b', duration: 0.4 });
+  to('#r-money', cue('control', 1, 'অ্যাপ্রুভাল') - 0.1, { color: '#f2b84b', duration: 0.3 });
+  to('#r-legal', cue('control', 1, 'আইনি') - 0.1, { color: '#e8805f', duration: 0.3 });
+}
+
+// ---------- COST ----------
+{
+  const s = SC.cost.start;
+  enter('#q-l0', s + 0.2, { y: -20 }, 0.5, 'power3.out');
+  enter('#q-num', s + 0.4, { scale: 0.8 }, 0.6, 'power3.out');
+  const tD = cue('cost', 0, 'দুশো');
+  counter('#q-n', tD - 0.8, 1.2, 0, 200, money);
+  enter('#q-stack', tD - 0.2, { y: 30 }, 0.5, 'power3.out');
+  ['#q-p0', '#q-p1', '#q-p2', '#q-p3'].forEach((p, k) => { gsap.set(p, { scaleX: 0 }); to(p, tD + k * 0.25, { scaleX: 1, duration: 0.5 }); });
+  enter('#q-leg', tD + 0.6, { y: 20 }, 0.5, 'power3.out');
+  const l1 = line('cost', 1).start;
+  leave('#q-g0', l1 - 0.2, { y: -40 }, 0.45);
+  gsap.set('#q-revbar', { scaleX: 0 });
+  gsap.set('#q-g1', { autoAlpha: 0 }); to('#q-g1', l1 + 0.1, { autoAlpha: 1, duration: 0.4 });
+  to('#q-revbar', cue('cost', 1, 'লাখ') - 0.4, { scaleX: 1, duration: 1.0, ease: 'power3.inOut' });
+  enter('#q-sliver', cue('cost', 1, 'লাখ') + 0.7, { scale: 0.3 }, 0.4, 'back.out(3)');
+  enter('#q-ptr', cue('cost', 1, 'খরচ') + 0.2, { y: 30 }, 0.5);
+  enter('#q-1p', cue('cost', 1, 'শতাংশের') - 0.3, { y: 30 }, 0.6, 'power3.out');
+}
+
+// ---------- ROADMAP ----------
+{
+  const s = SC.roadmap.start;
+  gsap.set(['#b-line', '#b-fill'], { scaleX: 0 });
+  to('#b-line', s + 0.2, { scaleX: 1, duration: 1.2, ease: 'power2.inOut' });
+  stagger(['#b-d0', '#b-d1', '#b-d2', '#b-d3', '#b-d4'], s + 0.3, 0.18, { scale: 0 }, 0.4, 'back.out(2.5)');
+  const ms = (k, t) => { enter('#b-m' + k, t, { y: k % 2 ? 30 : -30 }, 0.55, 'power3.out'); to('#b-fill', t - 0.2, { scaleX: (50 + 350 * k) / 1520, duration: 0.6, ease: 'power2.inOut' }); };
+  ms(0, cue('roadmap', 0, 'ধাপে') - 0.2);
+  ms(1, cue('roadmap', 0, 'ডিএম') - 0.1);
+  ms(2, lend('roadmap', 0) - 0.3);
+  ms(3, cue('roadmap', 1, 'অনবোর্ডিং') - 0.1);
+  ms(4, cue('roadmap', 1, 'কনটেন্ট') - 0.1);
+  enter('#b-ban', cue('roadmap', 1, 'বারো') - 0.2, { y: -30, scale: 0.8 }, 0.6, 'back.out(2)');
+}
+
+// ---------- CLOSE ----------
+{
+  const s = SC.close.start;
+  stagger($$('#z-t1 .w'), cue('close', 0, 'সত্যিকারের') - 0.3, 0.12, { y: 60 }, 0.8, 'power4.out');
+  stagger($$('#z-t2 .w'), cue('close', 0, 'মিথ্যা') - 0.3, 0.12, { y: 60 }, 0.8, 'power4.out');
+  const l1 = line('close', 1).start;
+  to(['#z-t1', '#z-t2'], l1 - 0.2, { y: -110, scale: 0.78, duration: 0.8, ease: 'power3.inOut' });
+  enter('#z-need', l1 + 0.2, { y: 20 }, 0.5, 'power3.out');
+  enter('#z-n0', cue('close', 1, 'ইনস্টাগ্রাম') - 0.1, { y: 40 }, 0.5);
+  enter('#z-n1', cue('close', 1, 'হোয়াটসঅ্যাপের') - 0.1, { y: 40 }, 0.5);
+  enter('#z-n2', cue('close', 1, 'ডিএম') - 0.15, { y: 40 }, 0.5);
+  enter('#z-n3', cue('close', 1, 'ডিএম') + 0.15, { y: 40 }, 0.5);
+  const tT = cue('close', 1, 'ধন্যবাদ');
+  leave('#z-g0', tT - 0.3, { scale: 0.96 }, 0.5);
+  enter('#z-end', tT + 0.1, { scale: 0.9 }, 0.9, 'power3.out');
+}
+
+// ---------- per-frame chrome ----------
+updaters.push(t => {
+  // captions: up for the whole spoken part of a scene, text switches on each chunk
+  const sc = T.scenes.find(s => t >= s.start && t < s.end);
+  const box = $('#caption');
+  let op = 0;
+  if (sc) {
+    const caps = sc.lines.flatMap(l => l.captions);
+    const cur = caps.filter(c => t >= c.s - 0.05).pop() || caps[0];
+    $('#capText').textContent = cur.text;
+    const first = sc.lines[0], last = sc.lines[sc.lines.length - 1];
+    op = Math.min(1, (t - (first.start - 0.1)) / 0.2, (last.end + 0.3 - t) / 0.2);
+  }
+  box.style.opacity = Math.max(0, op);
+  // chapter label
+  const ch = $('#chapter');
+  if (sc && sc.chapter) {
+    const [num, ...rest] = sc.chapter.split('  ');
+    $('#chapNum').textContent = num; $('#chapTitle').textContent = rest.join(' ');
+    const a = Math.min(1, (t - sc.start - 0.2) / 0.4), b = Math.min(1, (sc.end - t) / 0.35);
+    const k = Math.max(0, Math.min(a, b));
+    ch.style.opacity = k; ch.style.transform = `translateX(${(1 - k) * -24}px)`;
+  } else ch.style.opacity = 0;
+  $('#handle').style.opacity = sc && sc.id !== 'intro' && !(sc.id === 'close' && t > SC.close.lines[1].start) ? 1 : 0;
+  $('#progFill').style.transform = `scaleX(${t / T.duration})`;
+  // drifting background
+  $('#dots').style.transform = `translate(${(t * 6) % 46}px, ${(t * 3) % 46}px)`;
+  $('.b1').style.transform = `translate(${-200 + 260 * Math.sin(t / 14)}px, ${-250 + 140 * Math.cos(t / 11)}px)`;
+  $('.b2').style.transform = `translate(${1200 + 220 * Math.cos(t / 13)}px, ${350 + 160 * Math.sin(t / 9)}px)`;
+});
+
+window.DURATION = T.duration;
+window.FPS = T.fps;
+window.seek = t => { tl.seek(t, false); updaters.forEach(u => u(t)); };
+window.seek(0);
+window.READY = document.fonts.ready.then(() => true);
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "automation-video",
+  "private": true,
+  "description": "Motion-graphics explainer: how the agency runs on Claude agents (Bangla voiceover)",
+  "dependencies": {
+    "gsap": "3.15.0",
+    "lucide-static": "1.63.0"
+  }
+}
