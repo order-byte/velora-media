@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Running the Agency on Claude Agents</title>
+<style>
+  @font-face { font-family: "Body Serif"; src: url("fonts/NotoSerif.ttf"); font-weight: 100 900; font-style: normal; }
+  @font-face { font-family: "Body Serif"; src: url("fonts/NotoSerif-Italic.ttf"); font-weight: 100 900; font-style: italic; }
+  @font-face { font-family: "Head Sans"; src: url("fonts/NotoSans.ttf"); font-weight: 100 900; font-style: normal; }
+
+  @page { size: A4; margin: 20mm 21mm 20mm 21mm; }
+
+  :root {
+    --ink: #1f2328;
+    --muted: #5b636d;
+    --rule: #c9ced4;
+    --head: #1e3a5c;
+    --shade: #f0f2f5;
+  }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    margin: 0;
+    background: #fff;
+    color: var(--ink);
+    font-family: "Body Serif", Georgia, serif;
+    font-size: 10.4pt;
+    line-height: 1.55;
+    font-variant-numeric: lining-nums;
+  }
+
+  .titleblock { border-bottom: 1.2pt solid var(--head); padding-bottom: 10pt; margin-bottom: 16pt; }
+  .titleblock h1 {
+    font-family: "Head Sans", Arial, sans-serif;
+    font-weight: 650;
+    font-size: 21pt;
+    line-height: 1.2;
+    color: var(--head);
+    margin: 0 0 4pt;
+  }
+  .titleblock .sub { font-size: 12pt; margin: 0 0 8pt; }
+  .titleblock .meta { font-family: "Head Sans", Arial, sans-serif; font-size: 8.8pt; color: var(--muted); margin: 0; }
+
+  h2 {
+    font-family: "Head Sans", Arial, sans-serif;
+    font-weight: 620;
+    font-size: 13.5pt;
+    color: var(--head);
+    margin: 20pt 0 6pt;
+    break-after: avoid;
+  }
+  h3 {
+    font-family: "Head Sans", Arial, sans-serif;
+    font-weight: 620;
+    font-size: 11pt;
+    margin: 13pt 0 3pt;
+    break-after: avoid;
+  }
+  p { margin: 0 0 7pt; orphans: 3; widows: 3; }
+  ul, ol { margin: 0 0 8pt; padding-left: 17pt; }
+  li { margin-bottom: 3pt; }
+  li::marker { color: var(--muted); }
+  strong { font-weight: 650; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6pt 0 10pt;
+    font-family: "Head Sans", Arial, sans-serif;
+    font-size: 8.7pt;
+    line-height: 1.4;
+  }
+  th, td { border: 0.6pt solid var(--rule); padding: 4.5pt 6pt; vertical-align: top; text-align: left; }
+  th { background: var(--shade); font-weight: 620; }
+  tr { break-inside: avoid; }
+  thead { display: table-header-group; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  .note { font-size: 9pt; color: var(--muted); }
+
+  .flow {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4pt 3pt;
+    font-family: "Head Sans", Arial, sans-serif; font-size: 8.4pt;
+    margin: 4pt 0 12pt;
+  }
+  .flow span.step { border: 0.7pt solid var(--rule); background: var(--shade); padding: 3pt 6pt; border-radius: 2pt; }
+  .flow span.arrow { color: var(--muted); }
+
+  .keep { break-inside: avoid; }
+  .checklist { list-style: none; padding-left: 2pt; break-inside: avoid; }
+  .checklist li::before { content: "\2610"; margin-right: 6pt; color: var(--muted); }
+  .signoff { margin-top: 14pt; }
+</style>
+</head>
+<body>
+
+<div class="titleblock">
+  <h1>Running the agency on Claude agents</h1>
+  <p class="sub">An operating plan for @riyadhasan.official</p>
+  <p class="meta">Draft 1 &nbsp;·&nbsp; 28 October 2026 &nbsp;·&nbsp; For internal discussion</p>
+</div>
+
+<h2>1. Why this document exists</h2>
+
+<p>Right now most of the work behind the account is done by hand. Someone reads every DM, checks the channel, forwards the good ones to Saheb bhai on WhatsApp, chases payments and makes the next reel. That works at around $2,000 a month. It won't work at $100,000, and not because the team is slow. There just aren't enough hours in the day.</p>
+
+<p>This plan covers how we move the repeatable parts of that work onto a team of AI agents built on Claude: what each agent does, where people stay in charge, what it costs, and the order we build it in.</p>
+
+<p>One decision up front: everything runs on Claude. No Grok bot, and no mix of AI tools from three different companies. One platform means one bill, one set of logs, one place to look when something breaks, and agents that all work from the same knowledge about the business.</p>
+
+<p>What the plan doesn't do is just as important. It doesn't replace Saheb bhai on sales, and no agent will move money, sign anything or file anything legal on its own. Section 6 spells out exactly where that line is.</p>
+
+<h2>2. The business on one page</h2>
+
+<p>A short recap, so this document makes sense on its own.</p>
+
+<p><strong>Who we serve.</strong> YouTubers in any niche with at least 100,000 subscribers and a monetized channel, who want to grow their channel income with our content strategy (internally called "copyright work").</p>
+
+<table>
+  <thead><tr><th style="width:26%">Service</th><th>How we get paid</th></tr></thead><tbody>
+  <tr><td>Copyright work</td><td>A share of the channel's revenue. The channel owner keeps 40%.</td></tr>
+  <tr><td>Strike forward</td><td>Fixed fee for handling strikes on a channel: ₹5,000 for one strike, ₹10,000 for two.</td></tr>
+</tbody>
+</table>
+
+<p><strong>How customers find us.</strong></p>
+<div class="flow">
+  <span class="step">Revenue proof, reels, stories</span><span class="arrow">→</span>
+  <span class="step">YouTuber sends a DM</span><span class="arrow">→</span>
+  <span class="step">We check subscribers + monetization</span><span class="arrow">→</span>
+  <span class="step">Qualified lead to Saheb bhai on WhatsApp</span><span class="arrow">→</span>
+  <span class="step">Deal</span><span class="arrow">→</span>
+  <span class="step">Onboarding</span><span class="arrow">→</span>
+  <span class="step">Work starts</span>
+</div>
+
+<p><strong>Where we are and where we're going.</strong> About $2,000 a month today, with a target of $100,000 a month. That's a 50x jump, and section 9 looks at what it takes in actual numbers.</p>
+
+<p>The vision is to be the most trusted income growth partner for YouTubers, with real results and no false promises. It's worth repeating here because it turns into a hard rule inside every agent that talks to customers.</p>
+
+<h2>3. What we'll build it with</h2>
+
+<p>Everything AI-related sits on Anthropic's Claude platform. In plain terms:</p>
+
+<p><strong>Claude models (the brain).</strong> Claude Opus 5.5 is the main model. It handles judgment calls best, like reading a messy DM thread or a strike notice. For high-volume, simple steps we'll later test Claude Haiku 5.5, which costs a small fraction of Opus. We only switch if it gives the same answers on our real conversations.</p>
+
+<p><strong>Claude Managed Agents (where the agents live).</strong> Anthropic runs each agent and gives it its own workspace where it can read files, run code and use tools. The parts we actually need:</p>
+<ul>
+  <li>Each agent's instructions are saved with a version number. If a change makes an agent worse, we roll back to the last good version.</li>
+  <li>Agents can run on a schedule, for example the daily report every evening at 10 pm.</li>
+  <li>A shared memory holds prices, FAQ, rules and tone of voice. Every agent reads from it, and every change is recorded.</li>
+  <li>API keys and tokens live in a vault, not inside the instructions. Agents can use them without ever seeing them.</li>
+  <li>Each run can have a hard dollar cap, so a stuck agent can't burn money overnight.</li>
+  <li>Work can be graded against a written checklist by a separate checker, and sent back until it passes. That's how the quality check agent will work.</li>
+</ul>
+<p>Managed Agents is still labelled beta by Anthropic. We'll keep our own code thin, so if we ever need to move to the plain Claude API, it's a few days of work, not a rebuild.</p>
+
+<p><strong>Claude Code (how we build it).</strong> The small amount of connecting code (receiving Instagram messages, writing to the sheet, sending WhatsApp messages) gets written and maintained with Claude Code.</p>
+
+<p><strong>Claude projects on claude.ai (for the people).</strong> Saheb bhai and the team get a Claude project loaded with the same business knowledge, for one-off things like drafting a proposal or working out how to answer an unusual question.</p>
+
+<p><strong>What isn't Claude but we still need.</strong> These aren't AI tools. They're the pipes that carry messages and data:</p>
+<ul>
+  <li>Meta's official Instagram API, to read and answer DMs and to publish posts. It needs a professional Instagram account, a Meta app, and Meta's app review.</li>
+  <li>WhatsApp Business Platform (Cloud API), for lead cards and reports.</li>
+  <li>YouTube Data API, to look up a channel's public subscriber count. With the owner's permission, the YouTube Analytics API for revenue numbers.</li>
+  <li>Google Sheets as our customer list (CRM) to start with. Everyone can open it and fix things by hand.</li>
+  <li>A small server, a few dollars a month, that receives messages from Instagram and WhatsApp and passes them to the right agent.</li>
+</ul>
+
+<p>On Instagram specifically: we won't use any tool that logs into the account with the password and pretends to be a person. Those tools are the most common way accounts get restricted, and this account is the entire sales funnel. Official API only.</p>
+
+<h2>4. The agent team</h2>
+
+<p>The brief lists eight agents: research, script, design, quality check, social media, DM handling, onboarding and finance. I've kept all eight and added two. A <strong>Manager</strong> agent keeps track of everything and reports. A <strong>Strike desk</strong> agent handles strike cases, because that work has deadlines and legal weight and shouldn't be a side job for onboarding.</p>
+
+<table>
+  <thead><tr><th style="width:15%">Agent</th><th style="width:33%">Main job</th><th style="width:24%">Runs when</th><th>A person signs off on</th></tr></thead><tbody>
+  <tr><td>DM handling</td><td>Answers Instagram DMs, qualifies leads, sends lead cards</td><td>Every new DM, 24/7</td><td>Anything outside the handover rules</td></tr>
+  <tr><td>Onboarding</td><td>Welcome, agreement, channel access, kickoff</td><td>When a deal is marked won</td><td>The agreement, before it's sent</td></tr>
+  <tr><td>Finance</td><td>Revenue split, invoices, reminders, monthly P&amp;L</td><td>Daily check, plus the 1st of each month</td><td>Every invoice and every payout</td></tr>
+  <tr><td>Strike desk</td><td>Strike intake, deadlines, options, drafts</td><td>When a client reports a strike</td><td>Every appeal and counter notification</td></tr>
+  <tr><td>Research</td><td>Topics, trends, what competitors are doing</td><td>Weekly, and on request</td><td>Not needed</td></tr>
+  <tr><td>Script</td><td>Reel and video scripts, captions</td><td>From the content calendar</td><td>Anything that shows income numbers</td></tr>
+  <tr><td>Design</td><td>Thumbnails, story frames, carousels</td><td>After a script is approved</td><td>All of it for the first few weeks, then spot checks</td></tr>
+  <tr><td>Quality check</td><td>Checks everything before it goes out</td><td>Before anything is published or sent</td><td>The owner reads its weekly report</td></tr>
+  <tr><td>Social media</td><td>Publishes on Instagram, runs comment-to-DM</td><td>From the content calendar</td><td>Revenue proof posts</td></tr>
+  <tr><td>Manager</td><td>Daily and weekly reports, chases stuck work</td><td>Every evening, and Monday mornings</td><td>Nothing. It only reports.</td></tr>
+</tbody>
+</table>
+
+<h3>DM handling agent</h3>
+
+<p>This is where the money starts, so it's the first agent we build and the one we test hardest.</p>
+
+<p>When a DM comes in, Instagram sends it to our server, which hands it to the DM agent together with the conversation so far. The agent then:</p>
+<ol>
+  <li>Replies in whatever language the person used: Bangla, Hindi, English, or a mix of them.</li>
+  <li>Asks for the channel link if it doesn't have one yet.</li>
+  <li>Looks up the subscriber count through the YouTube API. Two catches here. YouTube rounds public counts (a channel with 102,345 subscribers shows as 102,000), and some channels hide the count completely. If it's hidden or close to the line, the agent asks for a YouTube Studio screenshot.</li>
+  <li>Checks monetization. That isn't public, so the agent asks for a screenshot of the Earn page in YouTube Studio and reads it, since Claude can read images. Screenshots can be edited, so this is only a first filter. The real confirmation happens at onboarding, when we get proper access to the channel.</li>
+  <li>Decides: qualified, not yet (for example 80k to 99k subscribers, or not monetized yet), or not a fit.</li>
+</ol>
+
+<p>For a qualified lead, the agent adds a row to the Leads sheet and sends Saheb bhai a lead card on WhatsApp. The card has the name, channel link, subscriber count, niche, language, what they want (copyright work or strike help), the monetization screenshot, and a two-line summary of the chat. The YouTuber gets Saheb bhai's WhatsApp link with a short note on what happens next. Our target is a lead card within five minutes of the DM, day or night.</p>
+
+<p>"Not yet" leads go on a separate list. A channel at 85k today could be a customer in a few months, and the Manager agent will flag them for a check-in later.</p>
+
+<p><strong>When it hands over to a person:</strong> if someone is upset or confused, asks detailed money questions (rates, guarantees, contracts), mentions a legal problem, asks for a human, or says something the agent isn't sure how to handle. The agent tells them someone from the team will reply and pings the team on WhatsApp. Instagram's rules only allow automated replies within 24 hours of the person's last message, so handovers have to be picked up the same day.</p>
+
+<p><strong>What it never does:</strong> promise an income figure, use the word "guaranteed", ask for a password or OTP, or argue with anyone.</p>
+
+<p>One extra that helps growth is comment-to-DM. When someone comments a keyword like "INFO" on a reel, Instagram lets the business send one private message in reply to that comment. The social media agent sends that first message, and if the person answers, the DM agent takes over. It's a cheap way to turn reel views into conversations.</p>
+
+<h3>Onboarding agent</h3>
+
+<p>This starts when Saheb bhai marks a deal as won. To keep it simple, Saheb bhai just replies to the lead card on WhatsApp with "WON", or "LOST" plus a reason. Our server picks that up and updates the sheet, so nobody has to open a spreadsheet in the middle of a sales day.</p>
+
+<p>From there the agent sends the welcome message and the agreement. The agreement template is fixed (revenue share terms with 40% to the owner, payment dates, what we do and don't do), and the agent only fills in names and details. A person checks it before it goes out.</p>
+
+<p>Next it sets up channel access the right way. The owner adds our account through YouTube Studio's channel permissions (Settings, then Permissions). Nobody shares a password, ever. This protects the owner as much as us, and clients notice that.</p>
+
+<p>It also collects what the content team needs (niche, audience, best-performing past videos, topics to avoid), creates the client's row in the Clients sheet and a folder for files, and tells the Research agent to start. On day 3 and day 14 it sends a short "how's it going" message.</p>
+
+<h3>Finance agent</h3>
+
+<p>Probably the least exciting agent, and the one that saves the most headaches.</p>
+<ul>
+  <li>Once a client authorizes it, it pulls estimated revenue from the YouTube Analytics API, so nobody types numbers off screenshots.</li>
+  <li>It works out the split per client per month (40% to the channel owner, the rest to us) and any strike fees owed.</li>
+  <li>It prepares invoices and payment reminders, and logs payments as they come in.</li>
+  <li>It tracks our own costs too, including the Claude bill, so we always know the real margin.</li>
+  <li>On the 1st of every month, the owner gets a one-page profit and loss summary.</li>
+</ul>
+<p>It never sends money and never changes an invoice once it's sent. A person approves every invoice and every payout.</p>
+
+<h3>Strike desk agent</h3>
+
+<p>When a client reports a strike, the agent collects the details: which video, what kind of strike (copyright strike, Community Guidelines strike, or just a Content ID claim, which isn't a strike at all), who filed it, and when. Deadlines go into the Strikes sheet. Strikes expire after 90 days, and three active strikes means YouTube terminates the channel, so the count matters more than anything else.</p>
+
+<p>Then it lays out the honest options: wait it out, ask the claimant to retract, appeal (for Community Guidelines strikes), or file a counter notification (for copyright strikes). It drafts whatever is needed and sends the fee request (₹5,000 or ₹10,000) through the Finance agent.</p>
+
+<p>One hard rule. A counter notification is a legal statement, made under penalty of perjury, and the claimant can take it to court. The agent drafts it, a person checks that the client really owns the rights, and the client submits it. The agent never promises that a strike will be removed. That's what "no false promises" looks like in practice.</p>
+
+<h3>The content line: Research, Script, Design, Quality check, Social media</h3>
+
+<p>These five work as one assembly line, both for our own Instagram and for client channels.</p>
+
+<p><strong>Research</strong> looks once a week at what's working in each client's niche, what's trending and what competitors posted, and writes a short topic list with a reason next to each topic. It uses web search, and it keeps a running file of what has worked for us before.</p>
+
+<p><strong>Script</strong> turns approved topics into scripts. For our Instagram that means reels with a hook in the first two seconds, revenue proof stories and client results (with permission). For client channels it means video scripts. It writes in the brand's tone, taken from the shared memory.</p>
+
+<p><strong>Design</strong> needs an honest note first: Claude doesn't generate photos the way image generators do. What it does well is layout. It builds thumbnails, story frames and carousels from our own templates, fonts and photos, and exports them as images. It can also do simple video work in its workspace, like adding captions or cutting clips. Heavy editing stays with a human editor for now.</p>
+
+<p><strong>Quality check</strong> is the gate. Nothing goes out without passing it. It checks every piece against a written checklist: facts and numbers, spelling, brand tone, Instagram and YouTube rules, and rights (is every clip, song and image ours, licensed, or allowed to be reused?). It sends work back to Script or Design with notes until it passes. It also reads a random 10% of DM conversations every week and reports anything the DM agent got wrong. That's how the DM agent gets better over time.</p>
+
+<p>Revenue proof gets extra care. It has to be a real screenshot from a real channel, used with the client's permission and with personal details blurred. The agents never create, edit or "improve" revenue numbers. If we want to be the agency that doesn't lie, our proof has to be the most boring, checkable thing on the page.</p>
+
+<p><strong>Social media</strong> publishes approved posts and reels through the Instagram API according to the content calendar, writes captions, runs comment-to-DM, and reports which posts brought in DMs, not just likes. Revenue proof posts need the owner's OK before they go live.</p>
+
+<h3>Manager agent</h3>
+
+<p>Every evening it reads the sheets and logs and sends the owner a short WhatsApp report: DMs that day, how many qualified, how many went to Saheb bhai, deals won, content published, content waiting for approval. Most importantly, it lists anything stuck, like a lead nobody followed up within 24 hours, an unpaid invoice, or a strike deadline this week. On Monday mornings it sends the weekly version with funnel numbers and costs. It nudges people politely. It doesn't make decisions.</p>
+
+<h2>5. One lead, start to finish</h2>
+
+<p>A made-up but typical example, to show how the pieces fit together.</p>
+
+<table>
+  <thead><tr><th style="width:15%">When</th><th>What happens</th><th style="width:20%">Who</th></tr></thead><tbody>
+  <tr><td>11:40 pm</td><td>A gaming YouTuber watches a reel and sends a DM: "Bhai, apnara ki kaj koren?" The agent answers in Bangla within a minute, explains the service in three lines and asks for the channel link.</td><td>DM agent</td></tr>
+  <tr><td>11:46 pm</td><td>Link received. The YouTube API shows 135,000 subscribers. The agent asks for a screenshot of the monetization page.</td><td>DM agent</td></tr>
+  <tr><td>11:52 pm</td><td>Screenshot shows the channel is monetized. Lead is marked qualified, a row is added to the sheet, and a lead card goes to Saheb bhai. The YouTuber gets Saheb bhai's WhatsApp link and a note that our sales lead will message them in the morning.</td><td>DM agent</td></tr>
+  <tr><td>9:30 am</td><td>Saheb bhai reads the card and summary and starts the conversation on WhatsApp, already knowing the channel.</td><td>Saheb bhai</td></tr>
+  <tr><td>Two days later</td><td>Deal agreed. Saheb bhai replies "WON" to the lead card.</td><td>Saheb bhai</td></tr>
+  <tr><td>Same hour</td><td>Welcome message and agreement go out after a two-minute check, along with the steps for giving us channel access.</td><td>Onboarding agent + a person</td></tr>
+  <tr><td>Day 2</td><td>Access confirmed. Research gets the channel's niche and top videos, and the first topic list is ready by evening.</td><td>Research agent</td></tr>
+  <tr><td>Day 14</td><td>Check-in message to the client.</td><td>Onboarding agent</td></tr>
+  <tr><td>Month end</td><td>Revenue pulled, split calculated, invoice prepared. The owner approves it in a minute.</td><td>Finance agent + owner</td></tr>
+</tbody>
+</table>
+
+<p>Human time spent on this lead: Saheb bhai's sales conversation, a two-minute agreement check and one invoice approval. Everything else ran on its own, including the part at midnight.</p>
+
+<h2>6. Where people stay in charge</h2>
+
+<table>
+  <thead><tr><th style="width:34%">Agents do it alone</th><th style="width:36%">Agent prepares, a person approves</th><th>People only</th></tr></thead><tbody>
+  <tr>
+    <td>Standard DM replies and qualification<br>Updating the sheets<br>Lead cards to Saheb bhai<br>Publishing already-approved content<br>Reminders and follow-ups<br>Daily and weekly reports<br>Research and first drafts</td>
+    <td>Client agreements<br>Invoices and payouts<br>Revenue proof posts<br>Strike appeals and counter notifications<br>Any message quoting money amounts to a client<br>Changes to prices or rules in the shared memory</td>
+    <td>Sales conversations and closing<br>Pricing exceptions<br>Disputes with a client<br>Anything legal<br>Who has access to which accounts and keys</td>
+  </tr>
+</tbody>
+</table>
+
+<p>On top of that, every agent follows the same short list of rules, written into its instructions:</p>
+<ol>
+  <li>No income promises, and never the word "guaranteed".</li>
+  <li>Never ask for passwords, OTPs or recovery codes. Channel access only through YouTube Studio permissions.</li>
+  <li>Never create or edit revenue proof.</li>
+  <li>Nothing gets uploaded without passing the rights check.</li>
+  <li>No legal filings and no moving money.</li>
+  <li>When unsure, hand over to a person and say so honestly.</li>
+  <li>Every run has a spend cap.</li>
+</ol>
+
+<h2>7. Where the data lives</h2>
+
+<p><strong>Google Sheet (our CRM)</strong> with five tabs: Leads, Clients, Content calendar, Strikes and Money. It's simple on purpose. If we outgrow it, say a few thousand new rows a month, we move to a proper database and the agents won't care.</p>
+
+<p><strong>Shared memory in Claude</strong> holds prices, FAQ, qualifying rules, tone of voice, examples of good DM replies and lessons learned. Every change is versioned, so we can always see when the price list changed and roll it back if needed.</p>
+
+<p><strong>Vault</strong> holds the Instagram, WhatsApp, Google and YouTube tokens. They never go into the shared memory and never into a chat.</p>
+
+<p><strong>Client data</strong> such as revenue numbers and contact details is only visible to the agents that need it. Finance sees money. The DM agent doesn't.</p>
+
+<h2>8. What it will cost</h2>
+
+<div class="keep"><p>Claude charges by usage, so the bill follows volume. At list prices as of this draft (Claude Opus 5.5 at $4 per million input tokens and $20 per million output tokens; Claude Haiku 5.5 at $0.10 and $0.50), the rough cost per unit is:</p>
+
+<table>
+  <thead><tr><th>Unit of work</th><th class="num">On Opus 5.5</th><th class="num">On Haiku 5.5</th></tr></thead><tbody>
+  <tr><td>One DM conversation (about six back-and-forths)</td><td class="num">10–15 cents</td><td class="num">under half a cent</td></tr>
+  <tr><td>One content piece (research, script, design, QC, web searches)</td><td class="num">about 75 cents</td><td class="num">stays on Opus</td></tr>
+</tbody>
+</table></div>
+
+<div class="keep"><p>And per month, for two levels of volume:</p>
+
+<table>
+  <thead><tr><th>Item</th><th class="num">Starting<br><span style="font-weight:400">(~1,000 DMs, 60 content pieces)</span></th><th class="num">At scale<br><span style="font-weight:400">(~5,000 DMs, 200 content pieces)</span></th></tr></thead><tbody>
+  <tr><td>DM agent</td><td class="num">$100–$150</td><td class="num">$500–$750<br><span class="note">about $20 if Haiku passes testing</span></td></tr>
+  <tr><td>Content line (five agents)</td><td class="num">~$45</td><td class="num">~$150</td></tr>
+  <tr><td>Onboarding, Finance, Strike desk, Manager</td><td class="num">~$30</td><td class="num">~$100</td></tr>
+  <tr><td>Agent workspace time ($0.08 per hour)</td><td class="num">~$10</td><td class="num">~$50</td></tr>
+  <tr><th>Claude total per month</th><th class="num">~$185–$235</th><th class="num">~$800–$1,050<br><span class="note" style="font-weight:400">~$320 with Haiku on DMs</span></th></tr>
+</tbody>
+</table></div>
+
+<p>Outside Claude: the server is $5–$20 a month, the Instagram API is free, and Meta charges per message for WhatsApp template messages (lead cards and reports are a small number of those). Team members who use claude.ai need their own plan; check the current price on the Claude website when we sign up.</p>
+
+<p>At the start, around $200 a month is about 10% of today's revenue. That's a real cost, and it's why we build in stages and switch agents on as they pay for themselves. At scale, even the high end is about 1% of a $100k month.</p>
+
+<p>To keep the bill under control we use prompt caching (repeat reads of the same instructions cost about a twentieth of the normal price), a spend cap on every run, a monthly limit on the Anthropic account, and a cost line in the Manager's weekly report.</p>
+
+<p class="note">These are estimates from list prices in October 2026. The real numbers come in after the first month, and I'll update this section with them.</p>
+
+<h2>9. From $2,000 to $100,000: what the numbers say</h2>
+
+<p>Agents make us faster and let us handle ten times the conversations without hiring ten more people. But they don't create demand on their own. To get to $100k a month, four things have to move: how many DMs we get, how many qualify, how many close, and how much we earn per active channel each month (plus how long clients stay with us).</p>
+
+<div class="keep"><p>The number that decides most of it is our average monthly income per active channel. Here is how many active channels $100k takes at different levels:</p>
+
+<table style="width:70%">
+  <thead><tr><th>Our average income per channel per month</th><th class="num">Active channels needed</th></tr></thead><tbody>
+  <tr><td>$200</td><td class="num">500</td></tr>
+  <tr><td>$400</td><td class="num">250</td></tr>
+  <tr><td>$800</td><td class="num">125</td></tr>
+  <tr><td>$1,500</td><td class="num">about 67</td></tr>
+</tbody>
+</table></div>
+
+<p>Working backwards from that: to add 20 new channels a month at a 30% close rate, Saheb bhai needs about 67 qualified leads a month. If 15% of DMs qualify, that's around 450 DM conversations a month. Those percentages are placeholders. After the first month the Manager agent gives us the real ones, and this section gets rewritten with them.</p>
+
+<p>Where the agents actually move the numbers:</p>
+<ul>
+  <li>No DM waits until the next afternoon. Replies go out in a minute, even at 2 am, and fast replies close more often.</li>
+  <li>Nothing falls through the cracks. Every "not yet" channel gets a follow-up when it crosses 100k.</li>
+  <li>Saheb bhai only talks to qualified people, with a summary already in hand, which means more closes per hour.</li>
+  <li>More content gets made, and it's judged by the DMs it brings in rather than by likes.</li>
+  <li>Clients who are paid correctly and on time stay longer. In a revenue-share business, losing clients quietly hurts more than not finding new ones.</li>
+</ul>
+
+<p>And where they won't help: if income per channel is low, or channels keep getting terminated, no amount of DM speed fixes that. Strike forward is useful extra income, but at ₹5,000 a strike it would take roughly 1,700 strikes a month to reach $100k. It's an add-on, not the engine.</p>
+
+<h2>10. Build order</h2>
+
+<table>
+  <thead><tr><th style="width:14%">When</th><th>What we build</th><th style="width:30%">Done when</th></tr></thead><tbody>
+  <tr><td>Week 1</td><td>Accounts and paperwork: Meta app and app review request, WhatsApp number, Google Sheet, Anthropic account with spend limits, first version of the shared memory. Export around 100 past DM conversations.</td><td>App review submitted, sheet live, shared memory written</td></tr>
+  <tr><td>Weeks 2–3</td><td>DM agent in draft mode: it writes every reply, and a person reads it and presses send. Lead cards to Saheb bhai.</td><td>Nine out of ten drafts get sent without edits</td></tr>
+  <tr><td>Weeks 4–5</td><td>DM agent live for standard cases, with handover rules switched on. Manager's daily report.</td><td>A full week with no missed DM and no wrong qualification</td></tr>
+  <tr><td>Weeks 6–8</td><td>Onboarding, Finance and Strike desk agents.</td><td>One new client onboarded end to end, and the first month-end invoices made by the agent</td></tr>
+  <tr><td>Weeks 9–12</td><td>Content line: Research, Script, Design, Quality check, Social media.</td><td>Content calendar running two weeks ahead</td></tr>
+  <tr><td>Month 4 on</td><td>Tuning: cut costs (test Haiku for DMs), add languages, and a second Instagram account if it makes sense.</td><td>Cost per qualified lead going down month on month</td></tr>
+</tbody>
+</table>
+
+<p>Meta's app review is the one step we don't control, and it can take a while. We submit it in week 1. While we wait, we test the DM agent on the 100 exported conversations, so by the time access comes through we already know how it answers.</p>
+
+<h2>11. Risks and how we handle them</h2>
+
+<p><strong>The Instagram account gets restricted.</strong> This account is the whole funnel. We use the official API only, never send cold DMs (the API doesn't allow them anyway), avoid spammy repeat messages, and make sure handovers are answered within 24 hours.</p>
+
+<p><strong>Copyright and channel safety.</strong> This document doesn't go into how copyright work is done, and it doesn't need to. But one rule goes into the system either way: the quality check agent won't pass any upload unless the footage, music and images are owned, licensed, or clearly allowed for reuse. Uploading other people's videos is the fastest way to collect strikes, lose monetization under YouTube's reused content policy, and get a channel terminated after three strikes in 90 days. Every terminated client channel ends a revenue share, so this is about protecting the business, not just following rules.</p>
+
+<p><strong>The DM agent says something wrong.</strong> The shared memory has exact prices and rules, the agent starts in draft mode, the quality check agent reads 10% of chats every week, and the agent hands over whenever it isn't sure.</p>
+
+<p><strong>Fake screenshots.</strong> A screenshot is only the first filter. Proper channel access during onboarding is the real check.</p>
+
+<p><strong>Client data leaks.</strong> Channel permissions instead of passwords, tokens in the vault, and each agent only sees the data it needs.</p>
+
+<p><strong>Too much depends on one person or one account.</strong> Lead cards and the sheet make Saheb bhai's pipeline visible, so a second salesperson can pick it up if needed. Over time we should also build a second channel of our own, so one Instagram account isn't the only door in.</p>
+
+<p><strong>Costs creep up.</strong> Spend caps per run, a monthly limit, and the Claude bill in every weekly report.</p>
+
+<h2>12. What I need from you to start</h2>
+
+<ul class="checklist">
+  <li>Admin access to the Meta Business account and the Instagram professional account</li>
+  <li>A phone number for the WhatsApp Business Platform (not Saheb bhai's personal number)</li>
+  <li>Around 100 past DM conversations, good ones and bad ones</li>
+  <li>The current price list, the exact qualifying rules, and how exceptions are handled today</li>
+  <li>The agreement currently used with clients</li>
+  <li>Saheb bhai's working hours, and how many new leads a day is comfortable</li>
+  <li>A Google account for the sheets</li>
+  <li>Billing details for the Anthropic account</li>
+</ul>
+
+<p>And a few questions I need answered before building the Finance and Onboarding agents:</p>
+<ol>
+  <li>How is the revenue share collected today? Does the owner pay us, or does it reach us some other way?</li>
+  <li>Channels at 90k to 99k subscribers: do we turn them away, or keep them warm until they cross 100k?</li>
+  <li>Which languages do DMs come in, and roughly in what share?</li>
+  <li>Who approves content today, and who should approve it in the new setup?</li>
+  <li>Is there a refund policy for strike forward if a strike can't be resolved?</li>
+</ol>
+
+<p class="signoff">Once I have the items above, week 1 starts. I'd rather launch the DM agent in draft mode a week later and get it right than rush it. That agent is going to talk to every future customer.</p>
+
+</body>
+</html>
