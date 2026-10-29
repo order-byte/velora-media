@@ -1,0 +1,9 @@
+node_modules/
+fonts/
+tts_cache/
+frames/
+stills/
+icons.js
+timing.js
+timing.json
+audio.wav

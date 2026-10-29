@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A Note for Riyad Bhai</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("fonts/Inter.ttf"); font-weight: 100 900; }
+  @font-face { font-family: "Hind"; src: url("fonts/HindSiliguri-Medium.ttf"); font-weight: 500; }
+
+  :root {
+    --bg: #0b1324; --card: #131e33; --card2: #1a2741; --line: rgba(255,255,255,0.09);
+    --text: #f3f5f9; --muted: #93a2ba; --coral: #e8805f; --teal: #3cc9b4; --amber: #f2b84b;
+    --green: #25d366; --blue: #6ea8ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: var(--text);
+           font-family: "Inter", sans-serif; -webkit-font-smoothing: antialiased; }
+  .abs { position: absolute; }
+  .scene { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
+  i[data-i] { display: inline-block; width: 1em; height: 1em; flex: none; }
+  i[data-i] svg { width: 100%; height: 100%; display: block; }
+
+  #bg { position: absolute; inset: 0; background: radial-gradient(1200px 800px at 50% 40%, #122042 0%, var(--bg) 70%); }
+  #dots { position: absolute; inset: -60px; opacity: 0.5;
+          background-image: radial-gradient(rgba(255,255,255,0.07) 1.6px, transparent 1.7px); background-size: 46px 46px; }
+  .blob { position: absolute; width: 900px; height: 900px; border-radius: 50%; }
+  .b1 { background: radial-gradient(circle, rgba(232,128,95,0.16), rgba(232,128,95,0) 65%); }
+  .b2 { background: radial-gradient(circle, rgba(60,201,180,0.12), rgba(60,201,180,0) 65%); }
+
+  #chapter { position: absolute; left: 90px; top: 62px; display: flex; align-items: center; gap: 14px;
+             font-size: 23px; font-weight: 600; letter-spacing: 0.02em; opacity: 0; }
+  #chapter .bar { width: 34px; height: 4px; border-radius: 2px; background: var(--coral); }
+  #chapNum { color: var(--coral); font-variant-numeric: tabular-nums; }
+  #chapTitle { color: #d6deea; }
+  #handle { position: absolute; right: 90px; top: 62px; font-size: 21px; font-weight: 500; color: var(--muted); }
+  #caption { position: absolute; left: 0; right: 0; bottom: 54px; display: flex; justify-content: center; opacity: 0; }
+  #capText { font-family: "Hind", sans-serif; font-weight: 500; font-size: 35px; line-height: 1.32; color: #fff;
+             background: rgba(6, 11, 22, 0.78); border: 1px solid rgba(255,255,255,0.06);
+             padding: 9px 30px 7px; border-radius: 14px; max-width: 1560px; text-align: center; }
+  #progress { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgba(255,255,255,0.05); }
+  #progFill { height: 100%; width: 100%; background: var(--coral); transform-origin: left center; transform: scaleX(0); }
+
+  .card { background: var(--card); border: 1.5px solid var(--line); border-radius: 22px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+  .pill { display: inline-flex; align-items: center; gap: 12px; padding: 12px 24px; border-radius: 999px;
+          background: var(--card2); border: 1.5px solid var(--line); font-size: 24px; font-weight: 600; white-space: nowrap; }
+  .pill i { font-size: 26px; }
+  .h2 { font-size: 56px; font-weight: 750; line-height: 1.12; letter-spacing: -0.02em; }
+  .muted { color: var(--muted); }
+  .coral { color: var(--coral); }
+  .ic { width: 58px; height: 58px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; flex: none; }
+  .ic.coral { background: rgba(232,128,95,0.16); color: var(--coral); }
+  .ic.teal { background: rgba(60,201,180,0.15); color: var(--teal); }
+  .ic.amber { background: rgba(242,184,75,0.15); color: var(--amber); }
+  .ic.green { background: rgba(37,211,102,0.15); color: var(--green); }
+  .ic.blue { background: rgba(110,168,255,0.15); color: var(--blue); }
+  .title { text-align: center; font-size: 100px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; }
+  .title .w { display: inline-block; }
+  .sub { text-align: center; font-size: 32px; color: var(--muted); font-weight: 500; }
+  .node { border-radius: 50%; display: flex; align-items: center; justify-content: center;
+          background: radial-gradient(circle at 35% 30%, #f39b7c, #d9694a 70%);
+          box-shadow: 0 0 0 14px rgba(232,128,95,0.13), 0 0 0 30px rgba(232,128,95,0.06), 0 30px 70px rgba(0,0,0,0.45); }
+
+  .topic { display: flex; align-items: center; gap: 24px; width: 560px; padding: 30px 34px; }
+  .topic .num { width: 64px; height: 64px; border-radius: 50%; background: var(--card2); border: 2px solid var(--line);
+                display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; flex: none; }
+  .topic .tt { font-size: 32px; font-weight: 750; }
+  .topic .ts { font-size: 22px; color: var(--muted); margin-top: 6px; }
+
+  .row { display: flex; align-items: center; gap: 22px; padding: 24px 30px; margin-bottom: 22px; font-size: 29px; font-weight: 650; }
+  .row .mk { margin-left: auto; font-size: 34px; color: var(--green); }
+  .flow { display: flex; align-items: center; gap: 14px; }
+  .fstep { width: 236px; height: 118px; padding: 18px 20px; font-size: 22px; font-weight: 650; line-height: 1.3;
+           display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+  .fstep i { font-size: 28px; }
+  .arrow { color: var(--muted); font-size: 30px; }
+  .need-badge { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 999px;
+                background: rgba(37,211,102,0.16); color: var(--green); font-weight: 800; font-size: 22px; letter-spacing: 0.08em; }
+
+  .scard { width: 360px; height: 290px; padding: 30px 30px; display: flex; flex-direction: column; gap: 16px; }
+  .scard .sn { font-size: 20px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .scard .st { font-size: 30px; font-weight: 750; line-height: 1.2; }
+  .scard .stat { margin-top: auto; display: inline-flex; align-items: center; gap: 10px; align-self: flex-start;
+                 padding: 8px 18px; border-radius: 999px; font-size: 20px; font-weight: 800; letter-spacing: 0.06em; }
+  .stat.now { background: rgba(232,128,95,0.18); color: var(--coral); }
+  .stat.later { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+  .split { display: flex; width: 1200px; height: 120px; border-radius: 24px; overflow: hidden; background: rgba(255,255,255,0.05); }
+  .split div { height: 100%; display: flex; flex-direction: column; justify-content: center; padding-left: 30px;
+               color: #0b1324; transform-origin: left center; }
+  .split b { font-size: 40px; font-weight: 850; letter-spacing: -0.02em; }
+  .split span { font-size: 21px; font-weight: 700; opacity: 0.8; }
+  .seglabel { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 650; }
+  .seglabel i { font-size: 30px; }
+
+  .todo { display: flex; align-items: center; gap: 22px; width: 640px; padding: 26px 32px; margin-bottom: 24px; font-size: 30px; font-weight: 700; }
+  .todo .box { position: relative; width: 46px; height: 46px; font-size: 46px; flex: none; }
+  .todo .box i { position: absolute; inset: 0; width: 46px; height: 46px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"><div class="blob b1"></div><div class="blob b2"></div><div id="dots"></div></div>
+
+  <!-- INTRO -->
+  <section class="scene" id="s-intro">
+    <div class="abs" style="left:0;right:0;top:250px;display:flex;justify-content:center">
+      <div class="pill" id="i-pill"><i data-i="sparkles" class="coral"></i>A short note for Riyad bhai</div>
+    </div>
+    <h1 class="abs title" id="i-t1" style="left:0;right:0;top:350px">Before we start,</h1>
+    <h1 class="abs title coral" id="i-t2" style="left:0;right:0;top:458px">two quick things</h1>
+    <div class="abs card topic" id="i-c0" style="left:380px;top:650px"><div class="num">1</div><div><div class="tt">What we need now</div><div class="ts">One account, for now</div></div></div>
+    <div class="abs card topic" id="i-c1" style="left:980px;top:650px"><div class="num">2</div><div><div class="tt">Payment</div><div class="ts">How and when</div></div></div>
+  </section>
+
+  <!-- NEED -->
+  <section class="scene" id="s-need">
+    <h2 class="abs h2" id="n-h" style="left:150px;top:160px">For now, <span class="coral">just one thing</span></h2>
+    <div class="abs card" id="n-acc" style="left:150px;top:290px;width:760px;height:520px;padding:50px;display:flex;flex-direction:column;align-items:center;text-align:center">
+      <div class="node" id="n-node" style="width:170px;height:170px"><i data-i="asterisk" style="font-size:90px"></i></div>
+      <div style="font-size:46px;font-weight:800;margin-top:46px;letter-spacing:-0.02em">A separate Claude account</div>
+      <div class="muted" style="font-size:26px;margin-top:12px">Only for the agency's work</div>
+      <div style="margin-top:30px" id="n-badge"><span class="need-badge"><i data-i="circle-check"></i>NEEDED NOW</span></div>
+    </div>
+    <div class="abs" style="left:990px;top:290px;width:780px">
+      <div class="card row" id="n-r0"><span class="ic coral"><i data-i="mail"></i></span>Opened with the agency's own email<span class="mk"><i data-i="check"></i></span></div>
+      <div class="card row" id="n-r1"><span class="ic teal"><i data-i="layers"></i></span>Agents, costs and data in one place<span class="mk"><i data-i="check"></i></span></div>
+      <div class="card row" id="n-r2"><span class="ic amber"><i data-i="shield-check"></i></span>Kept apart from personal use<span class="mk"><i data-i="check"></i></span></div>
+    </div>
+    <div class="abs flow" id="n-flow" style="left:990px;top:676px">
+      <div class="card fstep" id="n-f0"><i data-i="user-plus" class="coral"></i>You open the account</div><i data-i="arrow-right" class="arrow" id="n-a0"></i>
+      <div class="card fstep" id="n-f1"><i data-i="send" style="color:var(--teal)"></i>You let us know</div><i data-i="arrow-right" class="arrow" id="n-a1"></i>
+      <div class="card fstep" id="n-f2"><i data-i="key-round" style="color:var(--amber)"></i>We show you how to give access</div>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="scene" id="s-steps">
+    <h2 class="abs h2" id="p-h" style="left:180px;top:160px">The rest, <span class="coral">one step at a time</span></h2>
+    <div class="abs" id="p-line" style="left:360px;top:474px;width:1200px;height:4px;background:rgba(255,255,255,0.12);transform-origin:left center"></div>
+    <div class="abs card scard" id="p-c0" style="left:180px;top:330px;border-color:rgba(232,128,95,0.7);box-shadow:0 0 0 3px rgba(232,128,95,0.25),0 24px 60px rgba(0,0,0,0.4)">
+      <div class="sn">Step 1</div><div class="st">Claude account</div><span class="stat now"><i data-i="circle-check"></i>NOW</span></div>
+    <div class="abs card scard" id="p-c1" style="left:580px;top:330px"><div class="sn">Step 2</div><div class="st">Instagram and Meta access</div><span class="stat later"><i data-i="lock"></i>LATER</span></div>
+    <div class="abs card scard" id="p-c2" style="left:980px;top:330px"><div class="sn">Step 3</div><div class="st">A WhatsApp number</div><span class="stat later"><i data-i="lock"></i>LATER</span></div>
+    <div class="abs card scard" id="p-c3" style="left:1380px;top:330px"><div class="sn">Step 4</div><div class="st">Old DMs and the price list</div><span class="stat later"><i data-i="lock"></i>LATER</span></div>
+    <div class="abs" id="p-b0" style="left:180px;top:690px"><div class="pill"><i data-i="info" style="color:var(--teal)"></i>No need to send everything at once</div></div>
+    <div class="abs" id="p-b1" style="left:180px;top:780px"><div class="pill"><i data-i="list-checks" style="color:var(--amber)"></i>Before each step: exactly what we need, and why</div></div>
+  </section>
+
+  <!-- PAYMENT -->
+  <section class="scene" id="s-payment">
+    <div class="abs muted" id="m-l" style="left:0;right:0;top:186px;text-align:center;font-size:28px;font-weight:650;letter-spacing:0.06em;text-transform:uppercase">Total agreed</div>
+    <div class="abs" id="m-num" style="left:0;right:0;top:226px;text-align:center"><span style="font-size:160px;font-weight:850;letter-spacing:-0.04em;font-variant-numeric:tabular-nums" id="m-n">0</span><span class="muted" style="font-size:48px;font-weight:650"> taka</span></div>
+    <div class="abs split" id="m-split" style="left:360px;top:520px">
+      <div id="m-s0" style="width:60%;background:var(--coral)"><b>15,000</b><span>Now</span></div>
+      <div id="m-s1" style="width:40%;background:var(--teal)"><b>10,000</b><span>Month end</span></div>
+    </div>
+    <div class="abs seglabel" id="m-l0" style="left:360px;top:676px"><i data-i="rocket" class="coral"></i>Now, to start the work</div>
+    <div class="abs seglabel" id="m-l1" style="left:1080px;top:676px"><i data-i="calendar" style="color:var(--teal)"></i>At the end of the month</div>
+    <div class="abs" id="m-sum" style="left:0;right:0;top:770px;display:flex;justify-content:center"><div class="pill" style="font-size:28px;padding:14px 30px">15,000 now &nbsp;+&nbsp; 10,000 at month end &nbsp;=&nbsp; <b class="coral">25,000 taka</b></div></div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="scene" id="s-close">
+    <div class="abs" id="z-g0" style="left:0;right:0;top:0;height:1080px">
+      <div class="abs card todo" id="z-t0" style="left:300px;top:340px"><span class="box"><i data-i="square" class="muted" id="z-u0"></i><i data-i="square-check" style="color:var(--green)" id="z-k0"></i></span>A separate Claude account</div>
+      <div class="abs card todo" id="z-t1" style="left:300px;top:480px"><span class="box"><i data-i="square" class="muted" id="z-u1"></i><i data-i="square-check" style="color:var(--green)" id="z-k1"></i></span>15,000 taka now</div>
+      <i data-i="arrow-right" class="abs arrow" id="z-arr" style="left:1000px;top:448px;font-size:60px"></i>
+      <div class="abs card" id="z-go" style="left:1110px;top:340px;width:500px;height:252px;padding:40px;display:flex;flex-direction:column;justify-content:center;gap:18px">
+        <span class="ic coral" style="width:76px;height:76px;font-size:40px;border-radius:22px"><i data-i="rocket"></i></span>
+        <div style="font-size:40px;font-weight:800">We start the work</div>
+      </div>
+    </div>
+    <div class="abs" id="z-q" style="left:0;right:0;top:320px;display:flex;justify-content:center"><div class="pill" style="font-size:28px;padding:14px 30px"><i data-i="circle-help" style="color:var(--teal)"></i>Any questions? Just let us know</div></div>
+    <div class="abs title" id="z-end" style="left:0;right:0;top:450px">Thank you, <span class="coral">Riyad bhai</span></div>
+  </section>
+
+  <div id="chapter"><span class="bar"></span><span id="chapNum"></span><span id="chapTitle"></span></div>
+  <div id="handle">For Riyad bhai</div>
+  <div id="caption"><span id="capText"></span></div>
+  <div id="progress"><div id="progFill"></div></div>
+</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script src="icons.js"></script>
+<script src="timing.js"></script>
+<script>
+const T = window.TIMING;
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+document.querySelectorAll('i[data-i]').forEach(el => { el.innerHTML = window.ICONS[el.dataset.i] || ''; });
+['#i-t1', '#i-t2'].forEach(sel => {
+  const el = $(sel);
+  el.innerHTML = el.textContent.trim().split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
+});
+
+const SC = Object.fromEntries(T.scenes.map(s => [s.id, s]));
+const line = (sid, i) => SC[sid].lines[i];
+function cue(sid, i, kw, which = 0) {
+  const l = line(sid, i);
+  if (!kw) return l.start;
+  const hits = l.words.filter(w => w.w.includes(kw));
+  return hits.length ? hits[Math.min(which, hits.length - 1)].s : l.start;
+}
+const lend = (sid, i) => line(sid, i).end;
+
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out', duration: 0.6 } });
+const updaters = [];
+const R = sel => Array.isArray(sel) ? sel.flatMap(x => typeof x === 'string' ? $$(x) : [x]) : (typeof sel === 'string' ? $$(sel) : [sel]);
+function enter(sel, t, from = { y: 26 }, d = 0.65, ease = 'back.out(1.5)') {
+  R(sel).forEach(el => {
+    gsap.set(el, Object.assign({ autoAlpha: 0 }, from));
+    tl.to(el, { autoAlpha: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: d, ease }, Math.max(0, t));
+  });
+}
+function stagger(sels, t, step, from, d, ease) { sels.forEach((s, k) => enter(s, t + k * step, from, d, ease)); }
+function leave(sel, t, to = {}, d = 0.4) { tl.to(R(sel), Object.assign({ autoAlpha: 0, duration: d, ease: 'power2.in' }, to), t); }
+function to(sel, t, vars) { tl.to(R(sel), vars, t); }
+function counter(el, t0, d, from, toV, fmt) {
+  const e = $(el);
+  updaters.push(t => {
+    const p = Math.min(1, Math.max(0, (t - t0) / d));
+    e.textContent = fmt(from + (toV - from) * (1 - Math.pow(1 - p, 3)));
+  });
+}
+const glowOn = (sel, t, c) => to(sel, t, { scale: 1.04, borderColor: c, boxShadow: `0 0 0 3px ${c}55, 0 24px 60px rgba(0,0,0,0.4)`, duration: 0.35 });
+const glowOff = (sel, t) => to(sel, t, { scale: 1, borderColor: 'rgba(255,255,255,0.09)', boxShadow: '0 24px 60px rgba(0,0,0,0.35)', duration: 0.35 });
+
+T.scenes.forEach((s, k) => {
+  const el = $('#s-' + s.id);
+  tl.to(el, { autoAlpha: 1, duration: 0.45, ease: 'power2.out' }, s.start + (k ? 0.05 : 0));
+  if (k < T.scenes.length - 1) tl.to(el, { autoAlpha: 0, duration: 0.45, ease: 'power2.in' }, s.end - 0.45);
+});
+
+// ---------- INTRO ----------
+{
+  const s = SC.intro.start;
+  enter('#i-pill', s + 0.4, { y: -20 });
+  stagger($$('#i-t1 .w'), cue('intro', 0, 'রিয়াদ') - 0.2, 0.1, { y: 60 }, 0.8, 'power4.out');
+  stagger($$('#i-t2 .w'), cue('intro', 1, 'দুটো') - 0.3, 0.12, { y: 60 }, 0.8, 'power4.out');
+  stagger(['#i-c0', '#i-c1'], cue('intro', 1, 'বিষয়'), 0.2, { y: 50 }, 0.6);
+  glowOn('#i-c0', cue('intro', 1, 'লাগবে') - 0.1, '#e8805f');
+  glowOff('#i-c0', cue('intro', 1, 'পেমেন্ট') - 0.2);
+  glowOn('#i-c1', cue('intro', 1, 'পেমেন্ট') - 0.1, '#3cc9b4');
+  glowOff('#i-c1', lend('intro', 1) + 0.2);
+}
+
+// ---------- NEED ----------
+{
+  const N = 'need';
+  enter('#n-h', SC.need.start + 0.3, { x: -40 }, 0.7, 'power3.out');
+  const tAcc = cue(N, 0, 'আলাদা') - 0.4;
+  enter('#n-acc', tAcc, { y: 50 }, 0.7, 'power3.out');
+  enter('#n-node', tAcc + 0.2, { scale: 0.3 }, 0.8, 'back.out(1.8)');
+  enter('#n-badge', cue(N, 0, 'অ্যাকাউন্ট') + 0.2, { scale: 0.5 }, 0.5, 'back.out(2.4)');
+  enter('#n-r0', cue(N, 1, 'ইমেইল') - 0.2, { x: 50 }, 0.55);
+  enter('#n-r1', cue(N, 1, 'এজেন্ট') - 0.1, { x: 50 }, 0.55);
+  enter('#n-r2', cue(N, 1, 'আলাদা') - 0.1, { x: 50 }, 0.55);
+  const l2 = line(N, 2).start;
+  enter('#n-f0', cue(N, 2, 'খোলা') - 0.2, { y: 30 }, 0.5);
+  enter('#n-a0', cue(N, 2, 'জানাবেন') - 0.5, { x: -10 }, 0.3, 'power2.out');
+  enter('#n-f1', cue(N, 2, 'জানাবেন') - 0.2, { y: 30 }, 0.5);
+  enter('#n-a1', cue(N, 2, 'দেখিয়ে') - 0.9, { x: -10 }, 0.3, 'power2.out');
+  enter('#n-f2', cue(N, 2, 'দেখিয়ে') - 0.6, { y: 30 }, 0.5);
+  to(['#n-r0', '#n-r1', '#n-r2'], l2, { opacity: 0.5, duration: 0.4 });
+}
+
+// ---------- STEPS ----------
+{
+  const P = 'steps';
+  const s = SC.steps.start;
+  enter('#p-h', s + 0.3, { x: -40 }, 0.7, 'power3.out');
+  gsap.set('#p-line', { scaleX: 0 });
+  to('#p-line', s + 0.6, { scaleX: 1, duration: 1.2, ease: 'power2.inOut' });
+  enter('#p-c0', s + 0.7, { y: 50 }, 0.6);
+  stagger(['#p-c1', '#p-c2', '#p-c3'], cue(P, 0, 'ধাপে') - 0.2, 0.2, { y: 50 }, 0.6);
+  enter('#p-b0', cue(P, 0, 'একসাথে') - 0.2, { y: 30 }, 0.5);
+  enter('#p-b1', line(P, 1).start, { y: 30 }, 0.5);
+  ['#p-c1', '#p-c2', '#p-c3'].forEach((c, k) => to(c, line(P, 1).start + 0.3 + k * 0.25,
+    { keyframes: [{ y: -10, duration: 0.25 }, { y: 0, duration: 0.35 }] }));
+}
+
+// ---------- PAYMENT ----------
+{
+  const M = 'payment';
+  const s = SC.payment.start;
+  enter('#m-l', s + 0.3, { y: -20 }, 0.5, 'power3.out');
+  enter('#m-num', s + 0.5, { scale: 0.85 }, 0.6, 'power3.out');
+  const tTot = cue(M, 0, 'পঁচিশ');
+  counter('#m-n', tTot - 0.3, 1.3, 0, 25000, v => Math.round(v).toLocaleString('en-US'));
+  enter('#m-split', lend(M, 0) - 0.2, { y: 30 }, 0.5, 'power3.out');
+  gsap.set(['#m-s0', '#m-s1'], { scaleX: 0 });
+  const tNow = cue(M, 1, 'পনেরো');
+  to('#m-s0', tNow - 0.3, { scaleX: 1, duration: 0.8, ease: 'power3.inOut' });
+  enter('#m-l0', tNow + 0.3, { y: 20 }, 0.5);
+  const tRest = cue(M, 2, 'দশ');
+  to('#m-s1', tRest - 0.3, { scaleX: 1, duration: 0.8, ease: 'power3.inOut' });
+  enter('#m-l1', cue(M, 2, 'মাসের') - 0.1, { y: 20 }, 0.5);
+  enter('#m-sum', lend(M, 2) - 0.1, { y: 30, scale: 0.9 }, 0.6);
+}
+
+// ---------- CLOSE ----------
+{
+  const Z = 'close';
+  const s = SC.close.start;
+  stagger(['#z-t0', '#z-t1'], s + 0.3, 0.25, { x: -40 }, 0.55, 'power3.out');
+  gsap.set(['#z-k0', '#z-k1'], { autoAlpha: 0, scale: 0.5 });
+  const tDone = cue(Z, 0, 'হয়ে');
+  ['0', '1'].forEach((k, j) => {
+    to('#z-u' + k, tDone + j * 0.3, { autoAlpha: 0, duration: 0.15 });
+    to('#z-k' + k, tDone + j * 0.3, { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(2.6)' });
+  });
+  enter('#z-arr', cue(Z, 0, 'আমরা') - 0.1, { x: -30 }, 0.4, 'power2.out');
+  enter('#z-go', cue(Z, 0, 'শুরু') - 0.2, { scale: 0.8 }, 0.6, 'back.out(1.8)');
+  const l1 = line(Z, 1).start;
+  leave('#z-g0', l1 - 0.2, { y: -30 }, 0.45);
+  enter('#z-q', l1 + 0.2, { y: 30 }, 0.55);
+  enter('#z-end', cue(Z, 1, 'ধন্যবাদ') - 0.1, { y: 40, scale: 0.92 }, 0.8, 'power3.out');
+}
+
+updaters.push(t => {
+  const sc = T.scenes.find(s => t >= s.start && t < s.end);
+  let op = 0;
+  if (sc) {
+    const caps = sc.lines.flatMap(l => l.captions);
+    const cur = caps.filter(c => t >= c.s - 0.05).pop() || caps[0];
+    $('#capText').textContent = cur.text;
+    const first = sc.lines[0], last = sc.lines[sc.lines.length - 1];
+    op = Math.min(1, (t - (first.start - 0.1)) / 0.2, (last.end + 0.3 - t) / 0.2);
+  }
+  $('#caption').style.opacity = Math.max(0, op);
+  const ch = $('#chapter');
+  if (sc && sc.chapter) {
+    const [num, ...rest] = sc.chapter.split('  ');
+    $('#chapNum').textContent = num; $('#chapTitle').textContent = rest.join(' ');
+    const k = Math.max(0, Math.min(1, (t - sc.start - 0.2) / 0.4, (sc.end - t) / 0.35));
+    ch.style.opacity = k; ch.style.transform = `translateX(${(1 - k) * -24}px)`;
+  } else ch.style.opacity = 0;
+  $('#handle').style.opacity = sc && sc.id !== 'intro' && sc.id !== 'close' ? 1 : 0;
+  $('#progFill').style.transform = `scaleX(${t / T.duration})`;
+  $('#dots').style.transform = `translate(${(t * 6) % 46}px, ${(t * 3) % 46}px)`;
+  $('.b1').style.transform = `translate(${-200 + 260 * Math.sin(t / 14)}px, ${-250 + 140 * Math.cos(t / 11)}px)`;
+  $('.b2').style.transform = `translate(${1200 + 220 * Math.cos(t / 13)}px, ${350 + 160 * Math.sin(t / 9)}px)`;
+});
+
+window.DURATION = T.duration;
+window.FPS = T.fps;
+window.seek = t => { tl.seek(t, false); updaters.forEach(u => u(t)); };
+window.seek(0);
+window.READY = document.fonts.ready.then(() => true);
+</script>
+</body>
+</html>
