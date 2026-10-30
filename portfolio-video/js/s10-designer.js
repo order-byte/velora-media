@@ -61,7 +61,7 @@
     background: 'radial-gradient(closest-side, rgba(255,240,200,.55), rgba(255,200,80,0))', filter: 'blur(30px)' } });
 
   // MOTION brush lettering and signature, both lifted from the banner
-  const motion = h('img', { src: 'assets/me/motion.png', class: 'abs', style: { left: '150px', top: '150px', width: '760px', transform: 'rotate(-5deg)',
+  const motion = h('img', { src: 'assets/me/motion.png', class: 'abs', style: { left: '262px', top: '150px', width: '660px', transform: 'rotate(-5deg)',
     filter: 'drop-shadow(0 14px 24px rgba(110,25,0,.5))' } });
   const sig = h('img', { src: 'assets/me/signature.png', class: 'abs', style: { left: '1150px', top: '760px', width: '720px', filter: 'drop-shadow(0 8px 18px rgba(110,25,0,.45))' } });
 
@@ -74,7 +74,7 @@
     Array.from({ length: 10 }, (_, i) => { const a = i * Math.PI / 5; return `<line x1="${50 + Math.cos(a) * 12}" y1="${50 + Math.sin(a) * 12}" x2="${50 + Math.cos(a) * 44}" y2="${50 + Math.sin(a) * 44}"/>`; }).join('') +
     '</g></svg>', 'linear-gradient(150deg,#ff9a6a,#ef5a28 70%)', 'rgba(255,160,90,.75)');
   const icons = [
-    { e: pr, x: 150, y: 120, from: [-500, -400], r: -12, at: 12.78 },
+    { e: pr, x: 30, y: 70, from: [-500, -400], r: -12, at: 12.78 },
     { e: ae, x: 1500, y: 90, from: [500, -420], r: 10, at: 12.86 },
     { e: sp, x: 1640, y: 470, from: [600, 120], r: 8, at: 12.94 },
   ];
