@@ -1,0 +1,230 @@
+<title>Aminur Showreel Live Edit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Editor-style single dark look: the video is the hero, the chrome stays quiet. */
+  :root {
+    --ink: #0d0f0c; --panel: #161914; --line: #272b24; --text: #eef2e8; --muted: #8e9589;
+    --lime: #c8ff00;          /* from Aminur's profile photo backdrop */
+    --ui: 'Manrope', system-ui, sans-serif; --mono: 'JetBrains Mono', ui-monospace, monospace;
+    color-scheme: dark;
+  }
+  html, body { background: var(--ink); color: var(--text); }
+  body {
+    font-family: var(--ui); margin: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 20px 40px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; display: grid; gap: 16px; }
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; }
+  h1 { font: 700 clamp(18px, 2.4vw, 24px)/1.2 var(--ui); margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  h1 span { color: var(--muted); font-weight: 500; }
+  .live { display: inline-flex; align-items: center; gap: 8px; font: 600 12px/1 var(--ui); letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text); background: var(--panel); border: 1px solid var(--line);
+    padding: 8px 12px; border-radius: 999px; }
+  .live i { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 10px var(--lime); }
+  .live b { font-family: var(--mono); font-weight: 500; color: var(--muted); letter-spacing: 0; text-transform: none; }
+
+  #viewport { position: relative; width: 100%; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 14px; overflow: hidden;
+    background: #000; border: 1px solid var(--line); }
+  #viewport #stage { position: absolute; left: 0; top: 0; }
+
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+  button { font: 600 14px/1 var(--ui); color: var(--text); background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 14px; cursor: pointer; }
+  button:hover { border-color: #3a4035; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+  button[aria-pressed="true"] { background: var(--lime); color: #11140a; border-color: var(--lime); }
+  #play { min-width: 92px; }
+  .time { font: 500 14px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .time b { color: var(--text); font-weight: 500; }
+  .speed { display: inline-flex; gap: 6px; }
+  .speed button { padding: 10px 10px; min-width: 52px; }
+  .spacer { flex: 1 1 auto; }
+
+  .track { position: relative; display: grid; gap: 8px; }
+  #scrub { width: 100%; accent-color: var(--lime); margin: 0; }
+  .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .chip { flex: 0 0 auto; font: 600 12px/1 var(--ui); padding: 8px 10px; border-radius: 8px; background: var(--panel);
+    border: 1px solid var(--line); color: var(--muted); display: inline-flex; gap: 8px; align-items: center; }
+  .chip .dot { width: 7px; height: 7px; border-radius: 50%; background: #3a4035; }
+  .chip[data-state="built"] .dot { background: var(--lime); }
+  .chip[data-state="building"] .dot { background: #ffb02e; box-shadow: 0 0 8px #ffb02e; }
+  .chip.on { color: var(--text); border-color: #4a5143; }
+  .chip .tc { font-family: var(--mono); font-weight: 500; color: var(--muted); }
+
+  .log { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 10px; }
+  .log h2 { margin: 0; font: 700 13px/1 var(--ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .log ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; line-height: 1.5; max-width: 75ch; }
+  .log li::marker { color: var(--muted); font-family: var(--mono); }
+  @media (prefers-reduced-motion: reduce) { .live i { box-shadow: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Aminur Rahaman Showreel <span>· live edit</span></h1>
+    <div class="live"><i></i> Live edit <b id="ver"></b></div>
+  </header>
+
+  <div id="viewport">
+    <div id="stage">
+      <div class="scene" id="s1"></div>
+      <div class="scene" id="s2"></div>
+      <div class="scene" id="s3"></div>
+      <div class="scene" id="s4"></div>
+      <div class="scene" id="s5"></div>
+      <div class="scene" id="s6"></div>
+      <div class="scene" id="s7"></div>
+      <div class="scene" id="s8"></div>
+      <div class="scene" id="s9"></div>
+      <div id="todo" class="fill" style="display:none;background:#0d0f0c"><div class="placeholder-note"></div></div>
+      <div id="grain"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="play" aria-pressed="false">▶ Play</button>
+    <span class="time"><b id="now">00.00</b> / <span id="dur">30.00</span>s</span>
+    <span class="spacer"></span>
+    <span class="speed" role="group" aria-label="Playback speed">
+      <button data-speed="0.25" aria-pressed="false">0.25×</button>
+      <button data-speed="0.5" aria-pressed="false">0.5×</button>
+      <button data-speed="1" aria-pressed="true">1×</button>
+    </span>
+    <button id="sound" aria-pressed="false" hidden>Sound off</button>
+  </div>
+  <div class="track">
+    <input id="scrub" type="range" min="0" max="30" step="0.0166667" value="0" aria-label="Timeline">
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <section class="log">
+    <h2>Edit log</h2>
+    <ol id="log"></ol>
+  </section>
+</div>
+
+<script>
+  // Updated on every publish so the person watching can follow along.
+  window.BUILD = {
+    version: 'v5',
+    scenes: [
+      { id: 's1', name: 'Glass hook', from: 0, to: 4, state: 'built' },
+      { id: 's2', name: 'Client chat', from: 4, to: 8, state: 'built' },
+      { id: 's3', name: 'Prompt', from: 8, to: 10, state: 'built' },
+      { id: 's4', name: 'Gradient title', from: 10, to: 14, state: 'built' },
+      { id: 's5', name: 'Work showcase', from: 14, to: 18, state: 'built' },
+      { id: 's6', name: 'Work grid', from: 18, to: 22, state: 'built' },
+      { id: 's7', name: 'Services', from: 22, to: 24, state: 'built' },
+      { id: 's8', name: 'Profile card', from: 24, to: 26, state: 'built' },
+      { id: 's9', name: 'Logo end', from: 26, to: 30, state: 'built' },
+    ],
+    log: [
+      'Studied the 5 references: glass/frost reveal, blur-in type, chat bubbles, prompt bar, card stacks, 2×2 grids, pill marquee.',
+      'Downloaded your 4 Drive projects (NanoSyllabus, CSGOGem, FortKnox, Quadrant) and the 2 short clips.',
+      'Set up this live preview. Each scene appears here as soon as it is built.',
+      'Scene 1 (glass hook) built: violet fluted glass melts into a dusk sky, a liquid-glass pill rises with a lime neon orbit, types the hook, answers, then swallows the frame into the chat scene. Try it at 0.25× to check the smoothness.',
+      'Scenes 2–4 built: client chat with typed bubbles and emoji stickers, a dark prompt bar with a rising glow, then a liquid gradient wave with "Ready to launch?", your aminur_rex name reveal and a fast "Promos for SaaS / Gaming / EdTech / AI tools" swap.',
+      'Your project clips are being upscaled and smoothed to 1080p60 in the background (the two 736p clips go through AI upscaling). They come in next, in the showcase and grid scenes.',
+      'Scenes 5–9 built: card stack "Promos [your work] that convert.", a diagonal stream of your projects, a 2×2 grid playing 4 projects at once (then 4 more), a red services marquee with a "1,000+ videos delivered" counter, a glass Instagram profile card where Follow gets tapped, and the aminur_rex sign-off with "Book a call".',
+      'Black cards = clips still being upscaled (Quadrant insight, Flowly ×3, AI Agent ×2). The profile picture shows "AR" until you upload your photo as a file.',
+      'Soundtrack added: an original 120 BPM track (hook from the first second, drops at 4s and 10s) with sound effects cued to every move: glass shimmer, whooshes, bubble pops, key clicks, taps, counter ticks, impacts. Press "Sound off" to turn it on.',
+    ],
+    audio: 'assets/audio/mix.mp3',
+  };
+</script>
+<script src="config.js"></script>
+<script src="assets/work/clips.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/kit.js"></script>
+<script src="js/s1-glass.js"></script>
+<script src="js/s2-chat.js"></script>
+<script src="js/s3-prompt.js"></script>
+<script src="js/s4-gradient.js"></script>
+<script src="js/s5-showcase.js"></script>
+<script src="js/s6-grid.js"></script>
+<script src="js/s7-marquee.js"></script>
+<script src="js/s8-profile.js"></script>
+<script src="js/s9-logo.js"></script>
+<script>
+(() => {
+  const B = window.BUILD, DUR = 30;
+  const stage = document.getElementById('stage'), vp = document.getElementById('viewport');
+  const scrub = document.getElementById('scrub'), now = document.getElementById('now');
+  const playBtn = document.getElementById('play'), soundBtn = document.getElementById('sound');
+  const todo = document.getElementById('todo'), note = todo.firstElementChild;
+  document.getElementById('ver').textContent = B.version;
+  document.getElementById('log').innerHTML = B.log.map(l => `<li>${l}</li>`).join('');
+
+  const chips = document.getElementById('chips');
+  B.scenes.forEach(s => {
+    const c = document.createElement('button');
+    c.className = 'chip'; c.dataset.state = s.state; c.dataset.id = s.id;
+    c.innerHTML = `<span class="dot"></span>${s.name}<span class="tc">${s.from}s</span>`;
+    c.onclick = () => { t = s.from; draw(); };
+    chips.append(c);
+  });
+
+  const fit = () => { stage.style.transform = `scale(${vp.clientWidth / 1920})`; };
+  new ResizeObserver(fit).observe(vp); fit();
+
+  const hot = window.claude && window.claude.hot;
+  const saved = (hot && hot.data) || {};
+  let t = Number(saved.t) || 0, playing = saved.playing ?? true, speed = Number(saved.speed) || 1, last = performance.now();
+  let audio = null;
+  if (B.audio) {
+    audio = new Audio(B.audio); audio.preload = 'auto';
+    soundBtn.hidden = false;
+  }
+  if (hot && hot.snapshot) hot.snapshot(() => ({ t, playing, speed }));
+
+  function draw() {
+    window.__seek(t);
+    const built = new Set(window.V.scenes.map(s => s.root.id));
+    const cur = B.scenes.find(s => t >= s.from && t < s.to) || B.scenes[B.scenes.length - 1];
+    const missing = !window.V.scenes.some(s => t >= s.start && t < s.end);
+    todo.style.display = missing ? 'block' : 'none';
+    if (missing) note.innerHTML = `${cur.name}<small>${cur.state === 'building' ? 'Building this scene now' : 'Coming up next'} · ${cur.from}s–${cur.to}s</small>`;
+    scrub.value = t; now.textContent = t.toFixed(2).padStart(5, '0');
+    for (const c of chips.children) {
+      c.classList.toggle('on', c.dataset.id === cur.id);
+      if (built.has(c.dataset.id) && c.dataset.state === 'queued') c.dataset.state = 'built';
+    }
+  }
+  function setPlaying(p) {
+    playing = p; playBtn.textContent = p ? '❚❚ Pause' : '▶ Play'; playBtn.setAttribute('aria-pressed', p);
+    if (audio) { if (p && soundBtn.getAttribute('aria-pressed') === 'true') { audio.currentTime = t; audio.playbackRate = speed; audio.play().catch(() => {}); } else audio.pause(); }
+    last = performance.now();
+  }
+  function frame(ts) {
+    if (playing) {
+      if (audio && !audio.paused) t = audio.currentTime;
+      else t += (ts - last) / 1000 * speed;
+      if (t >= DUR) { t = 0; if (audio && !audio.paused) audio.currentTime = 0; }
+      draw();
+    }
+    last = ts; requestAnimationFrame(frame);
+  }
+  playBtn.onclick = () => setPlaying(!playing);
+  scrub.oninput = () => { t = Number(scrub.value); if (audio && !audio.paused) audio.currentTime = t; draw(); };
+  document.querySelectorAll('[data-speed]').forEach(b => b.onclick = () => {
+    speed = Number(b.dataset.speed);
+    document.querySelectorAll('[data-speed]').forEach(x => x.setAttribute('aria-pressed', x === b));
+    if (audio) audio.playbackRate = speed;
+  });
+  soundBtn.onclick = () => {
+    const on = soundBtn.getAttribute('aria-pressed') !== 'true';
+    soundBtn.setAttribute('aria-pressed', on); soundBtn.textContent = on ? 'Sound on' : 'Sound off';
+    if (on && playing) { audio.currentTime = t; audio.playbackRate = speed; audio.play().catch(() => {}); } else audio.pause();
+  };
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && e.target.tagName !== 'INPUT') { e.preventDefault(); setPlaying(!playing); }
+  });
+  setPlaying(playing);
+  Promise.resolve(document.fonts && document.fonts.ready).then(() => { draw(); requestAnimationFrame(frame); });
+})();
+</script>

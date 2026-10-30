@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Aminur Showreel</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+<style>html,body{margin:0;background:#000;overflow:hidden}</style>
+</head>
+<body>
+<div id="stage">
+  <div class="scene" id="s1"></div>
+  <div class="scene" id="s2"></div>
+  <div class="scene" id="s3"></div>
+  <div class="scene" id="s4"></div>
+  <div class="scene" id="s5"></div>
+  <div class="scene" id="s6"></div>
+  <div class="scene" id="s7"></div>
+  <div class="scene" id="s8"></div>
+  <div class="scene" id="s9"></div>
+  <div id="grain"></div>
+</div>
+<script>window.__RENDER = true;</script>
+<script src="config.js"></script>
+<script src="assets/work/clips.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/kit.js"></script>
+<script src="js/s1-glass.js"></script>
+<script src="js/s2-chat.js"></script>
+<script src="js/s3-prompt.js"></script>
+<script src="js/s4-gradient.js"></script>
+<script src="js/s5-showcase.js"></script>
+<script src="js/s6-grid.js"></script>
+<script src="js/s7-marquee.js"></script>
+<script src="js/s8-profile.js"></script>
+<script src="js/s9-logo.js"></script>
+<script>
+  window.__duration = 30;
+  Promise.all([document.fonts.ready, ...['400','500','600','700'].map(w => document.fonts.load(`${w} 40px Poppins`)), document.fonts.load('600 40px Manrope'), ...[...document.images].map(i => i.decode().catch(() => {}))])
+    .then(() => { window.__seek(Number(new URLSearchParams(location.search).get('t') || 0)); window.__ready = true; });
+</script>
+</body>
+</html>
