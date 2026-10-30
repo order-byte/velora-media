@@ -64,7 +64,10 @@
   const replyB = h('span', { style: { color: '#c8ff00' } }, ' Watch this.');
   reply.append(replyA, replyB);
   const replyWords = [...split(replyA, 'words'), ...split(replyB, 'words')];
-  pill.append(rim, plusBtn, text, reply, sendBtn, fog);
+  // specular sheen that sweeps across the glass once it has landed
+  const sheen = h('div', { class: 'fill', style: { background: 'linear-gradient(100deg, rgba(255,255,255,0) 35%, rgba(255,255,255,.55) 47%, rgba(255,255,255,0) 50%, rgba(255,255,255,.25) 54%, rgba(255,255,255,0) 62%)',
+    backgroundSize: '250% 100%', mixBlendMode: 'overlay', opacity: '0' } });
+  pill.append(rim, sheen, plusBtn, text, reply, sendBtn, fog);
 
   const vignette = h('div', { class: 'fill', style: { background: 'radial-gradient(120% 90% at 50% 45%, rgba(0,0,0,0) 55%, rgba(30,10,90,.28) 100%)' } });
   const cam = h('div', { class: 'fill' }, sky, flutes, glint, orbitWrap, vignette, pill);
@@ -121,6 +124,8 @@
       width: `${w}px`, height: `${hh}px`, marginLeft: `${-w / 2}px`, marginTop: `${-hh / 2}px`, borderRadius: `${mix(PH / 2, 0, E.inCubic(grow))}px`,
     });
     fog.style.opacity = P(t, 3.3, 3.84, E.smooth).toFixed(3);
+    sheen.style.backgroundPosition = `${kf(t, [[1.7, 120], [2.5, -20, E.inOutCubic]])}% 0`;
+    sheen.style.opacity = (P(t, 1.7, 1.85) * (1 - P(t, 2.35, 2.5))).toFixed(3);
     const btnIn = P(t, 1.15, 1.7, E.outBack);
     set(plusBtn, { o: btnIn, s: mix(0.5, 1, btnIn) });
     const sendIn = P(t, 1.25, 1.8, E.outBack);
