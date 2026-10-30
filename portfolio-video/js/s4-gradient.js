@@ -1,4 +1,4 @@
-// S4 · Gradient title (9.98–14.02s)
+// S4 · Gradient title (9.98–12.02s)
 // The flood from the prompt settles into a soft liquid wave; "Ready to launch?" writes
 // itself in, the wave climbs back over the frame for the name reveal, then wipes off
 // to a rapid "Promos for <category>" swap.
@@ -68,7 +68,7 @@
   const CAT_AT = 13.08, CAT_STEP = 0.19;
   let catW = null;
 
-  scene('s4', 9.98, 14.02, (lt, t) => {
+  scene('s4', 9.98, 12.02, (lt, t) => {
     // wave level: full frame -> low wave -> full frame -> wiped away
     const base = kf(t, [[9.98, -260], [10.75, 760, E.outQuint], [11.55, 790], [11.95, -300, E.inOutQuint], [12.82, -300], [13.12, -1700, E.inQuint]]);
     w1.setAttribute('d', wavePath(base, 70 + 40 * Math.sin(t * 1.3), t));

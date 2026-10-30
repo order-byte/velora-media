@@ -128,12 +128,15 @@
   }
 
   const scenes = [];
+  // scenes written on an earlier timeline can be slid later with V.at(seconds)
+  let offset = 0;
   function scene(id, start, end, render) {
-    const root = document.getElementById(id);
-    scenes.push({ root, start, end, render });
+    const root = document.getElementById(id), off = offset;
+    scenes.push({ root, start: start + off, end: end + off, render: (lt, t) => render(lt, t - off) });
   }
+  const at = o => { offset = o; };
 
-  window.V = { clamp, mix, E, P, kf, $, $$, h, tf, set, split, blurIn, blurOut, typeIn, scene, scenes };
+  window.V = { clamp, mix, E, P, kf, $, $$, h, tf, set, split, blurIn, blurOut, typeIn, scene, scenes, at };
 
   // returns a promise that settles once any frame images requested for t have decoded
   window.__pending = [];

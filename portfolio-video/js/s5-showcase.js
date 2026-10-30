@@ -1,118 +1,94 @@
-// S5 · Work showcase (14.0–18.05s)
-// "Promos [stack] that convert." — a card stack in the middle deals Aminur's projects
-// one per beat (reference 4), then the stack bursts into a diagonal stream of work
-// cards around a changing label (reference 3).
+// S5 · Selected work (16.0–25.05s)
+// One project at a time, big: a 3D carousel deals each film to the centre of the frame,
+// where it plays with its name and what it was, then slides away for the next.
 (() => {
-  const { h, P, E, mix, kf, set, split, blurIn, blurOut, scene, clamp } = window.V;
+  const { h, P, E, mix, kf, set, split, blurIn, scene, clamp } = window.V;
   const { clip } = window.K;
   const root = document.getElementById('s5');
-  root.style.background = '#fbfafc';
+  root.style.background = '#f3f3f6';
 
-  const card = (id, w, hgt, r = 26) => {
-    const c = clip(id);
-    const el = h('div', { class: 'abs', style: { width: `${w}px`, height: `${hgt}px`, left: `${-w / 2}px`, top: `${-hgt / 2}px`, borderRadius: `${r}px`, overflow: 'hidden',
-      background: '#111', boxShadow: '0 0 0 5px #fff, 0 24px 60px rgba(20,20,40,.22), 0 4px 14px rgba(20,20,40,.12)' } }, c.el);
-    return { el, c };
-  };
+  const WORK = [
+    { id: 'csgo_pick', name: 'CSGOGem', kind: 'Gaming platform launch', tint: '#8b5cff' },
+    { id: 'nano_science', name: 'NanoSyllabus', kind: 'EdTech product promo', tint: '#3d5afe' },
+    { id: 'fort_walls', name: 'OfflineIQ · Fort Knox', kind: 'AI hardware film', tint: '#19c2a8' },
+    { id: 'quad_globe', name: 'Quadrant', kind: 'IT services brand film', tint: '#0fb39a' },
+    { id: 'flowly_glass', name: 'Flowly', kind: 'AI app launch', tint: '#4aa8ff' },
+    { id: 'agent_glass', name: 'AI Agent', kind: 'SaaS motion promo', tint: '#c03cff' },
+  ];
+  const T0 = 16.0, STEP = 1.5, SLIDE = 0.5;
 
-  // --- A: stack ---
-  const STACK = ['csgo_pick', 'nano_orbit', 'fort_walls', 'quad_globe', 'flowly_glass', 'agent_boost', 'csgo_mines'];
-  const stackWrap = h('div', { class: 'center' });
-  const stack = STACK.map((id, i) => {
-    const c = card(id, 600, 338);
-    stackWrap.append(c.el);
-    return { ...c, at: 14.18 + i * 0.25, rot: [-7, 6, -4, 8, -6, 4, 0][i] };
-  });
-  const left = h('div', { class: 'abs', style: { right: '1300px', top: '470px', font: '600 104px/1 Poppins', letterSpacing: '-0.04em', color: '#16161d', whiteSpace: 'nowrap' } }, 'Promos');
-  const right = h('div', { class: 'abs', style: { left: '1300px', top: '470px', font: '600 104px/1 Poppins', letterSpacing: '-0.04em', color: '#16161d', whiteSpace: 'nowrap' } }, 'that convert.');
-  const lw = split(left, 'chars'), rw = split(right, 'chars');
+  const glow = h('div', { class: 'fill' });
+  const header = h('div', { class: 'abs', style: { left: '120px', top: '64px', display: 'flex', alignItems: 'center', gap: '22px', font: '600 34px/1 Poppins', color: '#16161d', letterSpacing: '-0.01em' } });
+  const dot = h('span', { style: { width: '16px', height: '16px', borderRadius: '50%', background: '#c8ff00', boxShadow: '0 0 0 6px rgba(200,255,0,.3)' } });
+  const hTitle = h('span', {}, 'Selected work');
+  header.append(dot, hTitle);
+  const counter = h('div', { class: 'abs', style: { right: '120px', top: '60px', font: '600 40px/1 Poppins', color: '#16161d', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' } });
+  const cNow = h('span', {}, '01'), cAll = h('span', { style: { color: '#9a9aa6' } }, ' / 06');
+  counter.append(cNow, cAll);
 
-  // --- B: stream ---
-  const FLOW = ['csgo_deposit', 'nano_science', 'fort_apps', 'quad_insight', 'flowly_phone', 'agent_glass', 'csgo_pick', 'nano_explore',
-    'quad_globe', 'flowly_grass', 'fort_walls', 'agent_boost', 'csgo_mines', 'nano_orbit'];
-  const streamWrap = h('div', { class: 'fill' });
-  const stream = FLOW.map((id, i) => {
-    const depth = [1, 0.7, 0.85, 1.1, 0.75, 0.95, 0.65, 1.05, 0.8, 0.9, 1.15, 0.7, 0.95, 0.8][i];
-    const c = card(id, 420 * depth, 236 * depth, 22 * depth);
-    streamWrap.append(c.el);
-    return { ...c, depth, u0: 0.35 - i * 0.075, side: (i % 2 ? 1 : -1) * (120 + (i * 53) % 160), rot: ((i * 37) % 20) - 10 };
-  });
-  const labels = ['Launch films', 'Product demos', 'UI animation', 'Explainers'];
-  const labelBox = h('div', { class: 'center', style: { width: '0', height: '0' } });
-  const labelEls = labels.map(l => {
-    const e = h('div', { class: 'abs', style: { left: '0', top: '0', transform: 'translate(-50%,-50%)', whiteSpace: 'nowrap', font: '600 92px/1 Poppins', letterSpacing: '-0.035em', color: '#16161d',
-      padding: '18px 40px', borderRadius: '999px', background: 'rgba(255,255,255,.82)', boxShadow: '0 10px 40px rgba(20,20,40,.10)' } }, l);
-    labelBox.append(e); return e;
+  const stage = h('div', { class: 'center', style: { width: '0', height: '0', perspective: '1800px' } });
+  const CW = 1280, CH = 720;
+  const cards = WORK.map(w => {
+    const c = clip(w.id);
+    const el = h('div', { class: 'abs', style: { width: `${CW}px`, height: `${CH}px`, left: `${-CW / 2}px`, top: `${-CH / 2 - 40}px`, borderRadius: '34px', overflow: 'hidden',
+      background: '#111', boxShadow: '0 0 0 8px #fff, 0 50px 120px rgba(20,20,40,.28), 0 10px 30px rgba(20,20,40,.14)' } }, c.el);
+    const sheen = h('div', { class: 'fill', style: { background: 'linear-gradient(115deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.28) 48%, rgba(255,255,255,0) 56%)', backgroundSize: '260% 100%', mixBlendMode: 'screen' } });
+    el.append(sheen);
+    stage.append(el);
+    return { ...w, el, c, sheen };
   });
 
-  root.append(left, right, stackWrap, streamWrap, labelBox);
-
-  scene('s5', 14.0, 18.05, (lt, t) => {
-    // ---------- A ----------
-    const aOn = t < 16.1;
-    stackWrap.style.display = left.style.display = right.style.display = aOn ? 'block' : 'none';
-    if (aOn) {
-      blurIn(lw, t, 14.02, { stagger: 0.025, dur: 0.45, blur: 18, dx: -30 });
-      blurIn(rw, t, 14.12, { stagger: 0.025, dur: 0.45, blur: 18, dx: 30 });
-      const push = kf(t, [[14.0, 0], [15.95, 0], [16.1, 1, E.inCubic]]);
-      set(left, { x: -push * 500, blur: push * 20 });
-      set(right, { x: push * 500, blur: push * 20 });
-      left.style.opacity = right.style.opacity = (1 - push).toFixed(3);
-      stack.forEach((s, i) => {
-        const k = P(t, s.at, s.at + 0.32, E.outExpo);
-        const seen = t >= s.at - 0.02;
-        s.el.style.display = seen ? 'block' : 'none';
-        if (!seen) return;
-        const under = stack.filter(o => t >= o.at).length - 1 - i; // how many cards landed on top
-        const sink = clamp(under, 0, 4);
-        set(s.el, {
-          o: P(t, s.at - 0.02, s.at + 0.08),
-          y: mix(420, 0, k) + sink * -10, x: sink * (i % 2 ? 14 : -14),
-          s: mix(1.25, 1, k) * (1 - sink * 0.04), r: mix(s.rot * 2.2, s.rot * (sink ? 1 : 0.35), k),
-          blur: mix(8, 0, k) + sink * 0.6,
-        });
-        s.c.seek(t - s.at);
-      });
-      set(stackWrap, { s: kf(t, [[14.0, 0.9], [14.5, 1, E.outCubic], [15.95, 1.04], [16.1, 1.5, E.inCubic]]), o: 1 - P(t, 15.98, 16.1) });
-    }
-
-    // ---------- B ----------
-    const bOn = t > 15.92;
-    streamWrap.style.display = labelBox.style.display = bOn ? 'block' : 'none';
-    if (bOn) {
-      const speed = kf(t, [[15.92, 2.2], [16.35, 0.42, E.outCubic], [17.6, 0.5], [18.05, 2.0, E.inCubic]]);
-      // integrate speed analytically enough: piecewise sum
-      const travel = flowTravel(t);
-      stream.forEach(s => {
-        const u = s.u0 + travel;
-        if (u < -0.2 || u > 1.25) { s.el.style.display = 'none'; return; }
-        s.el.style.display = 'block';
-        // gentle S-curve from bottom-left to top-right
-        const x = mix(-250, 2170, u), y = mix(1250, -170, u) + Math.sin(u * Math.PI * 1.4) * 140;
-        const nx = 0.53, ny = 0.85; // perpendicular-ish offset
-        set(s.el, { x: x + s.side * nx, y: y + s.side * ny, s: s.depth, r: s.rot + (u - 0.5) * 10,
-          blur: Math.max(0, (1 - s.depth) * 6) + speed * 2.2, o: 1 });
-        s.el.style.zIndex = Math.round(s.depth * 10);
-        s.c.seek(t - 15.9);
-      });
-      labelEls.forEach((e, i) => {
-        const a = 16.12 + i * 0.45, last = i === labels.length - 1;
-        const kin = P(t, a, a + 0.3, E.outExpo), kout = last ? P(t, 17.82, 18.02, E.inCubic) : P(t, a + 0.45, a + 0.6, E.inCubic);
-        e.style.opacity = (kin * (1 - kout)).toFixed(3);
-        e.style.filter = `blur(${((1 - kin) * 16 + kout * 16).toFixed(2)}px)`;
-        e.style.transform = `translate(-50%,-50%) translateY(${(mix(50, 0, kin) - kout * 50).toFixed(1)}px) scale(${mix(0.9, 1, kin)})`;
-      });
-      labelBox.style.zIndex = 9;
-    }
+  // caption under the card
+  const caps = WORK.map(w => {
+    const box = h('div', { class: 'abs', style: { left: '0', right: '0', top: '900px', textAlign: 'center', whiteSpace: 'nowrap' } });
+    const name = h('div', { style: { font: '700 68px/1.05 Poppins', color: '#16161d', letterSpacing: '-0.035em' } }, w.name);
+    const kind = h('div', { style: { font: '500 32px/1.3 Poppins', color: '#6c6c78', marginTop: '6px' } }, w.kind);
+    box.append(name, kind);
+    return { box, nameS: split(name, 'chars'), kind };
   });
 
-  // distance travelled along the stream by time t (speed curve integrated numerically)
-  function flowTravel(t) {
-    let d = 0;
-    for (let x = 15.92; x < t; x += 1 / 120) {
-      const sp = kf(x, [[15.92, 2.2], [16.35, 0.42, E.outCubic], [17.6, 0.5], [18.05, 2.0, E.inCubic]]);
-      d += sp / 120;
-    }
-    return d * 0.55;
-  }
+  root.append(glow, stage, header, counter, ...caps.map(c => c.box));
+
+  scene('s5', 15.98, 25.05, (lt, t) => {
+    // fade up from the designer scene's white flash
+    root.style.opacity = '1';
+    const enter = P(t, 15.98, 16.4, E.outCubic);
+    const f = (t - T0) / STEP;                         // which project we are on (fractional)
+    const idx = clamp(Math.floor(f), 0, WORK.length - 1);
+    const cur = WORK[idx];
+    glow.style.background = `radial-gradient(55% 60% at 50% 45%, ${cur.tint}33, rgba(243,243,246,0) 70%)`;
+    set(header, { o: P(t, 16.05, 16.4), x: mix(-30, 0, P(t, 16.05, 16.5, E.outCubic)) });
+    set(counter, { o: P(t, 16.1, 16.45) });
+    cNow.textContent = String(idx + 1).padStart(2, '0');
+
+    // carousel position: g counts how many projects have been dealt (eased between steps)
+    let g = 0;
+    for (let k = 1; k < WORK.length; k++) g += P(t, T0 + k * STEP - SLIDE, T0 + k * STEP, E.outExpo);
+    const exitAll = P(t, 24.55, 25.05, E.inCubic);
+    cards.forEach((c, i) => {
+      const pos = i - g;                     // 0 = centre, -1 = parked left, +1 = waiting right
+      const a = Math.abs(pos);
+      if (a > 1.6) { c.el.style.display = 'none'; return; }
+      c.el.style.display = 'block';
+      const first = i === 0 ? enter : 1;
+      set(c.el, { x: pos * 1180, y: (i === 0 ? mix(260, 0, enter) : 0) - exitAll * 80,
+        s: mix(1, 0.62, Math.min(1, a)) * (1 - exitAll * 0.1) * (i === 0 ? mix(0.85, 1, enter) : 1), ry: -pos * 28, persp: 1800,
+        o: (1 - clamp(a - 1, 0, 0.5) * 2) * (i === 1 ? enter : first) * (1 - exitAll), blur: Math.min(1, a) * 6 + exitAll * 10 });
+      c.el.style.zIndex = String(100 - Math.round(a * 10));
+      const start = T0 + i * STEP;
+      c.sheen.style.backgroundPosition = `${kf(t, [[start - 0.05, 130], [start + 0.6, -30, E.inOutCubic]])}% 0`;
+      c.c.seek(Math.max(0, t - (start - SLIDE)));
+    });
+
+    caps.forEach((cp, i) => {
+      const start = T0 + i * STEP;
+      const on = t > start - SLIDE * 0.6 && t < start + STEP - SLIDE * 0.4;
+      cp.box.style.display = on ? 'block' : 'none';
+      if (!on) return;
+      blurIn(cp.nameS, t, start - SLIDE * 0.5, { stagger: 0.018, dur: 0.4, blur: 16, dy: 30 });
+      const kk = P(t, start - 0.1, start + 0.3, E.outCubic);
+      set(cp.kind, { o: kk, y: mix(14, 0, kk) });
+      cp.box.style.opacity = (1 - P(t, start + STEP - SLIDE - 0.1, start + STEP - SLIDE * 0.4)).toFixed(3);
+    });
+  });
 })();

@@ -1,12 +1,31 @@
 // S1 · Glass hook (0–4s)
-// Violet frost -> fluted glass melts away to a dusk sky -> a liquid-glass prompt pill
-// rises with a neon orbit behind it, types the hook, then swallows the screen.
+// Violet frost -> fluted glass melts and clouds part to reveal a mountain meadow (as in
+// reference 5) -> a liquid-glass prompt pill rises with a neon orbit behind it, types
+// the hook, answers, then swallows the screen.
 (() => {
   const { h, P, E, mix, kf, set, split, typeIn, blurIn, blurOut, scene, clamp } = window.V;
-  const { skyBg, icon } = window.K;
+  const { icon } = window.K;
   const root = document.getElementById('s1');
 
+  // the meadow photo is laid out like background-size: cover (2560x1707 -> 1920x1280)
+  const IMG = 'assets/bg/meadow.jpg', IW = 1920, IH = 1280, IY = -100;
+  const photoBg = (zoom, sq, cx, ex) => {
+    // horizontal squeeze sq about cx (for the glass ribs), uniform zoom about the frame centre
+    const w = IW * zoom * sq, hgt = IH * zoom;
+    const x = cx + (960 + (0 - 960) * zoom - cx) * sq - ex; // image left edge, squeezed about cx
+    const y = 540 + (IY - 540) * zoom;
+    return { backgroundImage: `url(${IMG})`, backgroundRepeat: 'no-repeat', backgroundSize: `${w.toFixed(1)}px ${hgt.toFixed(1)}px`, backgroundPosition: `${x.toFixed(1)}px ${y.toFixed(1)}px` };
+  };
   const sky = h('div', { class: 'fill' });
+  const veilViolet = h('div', { class: 'fill', style: { background: 'linear-gradient(180deg, #5b4bff 0%, #8a7bff 55%, #c3b6ff 100%)' } });
+  // cloud banks the camera pushes through
+  const CLOUDS = [[260, 260, 1500, 900], [1640, 240, 1500, 900], [960, 820, 2200, 900], [120, 880, 1300, 800], [1800, 860, 1300, 800], [960, 420, 1500, 900], [600, 560, 1200, 700], [1340, 600, 1200, 700]];
+  const cloudBox = h('div', { class: 'fill' });
+  const clouds = CLOUDS.map(([x, y, w, hh]) => {
+    const e = h('div', { class: 'abs', style: { left: `${x - w / 2}px`, top: `${y - hh / 2}px`, width: `${w}px`, height: `${hh}px`, borderRadius: '50%',
+      background: 'radial-gradient(closest-side, rgba(255,255,255,.82), rgba(250,248,255,.55) 50%, rgba(255,255,255,0))', filter: 'blur(36px)' } });
+    cloudBox.append(e); return { e, x, y };
+  });
   // fluted glass: vertical ribs, each showing a horizontally squeezed copy of the sky
   const RIBS = 16, RW = 1920 / RIBS;
   const flutes = h('div', { class: 'fill' });
@@ -39,7 +58,7 @@
   const pill = h('div', { class: 'center', style: {
     width: `${PW}px`, height: `${PH}px`, marginLeft: `${-PW / 2}px`, marginTop: `${-PH / 2}px`, borderRadius: `${PH / 2}px`,
     backdropFilter: 'blur(18px) saturate(1.6) brightness(1.06)', WebkitBackdropFilter: 'blur(18px) saturate(1.6) brightness(1.06)',
-    background: 'linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.10) 55%, rgba(255,255,255,.18))',
+    background: 'linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,.06) 55%, rgba(255,255,255,.14)), rgba(20,30,60,.16)',
     boxShadow: 'inset 0 1.5px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(255,255,255,.45), inset 0 0 0 1.5px rgba(255,255,255,.45), inset 0 0 26px rgba(255,255,255,.35), 0 30px 80px rgba(40,10,120,.28), 0 6px 18px rgba(40,10,120,.12)',
     overflow: 'hidden' } });
   const rim = h('div', { class: 'fill', style: {
@@ -53,7 +72,7 @@
   const sendBtn = h('div', { class: 'abs', style: { right: '26px', top: '33px', width: '90px', height: '90px', borderRadius: '50%',
     background: '#c8ff00', color: '#141a00', padding: '24px', boxShadow: '0 8px 24px rgba(160,210,0,.45), inset 0 1px 0 rgba(255,255,255,.7)' }, html: icon.arrowUp });
   const textStyle = { left: '150px', top: '0', height: `${PH}px`, font: `500 50px/${PH}px Poppins`, color: '#fff',
-    whiteSpace: 'nowrap', textShadow: '0 2px 16px rgba(50,15,150,.35)', letterSpacing: '-0.01em' };
+    whiteSpace: 'nowrap', textShadow: '0 2px 18px rgba(10,20,50,.45)', letterSpacing: '-0.01em' };
   const text = h('div', { class: 'abs', style: textStyle }, 'Need a video that stops the scroll?');
   const caret = h('span', { style: { display: 'inline-block', width: '3px', height: '54px', background: '#fff', marginLeft: '5px', borderRadius: '2px', verticalAlign: 'middle' } });
   const chars = split(text, 'chars');
@@ -70,7 +89,7 @@
   pill.append(rim, sheen, plusBtn, text, reply, sendBtn, fog);
 
   const vignette = h('div', { class: 'fill', style: { background: 'radial-gradient(120% 90% at 50% 45%, rgba(0,0,0,0) 55%, rgba(30,10,90,.28) 100%)' } });
-  const cam = h('div', { class: 'fill' }, sky, flutes, glint, orbitWrap, vignette, pill);
+  const cam = h('div', { class: 'fill' }, sky, flutes, veilViolet, cloudBox, glint, orbitWrap, vignette, pill);
   root.append(cam);
 
   const TYPE_AT = 1.38, CPS = 30;
@@ -81,24 +100,30 @@
     set(cam, { s: camS });
 
     // fluted glass melts: ribs stop squeezing, shading fades, then they are removed
-    const melt = P(t, 0.25, 1.45, E.inOutQuart);
-    const squeeze = mix(0.22, 1, melt);
-    const drift = t;
+    const melt = P(t, 0.3, 1.5, E.inOutQuart);
+    const zoom = kf(t, [[0, 1.22], [1.7, 1.04, E.outCubic], [3.86, 1.0, E.lin]]);
     if (melt < 1) {
       flutes.style.display = 'block'; sky.style.display = 'none';
       ribs.forEach(({ rib, shade, cx }, i) => {
         const local = clamp(melt * 1.25 - (Math.abs(i - RIBS / 2) / RIBS) * 0.25);
-        const sq = mix(0.22, 1, E.inOutCubic(local));
-        rib.style.background = skyBg(drift, { cx, mx: sq, my: mix(1.08, 1, local), ex: cx - RW / 2 });
+        const sq = mix(0.25, 1, E.inOutCubic(local));
+        Object.assign(rib.style, photoBg(zoom * mix(1.06, 1, local), sq, cx, cx - RW / 2));
         shade.style.opacity = (1 - E.outCubic(local)).toFixed(3);
       });
     } else {
       flutes.style.display = 'none'; sky.style.display = 'block';
-      sky.style.background = skyBg(drift);
+      Object.assign(sky.style, photoBg(zoom, 1, 960, 0));
     }
-    // violet frost veil at the very start (the reference's flat violet open)
-    const veil = 1 - P(t, 0.05, 0.9, E.inOutCubic);
-    flutes.style.filter = veil > 0.01 ? `saturate(${1 + veil * 0.4}) brightness(${1 - veil * 0.12})` : 'none';
+    // flat violet open (reference 5) that dissolves into the clouds
+    veilViolet.style.opacity = (1 - P(t, 0.0, 0.85, E.inOutCubic)).toFixed(3);
+    flutes.style.filter = `blur(${(kf(t, [[0, 6], [1.2, 0, E.outCubic]])).toFixed(2)}px) saturate(1.12)`;
+    sky.style.filter = 'saturate(1.12) contrast(1.03)';
+    clouds.forEach((c, i) => {
+      const k = P(t, 0.15 + i * 0.05, 1.45 + i * 0.04, E.inOutCubic);
+      const dx = (c.x - 960) * k * 1.4, dy = (c.y - 540) * k * 1.2;
+      set(c.e, { x: dx, y: dy, s: 1 + k * 1.6, o: 1 - k });
+    });
+    cloudBox.style.display = t < 1.8 ? 'block' : 'none';
     glint.style.backgroundPosition = `${kf(t, [[0.1, 140], [1.25, -60, E.inOutCubic]])}% 0`;
     glint.style.opacity = (P(t, 0.1, 0.3) * (1 - P(t, 1.1, 1.4))).toFixed(3);
 

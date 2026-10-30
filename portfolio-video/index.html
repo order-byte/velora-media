@@ -13,6 +13,7 @@
   <div class="scene" id="s2"></div>
   <div class="scene" id="s3"></div>
   <div class="scene" id="s4"></div>
+  <div class="scene" id="s10"></div>
   <div class="scene" id="s5"></div>
   <div class="scene" id="s6"></div>
   <div class="scene" id="s7"></div>
@@ -31,12 +32,15 @@
 <script src="js/s4-gradient.js"></script>
 <script src="js/s5-showcase.js"></script>
 <script src="js/s6-grid.js"></script>
+<script>V.at(6);</script>
 <script src="js/s7-marquee.js"></script>
 <script src="js/s8-profile.js"></script>
 <script src="js/s9-logo.js"></script>
+<script>V.at(0);</script>
+<script src="js/s10-designer.js"></script>
 <script>
-  window.__duration = 30;
-  Promise.all([document.fonts.ready, ...['400','500','600','700'].map(w => document.fonts.load(`${w} 40px Poppins`)), document.fonts.load('600 40px Manrope'), ...[...document.images].map(i => i.decode().catch(() => {}))])
+  window.__duration = 36;
+  Promise.all([document.fonts.ready, ...['400','500','600','700'].map(w => document.fonts.load(`${w} 40px Poppins`)), document.fonts.load('600 40px Manrope'), document.fonts.load('400 40px Anton'), ...['assets/bg/meadow.jpg', 'assets/grain.png', ...Object.keys(window.CLIPS).map(id => `assets/work/thumbs/${id}.jpg`)].map(src => { const i = new Image(); i.src = src; return i.decode().catch(() => {}); }), ...[...document.images].map(i => i.decode().catch(() => {}))])
     .then(() => { window.__seek(Number(new URLSearchParams(location.search).get('t') || 0)); window.__ready = true; });
 </script>
 </body>

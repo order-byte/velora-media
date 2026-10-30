@@ -1,7 +1,8 @@
-"""Original soundtrack for the showreel: a 120 BPM electronic track with an immediate
-hook, plus sound design cued to the picture (whooshes on transitions, pops on bubbles
-and stickers, key clicks while text types, taps, counter ticks, impacts), in the way
-the reference videos use them. Everything is synthesised here, so it is license-free.
+"""Soundtrack for the showreel: an original 120 BPM electronic track with an immediate
+hook (synthesised here), plus recorded sound effects from Mixkit's free library
+(tools/fetch_sfx.py) cued to the picture the way the reference videos use them:
+whooshes on every transition, pops on bubbles and stickers, real keystrokes while text
+types, taps, counter ticks, impacts on the drops. The music ducks under the effects.
 
 writes out/audio/mix.wav, music.wav, sfx.wav (48 kHz stereo) and mix.m4a
 """
@@ -11,7 +12,7 @@ from scipy import signal
 import soundfile as sf
 
 SR = 48000
-DUR = 30.6
+DUR = 36.6
 N = int(SR * DUR)
 BPM = 120
 BEAT = 60 / BPM
@@ -283,8 +284,8 @@ HOOK = [  # per chord: (16th step, midi, length in steps)
     [(0, 79, 2), (2, 77, 1), (3, 76, 2), (6, 74, 4), (10, 71, 2), (12, 74, 2), (14, 76, 2)],
 ]
 # energy per bar (2 s each): what plays where
-#            0   1    2    3    4     5    6    7    8    9    10   11   12    13   14
-SECTION = ['intro', 'build', 'drop', 'drop', 'break', 'drop', 'drop', 'drop', 'drop', 'drop2', 'drop2', 'build2', 'half', 'final', 'outro']
+#  bar:  0 hook  1      2-3 chat      4 prompt 5 title  6-7 designer   8-12 showcase                          13 grid  14 services 15 profile 16 logo  17
+SECTION = ['intro', 'build', 'drop', 'drop', 'break', 'build3', 'drop2', 'drop2', 'drop', 'drop', 'drop', 'drop', 'drop', 'drop2', 'build2', 'half', 'final', 'outro']
 kick_times = []
 
 for b, sec in enumerate(SECTION):
@@ -322,6 +323,15 @@ for b, sec in enumerate(SECTION):
     if sec == 'build2':
         for s in range(8, 16):
             place(drums, snare(0.4 + 0.06 * (s - 8)), t0 + s * STEP, 1.0)
+    if sec == 'build3':
+        for q in range(4):
+            place(drums, kick(), t0 + q * BEAT, 0.9); kick_times.append(t0 + q * BEAT)
+        for s in range(16):
+            place(drums, hat(), t0 + s * STEP, 0.3 + 0.015 * s)
+        for s in range(4, 16):
+            place(drums, snare(0.3 + 0.05 * (s - 4)), t0 + s * STEP, 1.0)
+        for s in range(12, 16):
+            place(drums, snare(0.9), t0 + s * STEP + STEP / 2, 1.0)
     if sec == 'intro':
         # punchy from the first frame: half-time kick, clap on 3, 8th hats
         for q in (0, 2):
@@ -339,7 +349,7 @@ for b, sec in enumerate(SECTION):
         for s in pattern:
             m = root if s % 4 else root
             place(music, bass_note(m - 12 + 12, STEP * 1.6), t0 + s * STEP, 0.55)
-    if sec in ('break', 'intro', 'build'):
+    if sec in ('break', 'intro', 'build', 'build3'):
         place(music, bass_note(root, BAR * 0.95, 300), t0, 0.3 if sec == 'break' else 0.16)
 
     # --- chords
@@ -347,12 +357,12 @@ for b, sec in enumerate(SECTION):
         for s in (0, 3, 6, 10, 12) if sec != 'final' else (0, 3, 6, 8, 10, 12, 14):
             for m in tones:
                 place(music, supersaw(m, STEP * 1.2, 3600, release=0.12), t0 + s * STEP, 0.10)
-    if sec in ('intro', 'build', 'break', 'half', 'outro'):
+    if sec in ('intro', 'build', 'break', 'half', 'outro', 'build3'):
         for m in tones:
             place(music, supersaw(m, BAR * (0.98 if sec != 'outro' else 1.3), 1400 if sec != 'half' else 2200, attack=0.25, release=0.9), t0, 0.075)
 
     # --- lead hook (bright pluck), an octave up in drop2/final
-    if sec in ('intro', 'build', 'drop', 'drop2', 'final', 'half', 'build2'):
+    if sec in ('intro', 'build', 'drop', 'drop2', 'final', 'half', 'build2', 'build3'):
         up = 12 if sec in ('drop2', 'final') else 0
         bright = {'intro': 0.85, 'build': 0.9, 'half': 0.6}.get(sec, 1.0)
         for s, m, L in HOOK[b % 4]:
@@ -370,11 +380,12 @@ for b, sec in enumerate(SECTION):
 # risers / impacts that belong to the music
 place(fx_bus, riser(1.6), 2.4, 0.5)
 place(fx_bus, reverse_cymbal(1.0), 3.0, 0.6)
-place(fx_bus, riser(1.8), 8.2, 0.55)
-place(fx_bus, reverse_cymbal(0.8), 9.2, 0.6)
-place(fx_bus, riser(1.6), 22.4, 0.45)
-place(fx_bus, reverse_cymbal(0.8), 25.2, 0.5)
-for t_imp, g in [(0.0, 0.8), (4.0, 0.7), (10.0, 0.85), (26.0, 1.0)]:
+place(fx_bus, riser(1.8), 8.2, 0.4)
+place(fx_bus, riser(1.9), 10.1, 0.6)
+place(fx_bus, reverse_cymbal(1.0), 11.0, 0.7)
+place(fx_bus, riser(1.5), 28.5, 0.45)
+place(fx_bus, reverse_cymbal(0.8), 31.2, 0.5)
+for t_imp, g in [(0.0, 0.8), (4.0, 0.7), (12.0, 1.0), (16.0, 0.6), (32.0, 1.0)]:
     place(fx_bus, impact(g), t_imp, 0.6)
 
 # sidechain: duck bass/chords under each kick
@@ -398,104 +409,144 @@ music_mix += reverb(lead_bus + music * 0.5 + drums * 0.12, IR_HALL, 0.22)
 
 # outro fade
 fade = np.ones(N)
-fs, fe = int(28.2 * SR), int(30.4 * SR)
+fs, fe = int(34.2 * SR), int(36.4 * SR)
 fade[fs:fe] = np.linspace(1, 0, fe - fs) ** 1.5
 fade[fe:] = 0
 music_mix *= fade
 
 # ------------------------------------------------------------------ sfx cues (times match the scene scripts)
+SFX_DIR = os.path.join(os.path.dirname(OUT), '..', 'assets', 'sfx')
+_cache = {}
+
+
+def load(name):
+    if name not in _cache:
+        x, sr = sf.read(os.path.join(SFX_DIR, f'{name}.wav'), always_2d=True)
+        x = x.T
+        if sr != SR:
+            x = signal.resample_poly(x, SR, sr, axis=1)
+        x = x / (np.abs(x).max() + 1e-9) * 0.9
+        env = np.sqrt(np.convolve(x.mean(0) ** 2, np.ones(240) / 240, 'same'))
+        _cache[name] = (x, int(env.argmax()))
+    return _cache[name]
+
+
 sfx = buf()
 
 
-def typing(start, nchars, cps, gain=0.5, every=1):
+def hit(name, t, gain=1.0, pan=0.0, align='peak', rate=1.0, maxlen=None):
+    """place a recorded effect so that its loudest moment lands on t (or its start, align='start')."""
+    x, pk = load(name)
+    if rate != 1.0:
+        x = signal.resample(x, int(x.shape[1] / rate), axis=1); pk = int(pk / rate)
+    if maxlen:
+        n = int(maxlen * SR); x = x[:, :n].copy(); fl = min(n, int(0.08 * SR)); x[:, -fl:] *= np.linspace(1, 0, fl)
+    if pan:
+        l, r = np.cos((pan + 1) * np.pi / 4) * 1.414, np.sin((pan + 1) * np.pi / 4) * 1.414
+        x = np.vstack([x[0] * l, x[1] * r])
+    place(sfx, x, t - (pk / SR if align == 'peak' else 0), gain)
+
+
+KEYS = np.load(os.path.join(SFX_DIR, 'keys.npy'))
+
+
+def typing(start, nchars, cps, gain=0.55, every=1):
     for i in range(0, nchars, every):
-        place(sfx, keyclick(gain), start + i / cps + rng.uniform(-0.004, 0.004), 1.0, pan=rng.uniform(-0.25, 0.25))
+        k = KEYS[rng.integers(len(KEYS))].T
+        place(sfx, k, start + i / cps + rng.uniform(-0.006, 0.006), gain * rng.uniform(0.7, 1.0))
 
 
-# S1 glass hook
-place(sfx, shimmer(1.8, 1.2), 0.0, 1.0)
-place(sfx, whoosh(1.3, 200, 1800, 0.55), 0.2, 1.0)
-place(sfx, swoosh(1.0), 0.9, 1.0)
-place(sfx, pop(380, 900, 0.5), 1.18, 1.0, pan=-0.4)
-place(sfx, pop(480, 1200, 0.5), 1.28, 1.0, pan=0.4)
-typing(1.38, 35, 30, 0.5)
-place(sfx, tap(1.0), 2.6, 1.0, pan=0.35)
-place(sfx, swoosh(0.9), 2.84, 1.0)
-place(sfx, whoosh(0.62, 200, 4200, 1.0), 3.28, 1.0)
+WH = ['sweep_small', 'swoosh_fast', 'sweep_short', 'sweep_air', 'whoosh_fast']
+
+# S1 glass hook: violet frost, clouds part, fluted glass melts, pill rises and types
+hit('sparkle_whoosh', 0.0, 0.55, align='start')
+hit('swoosh_windy', 0.95, 0.75)
+hit('whoosh_air', 1.05, 0.6)
+hit('sweep_small', 1.2, 0.75)
+hit('pop_explainer', 1.2, 0.55, pan=-0.4)
+hit('click_bubble', 1.3, 0.55, pan=0.4)
+typing(1.38, 35, 30, 0.6)
+hit('click_classic', 2.6, 0.8, pan=0.3)
+hit('swoosh_fast', 2.95, 0.7)
+hit('whoosh_cine', 3.8, 0.95)
 # S2 chat
-for bt, sk in [(3.84, 4.78), (4.82, None), (5.82, 6.5), (6.72, None)]:
-    place(sfx, pop(360, 980, 0.9), bt, 1.0, pan=-0.3)
+for bt, sk in [(3.84, 4.78), (4.80, None), (5.80, 6.5), (6.70, None)]:
+    hit('pop_bubble' if bt != 5.80 else 'pop_dry', bt + 0.05, 0.85, pan=-0.3 if bt != 5.80 else 0.3)
     if sk:
-        place(sfx, pop(600, 1500, 0.8), sk, 1.0, pan=0.3)
-        place(sfx, chime((96, 103), 0.05, 0.35), sk + 0.02, 1.0)
-typing(3.94, 33, 46, 0.38, 2)
-typing(4.92, 43, 56, 0.38, 2)
-typing(5.92, 22, 40, 0.38, 2)
-typing(6.82, 13, 30, 0.38)
-place(sfx, whoosh(0.5, 300, 2500, 0.8), 7.55, 1.0)
+        hit('pop_long', sk + 0.05, 0.7, pan=0.3)
+        hit('alert_tech', sk + 0.08, 0.25)
+typing(3.94, 33, 46, 0.42, 2)
+typing(4.92, 43, 56, 0.42, 2)
+typing(5.92, 22, 40, 0.42, 2)
+typing(6.82, 13, 30, 0.42)
+hit('whoosh_fast', 7.95, 0.9)
 # S3 prompt
-place(sfx, swoosh(0.8), 7.92, 1.0)
-typing(8.32, 36, 34, 0.5)
-place(sfx, tap(1.1), 9.29, 1.0, pan=0.4)
-place(sfx, pop(250, 700, 0.7), 9.36, 1.0, pan=0.4)
-place(sfx, whoosh(0.4, 400, 6000, 0.9), 9.66, 1.0)
-# S4 gradient
-place(sfx, swoosh(0.9), 10.16, 1.0)
-place(sfx, whoosh(0.5, 250, 3000, 0.85), 11.48, 1.0)
-place(sfx, pop(300, 900, 1.0), 11.9, 1.0)
-place(sfx, swoosh(0.8), 12.02, 1.0)
-place(sfx, whoosh(0.35, 500, 5000, 0.85), 12.82, 1.0)
-for i in range(5):
-    place(sfx, tick(0.9, 2600 + i * 180), 13.08 + i * 0.19, 1.0)
-# S5 showcase
-place(sfx, swoosh(0.7), 14.02, 1.0)
-for i in range(7):
-    place(sfx, flick(0.9), 14.18 + i * 0.25, 1.0, pan=(-0.3 if i % 2 else 0.3))
-place(sfx, whoosh(0.55, 200, 3500, 1.0), 15.9, 1.0)
-for i in range(4):
-    place(sfx, swoosh(0.55), 16.12 + i * 0.45, 1.0)
-place(sfx, whoosh(0.4, 400, 5000, 0.9), 17.75, 1.0)
+hit('swoosh_accent', 8.05, 0.7)
+typing(8.32, 36, 34, 0.6)
+hit('click_mouse', 9.33, 0.85, pan=0.4)
+hit('pop_message', 9.38, 0.6, pan=0.4)
+hit('vacuum_zoom', 9.98, 0.85)
+# S4 title
+hit('swoosh_fast', 10.3, 0.75)
+hit('whoosh_air', 11.9, 0.8)
+# S10 motion designer (the drop)
+hit('impact_deep', 12.0, 1.0)
+hit('impact_zoom', 12.06, 0.75)
+hit('whoosh_fast', 12.45, 0.8)
+hit('sweep_fast', 12.75, 0.75)
+for i, tt in enumerate([12.9, 12.98, 13.06]):
+    hit('pop_hard', tt, 0.7, pan=[-0.6, 0.6, 0.7][i], rate=[1.0, 1.12, 1.25][i])
+hit('fairy_whoosh', 13.3, 0.45)
+hit('whoosh_cine', 16.0, 0.95)
+# S5 selected work carousel
+hit('sweep_air', 16.25, 0.75)
+for k in range(1, 6):
+    start = 16.0 + k * 1.5
+    hit(WH[k % len(WH)], start - 0.36, 0.9, pan=0.25)
+    hit('click_tone', start - 0.2, 0.45)
+hit('whoosh_air', 24.95, 0.8)
 # S6 grid
 for i in range(4):
-    place(sfx, whoosh(0.35, 400, 4000, 0.55), 18.0 + i * 0.06, 1.0, pan=[-0.6, 0.6, -0.4, 0.4][i])
+    hit('swoosh_fast', 25.12 + i * 0.06, 0.55, pan=[-0.6, 0.6, -0.4, 0.4][i])
 for i in range(4):
-    place(sfx, pop(500, 1300, 0.35), 18.55 + i * 0.08, 1.0, pan=[-0.5, 0.5, -0.5, 0.5][i])
+    hit('pop_explainer', 25.6 + i * 0.08, 0.35, pan=[-0.5, 0.5, -0.5, 0.5][i])
+hit('sweep_short', 26.55, 0.7)
 for i in range(4):
-    place(sfx, flick(0.8), 20.0 + i * 0.07, 1.0, pan=[-0.5, 0.5, -0.5, 0.5][i])
-place(sfx, whoosh(0.4, 300, 3000, 0.6), 20.0, 1.0)
-place(sfx, whoosh(0.62, 150, 3000, 1.0), 21.44, 1.0)
-# S7 services
-place(sfx, whoosh(0.4, 300, 5000, 0.9), 21.95, 1.0)
-place(sfx, pop(260, 800, 0.9), 22.38, 1.0)
+    hit('click_tone', 26.45 + i * 0.07, 0.35, pan=[-0.5, 0.5, -0.5, 0.5][i])
+hit('whoosh_cine', 27.95, 0.9)
+# S7 services + counter
+hit('whoosh_fast', 28.1, 0.75)
+hit('pop_hard', 28.42, 0.7)
 prev = -1
 for k in range(400):
-    tt = 22.45 + k * 0.002
-    v = int(1000 * (1 - 2 ** (-10 * min(1, (tt - 22.45) / 0.8))))
+    tt = 28.45 + k * 0.002
+    v = int(1000 * (1 - 2 ** (-10 * min(1, (tt - 28.45) / 0.8))))
     if v // 50 != prev:
         prev = v // 50
-        place(sfx, tick(0.45, 3800), tt, 1.0)
-place(sfx, chime((88, 95), 0.06, 0.9), 23.2, 1.0)
-place(sfx, whoosh(0.45, 300, 4500, 0.9), 23.62, 1.0)
+        hit('click_tone', tt, 0.3, rate=1.3)
+hit('beep_positive', 29.25, 0.6)
+hit('whoosh_fast', 30.0, 0.8)
 # S8 profile
-place(sfx, shimmer(1.4, 0.8), 24.0, 1.0)
-place(sfx, swoosh(0.8), 24.05, 1.0)
-place(sfx, pop(350, 1000, 0.7), 24.25, 1.0)
-place(sfx, swoosh(0.5), 24.9, 1.0)
-place(sfx, tap(1.1), 25.3, 1.0, pan=-0.2)
-place(sfx, chime((91, 98), 0.07, 0.8), 25.34, 1.0)
-place(sfx, whoosh(0.4, 300, 4000, 0.8), 25.72, 1.0)
+hit('sparkle_whoosh', 30.0, 0.35, align='start')
+hit('sweep_air', 30.3, 0.6)
+hit('pop_long', 30.3, 0.6)
+hit('swoosh_accent', 30.95, 0.5)
+hit('click_mouse', 31.33, 0.85, pan=-0.2)
+hit('notify_positive', 31.36, 0.45, maxlen=0.6)
+hit('whoosh_fast', 31.98, 0.8)
 # S9 logo
-place(sfx, shimmer(2.2, 1.1), 26.0, 1.0)
-place(sfx, pop(260, 760, 1.0), 26.1, 1.0)
-place(sfx, swoosh(0.7), 26.3, 1.0)
-place(sfx, swoosh(0.5), 27.0, 1.0)
-place(sfx, pop(420, 1100, 0.7), 27.55, 1.0)
+hit('impact_deep', 32.0, 0.9)
+hit('sparkle_whoosh', 32.05, 0.5, align='start')
+hit('pop_hard', 32.15, 0.7)
+hit('swoosh_fast', 32.45, 0.6)
+hit('swoosh_accent', 33.05, 0.45)
+hit('pop_bubble', 33.6, 0.6)
 
-sfx_mix = sfx + reverb(sfx, IR_ROOM, 0.18)
+sfx_mix = sfx + reverb(sfx, IR_ROOM, 0.08)
 
 
 # ------------------------------------------------------------------ master
-def limiter(x, ceiling=0.89):
+def limiter(x, ceiling=0.84):
     # look-ahead-free soft limiter: smooth gain from the peak envelope
     peak = np.max(np.abs(x), axis=0)
     win = int(0.004 * SR)
@@ -511,11 +562,16 @@ def rms_db(x):
 
 
 music_mix *= 10 ** ((-17.5 - rms_db(music_mix)) / 20)
-sfx_mix *= 10 ** ((-20.5 - rms_db(sfx_mix)) / 20)
+sfx_mix *= 10 ** ((-18.0 - rms_db(sfx_mix)) / 20)
+# duck the music under the effects so every whoosh and pop reads clearly
+sfx_env = signal.sosfiltfilt(signal.butter(1, 12, fs=SR, output='sos'), np.abs(sfx_mix).max(axis=0))
+sfx_env /= np.percentile(sfx_env, 99.5) + 1e-9
+music_mix *= 1 - 0.38 * np.clip(sfx_env, 0, 1)
 mix = limiter(np.tanh((music_mix + sfx_mix) * 1.25) / 1.25 * 1.15)
+mix *= 10 ** (-1.6 / 20)  # headroom for inter-sample peaks after AAC encoding
 music_only = limiter(music_mix * 1.1)
 sfx_only = limiter(sfx_mix * 1.6)
-end = int(30.0 * SR)
+end = int(36.0 * SR)
 for name, x in [('mix', mix), ('music', music_only), ('sfx', sfx_only)]:
     sf.write(os.path.join(OUT, f'{name}.wav'), x[:, :end].T, SR, subtype='PCM_24')
 print('mix rms', round(rms_db(mix), 1), 'dBFS  peak', round(20 * np.log10(np.abs(mix).max()), 2), 'dBFS')

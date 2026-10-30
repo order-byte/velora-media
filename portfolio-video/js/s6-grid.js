@@ -1,4 +1,4 @@
-// S6 · Work grid (17.98–22.05s)
+// S6 · Work grid (24.98–28.05s)
 // Four projects play at once in a 2x2 grid (references 2–4). The cells fly in, carry
 // a project tag, swap to four more projects on the beat, then the camera dives into
 // one cell to hand over to the services scene.
@@ -8,8 +8,8 @@
   const root = document.getElementById('s6');
   root.style.background = '#0b0b10';
 
-  const A = ['csgo_mines', 'nano_science', 'quad_globe', 'flowly_grass'];
-  const B = ['fort_apps', 'csgo_deposit', 'agent_glass', 'nano_explore'];
+  const A = ['csgo_mines', 'nano_explore', 'fort_apps', 'flowly_grass'];
+  const B = ['quad_insight', 'csgo_deposit', 'agent_boost', 'flowly_phone'];
   const GAP = 10, CW = (1920 - GAP) / 2, CH = (1080 - GAP) / 2;
   const cam = h('div', { class: 'fill', style: { transformOrigin: '0 0' } });
   root.append(cam);
@@ -33,32 +33,32 @@
     return { el, a, b, layA, layB, tagA, tagB, from, cx: x + CW / 2, cy: y + CH / 2 };
   });
 
-  scene('s6', 17.98, 22.05, (lt, t) => {
+  scene('s6', 24.98, 28.05, (lt, t) => {
     cells.forEach((c, i) => {
-      const k = P(t, 18.0 + i * 0.06, 18.55 + i * 0.06, E.outExpo);
-      set(c.el, { x: c.from[0] * 1100 * (1 - k), y: c.from[1] * 700 * (1 - k), s: mix(0.8, 1, k), o: P(t, 18.0 + i * 0.06, 18.15 + i * 0.06),
+      const k = P(t, 25.0 + i * 0.06, 25.55 + i * 0.06, E.outExpo);
+      set(c.el, { x: c.from[0] * 1100 * (1 - k), y: c.from[1] * 700 * (1 - k), s: mix(0.8, 1, k), o: P(t, 25.0 + i * 0.06, 25.15 + i * 0.06),
         blur: (1 - k) * 18 });
       // swap to the second set with a staggered vertical wipe
-      const sw = P(t, 20.0 + i * 0.07, 20.42 + i * 0.07, E.inOutQuart);
+      const sw = P(t, 26.35 + i * 0.07, 26.77 + i * 0.07, E.inOutQuart);
       set(c.layA, { y: -sw * CH * 0.35, s: 1 + sw * 0.08, blur: sw * 10 });
-      c.layA.style.opacity = (1 - P(t, 20.12 + i * 0.07, 20.42 + i * 0.07)).toFixed(3);
+      c.layA.style.opacity = (1 - P(t, 26.47 + i * 0.07, 26.77 + i * 0.07)).toFixed(3);
       c.layB.style.clipPath = `inset(${((1 - sw) * 100).toFixed(2)}% 0 0 0 round 18px)`;
       set(c.layB, { y: (1 - sw) * CH * 0.25, s: 1 + (1 - sw) * 0.08 });
       c.layB.style.display = sw > 0 ? 'block' : 'none';
       c.layA.style.display = sw < 1 ? 'block' : 'none';
-      if (sw < 1) c.a.seek(t - 18.0);
-      if (sw > 0) c.b.seek(t - 20.0);
-      const ta = P(t, 18.55 + i * 0.08, 18.95 + i * 0.08, E.outBack);
+      if (sw < 1) c.a.seek(t - 25.0);
+      if (sw > 0) c.b.seek(t - 26.35);
+      const ta = P(t, 25.55 + i * 0.08, 25.95 + i * 0.08, E.outBack);
       set(c.tagA, { o: ta, x: mix(-30, 0, ta) });
-      const tb = P(t, 20.45 + i * 0.08, 20.85 + i * 0.08, E.outBack);
+      const tb = P(t, 26.8 + i * 0.08, 27.2 + i * 0.08, E.outBack);
       set(c.tagB, { o: tb, x: mix(-30, 0, tb) });
     });
     // dive into the bottom-right cell, then hand over
-    const dive = P(t, 21.45, 22.05, E.inQuint);
+    const dive = P(t, 27.45, 28.05, E.inQuint);
     const target = cells[3];
     const s = mix(1, 2.6, dive);
     cam.style.transform = `translate(${mix(target.cx, 960, dive) - target.cx * s}px, ${mix(target.cy, 540, dive) - target.cy * s}px) scale(${s})`;
     cam.style.filter = dive > 0.02 ? `blur(${(dive * 14).toFixed(2)}px)` : 'none';
-    root.style.opacity = (1 - P(t, 21.88, 22.05)).toFixed(3);
+    root.style.opacity = (1 - P(t, 27.88, 28.05)).toFixed(3);
   });
 })();

@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="style.css">
 <style>
   /* Editor-style single dark look: the video is the hero, the chrome stays quiet. */
@@ -76,6 +76,7 @@
       <div class="scene" id="s2"></div>
       <div class="scene" id="s3"></div>
       <div class="scene" id="s4"></div>
+      <div class="scene" id="s10"></div>
       <div class="scene" id="s5"></div>
       <div class="scene" id="s6"></div>
       <div class="scene" id="s7"></div>
@@ -88,7 +89,7 @@
 
   <div class="controls">
     <button id="play" aria-pressed="false">▶ Play</button>
-    <span class="time"><b id="now">00.00</b> / <span id="dur">30.00</span>s</span>
+    <span class="time"><b id="now">00.00</b> / <span id="dur">36.00</span>s</span>
     <span class="spacer"></span>
     <span class="speed" role="group" aria-label="Playback speed">
       <button data-speed="0.25" aria-pressed="false">0.25×</button>
@@ -98,7 +99,7 @@
     <button id="sound" aria-pressed="false" hidden>Sound off</button>
   </div>
   <div class="track">
-    <input id="scrub" type="range" min="0" max="30" step="0.0166667" value="0" aria-label="Timeline">
+    <input id="scrub" type="range" min="0" max="36" step="0.0166667" value="0" aria-label="Timeline">
     <div class="chips" id="chips"></div>
   </div>
 
@@ -111,17 +112,18 @@
 <script>
   // Updated on every publish so the person watching can follow along.
   window.BUILD = {
-    version: 'v7',
+    version: 'v8',
     scenes: [
       { id: 's1', name: 'Glass hook', from: 0, to: 4, state: 'built' },
       { id: 's2', name: 'Client chat', from: 4, to: 8, state: 'built' },
       { id: 's3', name: 'Prompt', from: 8, to: 10, state: 'built' },
-      { id: 's4', name: 'Gradient title', from: 10, to: 14, state: 'built' },
-      { id: 's5', name: 'Work showcase', from: 14, to: 18, state: 'built' },
-      { id: 's6', name: 'Work grid', from: 18, to: 22, state: 'built' },
-      { id: 's7', name: 'Services', from: 22, to: 24, state: 'built' },
-      { id: 's8', name: 'Profile card', from: 24, to: 26, state: 'built' },
-      { id: 's9', name: 'Logo end', from: 26, to: 30, state: 'built' },
+      { id: 's4', name: 'Ready to launch', from: 10, to: 12, state: 'built' },
+      { id: 's10', name: 'Motion Designer', from: 12, to: 16, state: 'built' },
+      { id: 's5', name: 'Selected work', from: 16, to: 25, state: 'built' },
+      { id: 's6', name: 'Work grid', from: 25, to: 28, state: 'built' },
+      { id: 's7', name: 'Services', from: 28, to: 30, state: 'built' },
+      { id: 's8', name: 'Profile card', from: 30, to: 32, state: 'built' },
+      { id: 's9', name: 'Logo end', from: 32, to: 36, state: 'built' },
     ],
     log: [
       'Studied the 5 references: glass/frost reveal, blur-in type, chat bubbles, prompt bar, card stacks, 2×2 grids, pill marquee.',
@@ -135,6 +137,11 @@
       'Soundtrack added: an original 120 BPM track (hook from the first second, drops at 4s and 10s) with sound effects cued to every move: glass shimmer, whooshes, bubble pops, key clicks, taps, counter ticks, impacts. Press "Sound off" to turn it on.',
       'Glass polish: a specular sheen now sweeps across the pill after it lands, and the swallow into the chat is softer (no brightness jump). Test-rendered the intro at 60fps and measured every frame: motion is continuous with no stutter.',
       'Prompt scene: the glow under the prompt bar is now much stronger, closer to reference 1. Final render has started (0–14s done).',
+      'Your feedback, round 1 (v8): the hook now opens on violet frost, clouds part and fluted glass melts to reveal a mountain meadow with grass and pines (reference 5 look), with the glass pill typing your hook on top.',
+      'New 12–16s scene from your banner: on the drop "DESIGNER" slams in, you rise in front of it (cut out of your lime photo), the brushed "MOTION" wipes on, the Pr / Ae / spark icons fly in and float, and your "Aminur Rahaman" signature writes itself.',
+      'Work showcase rebuilt: 6 projects one at a time, big, in a 3D carousel with name and type under each (CSGOGem, NanoSyllabus, OfflineIQ, Quadrant, Flowly, AI Agent), counter 01/06. Grid follows with 8 more cuts.',
+      'Sound effects replaced with real recorded ones (Mixkit free library): whooshes on every transition, bubble pops, real keyboard keystrokes while typing, mouse clicks, impacts on the drops. The music now dips under each effect so they read clearly. Video is 36s now.',
+      'Profile card now uses your photo.',
     ],
     audio: 'assets/audio/mix.mp3',
   };
@@ -149,12 +156,15 @@
 <script src="js/s4-gradient.js"></script>
 <script src="js/s5-showcase.js"></script>
 <script src="js/s6-grid.js"></script>
+<script>V.at(6);</script>
 <script src="js/s7-marquee.js"></script>
 <script src="js/s8-profile.js"></script>
 <script src="js/s9-logo.js"></script>
+<script>V.at(0);</script>
+<script src="js/s10-designer.js"></script>
 <script>
 (() => {
-  const B = window.BUILD, DUR = 30;
+  const B = window.BUILD, DUR = 36;
   const stage = document.getElementById('stage'), vp = document.getElementById('viewport');
   const scrub = document.getElementById('scrub'), now = document.getElementById('now');
   const playBtn = document.getElementById('play'), soundBtn = document.getElementById('sound');

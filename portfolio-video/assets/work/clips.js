@@ -39,5 +39,30 @@ window.CLIPS = {
   "frames": 177,
   "fps": 60,
   "label": "OfflineIQ \u00b7 Workflows"
+ },
+ "quad_globe": {
+  "frames": 177,
+  "fps": 60,
+  "label": "Quadrant \u00b7 IT Services"
+ },
+ "quad_insight": {
+  "frames": 177,
+  "fps": 60,
+  "label": "Quadrant \u00b7 Data to insight"
+ },
+ "flowly_glass": {
+  "frames": 141,
+  "fps": 60,
+  "label": "Flowly \u00b7 AI notes"
+ },
+ "flowly_phone": {
+  "frames": 93,
+  "fps": 60,
+  "label": "Flowly \u00b7 App UI"
+ },
+ "flowly_grass": {
+  "frames": 141,
+  "fps": 60,
+  "label": "Flowly \u00b7 Listening"
  }
 };
