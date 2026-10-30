@@ -7,7 +7,7 @@
   const root = document.getElementById('s3');
   root.style.background = '#050408';
 
-  const glow = h('div', { class: 'abs', style: { left: '-192px', width: '2304px', top: '690px', height: '920px',
+  const glow = h('div', { class: 'abs', style: { left: '-192px', width: '2304px', top: '520px', height: '920px',
     background: 'radial-gradient(50% 50% at 50% 50%, #ffffff 0%, #f6c4ff 9%, #d64fff 26%, #7a2cff 48%, rgba(60,20,200,.0) 72%)', filter: 'blur(24px)', transformOrigin: '50% 50%' } });
   const flood = h('div', { class: 'fill', style: { background: 'linear-gradient(180deg, #ff7a3f 0%, #ff3a6e 42%, #e62cf0 78%, #b02cff 100%)', opacity: '0' } });
 
@@ -31,7 +31,7 @@
   scene('s3', 7.85, 10.06, (lt, t) => {
     root.style.opacity = P(t, 7.85, 8.05, E.outCubic).toFixed(3);
     // bottom glow breathes in and climbs as the brief is typed
-    const rise = kf(t, [[7.9, 0.0], [8.5, 0.55, E.outCubic], [9.3, 0.7], [9.85, 1.6, E.inCubic]]);
+    const rise = kf(t, [[7.9, 0.0], [8.5, 0.72, E.outCubic], [9.3, 0.86], [9.85, 1.6, E.inCubic]]);
     set(glow, { y: mix(420, 0, Math.min(1, rise)) - Math.max(0, rise - 1) * 700, sy: 1 + Math.max(0, rise - 1) * 1.6, sx: 1 + Math.max(0, rise - 1) * 0.6, o: Math.min(1, rise * 1.6) });
 
     const bin = P(t, 7.95, 8.55, E.outExpo);
