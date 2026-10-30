@@ -85,7 +85,7 @@
 
   scene('s10', 12.0, 16.05, (lt, t) => {
     // impact: flash + decaying shake + push-in
-    flash.style.opacity = (kf(t, [[12.0, 0.9], [12.28, 0, E.outCubic]]) + kf(t, [[15.8, 0], [16.05, 1, E.inCubic]])).toFixed(3);
+    flash.style.opacity = (kf(t, [[12.0, 0.9], [12.28, 0, E.outCubic]]) + kf(t, [[15.72, 0], [15.97, 1, E.inCubic]])).toFixed(3);
     const shake = Math.exp(-(t - 12.0) * 7) * 16;
     const push = kf(t, [[12.0, 1.08], [12.6, 1.0, E.outExpo], [15.7, 1.05, E.lin], [16.05, 1.3, E.inCubic]]);
     set(cam, { x: Math.sin(t * 70) * shake, y: Math.cos(t * 55) * shake * 0.7, s: push, blur: P(t, 15.75, 16.05, E.inCubic) * 18 });

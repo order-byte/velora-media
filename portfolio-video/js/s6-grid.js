@@ -46,8 +46,8 @@
       set(c.layB, { y: (1 - sw) * CH * 0.25, s: 1 + (1 - sw) * 0.08 });
       c.layB.style.display = sw > 0 ? 'block' : 'none';
       c.layA.style.display = sw < 1 ? 'block' : 'none';
-      if (sw < 1) c.a.seek(t - 25.0);
-      if (sw > 0) c.b.seek(t - 26.35);
+      if (sw < 1) c.a.seek(t - 25.0, true);
+      if (sw > 0) c.b.seek(t - 26.35, true);
       const ta = P(t, 25.55 + i * 0.08, 25.95 + i * 0.08, E.outBack);
       set(c.tagA, { o: ta, x: mix(-30, 0, ta) });
       const tb = P(t, 26.8 + i * 0.08, 27.2 + i * 0.08, E.outBack);
@@ -59,6 +59,6 @@
     const s = mix(1, 2.6, dive);
     cam.style.transform = `translate(${mix(target.cx, 960, dive) - target.cx * s}px, ${mix(target.cy, 540, dive) - target.cy * s}px) scale(${s})`;
     cam.style.filter = dive > 0.02 ? `blur(${(dive * 14).toFixed(2)}px)` : 'none';
-    root.style.opacity = (1 - P(t, 27.88, 28.05)).toFixed(3);
+    root.style.opacity = (P(t, 24.98, 25.1) * (1 - P(t, 27.88, 28.05))).toFixed(3);
   });
 })();

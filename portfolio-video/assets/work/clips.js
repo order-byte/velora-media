@@ -64,5 +64,15 @@ window.CLIPS = {
   "frames": 141,
   "fps": 60,
   "label": "Flowly \u00b7 Listening"
+ },
+ "agent_boost": {
+  "frames": 105,
+  "fps": 60,
+  "label": "AI Agent \u00b7 Boost"
+ },
+ "agent_glass": {
+  "frames": 105,
+  "fps": 60,
+  "label": "AI Agent \u00b7 Glass UI"
  }
 };

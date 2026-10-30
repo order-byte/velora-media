@@ -53,7 +53,7 @@
     // thread scrolls up as messages arrive; gentle settle on the camera
     const scroll = kf(t, [[5.7, 0], [6.1, -110, E.outExpo], [6.65, -110], [7.05, -215, E.outExpo]]);
     set(thread, { y: scroll });
-    const camS = kf(t, [[3.86, 1.06], [5.2, 1.0, E.outCubic], [7.5, 1.0], [8.02, 1.12, E.inCubic]]);
+    const camS = kf(t, [[3.86, 1.06], [5.2, 1.0, E.outCubic], [7.5, 0.975, E.lin], [8.02, 1.1, E.inCubic]]); // never fully still
     set(cam, { s: camS, blur: kf(t, [[7.55, 0], [8.0, 14, E.inCubic]]) });
     veil.style.opacity = P(t, 7.62, 8.0, E.inOutCubic).toFixed(3);
 

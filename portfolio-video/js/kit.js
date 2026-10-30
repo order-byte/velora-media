@@ -52,10 +52,10 @@
     let lastFrame = -1;
     return {
       el: wrap,
-      // lt = seconds into the clip (wraps around)
-      seek(lt) {
+      // lt = seconds into the clip; loops, or with hold=true freezes on the last frame
+      seek(lt, hold = false) {
         const len = spec.frames / spec.fps;
-        const ct = ((lt % len) + len) % len;
+        const ct = hold ? Math.min(Math.max(lt, 0), len - 1 / spec.fps) : ((lt % len) + len) % len;
         if (RENDER) {
           const f = Math.min(spec.frames - 1, Math.floor(ct * spec.fps + 1e-6));
           if (f !== lastFrame) {

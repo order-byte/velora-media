@@ -77,7 +77,7 @@
       c.el.style.zIndex = String(100 - Math.round(a * 10));
       const start = T0 + i * STEP;
       c.sheen.style.backgroundPosition = `${kf(t, [[start - 0.05, 130], [start + 0.6, -30, E.inOutCubic]])}% 0`;
-      c.c.seek(Math.max(0, t - (start - SLIDE)));
+      c.c.seek(t - (start - SLIDE), true);
     });
 
     caps.forEach((cp, i) => {
