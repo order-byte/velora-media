@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Claim vs Strike</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("fonts/Inter.ttf"); font-weight: 100 900; }
+  :root { --teal: #5ef2d6; --amber: #ffb547; --red: #ff3b47; --text: #f4f6fb; --muted: rgba(220,228,240,0.62); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #04060c; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Inter", sans-serif; color: var(--text); }
+  canvas { position: absolute; inset: 0; }
+  .txt { position: absolute; left: 90px; right: 90px; text-align: center; visibility: hidden; opacity: 0; }
+  .kick { font-size: 32px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; }
+  .head { font-size: 92px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.02;
+          text-shadow: 0 0 40px rgba(0,0,0,0.6), 0 2px 18px rgba(0,0,0,0.5); }
+  .sub { font-size: 56px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.12; margin-top: 18px; color: #e9eef7;
+         text-shadow: 0 2px 18px rgba(0,0,0,0.6); }
+  .line { display: block; overflow: hidden; padding: 0.06em 0; }
+  .line > span { display: inline-block; }
+  .amber { color: var(--amber); } .red { color: var(--red); } .teal { color: var(--teal); }
+  .neq { color: rgba(255,255,255,0.55); font-weight: 300; margin: 0 0.18em; }
+  #handle { position: absolute; left: 0; right: 0; top: 1440px; text-align: center; font-size: 34px; font-weight: 600;
+            letter-spacing: 0.04em; color: var(--muted); visibility: hidden; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="t0" class="txt" style="top:300px"><div class="head"><span class="line"><span>One mistake</span></span></div>
+    <div class="sub" id="t0b"><span class="line"><span>can cost you your channel</span></span></div></div>
+  <div id="t1" class="txt" style="top:300px"><div class="head"><span class="line"><span><span class="amber" id="t1a">CLAIM</span><span class="neq" id="t1n">≠</span><span class="red" id="t1b">STRIKE</span></span></span></div></div>
+  <div id="t2" class="txt" style="top:300px"><div class="kick amber">Claim</div><div class="head"><span class="line"><span>Their song.</span></span><span class="line"><span>Your video.</span></span></div></div>
+  <div id="t3" class="txt" style="top:330px"><div class="head teal"><span class="line"><span>Channel safe</span></span></div></div>
+  <div id="t4" class="txt" style="top:300px"><div class="sub" style="font-size:62px"><span class="line"><span>Revenue goes to <span class="amber">the owner</span></span></span></div>
+    <div class="sub" id="t4b" style="font-size:62px"><span class="line"><span>or the video is <span class="amber">blocked</span></span></span></div></div>
+  <div id="t5" class="txt" style="top:300px"><div class="kick red">Strike</div><div class="head"><span class="line"><span>Video removed</span></span></div>
+    <div class="sub" id="t5b"><span class="line"><span>+ a strike on <span class="red">your channel</span></span></span></div></div>
+  <div id="t6" class="txt" style="top:290px"><div class="sub" id="t6a" style="font-size:66px"><span class="line"><span><span class="amber">Claim</span> = runs lost</span></span></div>
+    <div class="sub" id="t6b" style="font-size:66px"><span class="line"><span><span class="red">Strike</span> = wicket down</span></span></div></div>
+  <div id="t7" class="txt" style="top:300px"><div class="head"><span class="line"><span>3 strikes</span></span><span class="line"><span class="red">in 90 days</span></span></div>
+    <div class="sub" id="t7b"><span class="line"><span>Channel can be shut down</span></span></div></div>
+  <div id="t8" class="txt" style="top:330px"><div class="head"><span class="line"><span>2 mistakes</span></span><span class="line"><span>to avoid</span></span></div></div>
+  <div id="t9" class="txt" style="top:300px"><div class="kick red">Mistake 1</div><div class="sub" style="font-size:64px"><span class="line"><span>Deleting the video</span></span><span class="line"><span>won't remove <span class="red">the strike</span></span></span></div></div>
+  <div id="t10" class="txt" style="top:300px"><div class="kick red">Mistake 2</div><div class="sub" style="font-size:64px"><span class="line"><span>Dispute without rights</span></span></div>
+    <div class="sub" id="t10b" style="font-size:64px"><span class="line"><span><span class="amber">claim</span> → <span class="red">strike</span></span></span></div></div>
+  <div id="t11" class="txt" style="top:330px"><div class="sub" style="font-size:70px"><span class="line"><span>Not sure what to do?</span></span></div></div>
+  <div id="t12" class="txt" style="top:300px"><div class="kick teal">DM us</div><div class="head" style="font-size:118px"><span class="line"><span>“COPYRIGHT”</span></span></div>
+    <div class="sub" id="t12b"><span class="line"><span>We'll tell you honestly</span></span></div></div>
+  <div id="handle">@riyadhasan.official</div>
+</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script src="timing.js"></script>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const T = window.TIMING;
+const W = 1080, H = 1920;
+const $ = s => document.querySelector(s);
+
+// ---------- deterministic randomness ----------
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const R = rng(20261030);
+
+// ---------- timing helpers ----------
+const LINES = T.lines;
+const L = i => LINES[i];
+function cue(i, kw, which = 0) {
+  const l = LINES[i];
+  const hits = l.words.filter(w => w.w.includes(kw));
+  return hits.length ? hits[Math.min(which, hits.length - 1)].s : l.start;
+}
+const smooth = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+const easeIO = x => x <= 0 ? 0 : x >= 1 ? 1 : (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+
+// ---------- renderer ----------
+const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.95;
+$('#stage').prepend(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x04060c);
+scene.fog = new THREE.FogExp2(0x05080f, 0.0105);
+const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1500);
+
+// soft round sprite points with per-point colour, size and alpha
+function pointsMaterial(scale = 1) {
+  return new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false,
+    uniforms: { uScale: { value: H * 0.5 / Math.tan(THREE.MathUtils.degToRad(25)) * scale }, uGain: { value: 1 } },
+    vertexShader: `attribute vec3 aColor; attribute float aSize; attribute float aAlpha;
+      varying vec3 vColor; varying float vAlpha; uniform float uScale;
+      void main(){ vColor=aColor; vec4 mv=modelViewMatrix*vec4(position,1.0);
+        float d=-mv.z; vAlpha=aAlpha*clamp(1.0-(d-60.0)/260.0,0.0,1.0);
+        gl_Position=projectionMatrix*mv; gl_PointSize=max(1.0,aSize*uScale/d); }`,
+    fragmentShader: `varying vec3 vColor; varying float vAlpha; uniform float uGain;
+      void main(){ vec2 c=gl_PointCoord-0.5; float d=length(c); float a=smoothstep(0.5,0.0,d); a=a*a;
+        gl_FragColor=vec4(vColor*a*vAlpha*uGain, a*vAlpha); }`,
+  });
+}
+
+// ---------- environment: stars tunnel, dust, beams, floor grid ----------
+const ENV_LEN = 2200;
+function makeCloud(n, fn) {
+  const g = new THREE.BufferGeometry();
+  const p = new Float32Array(n * 3), c = new Float32Array(n * 3), s = new Float32Array(n), a = new Float32Array(n);
+  for (let i = 0; i < n; i++) fn(i, p, c, s, a);
+  g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('aColor', new THREE.BufferAttribute(c, 3));
+  g.setAttribute('aSize', new THREE.BufferAttribute(s, 1)); g.setAttribute('aAlpha', new THREE.BufferAttribute(a, 1));
+  return g;
+}
+const stars = new THREE.Points(makeCloud(9000, (i, p, c, s, a) => {
+  const ang = R() * Math.PI * 2, rad = 26 + Math.pow(R(), 0.7) * 140;
+  p.set([Math.cos(ang) * rad, Math.sin(ang) * rad * 0.9, 80 - R() * ENV_LEN], i * 3);
+  const k = 0.55 + R() * 0.45, tint = R();
+  c.set(tint < 0.7 ? [0.62 * k, 0.75 * k, 1.0 * k] : [0.55 * k, 1.0 * k, 0.9 * k], i * 3);
+  s[i] = 0.18 + R() * 0.5; a[i] = 0.35 + R() * 0.65;
+}), pointsMaterial());
+scene.add(stars);
+const dust = new THREE.Points(makeCloud(1800, (i, p, c, s, a) => {
+  p.set([(R() - 0.5) * 70, (R() - 0.5) * 110, 40 - R() * ENV_LEN], i * 3);
+  c.set([0.5, 0.62, 0.8], i * 3); s[i] = 0.5 + R() * 1.4; a[i] = 0.08 + R() * 0.16;
+}), pointsMaterial());
+scene.add(dust);
+
+// perspective floor grid far below: gives the space a ground and scale
+const grid = new THREE.Group();
+{
+  const mat = new THREE.LineBasicMaterial({ color: 0x1d6f74, transparent: true, opacity: 0.22, fog: true });
+  const pts = [];
+  for (let x = -300; x <= 300; x += 12) pts.push(new THREE.Vector3(x, 0, 60), new THREE.Vector3(x, 0, -ENV_LEN));
+  for (let z = 60; z >= -ENV_LEN; z -= 12) pts.push(new THREE.Vector3(-300, 0, z), new THREE.Vector3(300, 0, z));
+  grid.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), mat));
+  grid.position.y = -34;
+  scene.add(grid);
+}
+
+// light shafts: long additive planes with a soft vertical gradient
+function gradTex(stops) {
+  const cv = document.createElement('canvas'); cv.width = 64; cv.height = 512;
+  const x = cv.getContext('2d'); const g = x.createLinearGradient(0, 0, 0, 512);
+  stops.forEach(([o, c]) => g.addColorStop(o, c)); x.fillStyle = g; x.fillRect(0, 0, 64, 512);
+  const hg = x.createLinearGradient(0, 0, 64, 0); hg.addColorStop(0, 'rgba(0,0,0,1)'); hg.addColorStop(0.5, 'rgba(0,0,0,0)'); hg.addColorStop(1, 'rgba(0,0,0,1)');
+  x.globalCompositeOperation = 'destination-out'; x.fillStyle = hg; x.fillRect(0, 0, 64, 512);
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const beams = new THREE.Group(); scene.add(beams);
+const beamTex = gradTex([[0, 'rgba(255,255,255,0)'], [0.35, 'rgba(255,255,255,0.55)'], [1, 'rgba(255,255,255,0)']]);
+const beamMats = [];
+for (let i = 0; i < 7; i++) {
+  const m = new THREE.MeshBasicMaterial({ map: beamTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.0, color: 0x6fdcff, side: THREE.DoubleSide, fog: false });
+  const b = new THREE.Mesh(new THREE.PlaneGeometry(5 + R() * 6, 150), m);
+  b.userData = { x: (R() - 0.5) * 70, zo: -40 - R() * 60, rot: (R() - 0.5) * 0.5, ph: R() * 6 };
+  beams.add(b); beamMats.push(m);
+}
+
+// soft glow behind the hero shapes
+function radialTex() {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 256;
+  const x = cv.getContext('2d'); const g = x.createRadialGradient(128, 128, 0, 128, 128, 128);
+  g.addColorStop(0, 'rgba(255,255,255,0.9)'); g.addColorStop(0.35, 'rgba(255,255,255,0.25)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 256, 256); const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTex(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.32, fog: false }));
+glow.scale.set(34, 34, 1); scene.add(glow);
+
+// ---------- hero particle system: one cloud that re-forms into every shape ----------
+const N = 22000;
+const HERO_D = 30;              // distance in front of the camera
+const heroGeo = makeCloud(N, (i, p, c, s, a) => { s[i] = 0.065 + R() * 0.075; a[i] = 0.24 + R() * 0.38; });
+const hero = new THREE.Points(heroGeo, pointsMaterial());
+scene.add(hero);
+const seedA = new Float32Array(N * 3), delay = new Float32Array(N);
+for (let i = 0; i < N; i++) { seedA[i * 3] = R() * 6.283; seedA[i * 3 + 1] = R() * 6.283; seedA[i * 3 + 2] = 0.3 + R() * 0.7; delay[i] = R(); }
+
+const COL = { teal: [0.37, 0.95, 0.84], white: [0.92, 0.95, 1.0], amber: [1.0, 0.71, 0.28], red: [1.0, 0.23, 0.28], gray: [0.42, 0.46, 0.55], blue: [0.43, 0.66, 1.0] };
+const hex = c => `rgb(${c.map(v => Math.round(v * 255)).join(',')})`;
+
+// icons: Lucide SVGs drawn onto a canvas, then particles are sampled from the drawn pixels
+const ICON_SRC = {};
+async function loadIcon(name) {
+  ICON_SRC[name] = await (await fetch(`node_modules/lucide-static/icons/${name}.svg`)).text();
+}
+function iconImage(name, color, sw) {
+  const svg = ICON_SRC[name].replace(/stroke="currentColor"/g, `stroke="${color}"`).replace(/stroke-width="2"/g, `stroke-width="${sw}"`);
+  return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); });
+}
+async function canvasShape(draw, opts = {}) {
+  const S = 1024, cv = document.createElement('canvas'); cv.width = cv.height = S;
+  const x = cv.getContext('2d'); x.lineCap = 'round'; x.lineJoin = 'round';
+  await draw(x, S);
+  const d = x.getImageData(0, 0, S, S).data;
+  const idx = [];
+  for (let i = 0; i < S * S; i++) if (d[i * 4 + 3] > 110) idx.push(i);
+  const pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
+  const r2 = rng(opts.seed || 7), span = opts.span || 15.2, depth = opts.depth ?? 1.0;
+  for (let k = 0; k < N; k++) {
+    const i = idx[Math.floor(r2() * idx.length)];
+    const px = i % S, py = Math.floor(i / S);
+    const X = (px / S - 0.5) * span, Y = -(py / S - 0.5) * span;
+    pos.set([X + (r2() - 0.5) * 0.04, Y + (r2() - 0.5) * 0.04 + (opts.y || 0), (r2() - 0.5) * depth - 0.02 * (X * X + Y * Y)], k * 3);
+    col.set([d[i * 4] / 255, d[i * 4 + 1] / 255, d[i * 4 + 2] / 255], k * 3);
+  }
+  return { pos, col };
+}
+async function drawIcon(x, name, cx, cy, size, color, sw = 1.6) {
+  const im = await iconImage(name, hex(color), sw);
+  x.drawImage(im, cx - size / 2, cy - size / 2, size, size);
+}
+function roundRect(x, cx, cy, w, h, r, color, lw) {
+  x.strokeStyle = hex(color); x.lineWidth = lw; x.beginPath(); x.roundRect(cx - w / 2, cy - h / 2, w, h, r); x.stroke();
+}
+function sphereShape(radius, colA, colB, opts = {}) {
+  const pos = new Float32Array(N * 3), col = new Float32Array(N * 3), r2 = rng(opts.seed || 3);
+  for (let k = 0; k < N; k++) {
+    const shell = r2() < 0.86;
+    const u = r2() * 2 - 1, th = r2() * Math.PI * 2, s = Math.sqrt(1 - u * u);
+    const rr = shell ? radius * (0.985 + r2() * 0.03) : radius * Math.cbrt(r2()) * 0.92;
+    const band = Math.abs(u) < 0.1 && opts.band;
+    pos.set([rr * s * Math.cos(th), rr * u + (opts.y || 0), rr * s * Math.sin(th)], k * 3);
+    const c = band ? opts.band : (shell ? (r2() < 0.8 ? colA : colB) : colB);
+    const kf = shell ? 1 : 0.5;
+    col.set([c[0] * kf, c[1] * kf, c[2] * kf], k * 3);
+  }
+  return { pos, col };
+}
+function fromShape(src, fn) {
+  const pos = new Float32Array(src.pos), col = new Float32Array(src.col), r2 = rng(99);
+  for (let k = 0; k < N; k++) fn(k, pos, col, r2);
+  return { pos, col };
+}
+
+const SH = {};
+async function buildShapes() {
+  for (const n of ['tag', 'triangle-alert', 'music', 'play', 'shield-check', 'circle-dollar-sign', 'user', 'ban', 'trash-2', 'message-circle', 'arrow-right'])
+    await loadIcon(n);
+  await document.fonts.load('800 120px Inter');
+
+  SH.dust = sphereShape(26, COL.gray, COL.gray, { seed: 11 });
+  for (let k = 0; k < N; k++) { SH.dust.col[k * 3] *= 0.35; SH.dust.col[k * 3 + 1] *= 0.35; SH.dust.col[k * 3 + 2] *= 0.4; }
+  SH.globe = sphereShape(6.2, COL.teal, COL.white, { y: -0.8 });
+  SH.crack = sphereShape(6.2, COL.teal, COL.white, { y: -0.8, band: COL.red });
+  SH.explode = fromShape(SH.crack, (k, p, c, r2) => {
+    const f = 1.6 + r2() * 2.6; p[k * 3] *= f; p[k * 3 + 1] = (p[k * 3 + 1] + 0.8) * f - 0.8; p[k * 3 + 2] *= f;
+    if (r2() < 0.45) c.set(COL.red, k * 3); });
+  SH.tokens = await canvasShape(async (x, S) => {
+    roundRect(x, 300, 560, 300, 300, 150, COL.amber, 10); await drawIcon(x, 'tag', 300, 560, 170, COL.amber, 1.7);
+    roundRect(x, 724, 560, 300, 300, 150, COL.red, 10); await drawIcon(x, 'triangle-alert', 724, 556, 170, COL.red, 1.7);
+    x.fillStyle = hex(COL.white); x.fillRect(472, 528, 80, 12); x.fillRect(472, 580, 80, 12);
+    x.save(); x.translate(512, 560); x.rotate(-1.05); x.fillRect(-7, -70, 14, 140); x.restore();
+  }, { seed: 21 });
+  const card = (x, cx, cy, w, col) => { roundRect(x, cx, cy, w, w * 0.5625, 34, col, 10); };
+  SH.claimCard = await canvasShape(async x => {
+    card(x, 512, 560, 640, COL.white); await drawIcon(x, 'play', 512, 560, 150, COL.white, 1.6);
+    await drawIcon(x, 'music', 760, 400, 150, COL.amber, 2.0); await drawIcon(x, 'tag', 250, 790, 170, COL.amber, 2.0);
+  }, { seed: 22 });
+  SH.safe = await canvasShape(async x => {
+    await drawIcon(x, 'shield-check', 512, 560, 620, COL.teal, 1.3);
+    x.strokeStyle = hex(COL.white); x.lineWidth = 8; x.beginPath(); x.arc(512, 560, 470, 0, Math.PI * 2); x.setLineDash([6, 22]); x.stroke();
+  }, { seed: 23 });
+  SH.revenue = await canvasShape(async x => {
+    card(x, 230, 560, 300, COL.white); await drawIcon(x, 'play', 230, 560, 80, COL.white, 2);
+    for (let i = 0; i < 3; i++) await drawIcon(x, 'circle-dollar-sign', 430 + i * 95, 560 - Math.sin(i / 2 * Math.PI) * 40, 90, COL.amber, 2);
+    await drawIcon(x, 'user', 820, 560, 230, COL.amber, 1.8);
+  }, { seed: 24 });
+  SH.blocked = await canvasShape(async x => {
+    card(x, 512, 560, 640, COL.gray); await drawIcon(x, 'play', 512, 560, 150, COL.gray, 1.6);
+    await drawIcon(x, 'ban', 512, 560, 430, COL.amber, 1.7);
+  }, { seed: 25 });
+  SH.card = await canvasShape(async x => { card(x, 512, 560, 640, COL.white); await drawIcon(x, 'play', 512, 560, 160, COL.white, 1.6); }, { seed: 26 });
+  SH.shatter = fromShape(SH.card, (k, p, c, r2) => {
+    const a = r2() * 6.283, f = 2 + r2() * 9; p[k * 3] += Math.cos(a) * f; p[k * 3 + 1] += Math.sin(a) * f; p[k * 3 + 2] += (r2() - 0.3) * 14;
+    c.set(r2() < 0.6 ? COL.red : COL.white, k * 3); c[k * 3] *= 0.8; c[k * 3 + 1] *= 0.8; c[k * 3 + 2] *= 0.8; });
+  SH.strikeMark = await canvasShape(async x => {
+    x.strokeStyle = hex(COL.teal); x.lineWidth = 10; x.beginPath(); x.arc(512, 470, 230, 0, Math.PI * 2); x.stroke();
+    await drawIcon(x, 'play', 512, 470, 150, COL.teal, 1.7);
+    await drawIcon(x, 'triangle-alert', 690, 300, 200, COL.red, 2.2);
+    for (let i = 0; i < 3; i++) { x.fillStyle = hex(i === 0 ? COL.red : COL.gray); x.beginPath(); x.arc(392 + i * 120, 820, 34, 0, Math.PI * 2); x.fill(); }
+  }, { seed: 27, depth: 0.6 });
+  const stumps = (x, cx, base, h, col, tilt = 0, bailOff = 0) => {
+    x.save(); x.translate(cx, base); x.rotate(tilt); x.strokeStyle = hex(col); x.lineWidth = 22;
+    for (const dx of [-70, 0, 70]) { x.beginPath(); x.moveTo(dx, 0); x.lineTo(dx, -h); x.stroke(); }
+    x.restore();
+    x.strokeStyle = hex(col); x.lineWidth = 16;
+    x.beginPath(); x.moveTo(cx - 70, base - h - 14 - bailOff); x.lineTo(cx - 4, base - h - 14 - bailOff * 1.4); x.stroke();
+    x.beginPath(); x.moveTo(cx + 4, base - h - 14 - bailOff * 1.2); x.lineTo(cx + 70, base - h - 14 - bailOff * 0.8); x.stroke();
+  };
+  SH.stumps = await canvasShape(async x => { stumps(x, 512, 860, 560, COL.white);
+    x.fillStyle = hex(COL.amber); x.globalAlpha = 0.9; x.fillRect(290, 880, 444, 10); }, { seed: 28 });
+  SH.wicket = await canvasShape(async x => {
+    stumps(x, 512, 860, 560, COL.red, 0.0, 0);
+    x.clearRect(380, 230, 270, 90);
+    x.strokeStyle = hex(COL.white); x.lineWidth = 16;
+    x.beginPath(); x.moveTo(330, 170); x.lineTo(392, 120); x.stroke(); x.beginPath(); x.moveTo(640, 110); x.lineTo(712, 150); x.stroke();
+    x.fillStyle = hex(COL.red); x.beginPath(); x.arc(512, 420, 46, 0, Math.PI * 2); x.fill();
+  }, { seed: 29 });
+  SH.threeWickets = await canvasShape(async x => {
+    const sm = (cx, tilt) => { x.save(); x.translate(cx, 700); x.rotate(tilt); x.strokeStyle = hex(COL.red); x.lineWidth = 14;
+      for (const dx of [-36, 0, 36]) { x.beginPath(); x.moveTo(dx, 0); x.lineTo(dx, -300); x.stroke(); } x.restore(); };
+    sm(230, -0.35); sm(512, 0.28); sm(794, -0.22);
+    x.strokeStyle = hex(COL.gray); x.lineWidth = 6; x.beginPath(); x.arc(512, 860, 380, Math.PI * 1.08, Math.PI * 1.92); x.stroke();
+  }, { seed: 30 });
+  SH.globeDark = sphereShape(4.2, COL.gray, [0.2, 0.22, 0.27], { y: -0.8, seed: 31 });
+  for (let k = 0; k < N; k++) { SH.globeDark.col[k * 3] *= 0.45; SH.globeDark.col[k * 3 + 1] *= 0.45; SH.globeDark.col[k * 3 + 2] *= 0.5; }
+  SH.warnings = await canvasShape(async x => {
+    await drawIcon(x, 'triangle-alert', 300, 560, 330, COL.red, 1.6); await drawIcon(x, 'triangle-alert', 724, 560, 330, COL.red, 1.6);
+    x.fillStyle = hex(COL.white); x.font = '800 150px Inter'; x.textAlign = 'center'; x.fillText('1', 300, 870); x.fillText('2', 724, 870);
+  }, { seed: 32 });
+  SH.trash = await canvasShape(async x => {
+    await drawIcon(x, 'trash-2', 512, 640, 470, COL.white, 1.3);
+    roundRect(x, 512, 300, 260, 146, 18, COL.gray, 8);
+    await drawIcon(x, 'triangle-alert', 820, 250, 190, COL.red, 2.0);
+  }, { seed: 33 });
+  SH.dispute = await canvasShape(async x => {
+    await drawIcon(x, 'tag', 512, 560, 470, COL.amber, 1.5);
+    x.save(); x.translate(512, 560); x.rotate(-0.2); x.strokeStyle = hex(COL.white); x.lineWidth = 10;
+    x.strokeRect(-250, -70, 500, 140); x.fillStyle = hex(COL.white); x.font = '800 92px Inter'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText('DISPUTE', 0, 4); x.restore();
+  }, { seed: 34 });
+  SH.tagToStrike = await canvasShape(async x => { await drawIcon(x, 'triangle-alert', 512, 560, 560, COL.red, 1.5); }, { seed: 35 });
+  SH.gather = (() => { const pos = new Float32Array(N * 3), col = new Float32Array(N * 3), r2 = rng(36);
+    for (let k = 0; k < N; k++) { const a = r2() * 6.283 * 3, rr = 1 + Math.pow(r2(), 0.6) * 11;
+      pos.set([Math.cos(a + rr * 0.45) * rr, Math.sin(a + rr * 0.45) * rr * 0.9 - 0.8, (r2() - 0.5) * 6], k * 3);
+      const c = r2() < 0.7 ? COL.teal : COL.white; const f = 0.35 + 0.65 * (1 - rr / 12); col.set([c[0] * f, c[1] * f, c[2] * f], k * 3); }
+    return { pos, col }; })();
+  SH.dm = await canvasShape(async x => {
+    await drawIcon(x, 'message-circle', 512, 600, 760, COL.teal, 1.25);
+    for (let i = 0; i < 3; i++) { x.fillStyle = hex(COL.white); x.beginPath(); x.arc(392 + i * 120, 600, 30, 0, Math.PI * 2); x.fill(); }
+  }, { seed: 37 });
+}
+
+// ---------- the schedule: which shape the cloud forms, and when ----------
+let SCHED = [];
+function buildSchedule() {
+  const s = (shape, t, dur = 1.3, extra = {}) => SCHED.push(Object.assign({ shape, t, dur }, extra));
+  s('dust', -10, 0.1);
+  s('globe', 0.15, 2.2, { slow: true });
+  s('crack', cue(0, 'गलती') - 0.05, 0.5, { flash: 1 });
+  s('explode', cue(0, 'चैनल') - 0.1, 1.6, { drift: 0.35 });
+  s('tokens', L(1).start + 0.1, 1.4);
+  s('claimCard', L(2).start - 0.05, 1.3);
+  s('safe', L(3).start - 0.25, 1.1);
+  s('revenue', L(4).start - 0.1, 1.2);
+  s('blocked', cue(4, 'ब्लॉक') - 0.35, 0.9);
+  s('card', L(5).start - 0.1, 1.0);
+  s('shatter', cue(5, 'हटवा') - 0.05, 0.9, { drift: 0.25, flash: 0.8 });
+  s('strikeMark', cue(5, 'स्ट्राइक', 1) - 0.25, 1.0, { flash: 0.7 });
+  s('stumps', L(6).start - 0.05, 1.2);
+  s('wicket', cue(6, 'विकेट') - 0.1, 0.45, { flash: 1 });
+  s('threeWickets', L(7).start - 0.05, 1.1);
+  s('globeDark', cue(7, 'चैनल') - 0.1, 1.2);
+  s('warnings', L(8).start - 0.1, 1.0);
+  s('trash', L(9).start - 0.1, 1.1);
+  s('dispute', L(10).start - 0.1, 1.1);
+  s('tagToStrike', cue(10, 'स्ट्राइक') - 0.3, 0.8, { flash: 0.7 });
+  s('gather', L(11).start - 0.2, 1.6, { slow: true });
+  s('dm', L(12).start - 0.15, 1.8, { flash: 0.9 });
+  SCHED.sort((a, b) => a.t - b.t);
+}
+
+const heroPos = heroGeo.attributes.position.array, heroCol = heroGeo.attributes.aColor.array;
+const tmpCol = { teal: COL.teal };
+function updateHero(t) {
+  let k = 0;
+  while (k + 1 < SCHED.length && SCHED[k + 1].t <= t) k++;
+  const cur = SCHED[k], prev = SCHED[Math.max(0, k - 1)];
+  const A = SH[prev.shape], B = SH[cur.shape];
+  const p = (t - cur.t) / cur.dur;
+  const since = t - cur.t;
+  const drift = cur.drift ? Math.max(0, since) * cur.drift : 0;
+  const stag = cur.slow ? 0.55 : 0.35;
+  for (let i = 0; i < N; i++) {
+    const q = easeIO((p - delay[i] * stag) / (1 - stag));
+    const i3 = i * 3;
+    const swirl = Math.sin(Math.PI * q) * (cur.slow ? 2.2 : 3.2) * seedA[i3 + 2];
+    const ax = seedA[i3], ay = seedA[i3 + 1];
+    const wx = Math.sin(t * 0.7 + ax) * 0.06, wy = Math.cos(t * 0.6 + ay) * 0.06, wz = Math.sin(t * 0.5 + ax + ay) * 0.06;
+    let x = A.pos[i3] + (B.pos[i3] - A.pos[i3]) * q + Math.cos(ax + q * 3) * swirl + wx;
+    let y = A.pos[i3 + 1] + (B.pos[i3 + 1] - A.pos[i3 + 1]) * q + Math.sin(ay + q * 3) * swirl + wy;
+    let z = A.pos[i3 + 2] + (B.pos[i3 + 2] - A.pos[i3 + 2]) * q + Math.sin(ax - ay) * swirl * 0.8 + wz;
+    if (drift) { x *= 1 + drift * 0.25; y = (y + 0.8) * (1 + drift * 0.25) - 0.8; z *= 1 + drift * 0.25; }
+    heroPos[i3] = x; heroPos[i3 + 1] = y; heroPos[i3 + 2] = z;
+    heroCol[i3] = A.col[i3] + (B.col[i3] - A.col[i3]) * q;
+    heroCol[i3 + 1] = A.col[i3 + 1] + (B.col[i3 + 1] - A.col[i3 + 1]) * q;
+    heroCol[i3 + 2] = A.col[i3 + 2] + (B.col[i3 + 2] - A.col[i3 + 2]) * q;
+  }
+  heroGeo.attributes.position.needsUpdate = true; heroGeo.attributes.aColor.needsUpdate = true;
+  // flash on impacts
+  let fl = 0;
+  for (const e of SCHED) if (e.flash && t >= e.t && t < e.t + 0.6) fl = Math.max(fl, e.flash * Math.exp(-(t - e.t) * 6));
+  return { cur, fl, p };
+}
+
+// ---------- scene colour mood (glow + beams), by shape ----------
+const MOOD = { dust: COL.blue, globe: COL.teal, crack: COL.red, explode: COL.red, tokens: COL.white, claimCard: COL.amber, safe: COL.teal,
+  revenue: COL.amber, blocked: COL.amber, card: COL.white, shatter: COL.red, strikeMark: COL.red, stumps: COL.white, wicket: COL.red,
+  threeWickets: COL.red, globeDark: COL.gray, warnings: COL.red, trash: COL.white, dispute: COL.amber, tagToStrike: COL.red, gather: COL.teal, dm: COL.teal };
+const moodCol = new THREE.Color(), tmpA = new THREE.Color(), tmpB = new THREE.Color();
+
+// ---------- camera: one continuous flight, faster through transitions ----------
+let ZTAB = null;
+function buildFlight() {
+  const fps = 60, n = Math.ceil((T.duration + 2) * fps);
+  ZTAB = new Float32Array(n + 1);
+  let z = 0;
+  for (let f = 0; f <= n; f++) {
+    const t = f / fps;
+    let sp = 5.5;
+    for (const e of SCHED) { const d = t - e.t; if (d > -0.2 && d < e.dur + 0.2) sp += 26 * Math.sin(Math.PI * Math.min(1, Math.max(0, (d + 0.2) / (e.dur + 0.4)))); }
+    const end = T.duration - 3.2; if (t > end) sp *= Math.max(0.15, 1 - (t - end) / 1.5);
+    ZTAB[f] = z; z -= sp / fps;
+  }
+}
+const camZ = t => { const f = Math.max(0, Math.min(ZTAB.length - 1, t * 60)); const a = Math.floor(f), b = Math.min(ZTAB.length - 1, a + 1); return ZTAB[a] + (ZTAB[b] - ZTAB[a]) * (f - a); };
+
+// ---------- post: bloom, then grain + vignette + a touch of chromatic shift ----------
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.62, 0.45, 0.24);
+composer.addPass(bloom);
+const finish = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uAb: { value: 0.0006 }, uVig: { value: 1.0 } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime; uniform float uAb; uniform float uVig; varying vec2 vUv;
+    float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)) + uTime*43.7) * 43758.5453); }
+    void main(){ vec2 c=vUv-0.5; vec2 off=c*uAb*8.0;
+      vec3 col=vec3(texture2D(tDiffuse,vUv+off).r, texture2D(tDiffuse,vUv).g, texture2D(tDiffuse,vUv-off).b);
+      float v=smoothstep(0.95,0.25,length(c*vec2(0.9,1.05)))*uVig + (1.0-uVig);
+      col*=mix(0.55,1.0,v); col+= (hash(vUv*vec2(1080.0,1920.0))-0.5)*0.045; gl_FragColor=vec4(col,1.0); }`,
+});
+composer.addPass(finish);
+composer.addPass(new OutputPass());
+
+// ---------- text overlay (GSAP, seeked with the 3D) ----------
+const tl = gsap.timeline({ paused: true });
+function reveal(sel, t, d = 0.75) {
+  document.querySelectorAll(`${sel} .line > span`).forEach((el, k) => {
+    gsap.set(el, { yPercent: 110, opacity: 0 });
+    tl.to(el, { yPercent: 0, opacity: 1, duration: d, ease: 'power4.out' }, t + k * 0.09);
+  });
+}
+const TEXT_T = [];
+function block(sel, t0, t1) {
+  TEXT_T.push(t0);
+  const el = $(sel);
+  gsap.set(el, { autoAlpha: 0 });
+  tl.to(el, { autoAlpha: 1, duration: 0.01 }, t0);
+  tl.fromTo(el.querySelectorAll('.kick'), { autoAlpha: 0, letterSpacing: '0.6em' }, { autoAlpha: 1, letterSpacing: '0.32em', duration: 0.9, ease: 'power3.out', immediateRender: false }, t0);
+  reveal(sel + ' .head', t0 + 0.05);
+  tl.to(el, { autoAlpha: 0, y: -24, filter: 'blur(6px)', duration: 0.35, ease: 'power2.in' }, t1 - 0.35);
+}
+function subReveal(sel, t) { const el = $(sel); gsap.set(el, { autoAlpha: 0 }); tl.to(el, { autoAlpha: 1, duration: 0.01 }, t); reveal(sel, t); }
+function buildText() {
+  const next = i => (i + 1 < LINES.length ? LINES[i + 1].start - 0.15 : T.duration + 1);
+  block('#t0', cue(0, 'गलती') - 0.15, next(0)); subReveal('#t0b', cue(0, 'चैनल') - 0.1);
+  block('#t1', L(1).start, next(1));
+  gsap.set(['#t1a', '#t1n', '#t1b'], { opacity: 0 });
+  tl.to('#t1a', { opacity: 1, duration: 0.4 }, cue(1, 'क्लेम') - 0.1);
+  tl.to('#t1n', { opacity: 1, duration: 0.4 }, cue(1, 'एक') - 0.1);
+  tl.to('#t1b', { opacity: 1, duration: 0.4 }, cue(1, 'स्ट्राइक') - 0.1);
+  block('#t2', L(2).start, next(2));
+  block('#t3', L(3).start - 0.1, next(3));
+  block('#t4', L(4).start, next(4)); reveal('#t4 .sub:first-child', L(4).start + 0.05); subReveal('#t4b', cue(4, 'ब्लॉक') - 0.3);
+  block('#t5', L(5).start, next(5)); subReveal('#t5b', cue(5, 'स्ट्राइक', 1) - 0.1);
+  block('#t6', L(6).start, next(6)); subReveal('#t6a', cue(6, 'रन') - 0.4); subReveal('#t6b', cue(6, 'विकेट') - 0.3);
+  block('#t7', L(7).start, next(7)); subReveal('#t7b', cue(7, 'बंद') - 0.4);
+  block('#t8', L(8).start, next(8));
+  block('#t9', L(9).start, next(9)); reveal('#t9 .sub', L(9).start + 0.05);
+  block('#t10', L(10).start, next(10)); reveal('#t10 .sub:not(#t10b)', L(10).start + 0.05); subReveal('#t10b', cue(10, 'क्लेम') - 0.2);
+  block('#t11', L(11).start, next(11)); reveal('#t11 .sub', L(11).start + 0.05);
+  block('#t12', L(12).start + 0.4, T.duration + 2); subReveal('#t12b', cue(12, 'सच') - 0.2);
+  gsap.set('#handle', { autoAlpha: 0 }); tl.to('#handle', { autoAlpha: 1, duration: 0.8 }, cue(12, 'सच') + 0.4);
+}
+
+// ---------- per-frame ----------
+function render(t) {
+  tl.seek(t, false);
+  const { cur, fl } = updateHero(t);
+  const z = camZ(t);
+  const sway = 1 - smooth((t - (T.duration - 3)) / 2);
+  camera.position.set(Math.sin(t * 0.23) * 1.6 * sway, Math.sin(t * 0.19 + 1) * 1.1 * sway, z);
+  // impact shake
+  let shake = 0;
+  for (const e of SCHED) if (e.flash && t >= e.t && t < e.t + 0.7) shake = Math.max(shake, e.flash * Math.exp(-(t - e.t) * 7));
+  camera.position.x += Math.sin(t * 61) * 0.12 * shake; camera.position.y += Math.cos(t * 53) * 0.12 * shake;
+  camera.lookAt(0, -1.3, z - HERO_D);
+  camera.rotateZ(Math.sin(t * 0.17) * 0.015 * sway);
+  hero.position.set(0, -1.1, z - HERO_D);
+  hero.rotation.y = Math.sin(t * 0.21) * 0.22 + (cur.shape.startsWith('globe') || cur.shape === 'crack' ? t * 0.12 : 0);
+  hero.rotation.x = Math.sin(t * 0.13) * 0.06;
+  hero.material.uniforms.uGain.value = 1 + fl * 0.9;
+  // mood colour for glow and beams
+  let k = 0; while (k + 1 < SCHED.length && SCHED[k + 1].t <= t) k++;
+  const a = MOOD[SCHED[Math.max(0, k - 1)].shape], b = MOOD[SCHED[k].shape];
+  const m = smooth((t - SCHED[k].t) / 0.9);
+  tmpA.setRGB(a[0], a[1], a[2]); tmpB.setRGB(b[0], b[1], b[2]); moodCol.copy(tmpA).lerp(tmpB, m);
+  glow.position.set(0, -1.9, z - HERO_D - 9); glow.material.color.copy(moodCol); glow.material.opacity = 0.15 + fl * 0.15;
+  beams.children.forEach((bm, i) => {
+    const u = bm.userData; bm.position.set(u.x, 20, z + u.zo); bm.rotation.z = u.rot + Math.sin(t * 0.2 + u.ph) * 0.08;
+    bm.material.color.copy(moodCol); bm.material.opacity = 0.022 + 0.016 * Math.sin(t * 0.5 + u.ph);
+  });
+  stars.material.uniforms.uGain.value = 0.9 + fl * 0.4;
+  dust.position.z = 0;
+  finish.uniforms.uTime.value = t; finish.uniforms.uAb.value = 0.0006 + shake * 0.004;
+  bloom.strength = 0.62 + fl * 0.4;
+  // end: settle
+  composer.render();
+}
+
+window.READY = (async () => {
+  await document.fonts.ready;
+  await buildShapes();
+  buildSchedule(); buildFlight(); buildText();
+  window.DURATION = T.duration; window.FPS = T.fps;
+  window.EVENTS = { shapes: SCHED.filter(e => e.t >= 0).map(e => ({ t: e.t, shape: e.shape, dur: e.dur, flash: e.flash || 0 })), text: TEXT_T };
+  window.seek = t => render(t);
+  render(0);
+  return true;
+})();
+</script>
+</body>
+</html>
