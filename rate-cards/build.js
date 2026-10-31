@@ -5,16 +5,19 @@ const { chromium } = require('playwright');
 
 const LONG = 2000;          // Long video, 5-6 min
 const SHORT = 500;          // Short, 30-40 sec
-const MONTHLY_COUNT = 8;    // long + short pairs per month
-const DISCOUNT = 16;        // % off on monthly
+const M_LONG = 8;           // long videos per month
+const M_SHORTS = 16;        // shorts per month (2 from each long video)
+const M_PRICE = 20000;      // monthly package price
 
 const BUNDLE = LONG + SHORT;
-const monthlyLong = LONG * MONTHLY_COUNT;
-const monthlyShort = SHORT * MONTHLY_COUNT;
+const monthlyLong = LONG * M_LONG;
+const monthlyShort = SHORT * M_SHORTS;
 const monthlyTotal = monthlyLong + monthlyShort;
-const monthlyOff = Math.round(monthlyTotal * DISCOUNT / 100);
-const monthlyFinal = monthlyTotal - monthlyOff;
-const perBundleMonthly = Math.round(monthlyFinal / MONTHLY_COUNT);
+const monthlyFinal = M_PRICE;
+const monthlyOff = monthlyTotal - monthlyFinal;
+const shortsPerLong = M_SHORTS / M_LONG;
+const perSetNormal = LONG + SHORT * shortsPerLong;
+const perSetMonthly = Math.round(monthlyFinal / M_LONG);
 
 const rs = n => '₹' + n.toLocaleString('en-IN');
 
@@ -136,26 +139,26 @@ const perVideo = `<!doctype html><html><head><meta charset="utf-8"><style>${css}
 const monthly = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body><div class="page">
   ${header('MONTHLY')}
   <div class="body">
-    <h1>Monthly Package <span class="pill">${DISCOUNT}% OFF</span></h1>
+    <h1>Monthly Package <span class="pill">${rs(monthlyOff)} OFF</span></h1>
     <div class="sub">Regular kaam ke liye, per video se sasta</div>
 
     <p class="intro">Agar aap har mahine regular videos banwana chahte ho, toh monthly package lena better rahega. Same quality, kam price.</p>
 
     <div class="label">HAR MAHINE MILEGA</div>
     <table>
-      <tr><td>${MONTHLY_COUNT} Long Videos (5-6 min) &times; ${rs(LONG)}</td><td class="r">${rs(monthlyLong)}</td></tr>
-      <tr><td>${MONTHLY_COUNT} Shorts (30-40 sec) &times; ${rs(SHORT)}</td><td class="r">${rs(monthlyShort)}</td></tr>
-      <tr><td>${MONTHLY_COUNT} Thumbnails</td><td class="r">FREE</td></tr>
-      <tr class="total"><td>Total</td><td class="r">${rs(monthlyTotal)}</td></tr>
-      <tr class="off"><td>Monthly discount (${DISCOUNT}%)</td><td class="r">- ${rs(monthlyOff)}</td></tr>
+      <tr><td>${M_LONG} Long Videos (5-6 min) &times; ${rs(LONG)}</td><td class="r">${rs(monthlyLong)}</td></tr>
+      <tr><td>${M_SHORTS} Shorts (30-40 sec) &times; ${rs(SHORT)} &nbsp;<span style="color:#888">(har long video se ${shortsPerLong})</span></td><td class="r">${rs(monthlyShort)}</td></tr>
+      <tr><td>${M_LONG} Thumbnails</td><td class="r">FREE</td></tr>
+      <tr class="total"><td>Normal price</td><td class="r">${rs(monthlyTotal)}</td></tr>
+      <tr class="off"><td>Monthly discount</td><td class="r">- ${rs(monthlyOff)}</td></tr>
     </table>
     <div class="final">
-      <div class="t">Aapka monthly price<span>Matlab ek bundle sirf ${rs(perBundleMonthly)} ka pada</span></div>
+      <div class="t">Aapka monthly price<span>Matlab 1 Long + ${shortsPerLong} Shorts sirf ${rs(perSetMonthly)} me (normally ${rs(perSetNormal)})</span></div>
       <div class="p">${rs(monthlyFinal)}</div>
     </div>
 
     <div class="label">EDITING ME KYA HOGA</div>
-    <div class="incl">Fast pacing, heavy sound effects, stock footage, text pop-ups aur background music. Shorts usi long video me se nikale jayenge.</div>
+    <div class="incl">Fast pacing, heavy sound effects, stock footage, text pop-ups aur background music. Har long video me se ${shortsPerLong} shorts nikale jayenge.</div>
 
     <div class="label">PAYMENT KAISE HOGA</div>
     <div class="steps">
