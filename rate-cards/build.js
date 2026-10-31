@@ -3,8 +3,8 @@
 const path = require('path');
 const { chromium } = require('playwright');
 
-const LONG = 1200;          // Long video, 5-6 min
-const SHORT = 300;          // Short, 30-40 sec
+const LONG = 2000;          // Long video, 5-6 min
+const SHORT = 500;          // Short, 30-40 sec
 const MONTHLY_COUNT = 8;    // long + short pairs per month
 const DISCOUNT = 16;        // % off on monthly
 
