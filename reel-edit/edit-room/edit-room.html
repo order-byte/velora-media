@@ -1,0 +1,460 @@
+<title>Clients Reel Edit Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: an edit-suite screen. Program monitor (9:16) on the left, scene bin + NLE timeline on the right, AI tasks and logs below. Single dark look, like an editing app. */
+:root {
+  --bg: #0e0f13;
+  --panel: #16181f;
+  --panel-2: #1d2029;
+  --line: #2a2e3a;
+  --fg: #e9ebf2;
+  --muted: #9097a8;
+  --accent: #3d6bff;       /* the reel's own blue */
+  --accent-ink: #ffffff;
+  --warm: #ffb547;         /* tungsten practical light */
+  --ok: #3ccf8e;
+  --warn: #ffb547;
+  --bad: #ff5d6c;
+  --ai: #b28cff;
+  --info: #59a6ff;
+  --font-display: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --font-body: "Hind Siliguri", "Noto Sans Bengali", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--bg); color: var(--fg); }
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px 40px;
+}
+.wrap { max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+h1, h2 { margin: 0; text-wrap: balance; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4.4vw, 44px); letter-spacing: .5px; line-height: 1.05; text-transform: uppercase; }
+h1 .blue { color: var(--accent); }
+h2 { font-size: 17px; font-weight: 700; }
+.eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* header */
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+.live { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+.live.on .dot { background: var(--bad); box-shadow: 0 0 0 0 color-mix(in srgb, var(--bad) 60%, transparent); animation: pulse 1.8s infinite; }
+.live.on { color: var(--fg); }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--bad) 55%, transparent); } 70% { box-shadow: 0 0 0 9px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+/* stage bar */
+.stage { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; align-items: center; }
+.stage-text { font-weight: 600; font-size: 16px; min-width: 0; }
+.stage-note { grid-column: 1 / -1; color: var(--muted); font-size: 14px; min-width: 0; }
+.pct { font-family: var(--font-display); font-size: 30px; line-height: 1; color: var(--accent); }
+.bar { grid-column: 1 / -1; height: 6px; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--info)); transition: width .6s ease; }
+
+/* main grid */
+.main { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 820px) { .main { grid-template-columns: 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; min-width: 0; }
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+
+/* program monitor */
+.monitor { position: relative; width: 100%; max-width: 100%; aspect-ratio: 9 / 16; background: #000; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.monitor video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
+.monitor .empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 22px; color: var(--muted); }
+.monitor .empty b { font-family: var(--font-display); font-weight: 400; color: var(--fg); font-size: 26px; letter-spacing: .5px; }
+.safe { position: absolute; inset: 8% 6% 18% 6%; border: 1px dashed color-mix(in srgb, var(--fg) 18%, transparent); border-radius: 6px; pointer-events: none; }
+.ver { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 10px; font-size: 13.5px; }
+.tag { font-family: var(--font-mono); font-size: 11.5px; padding: 2px 8px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--line); color: var(--fg); }
+.tag.new { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.spec { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+.spec div { background: var(--panel-2); border-radius: 8px; padding: 6px 8px; }
+.spec b { display: block; font-family: var(--font-mono); font-size: 13px; }
+.spec span { font-size: 11.5px; color: var(--muted); }
+
+/* timeline */
+.tl { position: relative; margin: 2px 0 14px; }
+.ruler { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); margin-bottom: 4px; }
+.track { position: relative; height: 34px; background: var(--panel-2); border-radius: 6px; overflow: hidden; }
+.clip { position: absolute; top: 3px; bottom: 3px; border-radius: 4px; font-family: var(--font-mono); font-size: 10.5px; display: flex; align-items: center; justify-content: center; color: #0e0f13; font-weight: 600; overflow: hidden; border-right: 1px solid var(--panel); cursor: pointer; }
+.clip:focus-visible { outline: 2px solid var(--fg); outline-offset: 1px; }
+.playhead { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--bad); left: 0; pointer-events: none; transition: left .12s linear; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12.5px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* status colors (semantic) */
+.s-waiting { --c: #5b6172; }
+.s-matched { --c: var(--info); }
+.s-editing { --c: var(--warn); }
+.s-done { --c: var(--ok); }
+.s-ai { --c: var(--ai); }
+.s-missing { --c: var(--bad); }
+.clip { background: var(--c); }
+.legend i { background: var(--c); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 1px 9px; border-radius: 99px; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); border: 1px solid color-mix(in srgb, var(--c) 40%, transparent); white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
+
+/* scene list */
+.scenes { display: flex; flex-direction: column; gap: 8px; max-height: 760px; overflow-y: auto; padding-right: 4px; }
+.scene { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; padding: 8px; border-radius: 10px; background: var(--panel-2); border: 1px solid transparent; }
+.scene.now { border-color: var(--accent); }
+.scene .thumb { width: 112px; aspect-ratio: 16 / 11; border-radius: 6px; object-fit: cover; background: #000; display: block; }
+.scene .thumb.ph { display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 22px; color: var(--muted); }
+.scene-top { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.scene-n { font-family: var(--font-display); font-size: 18px; color: var(--accent); letter-spacing: .5px; }
+.scene-title { font-weight: 700; }
+.scene-time { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
+.scene-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 3px; font-size: 13px; }
+.scene-meta .file { font-family: var(--font-mono); font-size: 12px; color: var(--fg); background: var(--panel); padding: 0 6px; border-radius: 4px; }
+.scene-note { font-size: 13.5px; color: var(--muted); margin-top: 3px; }
+@media (max-width: 480px) { .scene { grid-template-columns: 84px minmax(0, 1fr); } .scene .thumb { width: 84px; } }
+
+/* AI tasks */
+.ai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 12px; }
+.ai-card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ai-card h3 { margin: 0; font-size: 15px; }
+.ai-row { font-size: 13.5px; }
+.ai-row b { color: var(--muted); font-weight: 600; margin-right: 4px; }
+.prompt { position: relative; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 10px 34px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+.copy { position: absolute; right: 8px; bottom: 6px; font-family: var(--font-body); font-size: 12.5px; font-weight: 600; padding: 3px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
+.copy:hover { border-color: var(--accent); }
+.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.ref { margin: 0; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ref img { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 6px; background: #000; display: block; }
+.ref figcaption { font-size: 11.5px; color: var(--muted); line-height: 1.3; }
+.save { font-family: var(--font-body); font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
+.save:hover { border-color: var(--accent); }
+.save:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* files + log */
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+@media (max-width: 820px) { .two { grid-template-columns: 1fr; } }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-weight: 600; color: var(--muted); font-size: 12px; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.mono { white-space: nowrap; }
+.log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
+.log li { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 10px; font-size: 13.5px; }
+.log time { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); padding-top: 2px; }
+.empty-line { color: var(--muted); font-size: 13.5px; padding: 6px 0; }
+.offline { background: color-mix(in srgb, var(--warn) 12%, transparent); border: 1px solid color-mix(in srgb, var(--warn) 40%, transparent); color: var(--fg); border-radius: 10px; padding: 10px 14px; font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .live.on .dot { animation: none; } .bar > i, .playhead { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Velora Media · লাইভ এডিট রুম</div>
+      <h1>How to get <span class="blue">clients</span> · reel edit</h1>
+    </div>
+    <div class="live" id="live"><span class="dot"></span><span id="liveText">সংযোগ হচ্ছে…</span></div>
+  </header>
+
+  <div class="offline" id="offline" hidden></div>
+
+  <section class="stage" aria-live="polite">
+    <div class="stage-text" id="stageText">এডিট শুরু হওয়ার অপেক্ষায়</div>
+    <div class="pct mono" id="pct">0%</div>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="stage-note" id="stageNote">ফুটেজ নামানো, মেলানো আর এডিটের প্রতিটা ধাপ এখানে লাইভ দেখা যাবে।</div>
+  </section>
+
+  <div class="main">
+    <section class="panel">
+      <div class="panel-head"><h2>প্রিভিউ</h2><span class="eyebrow">1080 × 1920 · 9:16</span></div>
+      <div class="monitor">
+        <video id="player" controls playsinline preload="metadata" hidden></video>
+        <div class="empty" id="monitorEmpty">
+          <b>NO SIGNAL</b>
+          <span>প্রথম প্রিভিউ রেন্ডার হলে এখানে চালিয়ে দেখতে পারবে।</span>
+        </div>
+        <div class="safe" aria-hidden="true"></div>
+      </div>
+      <div class="ver" id="ver"><span class="tag">ভার্সন —</span><span class="muted" id="verNote">এখনো কোনো রেন্ডার নেই</span></div>
+      <div class="spec">
+        <div><b>9:16</b><span>রেশিও</span></div>
+        <div><b>30 fps</b><span>ফ্রেম রেট</span></div>
+        <div><b id="durLabel">0:61</b><span>লক্ষ্য দৈর্ঘ্য</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>টাইমলাইন আর দৃশ্য</h2><span class="eyebrow" id="sceneCount">২০টা দৃশ্য</span></div>
+      <div class="tl">
+        <div class="ruler mono" id="ruler"><span>0:00</span><span>0:15</span><span>0:30</span><span>0:45</span><span>1:01</span></div>
+        <div class="track" id="track"><div class="playhead" id="playhead"></div></div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="scenes" id="scenes" style="margin-top:12px">
+        <div class="empty-line">দৃশ্যের তালিকা লোড হচ্ছে…</div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><h2>AI দিয়ে যা বানাতে হবে (তোমার কাজ)</h2><span class="eyebrow">প্রম্পট কপি করে AI টুলে দাও</span></div>
+    <div class="ai-grid" id="ai"><div class="empty-line">ফুটেজ দেখা শেষ হলে এখানে AI-এর কাজের তালিকা আর প্রম্পট আসবে।</div></div>
+  </section>
+
+  <div class="two">
+    <section class="panel">
+      <div class="panel-head"><h2>তোমার ফুটেজ</h2><span class="eyebrow" id="fileCount">—</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ফাইল</th><th>দৈর্ঘ্য</th><th>কোন দৃশ্যে</th><th>নোট</th></tr></thead>
+          <tbody id="files"><tr><td colspan="4" class="empty-line">ড্রাইভ থেকে নামানো ফাইল এখানে দেখা যাবে।</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>কাজের লগ</h2><span class="eyebrow">সবশেষটা উপরে</span></div>
+      <ul class="log" id="log"><li><time>—</time><span class="muted">এখনো কিছু হয়নি।</span></li></ul>
+    </section>
+  </div>
+</div>
+
+<script>
+(function () {
+  const STATUS = {
+    waiting: { cls: "s-waiting", label: "অপেক্ষায়" },
+    matched: { cls: "s-matched", label: "ফুটেজ মিলেছে" },
+    editing: { cls: "s-editing", label: "এডিট চলছে" },
+    done:    { cls: "s-done",    label: "তৈরি" },
+    ai:      { cls: "s-ai",      label: "AI লাগবে" },
+    missing: { cls: "s-missing", label: "ফুটেজ নেই" },
+  };
+  let TOTAL = 61.3;
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const bn = (s) => String(s).replace(/[0-9]/g, (d) => "০১২৩৪৫৬৭৮৯"[d]);
+  const fmt = (sec) => { sec = Math.max(0, sec || 0); const m = Math.floor(sec / 60); const s = Math.floor(sec % 60); return m + ":" + String(s).padStart(2, "0"); };
+  const clock = (iso) => { try { const d = new Date(iso); return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); } catch (e) { return "—"; } };
+
+  // legend
+  Object.values(STATUS).forEach((s) => { const sp = el("span", s.cls); sp.appendChild(el("i")); sp.appendChild(document.createTextNode(s.label)); $("legend").appendChild(sp); });
+
+  let scenes = [];
+  let currentPreview = null;
+
+  function renderStatus(d) {
+    if (!d) return;
+    $("stageText").textContent = d.stage || "—";
+    $("stageNote").textContent = d.note || "";
+    const p = Math.max(0, Math.min(100, Number(d.progress) || 0));
+    $("pct").textContent = bn(Math.round(p)) + "%";
+    $("barFill").style.width = p + "%";
+    $("liveText").textContent = d.updatedAt ? "লাইভ · আপডেট " + clock(d.updatedAt) : "লাইভ";
+    const pv = d.preview;
+    if (pv && pv.url && pv.url !== currentPreview) {
+      const isFirst = currentPreview === null;
+      currentPreview = pv.url;
+      const v = $("player");
+      v.src = pv.url;
+      v.hidden = false;
+      $("monitorEmpty").hidden = true;
+      const ver = $("ver");
+      ver.textContent = "";
+      const t = el("span", "tag" + (isFirst ? "" : " new"), "ভার্সন " + bn(pv.version || 1));
+      ver.appendChild(t);
+      ver.appendChild(el("span", "muted", pv.note || ""));
+    }
+    if (d.duration) {
+      $("durLabel").textContent = fmt(d.duration);
+      if (Math.abs(Number(d.duration) - TOTAL) > 0.05) {
+        TOTAL = Number(d.duration);
+        const r = $("ruler"); r.textContent = "";
+        [0, 0.25, 0.5, 0.75, 1].forEach((f) => r.appendChild(el("span", null, fmt(TOTAL * f))));
+        if (scenes.length) renderScenes({ items: scenes });
+      }
+    }
+  }
+
+  function renderScenes(d) {
+    scenes = (d && Array.isArray(d.items)) ? d.items : [];
+    const box = $("scenes");
+    box.textContent = "";
+    const track = $("track");
+    track.querySelectorAll(".clip").forEach((c) => c.remove());
+    if (!scenes.length) { box.appendChild(el("div", "empty-line", "দৃশ্যের তালিকা এখনো আসেনি।")); return; }
+    $("sceneCount").textContent = bn(scenes.length) + "টা দৃশ্য";
+    scenes.forEach((s, i) => {
+      const st = STATUS[s.status] || STATUS.waiting;
+      // timeline clip
+      const start = Number(s.start) || 0, end = Number(s.end) || start;
+      const clip = el("div", "clip " + st.cls, s.n);
+      clip.style.left = (start / TOTAL * 100) + "%";
+      clip.style.width = Math.max(0.8, (end - start) / TOTAL * 100) + "%";
+      clip.title = "দৃশ্য " + s.n + " · " + (s.title || "") + " · " + st.label;
+      clip.tabIndex = 0;
+      clip.addEventListener("click", () => jump(i));
+      clip.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); jump(i); } });
+      track.insertBefore(clip, $("playhead"));
+      // row
+      const row = el("div", "scene " + st.cls);
+      row.id = "scene-" + i;
+      if (s.ref) { const img = el("img", "thumb"); img.src = s.ref; img.alt = "মূল রিলের দৃশ্য " + s.n; img.loading = "lazy"; row.appendChild(img); }
+      else { row.appendChild(el("div", "thumb ph", s.n)); }
+      const body = el("div");
+      body.style.minWidth = "0";
+      const top = el("div", "scene-top");
+      top.appendChild(el("span", "scene-n", bn(s.n)));
+      top.appendChild(el("span", "scene-title", s.title || ""));
+      top.appendChild(el("span", "scene-time", fmt(start) + "–" + fmt(end)));
+      body.appendChild(top);
+      const meta = el("div", "scene-meta");
+      meta.appendChild(el("span", "pill " + st.cls, st.label));
+      (s.footage || []).forEach((f) => meta.appendChild(el("span", "file", f)));
+      body.appendChild(meta);
+      if (s.note) body.appendChild(el("div", "scene-note", s.note));
+      row.appendChild(body);
+      box.appendChild(row);
+    });
+  }
+
+  function jump(i) {
+    const s = scenes[i]; if (!s) return;
+    const v = $("player");
+    if (!v.hidden && v.duration) { v.currentTime = Number(s.start) || 0; }
+    const row = $("scene-" + i); if (row) row.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
+  $("player").addEventListener("timeupdate", () => {
+    const v = $("player");
+    const t = v.currentTime;
+    $("playhead").style.left = Math.min(100, t / TOTAL * 100) + "%";
+    scenes.forEach((s, i) => { const r = $("scene-" + i); if (r) r.classList.toggle("now", t >= s.start && t < s.end); });
+  });
+
+  function copyText(text, btn) {
+    const done = () => { const o = btn.textContent; btn.textContent = "কপি হয়েছে"; setTimeout(() => { btn.textContent = o; }, 1400); };
+    try {
+      navigator.clipboard.writeText(text).then(done, () => selectFallback(btn));
+    } catch (e) { selectFallback(btn); }
+  }
+  function selectFallback(btn) {
+    const pre = btn.parentElement.querySelector(".ptext");
+    const r = document.createRange(); r.selectNodeContents(pre);
+    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    btn.textContent = "সিলেক্ট করা হয়েছে, কপি করো";
+  }
+
+  function renderAI(d) {
+    const items = (d && Array.isArray(d.items)) ? d.items : [];
+    const box = $("ai"); box.textContent = "";
+    if (!items.length) { box.appendChild(el("div", "empty-line", "ফুটেজ দেখা শেষ হলে এখানে AI-এর কাজের তালিকা আর প্রম্পট আসবে।")); return; }
+    items.forEach((a) => {
+      const st = STATUS[a.status] || STATUS.ai;
+      const c = el("article", "ai-card");
+      const head = el("div", "scene-top");
+      head.appendChild(el("h3", null, a.title || ""));
+      head.appendChild(el("span", "pill " + st.cls, a.statusLabel || st.label));
+      c.appendChild(head);
+      if (a.scene) { const r = el("div", "ai-row"); r.appendChild(el("b", null, "কোন দৃশ্যে:")); r.appendChild(document.createTextNode(a.scene)); c.appendChild(r); }
+      if (a.tool) { const r = el("div", "ai-row"); r.appendChild(el("b", null, "কোন টুলে:")); r.appendChild(document.createTextNode(a.tool)); c.appendChild(r); }
+      if (a.input) { const r = el("div", "ai-row"); r.appendChild(el("b", null, "AI-কে কী দেবে:")); r.appendChild(document.createTextNode(a.input)); c.appendChild(r); }
+      if (a.prompt) {
+        const pre = el("div", "prompt");
+        const pt = el("span", "ptext", a.prompt);
+        pre.appendChild(pt);
+        const b = el("button", "copy", "প্রম্পট কপি");
+        b.type = "button";
+        b.addEventListener("click", () => copyText(a.prompt, b));
+        pre.appendChild(b);
+        c.appendChild(pre);
+      }
+      if (a.after) { const r = el("div", "ai-row"); r.appendChild(el("b", null, "তারপর:")); r.appendChild(document.createTextNode(a.after)); c.appendChild(r); }
+      if (Array.isArray(a.refs) && a.refs.length) {
+        const g = el("div", "refs");
+        a.refs.forEach((rf) => {
+          const fig = el("figure", "ref");
+          const im = el("img"); im.src = rf.url; im.alt = rf.label || "রেফারেন্স ছবি"; im.loading = "lazy";
+          fig.appendChild(im);
+          fig.appendChild(el("figcaption", null, rf.label || ""));
+          const sb = el("button", "save", "ছবি সেভ করো");
+          sb.type = "button";
+          sb.hidden = !downloadsApi;
+          sb.addEventListener("click", () => saveImage(rf, sb));
+          fig.appendChild(sb);
+          g.appendChild(fig);
+        });
+        c.appendChild(g);
+      }
+      box.appendChild(c);
+    });
+  }
+
+  function renderFiles(d) {
+    const items = (d && Array.isArray(d.items)) ? d.items : [];
+    const tb = $("files"); tb.textContent = "";
+    $("fileCount").textContent = items.length ? bn(items.length) + "টা ফাইল" : "—";
+    if (!items.length) { const tr = el("tr"); const td = el("td", "empty-line", "ড্রাইভ থেকে নামানো ফাইল এখানে দেখা যাবে।"); td.colSpan = 4; tr.appendChild(td); tb.appendChild(tr); return; }
+    items.forEach((f) => {
+      const tr = el("tr");
+      tr.appendChild(el("td", "mono", f.name || ""));
+      tr.appendChild(el("td", "mono", f.dur || ""));
+      tr.appendChild(el("td", null, f.scene || "—"));
+      tr.appendChild(el("td", "muted", f.note || ""));
+      tb.appendChild(tr);
+    });
+  }
+
+  function renderLog(d) {
+    const items = (d && Array.isArray(d.items)) ? d.items.slice().reverse() : [];
+    const ul = $("log"); ul.textContent = "";
+    if (!items.length) { const li = el("li"); li.appendChild(el("time", null, "—")); li.appendChild(el("span", "muted", "এখনো কিছু হয়নি।")); ul.appendChild(li); return; }
+    items.forEach((x) => { const li = el("li"); const t = el("time", null, clock(x.t)); li.appendChild(t); li.appendChild(el("span", null, x.text || "")); ul.appendChild(li); });
+  }
+
+  function showOffline(msg) { const o = $("offline"); o.textContent = msg; o.hidden = false; }
+
+  let downloadsApi = null;
+  async function saveImage(rf, btn) {
+    if (!downloadsApi) return;
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = "তৈরি হচ্ছে…";
+    try {
+      const res = await fetch(rf.url);
+      const blob = await res.blob();
+      await downloadsApi.save({ filename: rf.file || "reference.jpg", data: blob });
+      btn.textContent = "সেভ হয়েছে";
+    } catch (e) {
+      const code = e && e.code;
+      btn.textContent = code === "declined" ? orig : "সেভ করা গেল না";
+      if (code === "unavailable" || code === "not_granted") { btn.hidden = true; }
+    }
+    setTimeout(() => { btn.disabled = false; if (btn.textContent !== orig) btn.textContent = orig; }, 2200);
+  }
+
+  async function start() {
+    let db = null;
+    try { db = window.claude && window.claude.use ? await window.claude.use("db") : null; } catch (e) { db = null; }
+    if (!db) { $("liveText").textContent = "অফলাইন"; showOffline("লাইভ আপডেট এই ভিউতে চালু হচ্ছে না। claude.ai-তে সাইন ইন করা অবস্থায় পেজটা খুলো।"); return; }
+    window.claude.use("downloads").then((d) => { downloadsApi = d || null; document.querySelectorAll(".save").forEach((b) => { b.hidden = !downloadsApi; }); }, () => {});
+    $("live").classList.add("on");
+    $("liveText").textContent = "লাইভ";
+    let gotFresh = false;
+    const timer = setTimeout(() => { if (!gotFresh) showOffline("ডেটা আসতে দেরি হচ্ছে। ইন্টারনেট ঠিক থাকলে একটু পরে নিজে থেকেই আপডেট হবে।"); }, 10000);
+    const fresh = (snap) => { if (!snap.metadata.fromCache && !gotFresh) { gotFresh = true; clearTimeout(timer); $("offline").hidden = true; } };
+    const fail = (e) => { clearTimeout(timer); $("live").classList.remove("on"); $("liveText").textContent = "সংযোগ বিচ্ছিন্ন"; showOffline("লাইভ সংযোগ বন্ধ হয়ে গেছে (" + (e && e.code || "unknown") + ")। পেজটা আবার খুললে চালু হবে।"); };
+    const sub = (path, fn) => db.doc(path).onSnapshot((s) => { fresh(s); fn(s.exists ? s.data() : null); }, fail);
+    sub("studio/status", renderStatus);
+    sub("studio/scenes", renderScenes);
+    sub("studio/ai", renderAI);
+    sub("studio/files", renderFiles);
+    sub("studio/log", renderLog);
+  }
+  start();
+})();
+</script>
