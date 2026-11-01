@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>Script Breakdown for the Team</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("fonts/Inter.ttf"); font-weight: 100 900; }
+  @font-face { font-family: "Hind"; src: url("fonts/HindSiliguri-Medium.ttf"); font-weight: 500; }
+  @font-face { font-family: "Hind"; src: url("fonts/HindSiliguri-SemiBold.ttf"); font-weight: 600 800; }
+  :root { --bg: #0b1324; --card: #131e33; --card2: #1a2741; --line: rgba(255,255,255,0.09); --text: #f3f5f9; --muted: #93a2ba;
+          --coral: #e8805f; --teal: #3cc9b4; --amber: #f2b84b; --red: #ff6b6b; --blue: #6ea8ff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: var(--text);
+           font-family: "Hind", "Inter", sans-serif; -webkit-font-smoothing: antialiased; }
+  .abs { position: absolute; }
+  .scene { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
+  i[data-i] { display: inline-block; width: 1em; height: 1em; flex: none; }
+  i[data-i] svg { width: 100%; height: 100%; display: block; }
+  #bg { position: absolute; inset: 0; background: radial-gradient(1200px 800px at 50% 40%, #122042 0%, var(--bg) 70%); }
+  #dots { position: absolute; inset: -60px; opacity: 0.5; background-image: radial-gradient(rgba(255,255,255,0.07) 1.6px, transparent 1.7px); background-size: 46px 46px; }
+  .blob { position: absolute; width: 900px; height: 900px; border-radius: 50%; }
+  .b1 { background: radial-gradient(circle, rgba(232,128,95,0.14), rgba(232,128,95,0) 65%); }
+  .b2 { background: radial-gradient(circle, rgba(60,201,180,0.11), rgba(60,201,180,0) 65%); }
+  #chapter { position: absolute; left: 90px; top: 58px; display: flex; align-items: center; gap: 14px; font-size: 27px; font-weight: 600; opacity: 0; }
+  #chapter .bar { width: 34px; height: 4px; border-radius: 2px; background: var(--coral); }
+  #chapNum { color: var(--coral); font-family: "Inter"; font-variant-numeric: tabular-nums; font-size: 23px; }
+  #chapTitle { color: #d6deea; }
+  #handle { position: absolute; right: 90px; top: 62px; font-size: 22px; color: var(--muted); }
+  #caption { position: absolute; left: 0; right: 0; bottom: 50px; display: flex; justify-content: center; opacity: 0; }
+  #capText { font-family: "Hind"; font-weight: 500; font-size: 35px; line-height: 1.32; color: #fff; background: rgba(6,11,22,0.8);
+             border: 1px solid rgba(255,255,255,0.06); padding: 9px 30px 7px; border-radius: 14px; max-width: 1560px; text-align: center; }
+  #progress { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgba(255,255,255,0.05); }
+  #progFill { height: 100%; width: 100%; background: var(--coral); transform-origin: left center; transform: scaleX(0); }
+  .card { background: var(--card); border: 1.5px solid var(--line); border-radius: 22px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+  .pill { display: inline-flex; align-items: center; gap: 12px; padding: 10px 22px; border-radius: 999px; background: var(--card2);
+          border: 1.5px solid var(--line); font-size: 26px; font-weight: 600; white-space: nowrap; }
+  .pill i { font-size: 26px; }
+  .h1 { font-size: 92px; font-weight: 700; line-height: 1.15; text-align: center; }
+  .h2 { font-size: 54px; font-weight: 700; line-height: 1.2; }
+  .muted { color: var(--muted); } .coral { color: var(--coral); } .teal { color: var(--teal); } .amber { color: var(--amber); }
+  .ic { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; flex: none; }
+  .ic.coral { background: rgba(232,128,95,0.16); } .ic.teal { background: rgba(60,201,180,0.15); } .ic.amber { background: rgba(242,184,75,0.15); }
+  .ic.blue { background: rgba(110,168,255,0.15); color: var(--blue); }
+
+  /* script card */
+  .sc { position: absolute; left: 230px; width: 1460px; padding: 34px 46px 34px; }
+  .sc .lab { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 600; color: var(--coral); margin-bottom: 16px; }
+  .sc .lab i { font-size: 26px; }
+  .sc .roman { font-family: "Inter"; font-size: 44px; font-weight: 650; line-height: 1.32; letter-spacing: -0.01em; }
+  .sc .roman .w { color: rgba(243,245,249,0.32); transition: none; }
+  .sc .roman .w.on { color: #fff; }
+  .sc .mean { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 34px; line-height: 1.38; color: #cfd8e6; }
+  .sc .mean b { color: var(--teal); font-weight: 600; margin-right: 12px; }
+
+  .take { position: absolute; left: 230px; width: 1460px; display: flex; gap: 26px; }
+  .tk { flex: 1; display: flex; align-items: center; gap: 22px; padding: 24px 30px; font-size: 32px; font-weight: 600; line-height: 1.3; }
+  .tk i { font-size: 30px; }
+  .struct { display: flex; gap: 22px; align-items: stretch; }
+  .blk { width: 330px; padding: 28px; display: flex; flex-direction: column; gap: 10px; }
+  .blk .n { font-family: "Inter"; font-weight: 800; font-size: 22px; letter-spacing: 0.1em; color: var(--muted); }
+  .blk .t { font-size: 36px; font-weight: 700; }
+  .blk .s { font-size: 24px; color: var(--muted); }
+  .opt { width: 560px; padding: 22px 26px; display: flex; gap: 18px; align-items: flex-start; }
+  .opt .num { width: 46px; height: 46px; border-radius: 50%; background: var(--card2); border: 2px solid var(--line); display: flex;
+              align-items: center; justify-content: center; font-family: "Inter"; font-weight: 800; font-size: 22px; flex: none; }
+  .opt .r { font-family: "Inter"; font-size: 22px; font-weight: 600; color: #e6ebf3; line-height: 1.35; }
+  .opt .b { font-size: 24px; color: var(--muted); margin-top: 6px; line-height: 1.35; }
+  .best { position: absolute; top: -16px; right: 18px; padding: 4px 14px; border-radius: 999px; background: var(--coral); color: #fff; font-size: 20px; font-weight: 700; }
+  .tip { width: 520px; padding: 34px 32px; display: flex; flex-direction: column; gap: 18px; }
+  .tip .t { font-size: 34px; font-weight: 700; line-height: 1.3; }
+  .tip .s { font-size: 26px; color: var(--muted); line-height: 1.4; }
+  .gl { display: inline-flex; align-items: baseline; gap: 16px; padding: 14px 26px; border-radius: 18px; background: rgba(60,201,180,0.1);
+        border: 1.5px solid rgba(60,201,180,0.35); font-size: 34px; }
+  .gl .ro { font-family: "Inter"; font-weight: 700; color: var(--teal); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"><div class="blob b1"></div><div class="blob b2"></div><div id="dots"></div></div>
+
+  <section class="scene" id="s-intro">
+    <div class="abs" style="left:0;right:0;top:250px;display:flex;justify-content:center"><div class="pill" id="i-pill"><i data-i="users" class="coral"></i>টিমের জন্য · রিল স্ক্রিপ্ট</div></div>
+    <div class="abs h1" id="i-t" style="left:0;right:0;top:350px">স্ক্রিপ্টটা বুঝে নিই</div>
+    <div class="abs" id="i-s" style="left:0;right:0;top:490px;text-align:center;font-family:Inter;font-size:44px;font-weight:600;color:var(--muted)">“Copyright ki galatfehmiyan”</div>
+    <div class="abs" style="left:0;right:0;top:640px;display:flex;justify-content:center;gap:24px">
+      <div class="pill" id="i-c0"><i data-i="file-text" class="amber"></i>স্ক্রিপ্ট: হিন্দিতে</div>
+      <div class="pill" id="i-c1"><i data-i="message-circle" class="teal"></i>বোঝানো: বাংলায়</div>
+    </div>
+  </section>
+
+  <section class="scene" id="s-idea">
+    <div class="abs card" id="d-topic" style="left:230px;top:190px;width:1460px;padding:36px 44px;display:flex;align-items:center;gap:28px">
+      <span class="ic coral" style="width:84px;height:84px;font-size:44px;color:var(--coral)"><i data-i="triangle-alert"></i></span>
+      <div><div class="muted" style="font-size:26px">রিলের বিষয়</div><div style="font-size:50px;font-weight:700">কপিরাইট নিয়ে ৩টা ভুল ধারণা</div></div>
+    </div>
+    <div class="abs struct" style="left:230px;top:450px">
+      <div class="card blk" id="d-b0"><div class="n">01</div><div class="t coral">হুক</div><div class="s">প্রথম ৩–৫ সেকেন্ড</div></div>
+      <div class="card blk" id="d-b1"><div class="n">02</div><div class="t amber">৩টা ভুল ধারণা</div><div class="s">আসল কথা</div></div>
+      <div class="card blk" id="d-b2"><div class="n">03</div><div class="t teal">সোজা নিয়ম</div><div class="s">সারকথা</div></div>
+      <div class="card blk" id="d-b3"><div class="n">04</div><div class="t" style="color:var(--blue)">ডিএম</div><div class="s">শেষে</div></div>
+    </div>
+    <div class="abs" id="d-time" style="left:230px;top:740px"><div class="pill"><i data-i="timer" class="coral"></i>পুরো রিল: ১ মিনিটের মধ্যে</div></div>
+  </section>
+
+  <section class="scene" id="s-hook">
+    <div class="abs h2" id="h-h" style="left:230px;top:150px">হুকের কাজ: <span class="coral">স্ক্রল থামানো</span></div>
+    <div class="abs take" id="h-take" style="top:700px">
+      <div class="card tk" id="h-k0"><span class="ic teal"><i data-i="users" class="teal"></i></span>প্রত্যেক ক্রিয়েটর ঘটনাটা নিজের সাথে মেলাতে পারবে</div>
+      <div class="card tk" id="h-k1"><span class="ic coral"><i data-i="circle-help" class="coral"></i></span>শেষে “Kyun?” মানে কেন, দর্শক উত্তর জানতে চাইবে</div>
+    </div>
+    <div class="abs" id="h-opts" style="left:230px;top:240px;width:1460px;display:flex;flex-wrap:wrap;gap:26px 40px">
+      <div class="card opt" id="h-o0" style="position:relative;border-color:rgba(232,128,95,0.7)"><span class="best">আমাদের পছন্দ</span><div class="num">1</div><div><div class="r">Paanch second ka gaana lagaya… Phir bhi strike. Kyun?</div><div class="b">৫ সেকেন্ডের গান, ক্রেডিট দিয়েছি, তবুও স্ট্রাইক। কেন?</div></div></div>
+      <div class="card opt" id="h-o1"><div class="num">2</div><div><div class="r">Agar aap bhi kisi aur ka gaana ya clip lagate ho…</div><div class="b">অন্যের গান বা ক্লিপ ব্যবহার করো? পুরো ভিডিও দেখো।</div></div></div>
+      <div class="card opt" id="h-o2"><div class="num">3</div><div><div class="r">Ek chhoti si galatfehmi, aur channel khatre mein…</div><div class="b">একটা ছোট ভুল ধারণা, আর বছরের পরিশ্রমের চ্যানেল ঝুঁকিতে।</div></div></div>
+      <div class="card opt" id="h-o3"><div class="num">4</div><div><div class="r">Credit dene se copyright khatam nahi hota…</div><div class="b">ক্রেডিট দিলে কপিরাইট শেষ হয় না।</div></div></div>
+      <div class="card opt" id="h-o4"><div class="num">5</div><div><div class="r">“No copyright intended” likh do, toh strike nahi aayega?</div><div class="b">“নো কপিরাইট ইন্টেন্ডেড” লিখলেই স্ট্রাইক আসবে না? ভুল।</div></div></div>
+    </div>
+  </section>
+
+  <section class="scene" id="s-myths">
+    <div class="abs h2" id="y-h" style="left:230px;top:150px">এবার <span class="amber">আসল কথা</span></div>
+    <div class="abs" id="y-gl" style="left:230px;top:730px"><div class="gl"><span class="ro">galatfehmi</span><span class="muted">=</span><span>ভুল ধারণা</span></div></div>
+  </section>
+
+  <section class="scene" id="s-m1">
+    <div class="abs h2" id="m1-h" style="left:230px;top:150px"><span class="amber">ভুল ধারণা ১</span> · “আমি তো ক্রেডিট দিয়েছি”</div>
+    <div class="abs take" style="top:760px"><div class="card tk" id="m1-k"><span class="ic teal"><i data-i="key-round" class="teal"></i></span>ক্রেডিট = ভদ্রতা। ব্যবহারের অধিকার = মালিকের অনুমতি।</div></div>
+  </section>
+  <section class="scene" id="s-m2">
+    <div class="abs h2" id="m2-h" style="left:230px;top:150px"><span class="amber">ভুল ধারণা ২</span> · “নো কপিরাইট ইন্টেন্ডেড”</div>
+    <div class="abs take" style="top:760px">
+      <div class="card tk" id="m2-k"><span class="ic teal"><i data-i="file-text" class="teal"></i></span>ডেসক্রিপশনের লাইন কোনো অধিকার দেয় না</div>
+      <div class="card tk" id="m2-s" style="flex:0 0 520px"><span class="ic blue"><i data-i="book-open"></i></span><span style="font-size:26px">সূত্র: YouTube Help, “Common copyright myths”</span></div>
+    </div>
+  </section>
+  <section class="scene" id="s-m3">
+    <div class="abs h2" id="m3-h" style="left:230px;top:150px"><span class="amber">ভুল ধারণা ৩</span> · “মাত্র দুই সেকেন্ডের ক্লিপ”</div>
+    <div class="abs take" style="top:760px"><div class="card tk" id="m3-k"><span class="ic teal"><i data-i="search" class="teal"></i></span>কত সেকেন্ড নয়, জিনিসটা কার, সেটাই আসল</div></div>
+  </section>
+  <section class="scene" id="s-rule">
+    <div class="abs h2" id="r-h" style="left:230px;top:150px"><span class="teal">সোজা নিয়ম</span> · পুরো রিলের সারকথা</div>
+    <div class="abs take" style="top:740px"><div class="card tk" id="r-k"><span class="ic teal"><i data-i="badge-check" class="teal"></i></span>দর্শক শুধু এটুকু মনে রাখলেই আমাদের কাজ হয়ে গেল</div></div>
+  </section>
+  <section class="scene" id="s-cta">
+    <div class="abs h2" id="c-h" style="left:230px;top:150px">শেষে <span style="color:var(--blue)">ডিএম</span></div>
+    <div class="abs take" style="top:760px">
+      <div class="card tk" id="c-k0"><span class="ic blue"><i data-i="send"></i></span>একটা নির্দিষ্ট শব্দ: COPYRIGHT, তাই ডিএম আলাদা করা সহজ</div>
+      <div class="card tk" id="c-k1"><span class="ic coral"><i data-i="hand-heart" class="coral"></i></span>কোনো গ্যারান্টি নয়, শুধু সত্যিটা জানাব</div>
+    </div>
+  </section>
+  <section class="scene" id="s-tips">
+    <div class="abs h2" id="t-h" style="left:230px;top:150px">শুটিংয়ের সময় <span class="coral">৩টা জিনিস</span></div>
+    <div class="abs" style="left:230px;top:300px;display:flex;gap:30px">
+      <div class="card tip" id="t-0"><span class="ic coral" style="color:var(--coral)"><i data-i="mic"></i></span><div class="t">হুক জোর দিয়ে, পরিষ্কার করে</div><div class="s">প্রথম ৩ সেকেন্ডের মধ্যেই</div></div>
+      <div class="card tip" id="t-1"><span class="ic amber" style="color:var(--amber)"><i data-i="pause"></i></span><div class="t">“Kyun?” এর পরে একটু থামো</div><div class="s">আধা সেকেন্ড</div></div>
+      <div class="card tip" id="t-2"><span class="ic teal" style="color:var(--teal)"><i data-i="users"></i></span><div class="t">বন্ধুকে বোঝানোর মতো বলো</div><div class="s">কঠিন শব্দ নয়, পুরো রিল ১ মিনিটের মধ্যে</div></div>
+    </div>
+  </section>
+  <section class="scene" id="s-close">
+    <div class="abs h1" id="z-t" style="left:0;right:0;top:380px">ধন্যবাদ</div>
+    <div class="abs" id="z-s" style="left:0;right:0;top:530px;text-align:center;font-size:40px;color:var(--muted)">কোথাও বুঝতে সমস্যা হলে জানিও</div>
+  </section>
+
+  <div id="chapter"><span class="bar"></span><span id="chapNum"></span><span id="chapTitle"></span></div>
+  <div id="handle">Team · Script breakdown</div>
+  <div id="caption"><span id="capText"></span></div>
+  <div id="progress"><div id="progFill"></div></div>
+</div>
+
+<script src="node_modules/gsap/dist/gsap.min.js"></script>
+<script src="icons.js"></script>
+<script src="timing.js"></script>
+<script>
+const T = window.TIMING;
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+document.querySelectorAll('i[data-i]').forEach(el => { el.innerHTML = window.ICONS[el.dataset.i] || ''; });
+const SC = Object.fromEntries(T.scenes.map(s => [s.id, s]));
+const line = (sid, i) => SC[sid].lines[i];
+const lend = (sid, i) => line(sid, i).end;
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out', duration: 0.6 } });
+const updaters = [];
+const R = sel => Array.isArray(sel) ? sel.flatMap(x => typeof x === 'string' ? $$(x) : [x]) : (typeof sel === 'string' ? $$(sel) : [sel]);
+function enter(sel, t, from = { y: 26 }, d = 0.6, ease = 'back.out(1.4)') {
+  R(sel).forEach(el => { gsap.set(el, Object.assign({ autoAlpha: 0 }, from)); tl.to(el, { autoAlpha: 1, x: 0, y: 0, scale: 1, duration: d, ease }, Math.max(0, t)); });
+}
+function leave(sel, t, to = {}, d = 0.4) { tl.to(R(sel), Object.assign({ autoAlpha: 0, duration: d, ease: 'power2.in' }, to), t); }
+function stagger(sels, t, step, from, d, ease) { sels.forEach((s, k) => enter(s, t + k * step, from, d, ease)); }
+
+T.scenes.forEach((s, k) => {
+  const el = $('#s-' + s.id);
+  tl.to(el, { autoAlpha: 1, duration: 0.45 }, s.start + (k ? 0.05 : 0));
+  if (k < T.scenes.length - 1) tl.to(el, { autoAlpha: 0, duration: 0.45, ease: 'power2.in' }, s.end - 0.45);
+});
+
+// script cards: one per Hindi line, built from the timing data
+const cards = {};
+T.scenes.forEach(s => s.lines.forEach((l, li) => {
+  if (l.lang !== 'hi') return;
+  const card = document.createElement('div');
+  card.className = 'card sc';
+  const words = l.roman.split(' ');
+  card.innerHTML = `<div class="lab"><i data-i="mic"></i>স্ক্রিপ্টের লাইন · হিন্দি</div>
+    <div class="roman">${words.map(w => `<span class="w">${w}</span>`).join(' ')}</div>
+    <div class="mean"><b>মানে</b>${l.bn}</div>`;
+  card.querySelector('i').innerHTML = window.ICONS['mic'];
+  $('#s-' + s.id).appendChild(card);
+  cards[`${s.id}.${li}`] = { card, l };
+}));
+function showCard(sid, li, top, tOut) {
+  const { card, l } = cards[`${sid}.${li}`];
+  card.style.top = top + 'px';
+  enter(card, l.start - 0.55, { y: 30 }, 0.6, 'power3.out');
+  const mean = card.querySelector('.mean');
+  gsap.set(mean, { autoAlpha: 0, y: 12 });
+  tl.to(mean, { autoAlpha: 1, y: 0, duration: 0.5 }, l.end - 0.2);
+  // light the Roman words up in step with the Hindi audio (by share of characters)
+  const ws = Array.from(card.querySelectorAll('.w'));
+  const total = ws.reduce((a, w) => a + w.textContent.length + 1, 0);
+  let acc = 0;
+  const at = ws.map(w => { const s = l.start + (l.end - l.start) * (acc / total); acc += w.textContent.length + 1; return s; });
+  updaters.push(t => ws.forEach((w, k) => w.classList.toggle('on', t >= at[k])));
+  if (tOut) leave(card, tOut, { y: -20 });
+}
+
+// ---------- intro ----------
+enter('#i-pill', SC.intro.start + 0.4, { y: -20 });
+enter('#i-t', SC.intro.start + 0.7, { y: 40 }, 0.8, 'power3.out');
+enter('#i-s', SC.intro.start + 1.1, { y: 20 }, 0.6);
+enter('#i-c0', line('intro', 1).start + 2.6, { y: 30 });
+enter('#i-c1', line('intro', 1).start + 5.2, { y: 30 });
+
+// ---------- idea ----------
+enter('#d-topic', SC.idea.start + 0.4, { y: 30 }, 0.6, 'power3.out');
+stagger(['#d-b0', '#d-b1', '#d-b2', '#d-b3'], line('idea', 1).start + 2.4, 0.7, { y: 40 }, 0.55);
+enter('#d-time', line('idea', 1).start + 0.6, { x: -30 }, 0.5);
+
+// ---------- hook ----------
+enter('#h-h', SC.hook.start + 0.3, { x: -30 }, 0.6, 'power3.out');
+showCard('hook', 1, 260, line('hook', 3).start - 0.3);
+enter('#h-k0', line('hook', 2).start + 0.2, { y: 30 });
+enter('#h-k1', line('hook', 2).start + 3.0, { y: 30 });
+leave('#h-take', line('hook', 3).start - 0.3);
+stagger(['#h-o0', '#h-o1', '#h-o2', '#h-o3', '#h-o4'], line('hook', 3).start + 0.1, 0.35, { y: 30, scale: 0.96 }, 0.5);
+
+// ---------- myths intro ----------
+enter('#y-h', SC.myths.start + 0.3, { x: -30 }, 0.6, 'power3.out');
+showCard('myths', 1, 260);
+enter('#y-gl', line('myths', 2).start + 0.3, { y: 30 }, 0.55);
+
+// ---------- myths 1-3, rule, cta ----------
+for (const id of ['m1', 'm2', 'm3', 'rule', 'cta']) {
+  const pre = { m1: 'm1', m2: 'm2', m3: 'm3', rule: 'r', cta: 'c' }[id];
+  enter(`#${pre}-h`, SC[id].start + 0.25, { x: -30 }, 0.6, 'power3.out');
+  showCard(id, 0, 260);
+}
+enter('#m1-k', line('m1', 1).start + 0.3, { y: 30 });
+enter('#m2-k', line('m2', 1).start + 0.3, { y: 30 }); enter('#m2-s', line('m2', 1).start + 3.4, { y: 30 });
+enter('#m3-k', line('m3', 1).start + 0.3, { y: 30 });
+enter('#r-k', line('rule', 1).start + 0.3, { y: 30 });
+enter('#c-k0', line('cta', 1).start + 0.3, { y: 30 });
+enter('#c-k1', line('cta', 2).start + 0.2, { y: 30 });
+
+// ---------- tips, close ----------
+enter('#t-h', SC.tips.start + 0.3, { x: -30 }, 0.6, 'power3.out');
+enter('#t-0', line('tips', 1).start, { y: 40 }); enter('#t-1', line('tips', 2).start, { y: 40 }); enter('#t-2', line('tips', 3).start, { y: 40 });
+enter('#z-t', SC.close.start + 0.4, { y: 30 }, 0.8, 'power3.out');
+enter('#z-s', SC.close.start + 1.2, { y: 20 });
+
+// ---------- chrome ----------
+updaters.push(t => {
+  const sc = T.scenes.find(s => t >= s.start && t < s.end);
+  let op = 0;
+  if (sc) {
+    const cur = sc.lines.filter(l => t >= l.start - 0.1 && t < l.end + 0.35).pop();
+    if (cur && cur.lang === 'bn') {
+      const caps = cur.captions;
+      const c = caps.filter(c => t >= c.s - 0.05).pop() || caps[0];
+      $('#capText').textContent = c.text;
+      op = Math.min(1, (t - (cur.start - 0.1)) / 0.2, (cur.end + 0.35 - t) / 0.2);
+    }
+  }
+  $('#caption').style.opacity = Math.max(0, op);
+  const ch = $('#chapter');
+  if (sc && sc.chapter) {
+    const [num, ...rest] = sc.chapter.split('  ');
+    $('#chapNum').textContent = num; $('#chapTitle').textContent = rest.join(' ');
+    const k = Math.max(0, Math.min(1, (t - sc.start - 0.2) / 0.4, (sc.end - t) / 0.35));
+    ch.style.opacity = k; ch.style.transform = `translateX(${(1 - k) * -24}px)`;
+  } else ch.style.opacity = 0;
+  $('#handle').style.opacity = sc && sc.chapter ? 1 : 0;
+  $('#progFill').style.transform = `scaleX(${t / T.duration})`;
+  $('#dots').style.transform = `translate(${(t * 6) % 46}px, ${(t * 3) % 46}px)`;
+  $('.b1').style.transform = `translate(${-200 + 260 * Math.sin(t / 14)}px, ${-250 + 140 * Math.cos(t / 11)}px)`;
+  $('.b2').style.transform = `translate(${1200 + 220 * Math.cos(t / 13)}px, ${350 + 160 * Math.sin(t / 9)}px)`;
+});
+
+window.DURATION = T.duration;
+window.FPS = T.fps;
+window.seek = t => { tl.seek(t, false); updaters.forEach(u => u(t)); };
+window.seek(0);
+window.READY = document.fonts.ready.then(() => true);
+</script>
+</body>
+</html>
