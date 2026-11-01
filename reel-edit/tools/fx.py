@@ -194,8 +194,26 @@ def perspective(rgba, k=0.25, side="right"):
 
 # ---------------------------------------------------------------- text
 def text_layer(text, fname="anton", size=160, fill=WHITE, stroke=0, stroke_fill=(0, 0, 0), glow=None, shadow=True,
-               tracking=0, italic_skew=0.0, pad=60):
-    """Render text to an RGBA numpy patch with optional glow and soft shadow."""
+               tracking=0, italic_skew=0.0, pad=60, extrude=0):
+    """Render text to an RGBA numpy patch with optional glow, soft shadow and 3D extrusion."""
+    if extrude:
+        base_lay = text_layer(text, fname, size, fill, stroke, stroke_fill, glow, False, tracking, italic_skew, pad + extrude)
+        f = font(fname, size)
+        side = text_layer(text, fname, size, (120, 124, 140), 0, (0, 0, 0), None, False, tracking, italic_skew, pad + extrude)
+        h, w = base_lay.shape[:2]
+        out = np.zeros_like(base_lay)
+        for i in range(extrude, 0, -1):
+            shade = 0.55 + 0.45 * (1 - i / extrude)
+            s = side.copy(); s[..., :3] = (s[..., :3].astype(np.float32) * shade).astype(np.uint8)
+            over_rgba(out, s, int(i * 0.35), i)
+        if shadow:
+            a = out[..., 3].astype(np.float32) / 255.0
+            sh = cv2.GaussianBlur(a, (0, 0), size * 0.07)
+            sh = np.roll(sh, int(size * 0.05), 0) * 0.6
+            shl = np.zeros_like(out); shl[..., 3] = (sh * 255).astype(np.uint8)
+            over_rgba(shl, out, 0, 0); out = shl
+        over_rgba(out, base_lay, 0, 0)
+        return out
     f = font(fname, size)
     # measure with tracking
     if tracking:

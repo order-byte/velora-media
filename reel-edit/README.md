@@ -27,3 +27,12 @@ Scenes 6, 13, 15, 16, 18 and 19 use placeholder shots until the AI clips arrive.
 and point the matching EDL rows in `render.py` at them. Prompts are on the live preview page.
 
 Music (Drake – "Shabang") is added inside Instagram at upload time, not baked into the file.
+
+## Version 3 (current): matches the reference reel
+
+- Format: landscape 1440x1014, the same shape as the reference file (1020x718).
+- `tools/retime.py` fits each voice phrase into the reference phrase timing (pauses squeezed, rubberband stretch only when needed).
+- The reference audio is split with Demucs (`htdemucs --two-stems=vocals`); the `no_vocals` stem is the music + SFX bed.
+- `tools/audio3.py bed48.wav voice2_final.wav IMG_4985.mp4 mix.wav 63.15 57.42` mixes bed, voice and the closing selfie audio.
+- `tools/proxy14.sh` makes 1440x2560 SDR proxies from the 4K HLG clips; `tools/ai_proxy.py` makes 30 fps AI clip proxies with the corner watermark inpainted.
+- `tools/render3.py OUT.mp4` renders the picture: 35 shots timed to the reference cuts, text placed from measurements of the reference frames (`tools/refgrid.py`).
