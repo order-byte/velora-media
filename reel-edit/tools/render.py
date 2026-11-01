@@ -424,7 +424,7 @@ def g_cta_cards(frame, t, seg, ctx):
             fx.over_rgba(arr, L("TEMPLATE", "B", 100), 40 + 230, 40 + 130)
             _layer_cache["cta_panel"] = arr
         dt = t - 64.05
-        fx.place_center(frame, _layer_cache["cta_panel"], 780, 430, clamp(dt / 0.1), 0.5 + 0.5 * ease_back(clamp(dt / 0.3)))
+        fx.place_center(frame, _layer_cache["cta_panel"], 725, 430, clamp(dt / 0.1), 0.5 + 0.5 * ease_back(clamp(dt / 0.3)))
     if t >= 65.45:
         if "cta_card" not in _layer_cache:
             p = Image.fromarray(fx.rounded_panel(440, 330, 30, (196, 186, 255, 250), outline=(120, 100, 255, 255), width=6))
@@ -435,10 +435,10 @@ def g_cta_cards(frame, t, seg, ctx):
             fx.over_rgba(arr, L("“CLIENTS”", "B", 110), 40 - 10, 40 + 140)
             _layer_cache["cta_card"] = arr
         dt = t - 65.45
-        fx.place_center(frame, _layer_cache["cta_card"], 800, 760, clamp(dt / 0.1), 0.5 + 0.5 * ease_back(clamp(dt / 0.3)), rot=-7)
+        fx.place_center(frame, _layer_cache["cta_card"], 770, 770, clamp(dt / 0.1), 0.5 + 0.5 * ease_back(clamp(dt / 0.3)), rot=-7)
     if t >= 66.43:
         dt = t - 66.43
-        fx.place_center(frame, L("FOR THE LINK", "W", 90), 820, 1010, clamp(dt / 0.1), 1.2 - 0.2 * ease_back(clamp(dt / 0.2)))
+        fx.place_center(frame, L("FOR THE LINK", "W", 90), 790, 1020, clamp(dt / 0.1), 1.2 - 0.2 * ease_back(clamp(dt / 0.2)))
 
 
 def g_niche(frame, t, seg, ctx):
