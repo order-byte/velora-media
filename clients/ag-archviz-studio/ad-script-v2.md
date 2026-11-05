@@ -53,6 +53,5 @@ Tap the button below and message us today.
 
 ## Still open
 
-- [ ] Ayush's email with more ideas
 - [ ] Points from today's meeting with Aminur
 - [ ] Ayush picks a voice
