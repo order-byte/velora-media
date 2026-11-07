@@ -2,6 +2,7 @@
 
 Each chunk writes a 1080p video-only master piece and a 720p preview part with audio.
 Usage: python3 render_chunks.py <edl> <raw> <broll_dir> <out_dir> [workers] [only_chunks e.g. 0,1,5]
+Set MATTES=<dir> to use pre-computed speaker mattes (matte.py) for graphics behind the speaker.
 """
 import json, os, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
@@ -23,7 +24,8 @@ def job(i):
     p = os.path.join(out, "preview", f"part{i:02d}.mp4")
     log = open(os.path.join(out, f"chunk{i:02d}.log"), "w")
     r = subprocess.run([sys.executable, "-I", os.path.join(here, "render.py"), "--edl", edl, "--raw", raw, "--broll", broll,
-                        "--start", str(a), "--end", str(b), "--master", m + ".tmp.mp4", "--preview", p + ".tmp.mp4"],
+                        "--start", str(a), "--end", str(b), "--master", m + ".tmp.mp4", "--preview", p + ".tmp.mp4"]
+                       + (["--mattes", os.environ["MATTES"]] if os.environ.get("MATTES") else []),
                        stdout=log, stderr=subprocess.STDOUT)
     if r.returncode == 0:
         os.replace(m + ".tmp.mp4", m); os.replace(p + ".tmp.mp4", p)

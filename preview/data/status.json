@@ -1,16 +1,16 @@
 {
- "updated": "17:13",
+ "updated": "17:46",
  "render": {
   "state": "working",
-  "progress": 0.25,
-  "message": "Rendering v1 \u00b7 3/12 parts ready (0:00\u20131:30)",
+  "progress": 0.083,
+  "message": "Rendering v1.1 \u00b7 reference match \u00b7 1/12 parts (0:00\u20130:30)",
   "headline": "Step 1 \u00b7 Motion graphics",
-  "detail": "3 of 12 parts rendered."
+  "detail": "1 of 12 parts rendered."
  },
  "steps": [
   {
    "title": "Motion graphics",
-   "desc": "Zoom in/out motion, kinetic text, graphics, B-roll after the hook",
+   "desc": "v1 first pass done \u00b7 v1.1 rebuilds every reference motion",
    "state": "active"
   },
   {
@@ -56,9 +56,24 @@
    "detail": "83 camera moves, 55 text cues, 7 graphics, 18 B-roll inserts"
   },
   {
+   "state": "ok",
+   "title": "v1 rendered",
+   "detail": "full 5:56, first pass of the motion"
+  },
+  {
+   "state": "ok",
+   "title": "References analysed motion by motion",
+   "detail": "30 motions across 5 videos, each mapped to a line in this script (see Reference breakdown)"
+  },
+  {
+   "state": "ok",
+   "title": "v1.1 timeline built",
+   "detail": "all 30 reference motions mapped to lines (tagged [R1\u00b71]\u2026[R5\u00b76] in the edit log)"
+  },
+  {
    "state": "live",
-   "title": "Rendering v1",
-   "detail": "3/12 parts playable now (0:00\u20131:30)"
+   "title": "Rendering v1.1 \u00b7 reference match",
+   "detail": "1/12 parts playable now (0:00\u20130:30)"
   }
  ],
  "specs": {
@@ -70,11 +85,21 @@
  "versions": [
   {
    "id": "v1",
-   "label": "v1 \u00b7 Motion",
+   "label": "v1 \u00b7 first pass",
    "path": "media/v1/",
    "parts": 12,
    "partDur": 30,
-   "ready": 3
+   "ready": 12,
+   "edl": "data/edl_v1.json"
+  },
+  {
+   "id": "v11",
+   "label": "v1.1 \u00b7 reference match",
+   "path": "media/v11/",
+   "edl": "data/edl.json",
+   "parts": 12,
+   "partDur": 30,
+   "ready": 1
   }
  ]
 }

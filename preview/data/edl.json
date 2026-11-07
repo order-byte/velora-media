@@ -10,7 +10,7 @@
    "cy": 300.0,
    "fw": 303.0
   },
-  "step": "v1-motion"
+  "step": "v1.1-motion"
  },
  "shots": [
   {
@@ -52,42 +52,42 @@
   {
    "start": 8.7,
    "end": 10.06,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
    "cx": 939.0,
    "cy": 298.5,
-   "shift": 1.0,
-   "ease_in": true,
-   "label": "close push-in 1.34\u21921.44 (eased)"
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
   },
   {
    "start": 10.06,
-   "end": 12.19,
+   "end": 12.32,
    "frame": "med",
    "z0": 1.2,
    "z1": 1.27,
    "cx": 948.0,
    "cy": 304.5,
-   "shift": 1.0,
-   "ease_in": true,
-   "label": "med push-in 1.20\u21921.27 (eased)"
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
   },
   {
-   "start": 12.19,
+   "start": 12.32,
    "end": 14.54,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "frame": "wide",
+   "z0": 1.07,
+   "z1": 1.01,
    "cx": 943.5,
    "cy": 319.5,
    "shift": 0.0,
    "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "label": "wide pull-out 1.07\u21921.01 (cut)"
   },
   {
    "start": 14.54,
-   "end": 18.15,
+   "end": 18.3,
    "frame": "med",
    "z0": 1.27,
    "z1": 1.2,
@@ -98,7 +98,7 @@
    "label": "med pull-out 1.27\u21921.20 (cut)"
   },
   {
-   "start": 18.15,
+   "start": 18.3,
    "end": 22.4,
    "frame": "wide",
    "z0": 1.0,
@@ -111,51 +111,52 @@
   },
   {
    "start": 22.4,
-   "end": 25.97,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 957.0,
-   "cy": 301.5,
-   "shift": 1.0,
-   "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
-  },
-  {
-   "start": 25.97,
-   "end": 29.29,
+   "end": 25.07,
    "frame": "med",
    "z0": 1.2,
    "z1": 1.27,
-   "cx": 949.5,
-   "cy": 298.5,
-   "shift": -1.0,
+   "cx": 957.8,
+   "cy": 306.0,
+   "shift": 0.0,
    "ease_in": false,
    "label": "med push-in 1.20\u21921.27 (cut)"
   },
   {
+   "start": 25.07,
+   "end": 29.29,
+   "frame": "med",
+   "z0": 1.1,
+   "z1": 1.16,
+   "cx": 949.5,
+   "cy": 298.5,
+   "shift": 0.0,
+   "face_x": 960,
+   "ease_in": false,
+   "label": "med push-in 1.10\u21921.16 (cut)"
+  },
+  {
    "start": 29.29,
-   "end": 35.04,
+   "end": 34.99,
    "frame": "close",
    "z0": 1.34,
    "z1": 1.44,
-   "cx": 955.5,
+   "cx": 951.0,
    "cy": 303.0,
-   "shift": -1.0,
+   "shift": 0.0,
    "ease_in": false,
    "label": "close push-in 1.34\u21921.44 (cut)"
   },
   {
-   "start": 35.04,
+   "start": 34.99,
    "end": 37.19,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 946.5,
-   "cy": 302.2,
-   "shift": 1.0,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 951.0,
+   "cy": 303.0,
+   "shift": 0.0,
    "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "label": "med push-in 1.20\u21921.27 (cut)"
   },
   {
    "start": 37.19,
@@ -206,29 +207,17 @@
   {
    "start": 46.67,
    "end": 48.44,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
    "cx": 948.0,
    "cy": 310.5,
    "shift": 0.0,
    "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
+   "label": "wide push-in 1.00\u21921.07 (cut)"
   },
   {
    "start": 48.44,
-   "end": 50.08,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
-   "cx": 951.0,
-   "cy": 301.5,
-   "shift": -1.0,
-   "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
-  },
-  {
-   "start": 50.08,
    "end": 54.03,
    "frame": "hidden",
    "z0": 1.0,
@@ -242,25 +231,25 @@
    "start": 54.03,
    "end": 57.83,
    "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "z0": 1.44,
+   "z1": 1.34,
    "cx": 946.5,
    "cy": 300.0,
-   "shift": -1.0,
-   "ease_in": true,
-   "label": "close push-in 1.34\u21921.44 (eased)"
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
   },
   {
    "start": 57.83,
    "end": 59.5,
-   "frame": "wide",
-   "z0": 1.07,
-   "z1": 1.01,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
    "cx": 947.2,
    "cy": 322.5,
    "shift": 0.0,
-   "ease_in": false,
-   "label": "wide pull-out 1.07\u21921.01 (cut)"
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
   },
   {
    "start": 59.5,
@@ -278,13 +267,13 @@
    "start": 61.18,
    "end": 64.4,
    "frame": "med",
-   "z0": 1.27,
-   "z1": 1.2,
+   "z0": 1.2,
+   "z1": 1.27,
    "cx": 946.5,
    "cy": 315.0,
    "shift": 1.0,
-   "ease_in": true,
-   "label": "med pull-out 1.27\u21921.20 (eased)"
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
   },
   {
    "start": 64.4,
@@ -299,7 +288,7 @@
   },
   {
    "start": 65.93,
-   "end": 69.92,
+   "end": 69.895,
    "frame": "hidden",
    "z0": 1.0,
    "z1": 1.0,
@@ -309,8 +298,8 @@
    "label": null
   },
   {
-   "start": 69.92,
-   "end": 73.91,
+   "start": 69.895,
+   "end": 73.86,
    "frame": "hidden",
    "z0": 1.0,
    "z1": 1.0,
@@ -320,16 +309,16 @@
    "label": null
   },
   {
-   "start": 73.91,
+   "start": 73.86,
    "end": 75.9,
-   "frame": "wide",
-   "z0": 1.0,
-   "z1": 1.07,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
    "cx": 939.8,
    "cy": 333.0,
    "shift": 0.0,
-   "ease_in": false,
-   "label": "wide push-in 1.00\u21921.07 (cut)"
+   "ease_in": true,
+   "label": "close pull-out 1.44\u21921.34 (eased)"
   },
   {
    "start": 75.9,
@@ -346,42 +335,42 @@
   {
    "start": 81.27,
    "end": 83.16,
-   "frame": "wide",
-   "z0": 1.07,
-   "z1": 1.01,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
    "cx": 951.8,
    "cy": 333.8,
    "shift": 0.0,
    "ease_in": false,
-   "label": "wide pull-out 1.07\u21921.01 (cut)"
+   "label": "close push-in 1.34\u21921.44 (cut)"
   },
   {
    "start": 83.16,
    "end": 85.18,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
    "cx": 925.5,
    "cy": 313.5,
    "shift": 1.0,
-   "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "ease_in": true,
+   "label": "med pull-out 1.27\u21921.20 (eased)"
   },
   {
    "start": 85.18,
    "end": 89.2,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
    "cx": 948.8,
    "cy": 293.2,
-   "shift": -1.0,
+   "shift": 0.0,
    "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
+   "label": "close push-in 1.34\u21921.44 (cut)"
   },
   {
    "start": 89.2,
-   "end": 93.84,
+   "end": 92.13,
    "frame": "hidden",
    "z0": 1.0,
    "z1": 1.0,
@@ -391,19 +380,29 @@
    "label": null
   },
   {
-   "start": 93.84,
-   "end": 95.48,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "start": 92.13,
+   "end": 93.74,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
    "cx": 948.0,
-   "cy": 292.5,
-   "shift": 0.0,
+   "cy": 300.0,
    "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "label": null
   },
   {
-   "start": 95.48,
+   "start": 93.74,
+   "end": 95.43,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 95.43,
    "end": 98.34,
    "frame": "hidden",
    "z0": 1.0,
@@ -415,18 +414,17 @@
   },
   {
    "start": 98.34,
-   "end": 103.8,
-   "frame": "med",
-   "z0": 1.27,
-   "z1": 1.2,
+   "end": 103.75,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
    "cx": 948.0,
-   "cy": 298.5,
-   "shift": 1.0,
+   "cy": 300.0,
    "ease_in": false,
-   "label": "med pull-out 1.27\u21921.20 (cut)"
+   "label": null
   },
   {
-   "start": 103.8,
+   "start": 103.75,
    "end": 105.4,
    "frame": "hidden",
    "z0": 1.0,
@@ -438,7 +436,7 @@
   },
   {
    "start": 105.4,
-   "end": 108.04,
+   "end": 108.12,
    "frame": "hidden",
    "z0": 1.0,
    "z1": 1.0,
@@ -448,158 +446,148 @@
    "label": null
   },
   {
-   "start": 108.04,
+   "start": 108.12,
    "end": 111.97,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
-   "cx": 958.5,
-   "cy": 303.0,
-   "shift": -1.0,
-   "ease_in": true,
-   "label": "close pull-out 1.44\u21921.34 (eased)"
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
   },
   {
    "start": 111.97,
-   "end": 115.66,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 952.5,
-   "cy": 301.5,
-   "shift": -1.0,
+   "end": 115.56,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
    "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "label": null
   },
   {
-   "start": 115.66,
-   "end": 119.85,
-   "frame": "med",
-   "z0": 1.27,
-   "z1": 1.2,
-   "cx": 944.2,
-   "cy": 301.5,
-   "shift": -1.0,
-   "ease_in": true,
-   "label": "med pull-out 1.27\u21921.20 (eased)"
-  },
-  {
-   "start": 119.85,
-   "end": 121.3,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
-   "cx": 955.5,
-   "cy": 298.5,
-   "shift": 0.0,
-   "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
-  },
-  {
-   "start": 121.3,
-   "end": 125.38,
+   "start": 115.56,
+   "end": 120.02,
    "frame": "med",
    "z0": 1.2,
    "z1": 1.27,
-   "cx": 948.0,
-   "cy": 296.2,
+   "cx": 949.5,
+   "cy": 301.5,
    "shift": 1.0,
    "ease_in": false,
    "label": "med push-in 1.20\u21921.27 (cut)"
   },
   {
-   "start": 125.38,
-   "end": 127.08,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 944.2,
-   "cy": 297.8,
-   "shift": 0.0,
-   "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
-  },
-  {
-   "start": 127.08,
-   "end": 128.42,
-   "frame": "hidden",
-   "z0": 1.0,
-   "z1": 1.0,
-   "cx": 948.0,
-   "cy": 300.0,
-   "ease_in": false,
-   "label": null
-  },
-  {
-   "start": 128.42,
-   "end": 132.08,
+   "start": 120.02,
+   "end": 125.38,
    "frame": "wide",
    "z0": 1.07,
    "z1": 1.01,
-   "cx": 914.2,
+   "cx": 948.0,
    "cy": 296.2,
    "shift": 0.0,
    "ease_in": false,
    "label": "wide pull-out 1.07\u21921.01 (cut)"
   },
   {
-   "start": 132.08,
-   "end": 135.88,
+   "start": 125.38,
+   "end": 127.08,
    "frame": "med",
    "z0": 1.2,
    "z1": 1.27,
-   "cx": 927.0,
-   "cy": 292.5,
-   "shift": -1.0,
+   "cx": 944.2,
+   "cy": 297.8,
+   "shift": 0.0,
    "ease_in": false,
    "label": "med push-in 1.20\u21921.27 (cut)"
   },
   {
+   "start": 127.08,
+   "end": 128.42,
+   "frame": "close",
+   "z0": 1.38,
+   "z1": 1.42,
+   "cx": 920.2,
+   "cy": 288.0,
+   "shift": 0.0,
+   "face_x": 470,
+   "ease_in": false,
+   "label": "close push-in 1.38\u21921.42 (cut)"
+  },
+  {
+   "start": 128.42,
+   "end": 132.08,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 914.2,
+   "cy": 296.2,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 132.08,
+   "end": 135.88,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 927.0,
+   "cy": 292.5,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "close pull-out 1.44\u21921.34 (eased)"
+  },
+  {
    "start": 135.88,
    "end": 139.16,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
    "cx": 949.5,
    "cy": 265.5,
-   "shift": 1.0,
+   "shift": 0.0,
    "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "label": "med push-in 1.20\u21921.27 (cut)"
   },
   {
    "start": 139.16,
-   "end": 144.64,
-   "frame": "med",
-   "z0": 1.27,
-   "z1": 1.2,
+   "end": 144.82,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
    "cx": 946.5,
    "cy": 279.0,
    "shift": -1.0,
    "ease_in": true,
-   "label": "med pull-out 1.27\u21921.20 (eased)"
+   "label": "close push-in 1.34\u21921.44 (eased)"
   },
   {
-   "start": 144.64,
+   "start": 144.82,
    "end": 147.86,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
    "cx": 930.0,
    "cy": 278.2,
-   "shift": 0.0,
-   "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
   },
   {
    "start": 147.86,
    "end": 152.2,
-   "frame": "hidden",
-   "z0": 1.0,
-   "z1": 1.0,
-   "cx": 948.0,
-   "cy": 300.0,
+   "frame": "close",
+   "z0": 1.38,
+   "z1": 1.42,
+   "cx": 940.5,
+   "cy": 277.5,
+   "shift": 0.0,
+   "face_x": 470,
    "ease_in": false,
-   "label": null
+   "label": "close push-in 1.38\u21921.42 (cut)"
   },
   {
    "start": 152.2,
@@ -614,63 +602,75 @@
   },
   {
    "start": 155.08,
-   "end": 161.04,
+   "end": 159.46,
    "frame": "med",
    "z0": 1.27,
    "z1": 1.2,
-   "cx": 939.0,
-   "cy": 273.0,
+   "cx": 942.0,
+   "cy": 274.5,
    "shift": 0.0,
-   "ease_in": true,
-   "label": "med pull-out 1.27\u21921.20 (eased)"
-  },
-  {
-   "start": 161.04,
-   "end": 162.86,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 925.5,
-   "cy": 271.5,
-   "shift": 1.0,
-   "ease_in": true,
-   "label": "close push-in 1.34\u21921.44 (eased)"
-  },
-  {
-   "start": 162.86,
-   "end": 166.41,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
-   "cx": 924.8,
-   "cy": 298.5,
-   "shift": -1.0,
    "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
+   "label": "med pull-out 1.27\u21921.20 (cut)"
   },
   {
-   "start": 166.41,
-   "end": 168.5,
+   "start": 159.46,
+   "end": 161.04,
    "frame": "wide",
    "z0": 1.0,
    "z1": 1.07,
-   "cx": 931.5,
-   "cy": 289.5,
+   "cx": 936.0,
+   "cy": 270.0,
    "shift": 0.0,
    "ease_in": false,
    "label": "wide push-in 1.00\u21921.07 (cut)"
   },
   {
+   "start": 161.04,
+   "end": 162.86,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 925.5,
+   "cy": 271.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med pull-out 1.27\u21921.20 (cut)"
+  },
+  {
+   "start": 162.86,
+   "end": 166.41,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 924.8,
+   "cy": 298.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 166.41,
+   "end": 168.5,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 931.5,
+   "cy": 289.5,
+   "shift": 0.0,
+   "ease_in": true,
+   "label": "med pull-out 1.27\u21921.20 (eased)"
+  },
+  {
    "start": 168.5,
    "end": 172.84,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
    "cx": 937.5,
    "cy": 291.0,
    "shift": 1.0,
-   "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
   },
   {
    "start": 172.84,
@@ -697,26 +697,26 @@
   {
    "start": 182.36,
    "end": 184.58,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
    "cx": 955.5,
    "cy": 280.5,
-   "shift": -1.0,
-   "ease_in": true,
-   "label": "close push-in 1.34\u21921.44 (eased)"
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
   },
   {
    "start": 184.58,
    "end": 190.26,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
    "cx": 949.5,
    "cy": 276.0,
-   "shift": 1.0,
-   "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
+   "shift": 0.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
   },
   {
    "start": 190.26,
@@ -744,26 +744,26 @@
   {
    "start": 196.44,
    "end": 200.38,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
    "cx": 945.8,
    "cy": 285.8,
-   "shift": -1.0,
+   "shift": 0.0,
    "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
+   "label": "med pull-out 1.27\u21921.20 (cut)"
   },
   {
    "start": 200.38,
    "end": 203.91,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
    "cx": 948.0,
    "cy": 325.5,
    "shift": 1.0,
    "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
+   "label": "close push-in 1.34\u21921.44 (cut)"
   },
   {
    "start": 203.91,
@@ -778,24 +778,23 @@
   },
   {
    "start": 207.81,
-   "end": 212.045,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 951.0,
-   "cy": 312.0,
-   "shift": 1.0,
-   "ease_in": true,
-   "label": "close push-in 1.34\u21921.44 (eased)"
+   "end": 211.57,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
   },
   {
-   "start": 212.045,
+   "start": 211.57,
    "end": 216.28,
    "frame": "wide",
    "z0": 1.0,
    "z1": 1.07,
    "cx": 943.5,
-   "cy": 319.5,
+   "cy": 321.0,
    "shift": 0.0,
    "ease_in": false,
    "label": "wide push-in 1.00\u21921.07 (cut)"
@@ -808,21 +807,21 @@
    "z1": 1.44,
    "cx": 948.0,
    "cy": 300.0,
-   "shift": -1.0,
-   "ease_in": true,
-   "label": "close push-in 1.34\u21921.44 (eased)"
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
   },
   {
    "start": 220.28,
    "end": 223.58,
    "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
+   "z0": 1.27,
+   "z1": 1.2,
    "cx": 936.0,
    "cy": 301.5,
    "shift": 1.0,
-   "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
+   "ease_in": true,
+   "label": "med pull-out 1.27\u21921.20 (eased)"
   },
   {
    "start": 223.58,
@@ -850,42 +849,54 @@
   {
    "start": 229.64,
    "end": 232.24,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
    "cx": 948.0,
    "cy": 304.5,
-   "shift": -1.0,
-   "ease_in": true,
-   "label": "med push-in 1.20\u21921.27 (eased)"
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
   },
   {
    "start": 232.24,
    "end": 234.32,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
    "cx": 942.8,
    "cy": 312.8,
-   "shift": -1.0,
-   "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "shift": 0.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
   },
   {
    "start": 234.32,
-   "end": 240.72,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
-   "cx": 952.5,
-   "cy": 306.0,
+   "end": 238.62,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 957.0,
+   "cy": 312.0,
    "shift": 1.0,
-   "ease_in": true,
-   "label": "med push-in 1.20\u21921.27 (eased)"
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
   },
   {
-   "start": 240.72,
-   "end": 242.52,
+   "start": 238.62,
+   "end": 240.62,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
+   "cx": 950.2,
+   "cy": 300.0,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
+  },
+  {
+   "start": 240.62,
+   "end": 245.19,
    "frame": "hidden",
    "z0": 1.0,
    "z1": 1.0,
@@ -895,322 +906,284 @@
    "label": null
   },
   {
-   "start": 242.52,
-   "end": 245.02,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 955.5,
-   "cy": 304.5,
-   "shift": -1.0,
-   "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
-  },
-  {
-   "start": 245.02,
-   "end": 246.42,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
-   "cx": 949.5,
-   "cy": 324.8,
-   "shift": -1.0,
-   "ease_in": true,
-   "label": "med push-in 1.20\u21921.27 (eased)"
-  },
-  {
-   "start": 246.42,
+   "start": 245.19,
    "end": 249.5,
-   "frame": "hidden",
-   "z0": 1.0,
-   "z1": 1.0,
-   "cx": 948.0,
-   "cy": 300.0,
-   "ease_in": false,
-   "label": null
-  },
-  {
-   "start": 249.5,
-   "end": 253.0,
    "frame": "close",
    "z0": 1.34,
    "z1": 1.44,
-   "cx": 960.8,
-   "cy": 313.5,
-   "shift": 1.0,
-   "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
-  },
-  {
-   "start": 253.0,
-   "end": 257.22,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
-   "cx": 966.0,
+   "cx": 957.0,
    "cy": 303.0,
-   "shift": -1.0,
-   "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
-  },
-  {
-   "start": 257.22,
-   "end": 261.44,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 953.2,
-   "cy": 298.5,
-   "shift": -1.0,
+   "shift": 0.0,
    "ease_in": true,
    "label": "close push-in 1.34\u21921.44 (eased)"
   },
   {
-   "start": 261.44,
-   "end": 265.56,
+   "start": 249.5,
+   "end": 253.0,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 960.8,
+   "cy": 313.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 253.0,
+   "end": 257.195,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 257.195,
+   "end": 261.39,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 261.39,
+   "end": 266.81,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 266.81,
+   "end": 269.68,
    "frame": "close",
    "z0": 1.34,
    "z1": 1.44,
-   "cx": 967.5,
-   "cy": 289.5,
-   "shift": 1.0,
+   "cx": 957.8,
+   "cy": 313.5,
+   "shift": -1.0,
    "ease_in": false,
    "label": "close push-in 1.34\u21921.44 (cut)"
   },
   {
-   "start": 265.56,
-   "end": 269.68,
+   "start": 269.68,
+   "end": 271.39,
+   "frame": "med",
+   "z0": 1.1,
+   "z1": 1.15,
+   "cx": 955.5,
+   "cy": 310.5,
+   "shift": 0.0,
+   "face_x": 960,
+   "ease_in": false,
+   "label": "med push-in 1.10\u21921.15 (cut)"
+  },
+  {
+   "start": 271.39,
+   "end": 274.3,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 950.2,
+   "cy": 305.2,
+   "shift": 0.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 274.3,
+   "end": 277.815,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 277.815,
+   "end": 281.33,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 281.33,
+   "end": 286.36,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
+   "cx": 942.0,
+   "cy": 297.0,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
+  },
+  {
+   "start": 286.36,
+   "end": 289.87,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 289.87,
+   "end": 293.38,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 293.38,
+   "end": 296.89,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 296.89,
+   "end": 301.68,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 952.5,
+   "cy": 290.2,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 301.68,
+   "end": 307.91,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 307.91,
+   "end": 311.8,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 967.5,
+   "cy": 295.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 311.8,
+   "end": 313.36,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 949.5,
+   "cy": 307.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 313.36,
+   "end": 315.95,
    "frame": "wide",
    "z0": 1.07,
    "z1": 1.01,
-   "cx": 960.0,
-   "cy": 303.8,
+   "cx": 949.5,
+   "cy": 306.0,
    "shift": 0.0,
    "ease_in": false,
    "label": "wide pull-out 1.07\u21921.01 (cut)"
   },
   {
-   "start": 269.68,
-   "end": 271.44,
+   "start": 315.95,
+   "end": 318.47,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 969.0,
+   "cy": 312.0,
+   "shift": 0.0,
+   "ease_in": true,
+   "label": "med pull-out 1.27\u21921.20 (eased)"
+  },
+  {
+   "start": 318.47,
+   "end": 323.52,
    "frame": "close",
    "z0": 1.44,
    "z1": 1.34,
    "cx": 955.5,
-   "cy": 310.5,
-   "shift": -1.0,
-   "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
-  },
-  {
-   "start": 271.44,
-   "end": 274.06,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
-   "cx": 950.2,
-   "cy": 305.2,
-   "shift": 1.0,
-   "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
-  },
-  {
-   "start": 274.06,
-   "end": 275.7,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 952.5,
-   "cy": 298.5,
-   "shift": 1.0,
-   "ease_in": true,
-   "label": "close push-in 1.34\u21921.44 (eased)"
-  },
-  {
-   "start": 275.7,
-   "end": 278.26,
-   "frame": "hidden",
-   "z0": 1.0,
-   "z1": 1.0,
-   "cx": 948.0,
    "cy": 300.0,
-   "ease_in": false,
-   "label": null
-  },
-  {
-   "start": 278.26,
-   "end": 281.38,
-   "frame": "med",
-   "z0": 1.27,
-   "z1": 1.2,
-   "cx": 937.5,
-   "cy": 292.5,
    "shift": 0.0,
    "ease_in": false,
-   "label": "med pull-out 1.27\u21921.20 (cut)"
-  },
-  {
-   "start": 281.38,
-   "end": 286.36,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
-   "cx": 942.0,
-   "cy": 297.0,
-   "shift": -1.0,
-   "ease_in": false,
    "label": "close pull-out 1.44\u21921.34 (cut)"
   },
   {
-   "start": 286.36,
-   "end": 289.887,
-   "frame": "med",
-   "z0": 1.27,
-   "z1": 1.2,
-   "cx": 957.0,
-   "cy": 298.5,
-   "shift": 1.0,
-   "ease_in": false,
-   "label": "med pull-out 1.27\u21921.20 (cut)"
-  },
-  {
-   "start": 289.887,
-   "end": 293.413,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
-   "cx": 957.0,
-   "cy": 297.0,
-   "shift": 1.0,
-   "ease_in": true,
-   "label": "close pull-out 1.44\u21921.34 (eased)"
-  },
-  {
-   "start": 293.413,
-   "end": 296.94,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 948.0,
-   "cy": 273.0,
-   "shift": 1.0,
-   "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
-  },
-  {
-   "start": 296.94,
-   "end": 301.63,
-   "frame": "med",
-   "z0": 1.27,
-   "z1": 1.2,
-   "cx": 952.5,
-   "cy": 290.2,
-   "shift": -1.0,
-   "ease_in": false,
-   "label": "med pull-out 1.27\u21921.20 (cut)"
-  },
-  {
-   "start": 301.63,
-   "end": 307.96,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 948.8,
-   "cy": 289.5,
-   "shift": 1.0,
-   "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
-  },
-  {
-   "start": 307.96,
-   "end": 311.8,
-   "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
-   "cx": 967.5,
-   "cy": 295.5,
-   "shift": -1.0,
-   "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
-  },
-  {
-   "start": 311.8,
-   "end": 313.23,
-   "frame": "hidden",
-   "z0": 1.0,
-   "z1": 1.0,
-   "cx": 948.0,
-   "cy": 300.0,
-   "ease_in": false,
-   "label": null
-  },
-  {
-   "start": 313.23,
-   "end": 315.95,
-   "frame": "hidden",
-   "z0": 1.0,
-   "z1": 1.0,
-   "cx": 948.0,
-   "cy": 300.0,
-   "ease_in": false,
-   "label": null
-  },
-  {
-   "start": 315.95,
-   "end": 318.47,
-   "frame": "hidden",
-   "z0": 1.0,
-   "z1": 1.0,
-   "cx": 948.0,
-   "cy": 300.0,
-   "ease_in": false,
-   "label": null
-  },
-  {
-   "start": 318.47,
-   "end": 323.47,
-   "frame": "hidden",
-   "z0": 1.0,
-   "z1": 1.0,
-   "cx": 948.0,
-   "cy": 300.0,
-   "ease_in": false,
-   "label": null
-  },
-  {
-   "start": 323.47,
+   "start": 323.52,
    "end": 327.86,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
    "cx": 954.0,
-   "cy": 288.0,
-   "shift": -1.0,
+   "cy": 286.5,
+   "shift": 0.0,
    "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
+   "label": "wide push-in 1.00\u21921.07 (cut)"
   },
   {
    "start": 327.86,
    "end": 331.24,
    "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
+   "z0": 1.27,
+   "z1": 1.2,
    "cx": 957.0,
    "cy": 312.0,
    "shift": 1.0,
-   "ease_in": true,
-   "label": "med push-in 1.20\u21921.27 (eased)"
+   "ease_in": false,
+   "label": "med pull-out 1.27\u21921.20 (cut)"
   },
   {
    "start": 331.24,
    "end": 335.02,
    "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
+   "z0": 1.44,
+   "z1": 1.34,
    "cx": 963.8,
    "cy": 320.2,
    "shift": -1.0,
    "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "label": "close pull-out 1.44\u21921.34 (cut)"
   },
   {
    "start": 335.02,
@@ -1227,62 +1200,59 @@
   {
    "start": 338.8,
    "end": 343.34,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
-   "cx": 952.5,
-   "cy": 295.5,
-   "shift": 1.0,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
    "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
+   "label": null
   },
   {
    "start": 343.34,
-   "end": 345.17,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 942.8,
-   "cy": 297.8,
-   "shift": -1.0,
+   "end": 345.03,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
    "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "label": null
   },
   {
-   "start": 345.17,
-   "end": 347.22,
-   "frame": "close",
-   "z0": 1.34,
-   "z1": 1.44,
-   "cx": 946.5,
-   "cy": 315.0,
-   "shift": 1.0,
+   "start": 345.03,
+   "end": 347.17,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
    "ease_in": false,
-   "label": "close push-in 1.34\u21921.44 (cut)"
+   "label": null
   },
   {
-   "start": 347.22,
+   "start": 347.17,
    "end": 352.64,
-   "frame": "close",
-   "z0": 1.44,
-   "z1": 1.34,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
    "cx": 961.5,
    "cy": 309.0,
-   "shift": -1.0,
+   "shift": 0.0,
    "ease_in": false,
-   "label": "close pull-out 1.44\u21921.34 (cut)"
+   "label": "wide push-in 1.00\u21921.07 (cut)"
   },
   {
    "start": 352.64,
    "end": 354.92,
    "frame": "med",
-   "z0": 1.2,
-   "z1": 1.27,
+   "z0": 1.27,
+   "z1": 1.2,
    "cx": 937.5,
    "cy": 297.8,
-   "shift": 1.0,
+   "shift": 0.0,
    "ease_in": false,
-   "label": "med push-in 1.20\u21921.27 (cut)"
+   "label": "med pull-out 1.27\u21921.20 (cut)"
   },
   {
    "start": 354.92,
@@ -1299,44 +1269,24 @@
  "bumps": [
   1.0,
   2.54,
-  9.44,
   16.06,
-  24.2,
   39.84,
-  49.6,
-  55.96,
   60.2,
   62.78,
   77.52,
   84.08,
-  119.16,
-  123.98,
   134.38,
-  136.38,
   162.04,
-  165.48,
   169.7,
-  183.38,
   194.66,
-  199.16,
   201.36,
-  210.86,
   225.52,
-  231.26,
   236.0,
-  244.2,
   251.48,
-  263.04,
-  270.12,
-  272.94,
-  282.48,
+  268.56,
   308.26,
-  325.64,
   329.94,
-  337.38,
-  345.86,
-  347.54,
-  353.78
+  337.38
  ],
  "texts": [
   {
@@ -1348,8 +1298,17 @@
    "end": 1.6199999999999999,
    "side": "L",
    "accent": false,
-   "hero_font": "serif",
-   "label": "What are you trying to prove?"
+   "lead_times": [
+    0.0,
+    0.34,
+    0.46,
+    0.58,
+    0.82
+   ],
+   "hero_times": [
+    1.0
+   ],
+   "label": "[R1\u00b71] What are you trying to prove?"
   },
   {
    "type": "stack",
@@ -1360,8 +1319,17 @@
    "end": 3.49,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "Who are you trying to satisfy?"
+   "lead_times": [
+    1.7,
+    1.88,
+    2.0,
+    2.12,
+    2.36
+   ],
+   "hero_times": [
+    2.54
+   ],
+   "label": "[R1\u00b71] Who are you trying to satisfy?"
   },
   {
    "type": "wordlist",
@@ -1388,19 +1356,37 @@
    "start": 3.54,
    "end": 8.62,
    "side": "L",
-   "label": "The society / your parents / your cousin / your aunt / or yourself?"
+   "label": "[R1\u00b71] The society / your parents / your cousin / your aunt / or yourself?"
   },
   {
-   "type": "stack",
-   "lead": "Who do you want to",
-   "hero": "live for?",
+   "type": "chest",
    "start": 8.7,
-   "hero_at": 9.44,
    "end": 12.22,
-   "side": "R",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "Who do you want to live for?"
+   "label": "[R1\u00b77] Who do you want to / live for? / yourself or other people?",
+   "small": "Who do you want to",
+   "big": "live for?",
+   "big_at": 9.44,
+   "tail": "yourself or other people?",
+   "tail_at": 10.16
+  },
+  {
+   "type": "caption",
+   "start": 12.32,
+   "end": 14.44,
+   "label": "[R5\u00b72] Because this is the way.",
+   "text": "Because this is the way.",
+   "key": [
+    3,
+    4
+   ],
+   "key_at": 13.74,
+   "times": [
+    12.32,
+    12.86,
+    13.54,
+    13.74,
+    13.9
+   ]
   },
   {
    "type": "stack",
@@ -1411,48 +1397,115 @@
    "end": 18.2,
    "side": "L",
    "accent": false,
-   "hero_font": "serif",
-   "label": "We're not here to follow other people's script"
+   "lead_times": [
+    14.54,
+    14.64,
+    14.8,
+    15.1,
+    15.42
+   ],
+   "hero_times": [
+    16.06,
+    16.96,
+    17.54
+   ],
+   "label": "[R1\u00b71] We're not here to follow other people's script"
   },
   {
-   "type": "stack",
+   "type": "wavy",
+   "start": 18.3,
+   "end": 22.3,
+   "label": "[R3\u00b74] SOMEONE ELSE'S SCRIPT (wavy letters)",
+   "lead": "We're not here to live",
+   "text": "SOMEONE ELSE'S SCRIPT",
+   "at": 19.76,
+   "dur": 0.7,
+   "tail": "for us."
+  },
+  {
+   "type": "torso",
+   "start": 22.4,
+   "end": 25.07,
+   "label": "[R1\u00b74] We're here to write our own / destiny.",
    "lead": "We're here to write our own",
    "hero": "destiny.",
-   "start": 22.4,
-   "hero_at": 24.2,
-   "end": 25.47,
-   "side": "R",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "We're here to write our own destiny."
+   "hero_at": 24.2
   },
   {
-   "type": "counter",
-   "lead": "This year I personally closed",
-   "prefix": "$",
-   "steps": [
-    {
-     "value": 60000000,
-     "at": 32.32
-    }
+   "type": "behind_words",
+   "start": 25.07,
+   "end": 29.29,
+   "label": "[R5\u00b71] OFF \u00b7 SCRIPT behind the speaker",
+   "left": "OFF",
+   "right": "SCRIPT",
+   "left_at": 25.96,
+   "right_at": 26.46,
+   "left_rgb": [
+    214,
+    58,
+    47
    ],
-   "suffix": "+",
-   "sub": "in personal production",
+   "right_rgb": [
+    17,
+    20,
+    24
+   ],
+   "size": 300,
+   "gap": 150,
+   "y": 430,
+   "front": "WELCOME TO OFF-SCRIPT",
+   "front_at": 27.6,
+   "front_rgb": [
+    255,
+    255,
+    255
+   ],
+   "front_size": 84
+  },
+  {
+   "type": "karaoke",
    "start": 30.48,
    "end": 34.99,
-   "side": "L",
-   "tone": "ink",
-   "label": "$60M closed counter"
+   "label": "[R2\u00b75] This year I personally closed over / in personal production",
+   "line1": "This year I personally closed over",
+   "line2_at": 33.26,
+   "line2": "in personal production",
+   "hl": [
+    1
+   ]
   },
   {
-   "type": "marker",
-   "text": "not to impress you.",
-   "lead": "I'm telling you this",
+   "type": "counter_behind",
+   "start": 30.48,
+   "end": 34.99,
+   "label": "[R2\u00b71] $60,000,000 counter behind the speaker",
+   "value": 60000000,
+   "prefix": "$",
+   "at": 32.32,
+   "roll": 1.5,
+   "tag": "closed this year",
+   "y": 440
+  },
+  {
+   "type": "caption",
    "start": 35.04,
-   "end": 37.290000000000006,
-   "side": "R",
-   "y": 0.3,
-   "label": "I'm telling you this not to impress you."
+   "end": 37.29,
+   "label": "[R5\u00b72] I'm not telling you this to impress you.",
+   "text": "I'm not telling you this to impress you.",
+   "key": [
+    6
+   ],
+   "key_at": 36.4,
+   "times": [
+    35.04,
+    35.22,
+    35.36,
+    35.62,
+    35.82,
+    36.06,
+    36.4,
+    36.72
+   ]
   },
   {
    "type": "stack",
@@ -1463,32 +1516,24 @@
    "end": 41.26,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "I know both sides."
+   "lead_times": [
+    39.46,
+    39.58
+   ],
+   "hero_times": [
+    39.84,
+    40.4
+   ],
+   "label": "[R1\u00b71] I know both sides."
   },
   {
-   "type": "stack",
-   "lead": "the difference between",
-   "hero": "homeless",
-   "start": 48.44,
-   "hero_at": 49.6,
-   "end": 50.059999999999995,
-   "side": "L",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "the difference between homeless\u2026"
-  },
-  {
-   "type": "stack",
-   "lead": "It's not complicated\u2026",
-   "hero": "but very, very difficult.",
+   "type": "chest",
    "start": 54.08,
-   "hero_at": 55.96,
    "end": 57.86,
-   "side": "L",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "It's not complicated\u2026 but very, very difficult."
+   "label": "[R1\u00b77] It's not complicated at all, / very difficult.",
+   "small": "It's not complicated at all, but",
+   "big": "very difficult.",
+   "big_at": 55.96
   },
   {
    "type": "stack",
@@ -1499,8 +1544,14 @@
    "end": 61.13,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "Everything is programmed."
+   "lead_times": [
+    59.5,
+    59.98
+   ],
+   "hero_times": [
+    60.2
+   ],
+   "label": "[R1\u00b71] Everything is programmed."
   },
   {
    "type": "stack",
@@ -1511,8 +1562,15 @@
    "end": 64.30000000000001,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "Everything is basically preset."
+   "lead_times": [
+    61.18,
+    61.46,
+    61.88
+   ],
+   "hero_times": [
+    62.78
+   ],
+   "label": "[R1\u00b71] Everything is basically preset."
   },
   {
    "type": "stack",
@@ -1523,8 +1581,18 @@
    "end": 81.34,
    "side": "L",
    "accent": false,
-   "hero_font": "serif",
-   "label": "Someone else wrote a script for me."
+   "lead_times": [
+    75.9,
+    76.3,
+    76.74
+   ],
+   "hero_times": [
+    77.52,
+    78.14,
+    78.74,
+    79.66
+   ],
+   "label": "[R1\u00b71] Someone else wrote a script for me."
   },
   {
    "type": "stack",
@@ -1535,40 +1603,44 @@
    "end": 85.13000000000001,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "What if I don't want that type of life?"
+   "lead_times": [
+    83.16,
+    83.36,
+    83.48,
+    83.66,
+    83.82
+   ],
+   "hero_times": [
+    84.08,
+    84.32,
+    84.54,
+    84.68
+   ],
+   "label": "[R1\u00b71] What if I don't want that type of life?"
   },
   {
-   "type": "marker",
-   "text": "No one asked me.",
-   "lead": "",
+   "type": "caption",
    "start": 85.18,
    "end": 88.01,
-   "side": "L",
-   "y": 0.3,
-   "label": "No one asked me."
-  },
-  {
-   "type": "counter",
-   "lead": "with student loans",
-   "prefix": "$",
-   "steps": [
-    {
-     "value": 100000,
-     "at": 100.34
-    },
-    {
-     "value": 200000,
-     "at": 101.46
-    }
+   "label": "[R5\u00b72] No one asked me what type of life I want.",
+   "text": "No one asked me what type of life I want.",
+   "key": [
+    0,
+    1
    ],
-   "suffix": "",
-   "sub": "in debt",
-   "start": 98.36,
-   "end": 103.75,
-   "side": "R",
-   "tone": "red",
-   "label": "$200K student debt counter"
+   "key_at": 85.18,
+   "times": [
+    85.18,
+    85.32,
+    85.52,
+    85.88,
+    86.14,
+    86.64,
+    86.86,
+    87.04,
+    87.3,
+    87.54
+   ]
   },
   {
    "type": "marker",
@@ -1581,108 +1653,126 @@
    "label": "Now what?"
   },
   {
-   "type": "chips",
-   "lead": "Competing for",
-   "items": [
-    {
-     "text": "$60K",
-     "at": 108.9
-    },
-    {
-     "text": "$100K",
-     "at": 109.78
-    },
-    {
-     "text": "$200K",
-     "at": 110.52
-    }
-   ],
-   "start": 108.17,
-   "end": 112.74,
-   "side": "L",
-   "tone": "ink",
-   "label": "Salary chips $60K / $100K / $200K"
-  },
-  {
-   "type": "marker",
-   "text": "Why?",
-   "lead": "",
+   "type": "caption",
    "start": 115.66,
    "end": 116.69,
-   "side": "R",
-   "y": 0.28,
-   "label": "Why?"
+   "label": "[R5\u00b72] Why?",
+   "text": "Why?",
+   "key": [
+    0
+   ],
+   "key_at": 115.66,
+   "times": [
+    115.66
+   ]
   },
   {
-   "type": "stack",
-   "lead": "I can teach you to make money in",
-   "hero": "six months.",
+   "type": "countup",
    "start": 116.74,
-   "hero_at": 119.16,
    "end": 119.92,
-   "side": "L",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "I can teach you to make money in six months."
+   "label": "[R5\u00b75] Count-up: 6 MONTHS",
+   "lead": "I can teach you how to make money in",
+   "value": 6,
+   "unit": " MONTHS",
+   "at": 119.16,
+   "side": "R"
   },
   {
-   "type": "stack",
-   "lead": "College for the sake of money?",
-   "hero": "Do not do that.",
-   "start": 121.3,
-   "hero_at": 123.98,
+   "type": "wavy",
+   "start": 120.02,
    "end": 125.41,
-   "side": "R",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "College for the sake of money? Do not do that."
+   "label": "[R3\u00b74] College for money? / DO NOT DO THAT.",
+   "lead": "College for the sake of money?",
+   "text": "DO NOT DO THAT.",
+   "at": 123.98,
+   "dur": 0.55
   },
   {
    "type": "stack",
-   "lead": "We need good doctors",
+   "lead": "We need good doctors,",
    "hero": "but not for money.",
    "start": 132.08,
    "hero_at": 134.38,
    "end": 135.82999999999998,
    "side": "L",
    "accent": false,
-   "hero_font": "serif",
-   "label": "We need good doctors but not for money."
+   "lead_times": [
+    132.08,
+    132.5,
+    133.08,
+    133.72
+   ],
+   "hero_times": [
+    134.38,
+    134.94,
+    135.18,
+    135.4
+   ],
+   "label": "[R1\u00b71] We need good doctors, but not for money."
   },
   {
-   "type": "stack",
-   "lead": "If it's your",
-   "hero": "passion, do it.",
+   "type": "torso",
    "start": 135.88,
-   "hero_at": 136.38,
    "end": 137.67,
-   "side": "R",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "If it's your passion, do it."
+   "label": "[R1\u00b74] If it's your / passion, / do it.",
+   "lead": "If it's your",
+   "hero": "passion,",
+   "hero_at": 136.38,
+   "tail": "do it.",
+   "tail_at": 136.82
   },
   {
-   "type": "chips",
+   "type": "numchips",
+   "start": 139.16,
+   "end": 144.77,
+   "label": "[R5\u00b74] 01 Easier \u00b7 02 Faster \u00b7 03 Flexible",
    "lead": "Other ways to make money",
+   "side": "L",
    "items": [
     {
-     "text": "much easier",
+     "text": "Easier",
      "at": 141.48
     },
     {
-     "text": "much faster",
+     "text": "Faster",
      "at": 142.72
     },
     {
-     "text": "more flexible",
+     "text": "Flexible",
      "at": 143.78
     }
+   ]
+  },
+  {
+   "type": "countup",
+   "start": 144.82,
+   "end": 147.81,
+   "label": "[R5\u00b75] Count-up: 10 YEARS",
+   "lead": "Even if you practice for",
+   "value": 10,
+   "unit": " YEARS",
+   "at": 147.34,
+   "side": "R"
+  },
+  {
+   "type": "caption",
+   "start": 159.46,
+   "end": 160.99,
+   "label": "[R5\u00b72] They want to work with you.",
+   "text": "They want to work with you.",
+   "key": [
+    4,
+    5
    ],
-   "start": 139.16,
-   "end": 144.76999999999998,
-   "side": "L",
-   "tone": "ink",
-   "label": "Easier / faster / more flexible chips"
+   "key_at": 160.12,
+   "times": [
+    159.46,
+    159.66,
+    159.86,
+    159.94,
+    160.12,
+    160.38
+   ]
   },
   {
    "type": "stack",
@@ -1693,20 +1783,28 @@
    "end": 162.81,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "As long as you work, you make money."
+   "lead_times": [
+    161.04,
+    161.14,
+    161.26,
+    161.42,
+    161.58
+   ],
+   "hero_times": [
+    162.04,
+    162.4,
+    162.58
+   ],
+   "label": "[R1\u00b71] As long as you work, you make money."
   },
   {
-   "type": "stack",
-   "lead": "Mortgage & loan origination",
-   "hero": "is not like that.",
+   "type": "chest",
    "start": 162.86,
-   "hero_at": 165.48,
    "end": 166.39,
-   "side": "L",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "Mortgage & loan origination is not like that."
+   "label": "[R1\u00b77] Mortgage & loan origination / is not like that.",
+   "small": "Mortgage & loan origination",
+   "big": "is not like that.",
+   "big_at": 165.48
   },
   {
    "type": "stack",
@@ -1717,39 +1815,48 @@
    "end": 172.79,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "You don't have to physically be anywhere."
+   "lead_times": [
+    168.5,
+    168.58,
+    168.8,
+    169.02,
+    169.2
+   ],
+   "hero_times": [
+    169.7,
+    171.66
+   ],
+   "label": "[R1\u00b71] You don't have to physically be anywhere."
   },
   {
-   "type": "stack",
-   "lead": "There is",
-   "hero": "no limitation.",
+   "type": "torso",
    "start": 182.36,
-   "hero_at": 183.38,
    "end": 184.53,
-   "side": "L",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "There is no limitation."
+   "label": "[R1\u00b74] there is / no limitation.",
+   "lead": "there is",
+   "hero": "no limitation.",
+   "hero_at": 183.38
   },
   {
-   "type": "chips",
-   "lead": "As long as you know how to",
+   "type": "pills",
+   "start": 184.58,
+   "end": 190.21,
+   "label": "[R2\u00b73] Pills: promote yourself \u2713 prospect \u2713",
+   "ok": true,
    "items": [
     {
-     "text": "promote yourself",
+     "text": "Promote yourself",
      "at": 185.8
     },
     {
-     "text": "prospect",
+     "text": "Prospect",
      "at": 187.92
+    },
+    {
+     "text": "I'll teach you how",
+     "at": 189.18
     }
-   ],
-   "start": 184.58,
-   "end": 190.16,
-   "side": "R",
-   "tone": "ink",
-   "label": "As long as you know how to promote yourself \u00b7 prospect"
+   ]
   },
   {
    "type": "stack",
@@ -1760,20 +1867,35 @@
    "end": 196.39,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "Consistent. Not one-time money."
+   "lead_times": [
+    193.48
+   ],
+   "hero_times": [
+    194.66,
+    194.92,
+    195.6
+   ],
+   "label": "[R1\u00b71] Consistent. Not one-time money."
   },
   {
-   "type": "stack",
-   "lead": "The formula that helps you",
-   "hero": "do it consistently.",
+   "type": "caption",
    "start": 196.44,
-   "hero_at": 199.16,
-   "end": 200.32999999999998,
-   "side": "L",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "The formula that helps you do it consistently."
+   "end": 200.33,
+   "label": "[R5\u00b72] The formula helps you do this consistently.",
+   "text": "The formula helps you do this consistently.",
+   "key": [
+    1
+   ],
+   "key_at": 196.54,
+   "times": [
+    196.44,
+    196.9,
+    197.32,
+    197.7,
+    198.42,
+    198.88,
+    199.16
+   ]
   },
   {
    "type": "stack",
@@ -1784,63 +1906,70 @@
    "end": 203.88,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "Here's what I mean by complicated vs. difficult"
+   "lead_times": [
+    200.38,
+    200.62,
+    200.8,
+    200.9,
+    201.1
+   ],
+   "hero_times": [
+    201.36,
+    201.94,
+    202.64
+   ],
+   "label": "[R1\u00b71] Here's what I mean by complicated vs. difficult"
   },
   {
-   "type": "stack",
-   "lead": "Six figures in",
-   "hero": "less than a month.",
-   "start": 207.86,
-   "hero_at": 210.86,
-   "end": 211.57,
-   "side": "R",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "Six figures in less than a month."
-  },
-  {
-   "type": "chips",
-   "lead": "It takes a lot of",
+   "type": "pills",
+   "start": 216.28,
+   "end": 220.23,
+   "label": "[R2\u00b73] Pills: effort \u00b7 resistance",
+   "ok": true,
    "items": [
     {
-     "text": "effort",
+     "text": "A lot of effort",
      "at": 217.8
     },
     {
-     "text": "resistance",
+     "text": "A lot of resistance",
      "at": 219.16
     }
-   ],
-   "start": 216.28,
-   "end": 220.23,
-   "side": "L",
-   "tone": "ink",
-   "label": "It takes a lot of effort \u00b7 resistance"
+   ]
   },
   {
    "type": "stack",
-   "lead": "The voice in your head that pushes you to",
+   "lead": "The sound in your brain that pushes you to",
    "hero": "quit.",
    "start": 220.28,
    "hero_at": 225.52,
    "end": 226.82999999999998,
    "side": "R",
    "accent": true,
-   "hero_font": "serif",
-   "label": "The voice in your head that pushes you to quit."
+   "lead_times": [
+    220.28,
+    220.42,
+    221.02,
+    222.0,
+    222.82,
+    223.22,
+    223.56,
+    223.92,
+    224.76
+   ],
+   "hero_times": [
+    225.52
+   ],
+   "label": "[R1\u00b71] The sound in your brain that pushes you to quit."
   },
   {
-   "type": "stack",
+   "type": "torso",
+   "start": 229.66,
+   "end": 233.12,
+   "label": "[R1\u00b74] I'm gonna / make it happen.",
    "lead": "I'm gonna",
    "hero": "make it happen.",
-   "start": 229.66,
-   "hero_at": 231.26,
-   "end": 233.12,
-   "side": "L",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "I'm gonna make it happen."
+   "hero_at": 231.26
   },
   {
    "type": "stack",
@@ -1848,23 +1977,47 @@
    "hero": "the mortgage industry",
    "start": 234.32,
    "hero_at": 236.0,
-   "end": 240.67,
+   "end": 238.57,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "The vehicle I use: the mortgage industry"
+   "lead_times": [
+    234.32,
+    234.44,
+    235.04,
+    235.14
+   ],
+   "hero_times": [
+    236.0,
+    237.12,
+    237.92
+   ],
+   "label": "[R1\u00b71] The vehicle I use: the mortgage industry"
   },
   {
-   "type": "stack",
-   "lead": "\u2026and you get",
-   "hero": "paid well.",
-   "start": 243.36,
-   "hero_at": 244.2,
-   "end": 246.36999999999998,
-   "side": "L",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "\u2026and you get paid well."
+   "type": "caption",
+   "start": 238.62,
+   "end": 240.57,
+   "label": "[R5\u00b72] The numbers make sense.",
+   "text": "The numbers make sense.",
+   "key": [
+    1
+   ],
+   "key_at": 239.32,
+   "times": [
+    238.62,
+    239.08,
+    239.64,
+    239.88
+   ]
+  },
+  {
+   "type": "torso",
+   "start": 245.24,
+   "end": 246.4,
+   "label": "[R1\u00b76] What is / better than that? + confetti",
+   "lead": "What is",
+   "hero": "better than that?",
+   "hero_at": 245.54
   },
   {
    "type": "stack",
@@ -1875,141 +2028,106 @@
    "end": 252.95,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "Not just a course about mortgages. This is the mindset."
-  },
-  {
-   "type": "chips",
-   "lead": "I'm gonna teach you how to",
-   "items": [
-    {
-     "text": "think",
-     "at": 254.54
-    },
-    {
-     "text": "generate business",
-     "at": 255.58
-    },
-    {
-     "text": "prospect",
-     "at": 257.36
-    },
-    {
-     "text": "fill your pipeline",
-     "at": 258.92
-    },
-    {
-     "text": "communicate",
-     "at": 260.72
-    }
+   "lead_times": [
+    249.52,
+    249.64,
+    249.76,
+    250.16,
+    250.34,
+    250.5
    ],
-   "start": 253.0,
-   "end": 261.39,
-   "side": "L",
-   "tone": "ink",
-   "label": "I'm gonna teach you how to think \u00b7 generate business \u00b7 prospect \u00b7 fill your pipeline \u00b7 communicate"
+   "hero_times": [
+    251.48,
+    251.84,
+    252.02,
+    252.18
+   ],
+   "label": "[R1\u00b71] Not just a course about mortgages. This is the mindset."
   },
   {
    "type": "stack",
-   "lead": "See the opportunity",
-   "hero": "everyone walks past.",
-   "start": 261.44,
-   "hero_at": 263.04,
-   "end": 265.01,
-   "side": "R",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "See the opportunity everyone walks past."
-  },
-  {
-   "type": "stack",
-   "lead": "This is a",
-   "hero": "lifetime career.",
-   "start": 269.68,
-   "hero_at": 270.12,
-   "end": 271.39,
+   "lead": "Jump on it and",
+   "hero": "maximize it.",
+   "start": 266.86,
+   "hero_at": 268.56,
+   "end": 269.63,
    "side": "L",
    "accent": true,
-   "hero_font": "serif",
-   "label": "This is a lifetime career."
+   "lead_times": [
+    266.86,
+    267.22,
+    267.76,
+    268.3
+   ],
+   "hero_times": [
+    268.56,
+    268.98
+   ],
+   "label": "[R1\u00b71] Jump on it and maximize it."
   },
   {
-   "type": "stack",
-   "lead": "That's why I built",
-   "hero": "Offscript.",
+   "type": "behind_words",
+   "start": 269.68,
+   "end": 271.39,
+   "label": "[R5\u00b71] LIFETIME CAREER behind the speaker",
+   "left": "LIFETIME",
+   "right": "CAREER",
+   "left_at": 270.12,
+   "right_at": 270.48,
+   "left_rgb": [
+    17,
+    20,
+    24
+   ],
+   "right_rgb": [
+    214,
+    58,
+    47
+   ],
+   "size": 230,
+   "gap": 150,
+   "y": 430
+  },
+  {
+   "type": "caption",
    "start": 271.44,
-   "hero_at": 272.94,
-   "end": 274.90000000000003,
-   "side": "R",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "That's why I built Offscript."
+   "end": 274.3,
+   "label": "[R5\u00b72] That's why I built Offscript.",
+   "text": "That's why I built Offscript.",
+   "key": [
+    4
+   ],
+   "key_at": 272.94,
+   "times": [
+    271.44,
+    271.8,
+    272.08,
+    272.48,
+    272.94
+   ]
   },
   {
-   "type": "stack",
-   "lead": "Why no one talks about",
-   "hero": "the mortgage industry",
+   "type": "prompt",
    "start": 281.38,
-   "hero_at": 282.48,
    "end": 286.31,
-   "side": "L",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "Why no one talks about the mortgage industry"
+   "label": "[R1\u00b72] AI prompt bar: why does no one talk about it?",
+   "hero": "Why?",
+   "bar_at": 281.68,
+   "text": "why does no one talk about the mortgage industry?",
+   "type_dur": 1.8
   },
   {
-   "type": "chips",
-   "lead": "A career with",
-   "items": [
-    {
-     "text": "flexibility",
-     "at": 288.16
-    },
-    {
-     "text": "anywhere in the world",
-     "at": 294.12
-    },
-    {
-     "text": "no limitation",
-     "at": 295.66
-    }
-   ],
-   "start": 286.36,
-   "end": 296.89,
-   "side": "R",
-   "tone": "ink",
-   "label": "A career with flexibility \u00b7 anywhere in the world \u00b7 no limitation"
-  },
-  {
-   "type": "chips",
-   "lead": "The difference between",
-   "items": [
-    {
-     "text": "shops",
-     "at": 302.9
-    },
-    {
-     "text": "retail",
-     "at": 303.84
-    },
-    {
-     "text": "brokers",
-     "at": 304.88
-    },
-    {
-     "text": "banks",
-     "at": 305.86
-    },
-    {
-     "text": "lenders",
-     "at": 307.08
-    }
-   ],
-   "start": 301.68,
-   "end": 307.90999999999997,
-   "side": "R",
-   "tone": "ink",
-   "label": "The difference between shops \u00b7 retail \u00b7 brokers \u00b7 banks \u00b7 lenders"
+   "type": "karaoke",
+   "start": 296.94,
+   "end": 301.63,
+   "label": "[R2\u00b75] I hold your hand until you make money / or your investment back",
+   "line1": "I hold your hand until you make money,",
+   "line2_at": 299.32,
+   "line2": "or your investment back.",
+   "hl": [
+    2,
+    3
+   ]
   },
   {
    "type": "stack",
@@ -2020,20 +2138,71 @@
    "end": 311.75,
    "side": "L",
    "accent": false,
-   "hero_font": "serif",
-   "label": "What's behind the scenes."
+   "lead_times": [
+    307.96,
+    308.12
+   ],
+   "hero_times": [
+    308.26,
+    310.08
+   ],
+   "label": "[R1\u00b71] What's behind the scenes."
   },
   {
-   "type": "stack",
-   "lead": "For people done living",
-   "hero": "someone else's script.",
+   "type": "caption",
+   "start": 311.8,
+   "end": 313.31,
+   "label": "[R5\u00b72] This course is not for everyone.",
+   "text": "This course is not for everyone.",
+   "key": [
+    3
+   ],
+   "key_at": 312.38,
+   "times": [
+    311.8,
+    311.96,
+    312.16,
+    312.38,
+    312.54,
+    312.74
+   ]
+  },
+  {
+   "type": "pills",
+   "start": 313.36,
+   "end": 323.47,
+   "label": "[R2\u00b73] Pills: passive income \u2715 \u00b7 shortcut \u2715 \u00b7 lazy \u2715 \u00b7 not doing the job \u2715",
+   "ok": false,
+   "items": [
+    {
+     "text": "Passive income",
+     "at": 313.82
+    },
+    {
+     "text": "A shortcut",
+     "at": 316.42
+    },
+    {
+     "text": "Being lazy",
+     "at": 319.58
+    },
+    {
+     "text": "Not doing the job",
+     "at": 321.06
+    }
+   ]
+  },
+  {
+   "type": "karaoke",
    "start": 323.52,
-   "hero_at": 325.64,
    "end": 327.81,
-   "side": "L",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "For people done living someone else's script."
+   "label": "[R2\u00b75] This is for people done living / someone else's script",
+   "line1": "This is for people who are done living",
+   "line2_at": 325.64,
+   "line2": "someone else's script",
+   "hl": [
+    2
+   ]
   },
   {
    "type": "stack",
@@ -2044,8 +2213,18 @@
    "end": 331.19,
    "side": "R",
    "accent": false,
-   "hero_font": "serif",
-   "label": "\u2026and ready to do the difficult work."
+   "lead_times": [
+    327.86,
+    328.64,
+    328.9,
+    329.26
+   ],
+   "hero_times": [
+    329.94,
+    330.1,
+    330.46
+   ],
+   "label": "[R1\u00b71] \u2026and ready to do the difficult work."
   },
   {
    "type": "stack",
@@ -2056,113 +2235,186 @@
    "end": 338.75,
    "side": "L",
    "accent": false,
-   "hero_font": "serif",
-   "label": "I personally teach and handhold you. I don't scale my time."
-  },
-  {
-   "type": "chips",
-   "lead": "If you're serious about",
-   "items": [
-    {
-     "text": "the mindset",
-     "at": 340.14
-    },
-    {
-     "text": "the work",
-     "at": 341.36
-    },
-    {
-     "text": "making money",
-     "at": 342.48
-    }
+   "lead_times": [
+    331.24,
+    331.92,
+    332.6,
+    333.56,
+    335.02,
+    335.94
    ],
-   "start": 338.8,
-   "end": 343.39,
-   "side": "R",
-   "tone": "ink",
-   "label": "If you're serious about the mindset \u00b7 the work \u00b7 making money"
+   "hero_times": [
+    337.38,
+    337.5,
+    337.7,
+    338.0,
+    338.2
+   ],
+   "label": "[R1\u00b71] I personally teach and handhold you. I don't scale my time."
   },
   {
-   "type": "stack",
-   "lead": "I read every",
-   "hero": "application myself.",
-   "start": 345.22,
-   "hero_at": 345.86,
-   "end": 347.17,
-   "side": "R",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "I read every application myself."
-  },
-  {
-   "type": "stack",
-   "lead": "I'm gonna",
-   "hero": "handpick",
+   "type": "caption",
    "start": 347.22,
-   "hero_at": 347.54,
    "end": 352.59,
-   "side": "L",
-   "accent": false,
-   "hero_font": "serif",
-   "label": "I'm gonna handpick the ones\u2026"
+   "label": "[R5\u00b72] I'm gonna handpick the ones I can work with.",
+   "text": "I'm gonna handpick the ones I can work with.",
+   "key": [
+    2
+   ],
+   "key_at": 347.54,
+   "times": [
+    347.22,
+    347.54,
+    348.56,
+    349.16,
+    349.54,
+    350.14,
+    350.98,
+    351.28,
+    351.56
+   ]
   },
   {
-   "type": "stack",
-   "lead": "If you're ready,",
-   "hero": "see you on the other side.",
+   "type": "torso",
    "start": 352.64,
-   "hero_at": 353.78,
-   "end": 354.91999999999996,
-   "side": "R",
-   "accent": true,
-   "hero_font": "serif",
-   "label": "If you're ready, see you on the other side."
+   "end": 354.87,
+   "label": "[R1\u00b74] If you're ready, I'll see you on / the other side.",
+   "lead": "If you're ready, I'll see you on",
+   "hero": "the other side.",
+   "hero_at": 354.08
   }
  ],
  "graphics": [
   {
-   "type": "offscript_title",
-   "start": 25.970000000000002,
-   "end": 29.29,
-   "label": "OFF-SCRIPT title reveal",
-   "fullscreen": false,
+   "type": "nodes",
+   "start": 48.44,
+   "end": 54.03,
+   "label": "[R4\u00b75] Homeless ---- largest investor deal (nodes + dashed line)",
+   "fullscreen": true,
    "params": {
-    "strike_at": 26.46,
-    "welcome_at": 27.6,
-    "side": "L"
+    "title": "The difference between",
+    "title_at": 48.44,
+    "left": {
+     "text": "Homeless",
+     "icon": "night_shelter",
+     "at": 49.6
+    },
+    "right": {
+     "text": "Largest investor deal",
+     "icon": "handshake",
+     "at": 51.1
+    },
+    "caption": "in entire South Florida",
+    "caption_at": 53.4
    }
   },
   {
-   "type": "script_page",
+   "type": "tiles",
    "start": 64.4,
-   "end": 73.91,
-   "label": "The script you were handed (full-screen)",
+   "end": 73.86,
+   "label": "[R4\u00b71] The script: school \u2192 degree \u2192 graduate \u2192 job \u2192 retire (glossy tiles)",
    "fullscreen": true,
    "params": {
-    "header": "THE SCRIPT YOU WERE HANDED",
-    "scenes": [
+    "title": "We've been told what to do",
+    "title_at": 64.4,
+    "items": [
      {
-      "text": "GO TO SCHOOL",
+      "text": "School",
+      "icon": "school",
       "at": 66.0
      },
      {
-      "text": "GET YOUR DEGREE",
+      "text": "Degree",
+      "icon": "workspace_premium",
       "at": 66.8
      },
      {
-      "text": "GET GRADUATED",
+      "text": "Graduate",
+      "icon": "history_edu",
       "at": 68.02
      },
      {
-      "text": "GET A JOB",
+      "text": "Job",
+      "icon": "work",
       "at": 69.14
      },
      {
-      "text": "RETIRE AT 60\u201365",
+      "text": "Retire at 60\u201365",
+      "icon": "elderly",
       "at": 70.72
      }
     ],
     "strike_at": 73.06
+   }
+  },
+  {
+   "type": "bignum",
+   "start": 92.13,
+   "end": 95.43,
+   "label": "[R3\u00b71] Giant \u201c10\u201d fly-in \u2192 10 YEARS card",
+   "fullscreen": true,
+   "params": {
+    "fly": "10",
+    "cut_at": 93.32,
+    "text": "10 YEARS",
+    "sub": "by school I mean college",
+    "sub_at": 93.84
+   }
+  },
+  {
+   "type": "bars",
+   "start": 98.36,
+   "end": 103.75,
+   "label": "[R3\u00b75] Debt bars: 10 years $100K \u00b7 15 years $200K",
+   "fullscreen": true,
+   "params": {
+    "bars": [
+     {
+      "label": "10 YEARS",
+      "value": "$100K",
+      "at": 100.34,
+      "h": 330
+     },
+     {
+      "label": "15 YEARS",
+      "value": "$200K",
+      "at": 101.46,
+      "h": 620
+     }
+    ],
+    "caption": "in student loans and debt",
+    "caption_at": 102.28
+   }
+  },
+  {
+   "type": "cards",
+   "start": 108.12,
+   "end": 115.56,
+   "label": "[R3\u00b72] Job cards $60K \u00b7 $100K \u00b7 $200K + MIGHT NOT slam",
+   "fullscreen": true,
+   "params": {
+    "cards": [
+     {
+      "title": "Analyst",
+      "company": "Corporate job",
+      "pay": "$60,000/yr",
+      "at": 108.9
+     },
+     {
+      "title": "Associate",
+      "company": "Corporate job",
+      "pay": "$100,000/yr",
+      "at": 109.78
+     },
+     {
+      "title": "Manager",
+      "company": "Corporate job",
+      "pay": "$200,000/yr",
+      "at": 110.52
+     }
+    ],
+    "slam": "MIGHT NOT",
+    "slam_at": 113.12
    }
   },
   {
@@ -2187,56 +2439,228 @@
    }
   },
   {
-   "type": "guarantee",
-   "start": 296.94,
-   "end": 301.63,
-   "label": "Hold your hand / investment back badge",
-   "fullscreen": false,
+   "type": "money_chart",
+   "start": 207.86,
+   "end": 211.57,
+   "label": "[R2\u00b72] Six-figure counter + chart line",
+   "fullscreen": true,
    "params": {
-    "lead": "I hold your hand until you make money",
-    "line_at": 297.86,
-    "badge": "OR YOUR INVESTMENT BACK",
-    "badge_at": 299.32,
-    "side": "L"
+    "prefix": "$",
+    "value": 100000,
+    "suffix": "+",
+    "at": 209.86,
+    "note": "in less than a month",
+    "note_at": 210.86
    }
   },
   {
-   "type": "checklist",
-   "start": 311.8,
-   "end": 323.46999999999997,
-   "label": "Not for you if\u2026 (full-screen)",
+   "type": "tree",
+   "start": 240.62,
+   "end": 245.19,
+   "label": "[R4\u00b73] Tree: mortgage \u2192 families \u00b7 lives \u00b7 paid well",
    "fullscreen": true,
    "params": {
-    "header": "THIS COURSE IS NOT FOR EVERYONE",
-    "header_at": 311.8,
-    "rows": [
+    "root": {
+     "text": "Mortgage industry",
+     "icon": "real_estate_agent",
+     "at": 240.67
+    },
+    "children": [
      {
-      "text": "You want passive income",
-      "at": 313.36,
-      "x_at": 314.96
+      "text": "Help families buy homes",
+      "icon": "home",
+      "at": 241.6
      },
      {
-      "text": "You want a shortcut",
-      "at": 316.02,
-      "x_at": 317.32
+      "text": "Impact lives",
+      "icon": "favorite",
+      "at": 242.62
      },
      {
-      "text": "You don't want to do the job",
-      "at": 318.64,
-      "x_at": 321.88
+      "text": "Get paid well",
+      "icon": "payments",
+      "at": 244.2
      }
     ]
    }
   },
   {
-   "type": "apply_button",
-   "start": 343.34,
-   "end": 345.17,
-   "label": "Click below & apply button",
-   "fullscreen": false,
+   "type": "title_icons",
+   "start": 253.0,
+   "end": 261.39,
+   "label": "[R4\u00b74] Title + icon row: think \u00b7 business \u00b7 prospect \u00b7 pipeline \u00b7 communicate",
+   "fullscreen": true,
    "params": {
-    "click_at": 344.54,
-    "side": "L"
+    "title": "I'm gonna teach you how to",
+    "title_at": 253.0,
+    "items": [
+     {
+      "text": "Think",
+      "icon": "psychology",
+      "at": 254.54
+     },
+     {
+      "text": "Generate business",
+      "icon": "trending_up",
+      "at": 255.58
+     },
+     {
+      "text": "Prospect",
+      "icon": "person_search",
+      "at": 257.36
+     },
+     {
+      "text": "Fill your pipeline",
+      "icon": "filter_alt",
+      "at": 258.92
+     },
+     {
+      "text": "Communicate",
+      "icon": "forum",
+      "at": 260.72
+     }
+    ]
+   }
+  },
+  {
+   "type": "spotlight",
+   "start": 261.44,
+   "end": 266.81,
+   "label": "[R4\u00b72] Spotlight: the opportunity everyone walks past",
+   "fullscreen": true,
+   "params": {
+    "icon": "diamond",
+    "tile": "The opportunity",
+    "land_at": 263.04,
+    "title": "See the opportunity everyone walks past",
+    "title_at": 261.44
+   }
+  },
+  {
+   "type": "doc_cam",
+   "start": 274.3,
+   "end": 281.33,
+   "label": "[R2\u00b76 + R2\u00b77] Shrink to circle cam + document highlighter",
+   "fullscreen": true,
+   "params": {
+    "title": "Inside Offscript",
+    "kicker": "I teach you everything:",
+    "lines": [
+     {
+      "text": "How the money moves",
+      "at": 275.7
+     },
+     {
+      "text": "How the banks work",
+      "at": 277.02
+     },
+     {
+      "text": "The secrets of the mortgage industry",
+      "at": 278.28
+     }
+    ]
+   }
+  },
+  {
+   "type": "blur_list",
+   "start": 286.36,
+   "end": 296.89,
+   "label": "[R5\u00b76] A career with: flexibility \u00b7 anywhere \u00b7 no limitation",
+   "fullscreen": true,
+   "params": {
+    "title": "A career with",
+    "items": [
+     {
+      "text": "Flexibility",
+      "icon": "bolt",
+      "at": 288.16
+     },
+     {
+      "text": "Anywhere in the world",
+      "icon": "public",
+      "at": 294.12
+     },
+     {
+      "text": "No limitation",
+      "icon": "all_inclusive",
+      "at": 295.66
+     }
+    ]
+   }
+  },
+  {
+   "type": "icon_cards",
+   "start": 301.68,
+   "end": 307.91,
+   "label": "[R2\u00b74] Icon cards: shops \u00b7 retail \u00b7 brokers \u00b7 banks \u00b7 lenders",
+   "fullscreen": true,
+   "params": {
+    "title": "The difference between",
+    "items": [
+     {
+      "text": "Shops",
+      "icon": "storefront",
+      "at": 302.9
+     },
+     {
+      "text": "Retail",
+      "icon": "shopping_bag",
+      "at": 303.84
+     },
+     {
+      "text": "Brokers",
+      "icon": "handshake",
+      "at": 304.88
+     },
+     {
+      "text": "Banks",
+      "icon": "account_balance",
+      "at": 305.86
+     },
+     {
+      "text": "Lenders",
+      "icon": "payments",
+      "at": 307.08
+     }
+    ]
+   }
+  },
+  {
+   "type": "ring",
+   "start": 338.8,
+   "end": 343.39,
+   "label": "[R5\u00b73] Ring: serious about the mindset \u00b7 the work \u00b7 making money",
+   "fullscreen": true,
+   "params": {
+    "title": "IF YOU'RE SERIOUS ABOUT",
+    "items": [
+     {
+      "text": "The mindset",
+      "at": 340.14
+     },
+     {
+      "text": "The work",
+      "at": 341.36
+     },
+     {
+      "text": "Making money",
+      "at": 342.48
+     }
+    ]
+   }
+  },
+  {
+   "type": "ui_card",
+   "start": 343.34,
+   "end": 347.17,
+   "label": "[R3\u00b73] Speaker inside an apply card + click",
+   "fullscreen": true,
+   "params": {
+    "brand": "OFFSCRIPT",
+    "headline": "Click below and apply",
+    "sub": "I read every application myself.",
+    "button": "Apply now",
+    "click_at": 344.54
    }
   },
   {
@@ -2270,31 +2694,13 @@
    "chips": []
   },
   {
-   "clip": "11814",
-   "start": 50.08,
-   "end": 54.03,
-   "label": "Largest investor deal, South Florida",
-   "clip_in": 0.5,
-   "caption": "SOUTH FLORIDA",
-   "chips": []
-  },
-  {
    "clip": "8861",
    "start": 89.2,
-   "end": 93.84,
+   "end": 92.13000000000001,
    "label": "Cost of college",
    "clip_in": 1.0,
    "caption": null,
-   "chips": [
-    {
-     "text": "5 years",
-     "at": 92.18
-    },
-    {
-     "text": "10 years",
-     "at": 93.02
-    }
-   ]
+   "chips": []
   },
   {
    "clip": "15923",
@@ -2317,7 +2723,7 @@
   {
    "clip": "6052",
    "start": 103.8,
-   "end": 108.03999999999999,
+   "end": 108.12,
    "label": "Competing for jobs",
    "clip_in": 2.0,
    "caption": null,
@@ -2327,28 +2733,40 @@
    "clip": "16108",
    "start": 127.08,
    "end": 128.42,
-   "label": "Lawyer",
+   "label": "[R1\u00b75] Split-screen: lawyer",
    "clip_in": 1.0,
-   "caption": null,
-   "chips": []
+   "mode": "split",
+   "lead": "don't become a",
+   "word": "lawyer,",
+   "word_at": 127.94,
+   "chips": [],
+   "caption": null
   },
   {
    "clip": "29933",
    "start": 128.44,
    "end": 129.61999999999998,
-   "label": "Doctor",
+   "label": "[R1\u00b75] Split-screen: doctor",
    "clip_in": 2.0,
-   "caption": null,
-   "chips": []
+   "mode": "split",
+   "lead": "don't become a",
+   "word": "doctor.",
+   "word_at": 129.16,
+   "chips": [],
+   "caption": null
   },
   {
    "clip": "7632",
    "start": 147.86,
    "end": 152.2,
-   "label": "Doctor seeing patients",
+   "label": "[R1\u00b75] Split-screen: doctor and patients",
    "clip_in": 4.0,
-   "caption": null,
-   "chips": []
+   "mode": "split",
+   "lead": "as long as you see your",
+   "word": "patients",
+   "word_at": 150.22,
+   "chips": [],
+   "caption": null
   },
   {
    "clip": "22246",
@@ -2418,24 +2836,6 @@
    "chips": []
   },
   {
-   "clip": "6518",
-   "start": 240.72,
-   "end": 242.51999999999998,
-   "label": "Help families buy homes",
-   "clip_in": 4.0,
-   "caption": null,
-   "chips": []
-  },
-  {
-   "clip": "36840",
-   "start": 242.54,
-   "end": 243.34,
-   "label": "Impact lives",
-   "clip_in": 3.0,
-   "caption": null,
-   "chips": []
-  },
-  {
    "clip": "4280",
    "start": 246.42,
    "end": 249.5,
@@ -2443,24 +2843,34 @@
    "clip_in": 2.0,
    "caption": null,
    "chips": []
+  }
+ ],
+ "fx": [
+  {
+   "type": "lightleak",
+   "at": 24.97,
+   "label": "[R1\u00b73] Light-leak flash"
   },
   {
-   "clip": "18249",
-   "start": 275.7,
-   "end": 278.26,
-   "label": "How the money moves",
-   "clip_in": 1.0,
-   "caption": null,
-   "chips": [
-    {
-     "text": "how the money moves",
-     "at": 275.7
-    },
-    {
-     "text": "how the banks work",
-     "at": 277.02
-    }
-   ]
+   "type": "lightleak",
+   "at": 64.35,
+   "label": "[R1\u00b73] Light-leak flash"
+  },
+  {
+   "type": "lightleak",
+   "at": 240.57,
+   "label": "[R1\u00b73] Light-leak flash"
+  },
+  {
+   "type": "confetti",
+   "at": 245.64,
+   "label": "[R1\u00b76] Confetti burst",
+   "y": 880
+  },
+  {
+   "type": "lightleak",
+   "at": 354.87,
+   "label": "[R1\u00b73] Light-leak flash"
   }
  ],
  "sfx": [],

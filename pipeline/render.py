@@ -10,160 +10,9 @@ Usage:
 import argparse, bisect, json, math, os, subprocess, sys, time
 import numpy as np, cv2, skia
 
-W, H, FPS = 1920, 1080, 30
-HERE = os.path.dirname(os.path.abspath(__file__))
-FONTS = os.path.join(HERE, "assets", "fonts")
-
-# ---------------------------------------------------------------- look & feel
-INK = (17, 20, 24)
-ACCENT = (214, 58, 47)       # Offscript red
-GOLD = (222, 160, 40)
-WHITE = (255, 255, 255)
-PAPER = (246, 244, 239)
-PAPER_LINE = (222, 226, 232)
-MARGIN = (232, 150, 140)
-
-TF = {k: skia.Typeface.MakeFromFile(os.path.join(FONTS, f)) for k, f in {
-    "serif": "InstrumentSerif-Italic.ttf", "serif_up": "InstrumentSerif-Regular.ttf",
-    "sans": "Inter-SemiBold.otf", "sans_med": "Inter-Medium.otf", "sans_bold": "Inter-Bold.otf",
-    "sans_xb": "Inter-ExtraBold.otf", "mono": "CourierPrime-Bold.ttf", "mono_reg": "CourierPrime-Regular.ttf"}.items()}
-
-
-def font(name, size):
-    f = skia.Font(TF[name], size)
-    f.setSubpixel(True)
-    f.setEdging(skia.Font.Edging.kAntiAlias)
-    f.setHinting(skia.FontHinting.kNone)
-    return f
-
-
-def col(rgb, a=1.0):
-    return skia.Color(int(rgb[0]), int(rgb[1]), int(rgb[2]), int(max(0, min(1, a)) * 255))
-
-
-# ---------------------------------------------------------------- easing
-def c01(x):
-    return 0.0 if x <= 0 else 1.0 if x >= 1 else x
-
-
-def ease_out_cubic(x):
-    x = c01(x); return 1 - (1 - x) ** 3
-
-
-def ease_in_cubic(x):
-    x = c01(x); return x ** 3
-
-
-def ease_in_out_cubic(x):
-    x = c01(x); return 4 * x ** 3 if x < 0.5 else 1 - (-2 * x + 2) ** 3 / 2
-
-
-def ease_in_out_sine(x):
-    x = c01(x); return -(math.cos(math.pi * x) - 1) / 2
-
-
-def ease_out_back(x, s=1.70158):
-    x = c01(x); return 1 + (s + 1) * (x - 1) ** 3 + s * (x - 1) ** 2
-
-
-def prog(t, a, d):
-    return c01((t - a) / d) if d > 0 else (1.0 if t >= a else 0.0)
-
-
-def env(t, start, end, fin=0.35, fout=0.25):
-    """(in-progress, out-progress) for an element living in [start, end]."""
-    return prog(t, start, fin), prog(t, end - fout, fout)
-
-
-# ---------------------------------------------------------------- text helpers
-def text_width(text, f, tracking=0.0):
-    if not text:
-        return 0.0
-    g = f.textToGlyphs(text)
-    return float(sum(f.getWidths(g))) + tracking * (len(g) - 1)
-
-
-def draw_text(cv, text, x, y, f, rgb, alpha=1.0, blur=0.0, tracking=0.0, align="left", glow=0.0, glow_rgb=WHITE,
-              shadow=0.0):
-    """Draw text with optional tracking, blur-in, soft glow (for dark text on bright sky) or dark shadow."""
-    if alpha <= 0.003 or not text:
-        return 0.0
-    w = text_width(text, f, tracking)
-    if align == "right":
-        x -= w
-    elif align == "center":
-        x -= w / 2
-    g = f.textToGlyphs(text)
-    widths = f.getWidths(g)
-    xs, acc = [], x
-    for wd in widths:
-        xs.append(acc)
-        acc += wd + tracking
-    blob = skia.TextBlob.MakeFromPosTextH(text, [p - x for p in xs], 0, f)
-    if blob is None:
-        return w
-    if glow > 0:
-        gp = skia.Paint(AntiAlias=True, Color=col(glow_rgb, alpha * glow),
-                        MaskFilter=skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, max(4.0, f.getSize() * 0.12)))
-        cv.drawTextBlob(blob, x, y, gp)
-    if shadow > 0:
-        sp = skia.Paint(AntiAlias=True, Color=col((0, 0, 0), alpha * shadow),
-                        MaskFilter=skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, max(3.0, f.getSize() * 0.08)))
-        cv.drawTextBlob(blob, x, y + f.getSize() * 0.04, sp)
-    p = skia.Paint(AntiAlias=True, Color=col(rgb, alpha))
-    if blur > 0.25:
-        p.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, blur))
-    cv.drawTextBlob(blob, x, y, p)
-    return w
-
-
-def wrap(text, f, max_w):
-    words, lines, cur = text.split(), [], ""
-    for w in words:
-        trial = (cur + " " + w).strip()
-        if text_width(trial, f) <= max_w or not cur:
-            cur = trial
-        else:
-            lines.append(cur); cur = w
-    if cur:
-        lines.append(cur)
-    return lines
-
-
-def fit_lines(text, face, size, max_w, max_lines=2, min_size=70):
-    while True:
-        f = font(face, size)
-        lines = wrap(text, f, max_w)
-        if (len(lines) <= max_lines and all(text_width(l, f) <= max_w for l in lines)) or size <= min_size:
-            return f, lines
-        size = int(size * 0.92)
-
-
-def rrect(cv, x, y, w, h, r, rgb, alpha=1.0, shadow=0.0, stroke=None):
-    rect = skia.RRect.MakeRectXY(skia.Rect.MakeXYWH(x, y, w, h), r, r)
-    if shadow > 0:
-        sp = skia.Paint(AntiAlias=True, Color=col((0, 0, 0), alpha * shadow),
-                        MaskFilter=skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 14))
-        cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeXYWH(x, y + 8, w, h), r, r), sp)
-    p = skia.Paint(AntiAlias=True, Color=col(rgb, alpha))
-    if stroke:
-        p.setStyle(skia.Paint.kStroke_Style); p.setStrokeWidth(stroke)
-    cv.drawRRect(rect, p)
-
-
-def line(cv, x0, y0, x1, y1, rgb, width, alpha=1.0, cap=True):
-    p = skia.Paint(AntiAlias=True, Color=col(rgb, alpha), StrokeWidth=width, Style=skia.Paint.kStroke_Style)
-    if cap:
-        p.setStrokeCap(skia.Paint.kRound_Cap)
-    cv.drawLine(x0, y0, x1, y1, p)
-
-
-SIDE_X = 112          # margin for side-anchored text
-TOP_Y = 300           # baseline of the first line of side text
-
-
-def side_x(side):
-    return (SIDE_X, "left") if side == "L" else (W - SIDE_X, "right")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # sibling modules (also under python -I)
+from gfx import *  # noqa: E402,F401,F403  (fonts, colours, easing, draw helpers)
+import motions as MO  # noqa: E402
 
 
 # ---------------------------------------------------------------- kinetic text renderers
@@ -612,16 +461,18 @@ GFX_DRAW = {"offscript_title": g_offscript_title, "script_page": g_script_page, 
 
 # ---------------------------------------------------------------- video sources
 class FrameReader:
-    def __init__(self, path, start, dur, vf):
+    def __init__(self, path, start, dur, vf, size=(W, H)):
         cmd = ["ffmpeg", "-v", "error", "-ss", f"{start:.3f}", "-i", path, "-t", f"{dur:.3f}", "-vf", vf,
                "-f", "rawvideo", "-pix_fmt", "rgba", "-"]
-        self.p = subprocess.Popen(cmd, stdout=subprocess.PIPE, bufsize=W * H * 4 * 2)
+        self.w, self.h = size
+        self.p = subprocess.Popen(cmd, stdout=subprocess.PIPE, bufsize=self.w * self.h * 4 * 2)
         self.last = None
 
     def read(self):
-        buf = self.p.stdout.read(W * H * 4)
-        if len(buf) == W * H * 4:
-            self.last = np.frombuffer(buf, np.uint8).reshape(H, W, 4)
+        n = self.w * self.h * 4
+        buf = self.p.stdout.read(n)
+        if len(buf) == n:
+            self.last = np.frombuffer(buf, np.uint8).reshape(self.h, self.w, 4)
         return self.last
 
     def close(self):
@@ -631,6 +482,7 @@ class FrameReader:
             pass
 
 
+SPLIT_W = 1150
 COVER_VF = f"fps={FPS},scale={W}:{H}:force_original_aspect_ratio=increase:flags=bicubic,crop={W}:{H},format=rgba"
 
 
@@ -648,13 +500,21 @@ class Broll:
             self.reader = None
             self.active = cur
             if cur:
-                self.reader = FrameReader(os.path.join(self.dir, cur["clip"] + ".mp4"), cur["clip_in"] + (t - cur["start"]),
-                                          cur["end"] - t + 0.5, COVER_VF)
+                if cur.get("mode") == "split":
+                    pw = SPLIT_W
+                    vf = f"fps={FPS},scale={pw}:{H}:force_original_aspect_ratio=increase:flags=bicubic,crop={pw}:{H},format=rgba"
+                    self.reader = FrameReader(os.path.join(self.dir, cur["clip"] + ".mp4"), cur["clip_in"] + (t - cur["start"]),
+                                              cur["end"] - t + 0.5, vf, size=(pw, H))
+                else:
+                    self.reader = FrameReader(os.path.join(self.dir, cur["clip"] + ".mp4"), cur["clip_in"] + (t - cur["start"]),
+                                              cur["end"] - t + 0.5, COVER_VF)
         if not cur:
             return None, None
         f = self.reader.read()
         if f is None:
             return None, None
+        if cur.get("mode") == "split":
+            return f, cur
         # entry settle + slow Ken Burns (alternate push/pull per clip)
         i = self.items.index(cur)
         p = prog(t, cur["start"], cur["end"] - cur["start"])
@@ -681,6 +541,8 @@ class Aroll:
         fx, fy = s["cx"], s["cy"]
         off = min(250.0, (z - 1) * W / 2 * 0.95)
         fox = W / 2 - s.get("shift", 0.0) * off      # text on the left -> speaker sits right of centre
+        if s.get("face_x") is not None:
+            fox = s["face_x"]
         foy = H * (0.37 if z > 1.12 else 0.31)
         x0 = fx - fox / z
         y0 = fy - foy / z
@@ -709,6 +571,12 @@ class Aroll:
             x0 = min(max(0.0, cx - W / z / 2), W - W / z)
             y0 = min(max(0.0, cy - H / z / 2), H - H / z)
         return z, x0, y0
+
+    def face_out(self, t):
+        i = max(0, bisect.bisect_right(self.starts, t) - 1)
+        s = self.shots[i]
+        z, x0, y0 = self.transform(t)
+        return (s["cx"] - x0) * z, (s["cy"] - y0) * z
 
     def apply(self, frame, t):
         z, x0, y0 = self.transform(t)
@@ -753,18 +621,19 @@ def main():
     ap.add_argument("--preview", default=None, help="720p preview with audio")
     ap.add_argument("--stills", default=None, help="comma separated times; writes JPGs instead of video")
     ap.add_argument("--stills-dir", default=".")
+    ap.add_argument("--mattes", default=None, help="directory with matte_*.npy from matte.py")
     a = ap.parse_args()
     edl = json.load(open(a.edl))
     end = min(a.end if a.end is not None else edl["meta"]["duration"], edl["meta"]["duration"])
     aroll, broll = Aroll(edl), Broll(edl, a.broll)
-    texts, gfx = edl["texts"], edl["graphics"]
+    mattes = Mattes(a.mattes)
 
     if a.stills:
         times = [float(x) for x in a.stills.split(",")]
         for ts in times:
             rd = FrameReader(a.raw, ts, 0.2, f"fps={FPS},format=rgba")
             src = rd.read(); rd.close()
-            out = compose(src, ts, aroll, broll, texts, gfx)
+            out = compose(src, ts, aroll, broll, edl, mattes)
             if broll.reader:
                 broll.reader.close()
             broll.active, broll.reader = None, None
@@ -793,7 +662,7 @@ def main():
         src = reader.read()
         if src is None:
             break
-        out = compose(src, t, aroll, broll, texts, gfx)
+        out = compose(src, t, aroll, broll, edl, mattes)
         enc.stdin.write(out.tobytes())
         if n % 150 == 0:
             el = time.time() - t0
@@ -822,25 +691,110 @@ def side_wash(cv, t, items):
         cv.drawRect(skia.Rect.MakeWH(W, H), skia.Paint(Shader=sh))
 
 
-def compose(src, t, aroll, broll, texts, gfx):
+class Mattes:
+    """Pre-computed speaker mattes (matte.py) looked up by time."""
+
+    def __init__(self, d):
+        self.items = []
+        if d and os.path.isdir(d):
+            for fn in sorted(os.listdir(d)):
+                if fn.startswith("matte_") and fn.endswith(".npy"):
+                    a, b = (float(x) for x in fn[6:-4].split("_"))
+                    self.items.append((a, b, np.load(os.path.join(d, fn), mmap_mode="r")))
+
+    def get(self, t):
+        for a, b, arr in self.items:
+            if a <= t < b:
+                k = int(round((t - a) * FPS))
+                if 0 <= k < len(arr):
+                    return np.asarray(arr[k])
+        return None
+
+
+SIDE_TEXT = {"stack", "chips", "counter", "wordlist", "numchips"}
+
+
+def draw_split(cv, t, b, panel):
+    p = ease_out_cubic(prog(t, b["start"], 0.42))
+    x = W - SPLIT_W * p
+    cv.drawRect(skia.Rect.MakeXYWH(x - 30, 0, 30, H), skia.Paint(Shader=skia.GradientShader.MakeLinear(
+        [skia.Point(x - 30, 0), skia.Point(x, 0)], [col((0, 0, 0), 0), col((0, 0, 0), 0.35)])))
+    MO.draw_image(cv, panel, skia.Rect.MakeXYWH(x, 0, SPLIT_W, H))
+    if b.get("word"):
+        pin, pout = env(t, b["start"], b["end"], 0.3, 0.2)
+        fo = 1 - ease_in_cubic(pout)
+        MO.bottom_shade(cv, fo, 420, 0.45)
+        wf = font("serif", 190)
+        pw_ = prog(t, b.get("word_at", b["start"] + 0.2) - 0.05, 0.45)
+        ww = text_width(b["word"], wf)
+        if b.get("lead"):
+            draw_text(cv, b["lead"], W / 2 - ww / 2 + 20, H - 250, font("sans_med", 36), WHITE,
+                      ease_out_cubic(pin) * fo, shadow=0.55)
+        if pw_ > 0:
+            e = ease_out_cubic(pw_)
+            draw_text(cv, b["word"], W / 2, H - 110, wf, ACCENT, e * fo, blur=(1 - e) * 12, tracking=(1 - e) * 18,
+                      align="center", shadow=0.35)
+        if b.get("tail"):
+            pt = prog(t, b.get("tail_at", b["end"] - 0.6), 0.3)
+            draw_text(cv, b["tail"], W / 2 + ww / 2 - 10, H - 60, font("sans_med", 34), WHITE, ease_out_cubic(pt) * fo,
+                      align="right", shadow=0.55)
+
+
+def compose(src, t, aroll, broll, edl, mattes):
+    texts, gfx, fx = edl["texts"], edl["graphics"], edl.get("fx", [])
+    a_frame = aroll.apply(src, t)                     # clean, zoomed talking head
     bf, bcur = broll.frame(t)
-    frame = np.ascontiguousarray(bf if bf is not None else aroll.apply(src, t))
+    split = bcur is not None and bcur.get("mode") == "split"
+    frame = np.ascontiguousarray(bf if (bf is not None and not split) else a_frame.copy())
     frame[..., 3] = 255
+    ctx = {"aroll": a_frame, "face_out": aroll.face_out(t)}
+
+    def active(c):
+        return c["start"] - 0.05 <= t <= c["end"] + 0.05
+
     surf = skia.Surface(frame, colorType=skia.kRGBA_8888_ColorType, alphaType=skia.kPremul_AlphaType)
     cv = surf.getCanvas()
+    behind = [c for c in texts if c["type"] in MO.BEHIND_MOTIONS and active(c)]
+    if behind and (bf is None or split):
+        for c in behind:
+            MO.BEHIND_MOTIONS[c["type"]](cv, t, c, ctx)
+        m = mattes.get(t)
+        if m is not None:                               # put the speaker back in front of the graphics
+            z, x0, y0 = aroll.transform(t)
+            M = np.float32([[2 * z, 0, -x0 * z], [0, 2 * z, -y0 * z]])
+            al = cv2.warpAffine(m, M, (W, H), flags=cv2.INTER_LINEAR)
+            a3 = (al.astype(np.float32) * (1 / 255.0))[..., None]
+            frame[..., :3] = (frame[..., :3] * (1 - a3) + a_frame[..., :3] * a3).astype(np.uint8)
+    if split:
+        draw_split(cv, t, bcur, bf)
+    full_on = False
     for g in gfx:
         if g["fullscreen"] and g["start"] - 0.05 <= t <= g["end"] + 0.05:
-            GFX_DRAW[g["type"]](cv, t, g)
-    if bcur is not None:
+            full_on = full_on or (g["start"] <= t <= g["end"])
+            if g["type"] in MO.FULL_MOTIONS:
+                MO.FULL_MOTIONS[g["type"]](cv, t, {**g["params"], **g}, ctx)
+            else:
+                GFX_DRAW[g["type"]](cv, t, g)
+    if bcur is not None and not split:
         draw_broll_overlays(cv, t, bcur)
-    elif not any(g["fullscreen"] and g["start"] <= t <= g["end"] for g in gfx):
-        side_wash(cv, t, [c for c in texts if c["type"] != "marker"] + [g for g in gfx if not g["fullscreen"]])
+    elif not full_on and not split:
+        side_wash(cv, t, [c for c in texts if c["type"] in SIDE_TEXT] + [g for g in gfx if not g["fullscreen"]])
     for c in texts:
-        if c["start"] - 0.05 <= t <= c["end"] + 0.05:
+        if not active(c):
+            continue
+        if c["type"] in MO.BEHIND_MOTIONS:
+            if c.get("front"):
+                MO.m_behind_front(cv, t, c, ctx)
+        elif c["type"] in MO.TEXT_MOTIONS:
+            MO.TEXT_MOTIONS[c["type"]](cv, t, c, ctx)
+        else:
             TEXT_DRAW[c["type"]](cv, t, c)
     for g in gfx:
         if not g["fullscreen"] and g["start"] - 0.05 <= t <= g["end"] + 0.05:
-            GFX_DRAW[g["type"]](cv, t, g)
+            (MO.FULL_MOTIONS[g["type"]](cv, t, {**g["params"], **g}, ctx) if g["type"] in MO.FULL_MOTIONS else GFX_DRAW[g["type"]](cv, t, g))
+    for f in fx:
+        if f["at"] - 0.05 <= t <= f["at"] + 1.6:
+            MO.FX_MOTIONS[f["type"]](cv, t, f, ctx)
     del cv, surf
     return frame
 

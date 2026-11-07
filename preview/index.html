@@ -128,6 +128,24 @@ button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg
 .specs dd { margin: 0; color: var(--fg); }
 .empty { color: var(--muted); font-size: 13px; }
 
+
+/* Reference breakdown */
+.refs { display: grid; gap: 14px; }
+.refs-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+.refs-head h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(24px, 3vw, 32px); }
+.refs-head p { margin: 0; color: var(--muted); max-width: 70ch; }
+.reftabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.reftabs button[aria-selected="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.mcard { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); overflow: hidden; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.mcard img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
+.mcard .body { padding: 12px 14px 14px; display: grid; gap: 6px; align-content: start; }
+.mcard .top { display: flex; justify-content: space-between; gap: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.mcard .nm { font-weight: 600; font-size: 15px; line-height: 1.3; }
+.mcard .how { color: var(--muted); font-size: 13px; }
+.mcard .use { font-size: 13px; border-top: 1px solid var(--line); padding-top: 8px; margin-top: 2px; }
+.mcard .use b { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 500; display: block; margin-bottom: 2px; }
+
 @media (max-width: 980px) {
   .main { grid-template-columns: minmax(0, 1fr); }
   .log { max-height: 360px; }
@@ -220,6 +238,15 @@ button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg
       </div>
     </aside>
   </section>
+
+  <section class="refs" id="refs" aria-label="Reference breakdown">
+    <div class="refs-head">
+      <h2>Reference breakdown</h2>
+      <p id="refsSummary">Every motion found in the client's reference edits, and where it lands in this video.</p>
+    </div>
+    <div class="reftabs" role="tablist" id="reftabs"></div>
+    <div class="mgrid" id="mgrid"><p class="empty">Loading the breakdown…</p></div>
+  </section>
 </div>
 
 <script>
@@ -257,6 +284,7 @@ button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg
     time() { return this.idx < 0 ? 0 : this.idx * this.src.partDur + (this.el.currentTime || 0); }
     show() { this.el.classList.add("on"); this.other.classList.remove("on"); }
     async seek(t, autoplay) {
+      if (this.ready < 1) return;
       t = Math.min(Math.max(0, t), DUR - 0.05, this.ready * this.src.partDur - 0.1);
       const i = Math.min(this.ready - 1, Math.floor(t / this.src.partDur));
       const off = t - i * this.src.partDur;
@@ -314,9 +342,10 @@ button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg
     $("specs").innerHTML = Object.entries(sp).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
     // versions
     const vs = (s.versions || []);
-    $("versionSeg").innerHTML = vs.length ? vs.map((v) => `<button type="button" id="ver-${v.id}" aria-pressed="false" data-id="${v.id}">${v.label}</button>`).join("") : `<button type="button" disabled aria-pressed="true">v1 · Motion</button>`;
+    const playable = vs.filter((v) => (v.ready ?? v.parts) > 0);
+    $("versionSeg").innerHTML = vs.length ? vs.map((v) => `<button type="button" id="ver-${v.id}" aria-pressed="false" data-id="${v.id}" ${(v.ready ?? v.parts) > 0 ? "" : "disabled"}>${v.label}${(v.ready ?? v.parts) > 0 ? "" : " (rendering)"}</button>`).join("") : `<button type="button" disabled aria-pressed="true">v1 · Motion</button>`;
     $("versionSeg").querySelectorAll("button[data-id]").forEach((b) => b.addEventListener("click", () => selectVersion(b.dataset.id)));
-    if (vs.length) selectVersion((version && version.id) || vs[vs.length - 1].id, true);
+    if (playable.length) selectVersion((version && playable.some((p) => p.id === version.id) && version.id) || playable[playable.length - 1].id, true);
   }
 
   function blocks(container, items, colorFn, titleFn) {
@@ -333,6 +362,7 @@ button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg
     (EDL.texts || []).forEach((t) => ev.push({ start: t.start, end: t.end, kind: "text", text: t.label || (t.lines || []).join(" ") }));
     (EDL.graphics || []).forEach((g) => ev.push({ start: g.start, end: g.end, kind: "graphic", text: g.label || g.type }));
     (EDL.broll || []).forEach((b) => ev.push({ start: b.start, end: b.end, kind: "b-roll", text: b.label || b.clip }));
+    (EDL.fx || []).forEach((f) => ev.push({ start: f.at, end: f.at + 0.6, kind: "graphic", text: f.label || f.type }));
     (EDL.sfx || []).forEach((b) => ev.push({ start: b.start, end: b.end || b.start + 0.5, kind: "sfx", text: b.label || b.name }));
     return ev.sort((a, b) => a.start - b.start);
   }
@@ -344,7 +374,7 @@ button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg
     const zc = { wide: "var(--zoom-wide)", med: "var(--zoom-med)", close: "var(--zoom-close)" };
     blocks($("laneZoom"), EDL.shots || [], (s) => zc[s.frame] || "var(--zoom-wide)", (s) => `${s.frame} ${s.z0.toFixed(2)}→${s.z1.toFixed(2)}${s.label ? " · " + s.label : ""}`);
     blocks($("laneText"), EDL.texts || [], () => "var(--lane-text)", (t) => t.label || (t.lines || []).join(" "));
-    blocks($("laneMg"), EDL.graphics || [], () => "var(--lane-mg)", (g) => g.label || g.type);
+    blocks($("laneMg"), (EDL.graphics || []).concat((EDL.fx || []).map((f) => ({ start: f.at, end: f.at + 0.5, label: f.label }))), () => "var(--lane-mg)", (g) => g.label || g.type);
     blocks($("laneBroll"), EDL.broll || [], () => "var(--lane-broll)", (b) => b.label || b.clip);
     blocks($("laneSfx"), EDL.sfx || [], () => "var(--fg)", (b) => b.label || "");
     blocks($("laneMusic"), EDL.music || [], () => "var(--muted)", (b) => b.label || "");
@@ -365,10 +395,17 @@ button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg
   const escapeHtml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   // ---------- transport ----------
+  let edlPath = "data/edl.json";
+  async function loadEdl(path) {
+    if (!path || path === edlPath) return;
+    try { const r = await fetch(path, { cache: "no-store" }); if (r.ok) { EDL = await r.json(); edlPath = path; lastNow = ""; renderTimeline(); } } catch (e) {}
+  }
+
   function selectVersion(id, initial) {
     const vs = (STATUS && STATUS.versions) || [];
     const v = vs.find((x) => x.id === id);
     if (!v) return;
+    loadEdl(v.edl);
     const keepT = edit ? edit.time() : 0;
     const wasPlaying = playing;
     version = v;
@@ -472,9 +509,24 @@ button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg
   }
   window.addEventListener("resize", () => updatePlayhead(edit ? edit.time() : 0));
 
+
+  let ANALYSIS = null, refSel = null;
+  function renderRefs() {
+    if (!ANALYSIS) { $("refs").hidden = true; return; }
+    $("refsSummary").textContent = ANALYSIS.summary || "";
+    const refs = ANALYSIS.refs || [];
+    if (!refSel && refs.length) refSel = refs[0].id;
+    $("reftabs").innerHTML = refs.map((r) => `<button type="button" role="tab" id="tab-${r.id}" aria-selected="${r.id === refSel}" data-id="${r.id}">${escapeHtml(r.title)} · ${r.motions.length}</button>`).join("");
+    $("reftabs").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { refSel = b.dataset.id; renderRefs(); }));
+    const r = refs.find((x) => x.id === refSel) || refs[0];
+    $("mgrid").innerHTML = r.motions.map((m, i) => `<article class="mcard"><img src="media/refs/${m.id}.jpg" alt="${escapeHtml(r.title)} at ${m.t}: ${escapeHtml(m.name)}" loading="lazy"><div class="body"><div class="top"><span>${escapeHtml(r.style)}</span><span>${m.t}</span></div><div class="nm">${i + 1}. ${escapeHtml(m.name)}</div><div class="how">${escapeHtml(m.how)}</div><div class="use"><b>In Offscript</b>${escapeHtml(m.use)}</div></div></article>`).join("");
+  }
+
   async function load() {
     try { const r = await fetch("data/status.json", { cache: "no-store" }); if (r.ok) STATUS = await r.json(); } catch (e) {}
     try { const r = await fetch("data/edl.json", { cache: "no-store" }); if (r.ok) EDL = await r.json(); } catch (e) {}
+    try { const r = await fetch("data/analysis.json", { cache: "no-store" }); if (r.ok) ANALYSIS = await r.json(); } catch (e) {}
+    renderRefs();
     renderTimeline();
     renderStatus();
     updatePlayhead(0);

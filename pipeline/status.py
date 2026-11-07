@@ -1,35 +1,41 @@
-"""Update preview/data/status.json while the edit renders.
+"""Update preview/data/status.json while an edit version renders.
 
-Usage: python3 status.py <status.json> <ready_parts> <total_parts> [--raw N] [--done]
+Usage: python3 status.py <status.json> --version v11 --label "v1.1 · reference match" --path media/v11/
+         --edl data/edl.json --ready N --total 12 [--done] [--raw N]
 """
-import json, sys, time
+import argparse, json, time
 
-path, ready, total = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
-raw = int(sys.argv[sys.argv.index("--raw") + 1]) if "--raw" in sys.argv else 0
-done = "--done" in sys.argv
-s = json.load(open(path))
+ap = argparse.ArgumentParser()
+ap.add_argument("status")
+ap.add_argument("--version", required=True)
+ap.add_argument("--label", required=True)
+ap.add_argument("--path", required=True)
+ap.add_argument("--edl", default="data/edl.json")
+ap.add_argument("--ready", type=int, required=True)
+ap.add_argument("--total", type=int, default=12)
+ap.add_argument("--raw", type=int, default=0)
+ap.add_argument("--done", action="store_true")
+a = ap.parse_args()
+
+s = json.load(open(a.status))
 s["updated"] = time.strftime("%H:%M")
-pct = ready / total
-mins = lambda n: f"{int(n * 30 // 60)}:{int(n * 30 % 60):02d}"
-end_t = "5:56" if ready >= total else mins(ready)
+end_t = "5:56" if a.ready >= a.total else f"{a.ready * 30 // 60}:{a.ready * 30 % 60:02d}"
+vs = [v for v in s.get("versions", []) if v["id"] != a.version]
+vs.append({"id": a.version, "label": a.label, "path": a.path, "edl": a.edl, "parts": a.total, "partDur": 30, "ready": a.ready})
+s["versions"] = vs
 s["render"] = {
-    "state": "done" if done else "working", "progress": round(pct, 3),
-    "message": "v1 Motion ready for review" if done else f"Rendering v1 · {ready}/{total} parts ready (0:00–{end_t})",
-    "headline": "Step 1 · Motion graphics",
-    "detail": f"{ready} of {total} parts rendered.",
+    "state": "done" if a.done else "working", "progress": round(a.ready / a.total, 3),
+    "message": f"{a.label} ready for review" if a.done else f"Rendering {a.label} · {a.ready}/{a.total} parts (0:00–{end_t})",
+    "headline": "Step 1 · Motion graphics", "detail": f"{a.ready} of {a.total} parts rendered.",
 }
-s["versions"] = [{"id": "v1", "label": "v1 · Motion", "path": "media/v1/", "parts": total, "partDur": 30, "ready": ready}]
-if raw:
-    s["raw"] = {"path": "media/raw/", "parts": total, "partDur": 30, "ready": raw}
-acts = [a for a in s.get("activity", []) if a["title"] not in ("Building timeline", "Rendering v1", "Timeline built", "v1 rendered", "Raw compare track")]
-acts.append({"state": "ok", "title": "Timeline built", "detail": "83 camera moves, 55 text cues, 7 graphics, 18 B-roll inserts"})
-if done:
-    acts.append({"state": "ok", "title": "v1 rendered", "detail": "1080p master + 720p preview, no SFX or music yet"})
-else:
-    acts.append({"state": "live", "title": "Rendering v1", "detail": f"{ready}/{total} parts playable now (0:00–{end_t})"})
-if raw:
-    acts.append({"state": "ok", "title": "Raw compare track", "detail": "press Compare with raw to watch both in sync"})
+if a.raw:
+    s["raw"] = {"path": "media/raw/", "parts": a.total, "partDur": 30, "ready": a.raw}
+title = f"Rendering {a.label}"
+acts = [x for x in s.get("activity", []) if not x["title"].startswith("Rendering ") and x["title"] != "Building v1.1"
+        and x["title"] != f"{a.label} rendered"]
+acts.append({"state": "ok" if a.done else "live", "title": f"{a.label} rendered" if a.done else title,
+             "detail": "all 30 reference motions placed, no SFX or music yet" if a.done else f"{a.ready}/{a.total} parts playable now (0:00–{end_t})"})
 s["activity"] = acts
-s["steps"][0]["state"] = "review" if done else "active"
-json.dump(s, open(path, "w"), indent=1)
+s["steps"][0]["state"] = "review" if a.done else "active"
+json.dump(s, open(a.status, "w"), indent=1)
 print(s["render"]["message"])

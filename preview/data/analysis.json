@@ -1,0 +1,45 @@
+{
+ "summary": "5 reference edits, 30 distinct motions. Every one is mapped to a moment in the Offscript script and rebuilt for v1.1.",
+ "refs": [
+  {"id": "r1", "title": "Reference 1", "style": "Light interview · 33 s", "motions": [
+   {"id": "r1m1", "t": "0:01", "name": "Word-by-word lead + light serif keyword", "how": "Small sans words appear as they are spoken; the keyword blurs in as a large upright serif with tracking that tightens. Each block gets its own punch-in with the speaker pushed to the other side.", "use": "Hook lines 0:00–0:25 and most body lines"},
+   {"id": "r1m2", "t": "0:04", "name": "AI prompt bar typing", "how": "White rounded search bar with a spark icon slides up under a serif word; the question types in letter by letter.", "use": "4:41 “why no one talks about the mortgage industry”"},
+   {"id": "r1m3", "t": "0:07", "name": "Light-leak flash", "how": "Warm pink leak and over-exposure for ~6 frames across a cut.", "use": "Into the OFF-SCRIPT title, section changes, end card"},
+   {"id": "r1m4", "t": "0:08", "name": "White serif keyword over the torso", "how": "Huge white serif word low and centred over the speaker's body, tiny lead words above, tail word below.", "use": "“destiny”, “passion”, “make it happen”, “lifetime career”"},
+   {"id": "r1m5", "t": "0:27", "name": "Split-screen B-roll slide-in", "how": "B-roll panel slides in from the right and takes two thirds of the frame while the speaker stays on the left; a red serif word runs across both.", "use": "2:07 lawyer / doctor, 4:00 families buying homes"},
+   {"id": "r1m6", "t": "0:29", "name": "Confetti burst on a positive word", "how": "Small coloured circles, triangles and crosses pop out around the serif word and drift away.", "use": "4:04 “paid well”"},
+   {"id": "r1m7", "t": "0:32", "name": "Bold white word stack at chest", "how": "Small word above, big bold sans word, small tail below, each landing on its spoken word; bottom of frame darkened.", "use": "2:43 “Mortgage & loan origination / is not like that”"}
+  ]},
+  {"id": "r2", "title": "Reference 2", "style": "Dark studio · 60 s", "motions": [
+   {"id": "r2m1", "t": "0:02", "name": "Giant counter behind the head", "how": "Huge white digits roll up fast and settle, placed behind the speaker so his head covers them; small label appears top-right.", "use": "0:32 “$60,000,000” behind the speaker"},
+   {"id": "r2m2", "t": "0:06", "name": "Money counter + chart line", "how": "Full-screen white-to-lilac gradient; big number counts while a thick line draws across with a glowing dot at its tip; icon cards pop under the line.", "use": "3:29 “six figures in less than a month”"},
+   {"id": "r2m3", "t": "0:11", "name": "Pill tags around the speaker", "how": "White pills with ✕ or ✓ icons pop in at four corners around the speaker, then fade out together.", "use": "5:13 not for you if… passive income ✕ shortcut ✕ lazy ✕; 3:05 promote ✓ prospect ✓"},
+   {"id": "r2m4", "t": "0:15", "name": "Icon cards on gradient", "how": "White cards with bold icons pop in one by one and the row re-centres each time.", "use": "4:13 think · generate business · prospect · pipeline · communicate"},
+   {"id": "r2m5", "t": "0:27", "name": "Karaoke caption", "how": "Lower caption types word by word with the spoken word lit in brand colour; a bigger second line lands with the key phrase highlighted.", "use": "4:57 “I hold your hand until you make money”"},
+   {"id": "r2m6", "t": "0:37", "name": "Document + circle face-cam + highlighter", "how": "Speaker shrinks into a circle over a document; a yellow marker sweeps each line as it is said.", "use": "4:35 “how the money moves, how the banks work, the secret…”"},
+   {"id": "r2m7", "t": "0:47", "name": "Shrink-to-card transition", "how": "The full frame scales down into a rounded card, revealing the next screen behind it.", "use": "Into the document view and the apply card"}
+  ]},
+  {"id": "r3", "title": "Reference 3", "style": "White VSL · 30 s", "motions": [
+   {"id": "r3m1", "t": "0:01", "name": "Giant number fly-in to white card", "how": "Huge dark number slides across the speaker, then cuts to a clean white screen with the number settled in the centre.", "use": "1:10 “retire at 60–65”"},
+   {"id": "r3m2", "t": "0:04", "name": "Cards in a row + number slam", "how": "Post cards pop in left to right on white; a big coloured number slams over them and the cards fade back.", "use": "1:48 job cards $60K · $100K · $200K"},
+   {"id": "r3m3", "t": "0:08", "name": "Speaker inside a UI card", "how": "The talking head shrinks into a rounded ad-style card on white with a pill, copy lines and a button.", "use": "5:43 “click below and apply” application card"},
+   {"id": "r3m4", "t": "0:11", "name": "Wavy letter reveal at chest", "how": "Bold white words build letter by letter with a small vertical wave, tail word smaller.", "use": "2:04 “Do not do that.”"},
+   {"id": "r3m5", "t": "0:20", "name": "Two-bar chart", "how": "Coloured label pills, then gradient bars grow from the bottom and the values pop on top.", "use": "1:37 10 years → $100K · 15 years → $200K in debt"}
+  ]},
+  {"id": "r4", "title": "Reference 4", "style": "Dark navy explainer · 22 s", "motions": [
+   {"id": "r4m1", "t": "0:04", "name": "Glossy icon tiles, camera pan", "how": "Glass-edged icon tiles pop on foggy navy; the camera pans sideways as each new tile arrives.", "use": "1:06 the script: school → degree → graduate → job → retire"},
+   {"id": "r4m2", "t": "0:03", "name": "Spotlight beam", "how": "A glowing dot throws a light cone that sweeps around to land on an icon.", "use": "4:22 “see the opportunity everyone walks past”"},
+   {"id": "r4m3", "t": "0:07", "name": "Tree diagram", "how": "Top node, then lines draw down and branch to three child nodes that pop in order.", "use": "3:56 mortgage industry → help families · impact lives · paid well"},
+   {"id": "r4m4", "t": "0:13", "name": "Title + growing icon row", "how": "Title blurs in word by word; icons arrive one by one beneath it while the camera eases in.", "use": "4:11 “This is the mindset” → what you'll learn"},
+   {"id": "r4m5", "t": "0:19", "name": "Two nodes + dashed connector", "how": "Left node, a dashed line draws across, right node pops with a caption arrow.", "use": "0:48 homeless ---- largest investor deal in South Florida"}
+  ]},
+  {"id": "r5", "title": "Reference 5", "style": "Yellow VSL · 36 s", "motions": [
+   {"id": "r5m1", "t": "0:03", "name": "Huge words behind the speaker", "how": "Giant white words fill the frame behind the speaker (he covers part of them); a coloured second line pops below.", "use": "0:26 OFF · SCRIPT behind his head, 4:29 LIFETIME CAREER"},
+   {"id": "r5m2", "t": "0:04", "name": "Caption with brand-colour keyword", "how": "Small lower caption, the key word lands bigger in the accent colour.", "use": "Name-free lines like “welcome to OFFSCRIPT”, “I read every application”"},
+   {"id": "r5m3", "t": "0:09", "name": "Ring diagram with pills", "how": "Title on a blurred frame, a dashed ring draws around it and pills pop on the ring.", "use": "5:38 serious about: the mindset · the work · making money"},
+   {"id": "r5m4", "t": "0:08", "name": "Numbered chips beside the speaker", "how": "Square chips 01, 02, 03 pop in a row next to the speaker with a caption underneath.", "use": "1:58 easier · faster · more flexible"},
+   {"id": "r5m5", "t": "0:09", "name": "Count-up beside the speaker", "how": "Big accent number counts up (0 → 15 YEARS) next to the speaker with a small sub-line.", "use": "2:27 “even if you practice for 10 years”"},
+   {"id": "r5m6", "t": "0:26", "name": "Icon list on blurred background", "how": "The frame blurs heavily; a heading and an icon list build line by line.", "use": "5:02 shops · retail · brokers · banks · lenders"}
+  ]}
+ ]
+}
