@@ -1,0 +1,6 @@
+# media stays out of git
+*.mp4
+*.mov
+*.wav
+*.m4a
+__pycache__/

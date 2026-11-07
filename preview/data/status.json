@@ -1,0 +1,80 @@
+{
+ "updated": "17:13",
+ "render": {
+  "state": "working",
+  "progress": 0.25,
+  "message": "Rendering v1 \u00b7 3/12 parts ready (0:00\u20131:30)",
+  "headline": "Step 1 \u00b7 Motion graphics",
+  "detail": "3 of 12 parts rendered."
+ },
+ "steps": [
+  {
+   "title": "Motion graphics",
+   "desc": "Zoom in/out motion, kinetic text, graphics, B-roll after the hook",
+   "state": "active"
+  },
+  {
+   "title": "Sound effects",
+   "desc": "Whooshes, pops and risers on each motion beat",
+   "state": "waiting"
+  },
+  {
+   "title": "Music",
+   "desc": "Background bed, ducked under the voice",
+   "state": "waiting"
+  }
+ ],
+ "activity": [
+  {
+   "state": "ok",
+   "title": "Raw file downloaded",
+   "detail": "5:56 \u00b7 1920\u00d71080 \u00b7 60 fps"
+  },
+  {
+   "state": "ok",
+   "title": "Reference style studied",
+   "detail": "5 client references: constant push-ins, punch-ins, kinetic serif text, full-screen graphics"
+  },
+  {
+   "state": "ok",
+   "title": "Speech transcribed",
+   "detail": "word-level timing for text and zoom beats"
+  },
+  {
+   "state": "ok",
+   "title": "Face tracked",
+   "detail": "zooms frame on the speaker"
+  },
+  {
+   "state": "ok",
+   "title": "B-roll sourced",
+   "detail": "16 free-license stock clips (Mixkit)"
+  },
+  {
+   "state": "ok",
+   "title": "Timeline built",
+   "detail": "83 camera moves, 55 text cues, 7 graphics, 18 B-roll inserts"
+  },
+  {
+   "state": "live",
+   "title": "Rendering v1",
+   "detail": "3/12 parts playable now (0:00\u20131:30)"
+  }
+ ],
+ "specs": {
+  "Source": "1920\u00d71080 \u00b7 60 fps \u00b7 HEVC \u00b7 5:56",
+  "Output": "1920\u00d71080 \u00b7 30 fps \u00b7 H.264",
+  "Preview": "1280\u00d7720 here, full-res master kept",
+  "Hook": "0:00\u20130:41 no B-roll (speaker only)"
+ },
+ "versions": [
+  {
+   "id": "v1",
+   "label": "v1 \u00b7 Motion",
+   "path": "media/v1/",
+   "parts": 12,
+   "partDur": 30,
+   "ready": 3
+  }
+ ]
+}

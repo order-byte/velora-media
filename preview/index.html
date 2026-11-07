@@ -1,0 +1,485 @@
+<title>Offscript VSL Edit Bay</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single dark edit-bay screen. Player + lanes on the left, edit log on the right; stacks on phones. */
+:root {
+  --bg: #111413;
+  --panel: #191d1c;
+  --panel-2: #202524;
+  --line: #2b3230;
+  --fg: #e7ebe9;
+  --muted: #8d9793;
+  --accent: #e2483d;      /* Offscript red: playhead, active step */
+  --zoom-wide: #4f5d58;
+  --zoom-med: #8fb3a3;
+  --zoom-close: #d8c79f;
+  --lane-text: #e0a526;
+  --lane-broll: #6fa8dc;
+  --lane-mg: #e2483d;
+  --ok: #57b883;
+  --font-display: "Instrument Serif", "Times New Roman", serif;
+  --font-ui: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--bg); color: var(--fg); }
+body {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+}
+.wrap { max-width: 1320px; margin: 0 auto; display: grid; gap: 18px; }
+
+/* Header */
+.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; }
+.brand { display: grid; gap: 2px; min-width: 0; }
+.eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 4.6vw, 48px); line-height: 1; margin: 0; text-wrap: balance; }
+h1 em { color: var(--accent); }
+.status-pill { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); font-size: 13px; max-width: 100%; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+.dot.live { background: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+.dot.ok { background: var(--ok); }
+@keyframes pulse { 50% { opacity: .35; } }
+
+/* Steps */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.step { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: var(--panel); display: grid; gap: 4px; min-width: 0; }
+.step .n { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; display: flex; justify-content: space-between; gap: 8px; }
+.step .t { font-weight: 600; font-size: 15px; }
+.step .d { color: var(--muted); font-size: 13px; }
+.step.active { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+.step.active .n span:last-child { color: var(--accent); }
+.step.done .n span:last-child { color: var(--ok); }
+
+/* Main grid */
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; align-items: start; }
+.stage { display: grid; gap: 12px; min-width: 0; }
+.screen { position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; opacity: 0; }
+.screen video.on { opacity: 1; }
+.screen .tag { position: absolute; top: 10px; left: 10px; z-index: 3; font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; background: rgba(0,0,0,.55); color: #fff; padding: 4px 8px; border-radius: 6px; }
+.placeholder { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; text-align: center; padding: 24px; background: radial-gradient(120% 90% at 50% 40%, #1f2523 0%, #0c0f0e 70%); }
+.placeholder .big { font-family: var(--font-display); font-size: clamp(26px, 4vw, 44px); line-height: 1.05; }
+.placeholder .small { color: var(--muted); margin-top: 8px; font-size: 13px; }
+.bar { height: 4px; width: min(320px, 70vw); background: var(--line); border-radius: 4px; margin: 16px auto 0; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .6s ease; }
+
+.compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.compare[hidden] { display: none !important; }
+.compare .screen .tag { background: rgba(0,0,0,.6); }
+
+.transport { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+button { font: inherit; color: var(--fg); background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+button:hover { border-color: var(--muted); }
+button:focus-visible, .lanes:focus-visible, .log li:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); font-weight: 600; min-width: 92px; }
+.tc { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 15px; letter-spacing: .02em; }
+.tc small { color: var(--muted); font-size: 12px; }
+.spacer { flex: 1; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; background: transparent; padding: 7px 12px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--panel-2); color: var(--fg); }
+
+/* Timeline lanes */
+.lanes { position: relative; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 8px 10px 6px; cursor: pointer; user-select: none; touch-action: none; }
+.lane { display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: center; gap: 8px; height: 22px; }
+.lane + .lane { margin-top: 4px; }
+.lane .lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.track { position: relative; height: 16px; background: var(--panel-2); border-radius: 4px; overflow: hidden; }
+.blk { position: absolute; top: 0; bottom: 0; border-radius: 2px; min-width: 2px; }
+.hook { position: absolute; top: 0; bottom: 0; left: 0; background: repeating-linear-gradient(135deg, transparent 0 5px, rgba(255,255,255,.07) 5px 10px); border-right: 1px dashed var(--muted); }
+.hook span { position: absolute; left: 6px; top: 0; font-size: 10px; line-height: 16px; color: var(--muted); white-space: nowrap; }
+.ruler { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; margin-top: 4px; }
+.ruler .ticks { position: relative; height: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.ruler .ticks span { position: absolute; transform: translateX(-50%); }
+.playhead { position: absolute; top: 4px; bottom: 4px; width: 2px; background: var(--accent); pointer-events: none; box-shadow: 0 0 0 1px rgba(0,0,0,.4); }
+.pending { position: absolute; top: 4px; bottom: 22px; background: repeating-linear-gradient(135deg, rgba(17,20,19,.72) 0 6px, rgba(17,20,19,.5) 6px 12px); border-left: 2px solid var(--accent); pointer-events: none; border-radius: 0 6px 6px 0; }
+.pending span { position: absolute; top: 4px; left: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--fg); white-space: nowrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 12px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+/* Side panel */
+.side { display: grid; gap: 12px; min-width: 0; }
+.card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 14px; display: grid; gap: 10px; min-width: 0; }
+.card h2 { margin: 0; font-size: 12px; font-family: var(--font-mono); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.log { list-style: none; margin: 0; padding: 0; max-height: 520px; overflow: auto; display: grid; gap: 2px; }
+.log li { display: grid; grid-template-columns: 58px 62px minmax(0, 1fr); gap: 8px; align-items: baseline; padding: 6px 6px; border-radius: 6px; cursor: pointer; }
+.log li:hover { background: var(--panel-2); }
+.log li.now { background: color-mix(in srgb, var(--accent) 16%, var(--panel)); }
+.log .t { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.log .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.log .x { font-size: 13px; overflow-wrap: anywhere; }
+.activity { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.activity li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; font-size: 13px; color: var(--muted); }
+.activity li b { color: var(--fg); font-weight: 500; }
+.activity .dot { margin-top: 6px; }
+.specs { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; font-size: 12px; color: var(--muted); }
+.specs dt { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .08em; font-size: 10px; padding-top: 2px; }
+.specs dd { margin: 0; color: var(--fg); }
+.empty { color: var(--muted); font-size: 13px; }
+
+@media (max-width: 980px) {
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .log { max-height: 360px; }
+}
+@media (max-width: 620px) {
+  .steps { grid-template-columns: minmax(0, 1fr); }
+  .compare { grid-template-columns: minmax(0, 1fr); }
+  .lane, .ruler { grid-template-columns: 46px minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .dot.live { animation: none; } .bar > i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="eyebrow">Velora Media · client VSL · edit bay</span>
+      <h1>Offscript <em>VSL</em> edit</h1>
+    </div>
+    <div class="status-pill" id="statusPill"><span class="dot live" id="statusDot"></span><span id="statusText">Preparing the edit</span></div>
+  </header>
+
+  <section class="steps" id="steps" aria-label="Edit steps"></section>
+
+  <section class="main">
+    <div class="stage">
+      <div class="screen" id="editScreen">
+        <span class="tag" id="editTag">Final edit</span>
+        <video id="editA" playsinline preload="auto"></video>
+        <video id="editB" playsinline preload="auto"></video>
+        <div class="placeholder" id="placeholder">
+          <div>
+            <div class="big" id="phBig">Rendering v1 · Motion</div>
+            <div class="small" id="phSmall">The video will appear here as soon as the render finishes.</div>
+            <div class="bar"><i id="phBar"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare" id="compare" hidden>
+        <div class="screen"><span class="tag">Raw footage</span><video id="rawA" playsinline muted preload="auto"></video><video id="rawB" playsinline muted preload="auto"></video></div>
+        <div class="card" style="align-content:start">
+          <h2>Now on screen</h2>
+          <div id="nowList" class="empty">Press play to see which edits are active.</div>
+        </div>
+      </div>
+
+      <div class="transport">
+        <button class="primary" id="playBtn" disabled>Play</button>
+        <button id="back5" disabled aria-label="Back 5 seconds">−5s</button>
+        <button id="fwd5" disabled aria-label="Forward 5 seconds">+5s</button>
+        <span class="tc" id="tc">00:00:00 <small>/ 00:00:00</small></span>
+        <span class="spacer"></span>
+        <div class="seg" role="group" aria-label="Version" id="versionSeg"></div>
+        <button id="cmpBtn" aria-pressed="false" disabled>Compare with raw</button>
+      </div>
+
+      <div class="lanes" id="lanes" tabindex="0" aria-label="Timeline. Click or use arrow keys to seek.">
+        <div class="lane"><span class="lbl">Zoom</span><div class="track" id="laneZoom"></div></div>
+        <div class="lane"><span class="lbl">Text</span><div class="track" id="laneText"></div></div>
+        <div class="lane"><span class="lbl">Graphic</span><div class="track" id="laneMg"></div></div>
+        <div class="lane"><span class="lbl">B-roll</span><div class="track" id="laneBroll"></div></div>
+        <div class="lane"><span class="lbl">SFX</span><div class="track" id="laneSfx"></div></div>
+        <div class="lane"><span class="lbl">Music</span><div class="track" id="laneMusic"></div></div>
+        <div class="ruler"><span></span><div class="ticks" id="ticks"></div></div>
+        <div class="pending" id="pending" hidden><span>Rendering…</span></div>
+        <div class="playhead" id="playhead" style="left:74px"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--zoom-wide)"></i>Wide</span>
+        <span><i style="background:var(--zoom-med)"></i>Medium punch-in</span>
+        <span><i style="background:var(--zoom-close)"></i>Close punch-in</span>
+        <span><i style="background:var(--lane-text)"></i>Kinetic text</span>
+        <span><i style="background:var(--lane-mg)"></i>Motion graphic</span>
+        <span><i style="background:var(--lane-broll)"></i>B-roll</span>
+      </div>
+    </div>
+
+    <aside class="side">
+      <div class="card">
+        <h2><span>Live activity</span><span id="updated"></span></h2>
+        <ul class="activity" id="activity"><li><span class="dot live"></span><span>Loading status…</span></li></ul>
+      </div>
+      <div class="card">
+        <h2><span>Edit decisions</span><span id="evCount"></span></h2>
+        <ul class="log" id="log"><li class="empty" style="cursor:default;display:block">The timeline appears here once it is built.</li></ul>
+      </div>
+      <div class="card">
+        <h2><span>Specs</span></h2>
+        <dl class="specs" id="specs"></dl>
+      </div>
+    </aside>
+  </section>
+</div>
+
+<script>
+(() => {
+  const FPS = 30;
+  const $ = (id) => document.getElementById(id);
+  let EDL = null, STATUS = null;
+  let DUR = 356.38;
+  let version = null;          // selected version object from STATUS.versions
+  let edit = null, raw = null; // ChunkTrack instances
+  let playing = false;
+
+  const fmt = (t) => {
+    t = Math.max(0, t || 0);
+    const m = Math.floor(t / 60), s = Math.floor(t % 60), f = Math.floor((t % 1) * FPS);
+    return [m, s, f].map((v) => String(v).padStart(2, "0")).join(":");
+  };
+  const fmtShort = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+
+  // ---------- chunked player: plays N short MP4 parts as one continuous timeline ----------
+  class ChunkTrack {
+    constructor(elA, elB, src, opts = {}) {
+      this.els = [elA, elB];
+      this.cur = 0;
+      this.idx = -1;
+      this.src = src; // {path, parts, partDur}
+      this.muted = !!opts.muted;
+      this.els.forEach((el) => { el.muted = this.muted; el.addEventListener("ended", () => this.onEnded(el)); el.addEventListener("timeupdate", () => this.prefetch(el)); });
+    }
+    setSource(src) { this.pause(); this.src = src; this.idx = -1; this.els.forEach((e) => { e.removeAttribute("src"); delete e.dataset.idx; e.load(); }); }
+    url(i) { return `${this.src.path}part${String(i).padStart(2, "0")}.mp4`; }
+    get el() { return this.els[this.cur]; }
+    get other() { return this.els[1 - this.cur]; }
+    get ready() { return Math.min(this.src.parts, this.src.ready ?? this.src.parts); }
+    time() { return this.idx < 0 ? 0 : this.idx * this.src.partDur + (this.el.currentTime || 0); }
+    show() { this.el.classList.add("on"); this.other.classList.remove("on"); }
+    async seek(t, autoplay) {
+      t = Math.min(Math.max(0, t), DUR - 0.05, this.ready * this.src.partDur - 0.1);
+      const i = Math.min(this.ready - 1, Math.floor(t / this.src.partDur));
+      const off = t - i * this.src.partDur;
+      if (i !== this.idx) {
+        const el = this.el;
+        this.idx = i;
+        if (this.other.dataset.idx === String(i)) { this.cur = 1 - this.cur; }
+        else { el.src = this.url(i); el.dataset.idx = String(i); }
+        await new Promise((r) => { if (this.el.readyState >= 1) r(); else this.el.addEventListener("loadedmetadata", r, { once: true }); });
+      }
+      this.el.currentTime = off;
+      this.show();
+      if (autoplay) { try { await this.el.play(); } catch (e) { /* needs a tap */ } }
+    }
+    prefetch(el) {
+      if (el !== this.el) return;
+      const next = this.idx + 1;
+      if (next < this.ready && el.duration && el.currentTime > el.duration - 4 && this.other.dataset.idx !== String(next)) {
+        this.other.src = this.url(next); this.other.dataset.idx = String(next); this.other.preload = "auto"; this.other.load();
+      }
+    }
+    async onEnded(el) {
+      if (el !== this.el) return;
+      const next = this.idx + 1;
+      if (next >= this.ready) { if (this.onFinish) this.onFinish(); return; }
+      if (this.other.dataset.idx !== String(next)) { this.other.src = this.url(next); this.other.dataset.idx = String(next); }
+      this.cur = 1 - this.cur; this.idx = next; this.el.currentTime = 0; this.show();
+      try { await this.el.play(); } catch (e) {}
+    }
+    play() { return this.el.play().catch(() => {}); }
+    pause() { this.els.forEach((e) => e.pause()); }
+  }
+
+  // ---------- rendering of status, steps, lanes, log ----------
+  function renderStatus() {
+    const s = STATUS || {};
+    const r = s.render || {};
+    $("statusText").textContent = r.message || "Preparing the edit";
+    $("statusDot").className = "dot " + (r.state === "done" ? "ok" : "live");
+    $("updated").textContent = s.updated || "";
+    const steps = s.steps || [
+      { title: "Motion graphics", desc: "Zoom motion, kinetic text, graphics, B-roll", state: "active" },
+      { title: "Sound effects", desc: "Whooshes, pops and risers on each motion beat", state: "waiting" },
+      { title: "Music", desc: "Background bed, ducked under the voice", state: "waiting" },
+    ];
+    const label = { active: "In progress", done: "Done", waiting: "Up next", review: "Ready for review" };
+    $("steps").innerHTML = steps.map((st, i) => `<div class="step ${st.state}"><div class="n"><span>Step ${i + 1}</span><span>${label[st.state] || st.state}</span></div><div class="t">${st.title}</div><div class="d">${st.desc}</div></div>`).join("");
+    const acts = s.activity || [];
+    $("activity").innerHTML = acts.length ? acts.map((a) => `<li><span class="dot ${a.state === "live" ? "live" : a.state === "ok" ? "ok" : ""}"></span><span><b>${a.title}</b>${a.detail ? " · " + a.detail : ""}</span></li>`).join("") : `<li><span class="dot live"></span><span>Waiting for the first status update…</span></li>`;
+    const pct = Math.round((r.progress || 0) * 100);
+    $("phBar").style.width = pct + "%";
+    $("phBig").textContent = r.headline || "Rendering v1 · Motion";
+    $("phSmall").textContent = r.detail || "The video will appear here as soon as the render finishes.";
+    const sp = s.specs || {};
+    $("specs").innerHTML = Object.entries(sp).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+    // versions
+    const vs = (s.versions || []);
+    $("versionSeg").innerHTML = vs.length ? vs.map((v) => `<button type="button" id="ver-${v.id}" aria-pressed="false" data-id="${v.id}">${v.label}</button>`).join("") : `<button type="button" disabled aria-pressed="true">v1 · Motion</button>`;
+    $("versionSeg").querySelectorAll("button[data-id]").forEach((b) => b.addEventListener("click", () => selectVersion(b.dataset.id)));
+    if (vs.length) selectVersion((version && version.id) || vs[vs.length - 1].id, true);
+  }
+
+  function blocks(container, items, colorFn, titleFn) {
+    container.innerHTML = items.map((it) => {
+      const l = (it.start / DUR) * 100, w = Math.max(0.15, ((it.end - it.start) / DUR) * 100);
+      return `<div class="blk" style="left:${l}%;width:${w}%;background:${colorFn(it)}" title="${fmtShort(it.start)} ${titleFn(it).replace(/"/g, "&quot;")}"></div>`;
+    }).join("");
+  }
+
+  function events() {
+    if (!EDL) return [];
+    const ev = [];
+    (EDL.shots || []).forEach((s) => { if (s.label) ev.push({ start: s.start, end: s.end, kind: "zoom", text: s.label }); });
+    (EDL.texts || []).forEach((t) => ev.push({ start: t.start, end: t.end, kind: "text", text: t.label || (t.lines || []).join(" ") }));
+    (EDL.graphics || []).forEach((g) => ev.push({ start: g.start, end: g.end, kind: "graphic", text: g.label || g.type }));
+    (EDL.broll || []).forEach((b) => ev.push({ start: b.start, end: b.end, kind: "b-roll", text: b.label || b.clip }));
+    (EDL.sfx || []).forEach((b) => ev.push({ start: b.start, end: b.end || b.start + 0.5, kind: "sfx", text: b.label || b.name }));
+    return ev.sort((a, b) => a.start - b.start);
+  }
+  const kindColor = { zoom: "var(--zoom-med)", text: "var(--lane-text)", graphic: "var(--lane-mg)", "b-roll": "var(--lane-broll)", sfx: "var(--fg)" };
+
+  function renderTimeline() {
+    if (!EDL) return;
+    DUR = (EDL.meta && EDL.meta.duration) || DUR;
+    const zc = { wide: "var(--zoom-wide)", med: "var(--zoom-med)", close: "var(--zoom-close)" };
+    blocks($("laneZoom"), EDL.shots || [], (s) => zc[s.frame] || "var(--zoom-wide)", (s) => `${s.frame} ${s.z0.toFixed(2)}→${s.z1.toFixed(2)}${s.label ? " · " + s.label : ""}`);
+    blocks($("laneText"), EDL.texts || [], () => "var(--lane-text)", (t) => t.label || (t.lines || []).join(" "));
+    blocks($("laneMg"), EDL.graphics || [], () => "var(--lane-mg)", (g) => g.label || g.type);
+    blocks($("laneBroll"), EDL.broll || [], () => "var(--lane-broll)", (b) => b.label || b.clip);
+    blocks($("laneSfx"), EDL.sfx || [], () => "var(--fg)", (b) => b.label || "");
+    blocks($("laneMusic"), EDL.music || [], () => "var(--muted)", (b) => b.label || "");
+    const hookEnd = EDL.meta && EDL.meta.hookEnd;
+    if (hookEnd) $("laneBroll").insertAdjacentHTML("afterbegin", `<div class="hook" style="width:${(hookEnd / DUR) * 100}%"><span>Hook · no B-roll</span></div>`);
+    let tk = "";
+    for (let t = 0; t <= DUR; t += 30) tk += `<span style="left:${(t / DUR) * 100}%">${fmtShort(t)}</span>`;
+    $("ticks").innerHTML = tk;
+    const ev = events();
+    $("evCount").textContent = ev.length ? `${ev.length}` : "";
+    $("log").innerHTML = ev.map((e, i) => `<li tabindex="0" data-t="${e.start}" data-i="${i}"><span class="t">${fmt(e.start).slice(0, 5)}</span><span class="k" style="color:${kindColor[e.kind]}">${e.kind}</span><span class="x">${escapeHtml(e.text)}</span></li>`).join("");
+    $("log").querySelectorAll("li[data-t]").forEach((li) => {
+      const go = () => seekTo(parseFloat(li.dataset.t) + 0.01);
+      li.addEventListener("click", go);
+      li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    });
+  }
+  const escapeHtml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- transport ----------
+  function selectVersion(id, initial) {
+    const vs = (STATUS && STATUS.versions) || [];
+    const v = vs.find((x) => x.id === id);
+    if (!v) return;
+    const keepT = edit ? edit.time() : 0;
+    const wasPlaying = playing;
+    version = v;
+    $("versionSeg").querySelectorAll("button[data-id]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === id)));
+    $("editTag").textContent = `Final edit · ${v.label}`;
+    if (edit) edit.setSource(v); else edit = new ChunkTrack($("editA"), $("editB"), v);
+    edit.onFinish = () => { playing = false; $("playBtn").textContent = "Play"; };
+    $("placeholder").hidden = true;
+    ["playBtn", "back5", "fwd5"].forEach((b) => ($(b).disabled = false));
+    const rs = STATUS && STATUS.raw;
+    $("cmpBtn").disabled = !rs;
+    if (rs && !raw) raw = new ChunkTrack($("rawA"), $("rawB"), rs, { muted: true });
+    edit.seek(keepT, wasPlaying && !initial);
+  }
+
+  async function seekTo(t) {
+    if (!edit) { updatePlayhead(t); return; }
+    await edit.seek(t, playing);
+    if (raw && !$("compare").hidden) raw.seek(t, playing);
+    updatePlayhead(t);
+  }
+
+  $("playBtn").addEventListener("click", async () => {
+    if (!edit) return;
+    playing = !playing;
+    $("playBtn").textContent = playing ? "Pause" : "Play";
+    if (playing) {
+      if (edit.idx < 0) await edit.seek(0, true); else edit.play();
+      if (raw && !$("compare").hidden) raw.seek(edit.time(), true);
+    } else { edit.pause(); if (raw) raw.pause(); }
+  });
+  $("back5").addEventListener("click", () => edit && seekTo(edit.time() - 5));
+  $("fwd5").addEventListener("click", () => edit && seekTo(edit.time() + 5));
+  $("cmpBtn").addEventListener("click", () => {
+    const on = $("compare").hidden;
+    $("compare").hidden = !on;
+    $("cmpBtn").setAttribute("aria-pressed", String(on));
+    $("cmpBtn").textContent = on ? "Hide raw" : "Compare with raw";
+    if (on && raw && edit) raw.seek(edit.time(), playing); else if (raw) raw.pause();
+  });
+
+  // timeline seeking (click / drag / keys)
+  const lanes = $("lanes");
+  function laneT(clientX) {
+    const tr = $("laneZoom").getBoundingClientRect();
+    return Math.min(Math.max(0, (clientX - tr.left) / tr.width), 1) * DUR;
+  }
+  let dragging = false;
+  lanes.addEventListener("pointerdown", (e) => { dragging = true; lanes.setPointerCapture(e.pointerId); updatePlayhead(laneT(e.clientX)); });
+  lanes.addEventListener("pointermove", (e) => { if (dragging) updatePlayhead(laneT(e.clientX)); });
+  lanes.addEventListener("pointerup", (e) => { if (!dragging) return; dragging = false; seekTo(laneT(e.clientX)); });
+  lanes.addEventListener("keydown", (e) => {
+    if (!edit) return;
+    if (e.key === "ArrowRight") { e.preventDefault(); seekTo(edit.time() + (e.shiftKey ? 10 : 1)); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); seekTo(edit.time() - (e.shiftKey ? 10 : 1)); }
+    if (e.key === " ") { e.preventDefault(); $("playBtn").click(); }
+  });
+
+  function updatePending() {
+    const tr = $("laneZoom").getBoundingClientRect(), lr = lanes.getBoundingClientRect();
+    const v = version;
+    const readyT = v ? Math.min(DUR, (v.ready ?? v.parts) * v.partDur) : 0;
+    const pend = $("pending");
+    if (!v || readyT >= DUR - 0.01) { pend.hidden = true; return; }
+    pend.hidden = false;
+    const left = tr.left - lr.left + (readyT / DUR) * tr.width;
+    pend.style.left = `${left}px`;
+    pend.style.width = `${tr.right - lr.left - left}px`;
+  }
+
+  function updatePlayhead(t) {
+    updatePending();
+    const tr = $("laneZoom").getBoundingClientRect(), lr = lanes.getBoundingClientRect();
+    $("playhead").style.left = `${tr.left - lr.left + (t / DUR) * tr.width - 1}px`;
+    $("tc").innerHTML = `${fmt(t)} <small>/ ${fmt(DUR)}</small>`;
+  }
+
+  let lastNow = "";
+  function tick() {
+    if (edit && !dragging) {
+      const t = edit.time();
+      updatePlayhead(t);
+      if (raw && !$("compare").hidden && playing) {
+        const d = raw.time() - t;
+        if (Math.abs(d) > 0.3) raw.seek(t, true);
+      }
+      // highlight active log rows + "now on screen"
+      const ev = events();
+      const active = ev.filter((e) => t >= e.start && t < e.end);
+      const key = active.map((e) => e.kind + e.start).join("|");
+      if (key !== lastNow) {
+        lastNow = key;
+        $("log").querySelectorAll("li[data-i]").forEach((li) => { const e = ev[+li.dataset.i]; li.classList.toggle("now", !!e && t >= e.start && t < e.end); });
+        const cur = $("log").querySelector("li.now");
+        if (cur && playing) { const lg = $("log"); const top = cur.offsetTop - lg.offsetTop; if (top < lg.scrollTop || top > lg.scrollTop + lg.clientHeight - 40) lg.scrollTop = top - 60; }
+        $("nowList").innerHTML = active.length ? active.map((e) => `<div><span class="k" style="font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:${kindColor[e.kind]}">${e.kind}</span> ${escapeHtml(e.text)}</div>`).join("") : `<span class="empty">Talking head only.</span>`;
+        $("nowList").classList.toggle("empty", false);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  window.addEventListener("resize", () => updatePlayhead(edit ? edit.time() : 0));
+
+  async function load() {
+    try { const r = await fetch("data/status.json", { cache: "no-store" }); if (r.ok) STATUS = await r.json(); } catch (e) {}
+    try { const r = await fetch("data/edl.json", { cache: "no-store" }); if (r.ok) EDL = await r.json(); } catch (e) {}
+    renderTimeline();
+    renderStatus();
+    updatePlayhead(0);
+    requestAnimationFrame(tick);
+  }
+  load();
+})();
+</script>

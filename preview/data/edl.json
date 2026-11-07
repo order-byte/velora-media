@@ -1,0 +1,2468 @@
+{
+ "meta": {
+  "duration": 356.38,
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "hookEnd": 41.3,
+  "face": {
+   "cx": 948.0,
+   "cy": 300.0,
+   "fw": 303.0
+  },
+  "step": "v1-motion"
+ },
+ "shots": [
+  {
+   "start": 0.0,
+   "end": 1.7,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 945.0,
+   "cy": 298.5,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
+  },
+  {
+   "start": 1.7,
+   "end": 3.54,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 926.2,
+   "cy": 293.2,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "close pull-out 1.44\u21921.34 (eased)"
+  },
+  {
+   "start": 3.54,
+   "end": 8.7,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 938.2,
+   "cy": 301.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 8.7,
+   "end": 10.06,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 939.0,
+   "cy": 298.5,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 10.06,
+   "end": 12.19,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 948.0,
+   "cy": 304.5,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
+  },
+  {
+   "start": 12.19,
+   "end": 14.54,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 943.5,
+   "cy": 319.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 14.54,
+   "end": 18.15,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 937.5,
+   "cy": 300.0,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med pull-out 1.27\u21921.20 (cut)"
+  },
+  {
+   "start": 18.15,
+   "end": 22.4,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
+   "cx": 952.5,
+   "cy": 304.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
+  },
+  {
+   "start": 22.4,
+   "end": 25.97,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 957.0,
+   "cy": 301.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 25.97,
+   "end": 29.29,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 949.5,
+   "cy": 298.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 29.29,
+   "end": 35.04,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 955.5,
+   "cy": 303.0,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 35.04,
+   "end": 37.19,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 946.5,
+   "cy": 302.2,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 37.19,
+   "end": 39.12,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
+   "cx": 950.2,
+   "cy": 297.0,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
+  },
+  {
+   "start": 39.12,
+   "end": 41.28,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 959.2,
+   "cy": 301.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 41.28,
+   "end": 42.76,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 42.76,
+   "end": 46.67,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 46.67,
+   "end": 48.44,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 948.0,
+   "cy": 310.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 48.44,
+   "end": 50.08,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 951.0,
+   "cy": 301.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 50.08,
+   "end": 54.03,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 54.03,
+   "end": 57.83,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 946.5,
+   "cy": 300.0,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 57.83,
+   "end": 59.5,
+   "frame": "wide",
+   "z0": 1.07,
+   "z1": 1.01,
+   "cx": 947.2,
+   "cy": 322.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide pull-out 1.07\u21921.01 (cut)"
+  },
+  {
+   "start": 59.5,
+   "end": 61.18,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 941.2,
+   "cy": 322.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 61.18,
+   "end": 64.4,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 946.5,
+   "cy": 315.0,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "med pull-out 1.27\u21921.20 (eased)"
+  },
+  {
+   "start": 64.4,
+   "end": 65.93,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 65.93,
+   "end": 69.92,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 69.92,
+   "end": 73.91,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 73.91,
+   "end": 75.9,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
+   "cx": 939.8,
+   "cy": 333.0,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
+  },
+  {
+   "start": 75.9,
+   "end": 81.27,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 943.5,
+   "cy": 303.0,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 81.27,
+   "end": 83.16,
+   "frame": "wide",
+   "z0": 1.07,
+   "z1": 1.01,
+   "cx": 951.8,
+   "cy": 333.8,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide pull-out 1.07\u21921.01 (cut)"
+  },
+  {
+   "start": 83.16,
+   "end": 85.18,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 925.5,
+   "cy": 313.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 85.18,
+   "end": 89.2,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 948.8,
+   "cy": 293.2,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 89.2,
+   "end": 93.84,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 93.84,
+   "end": 95.48,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 948.0,
+   "cy": 292.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 95.48,
+   "end": 98.34,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 98.34,
+   "end": 103.8,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 948.0,
+   "cy": 298.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med pull-out 1.27\u21921.20 (cut)"
+  },
+  {
+   "start": 103.8,
+   "end": 105.4,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 105.4,
+   "end": 108.04,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 108.04,
+   "end": 111.97,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 958.5,
+   "cy": 303.0,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "close pull-out 1.44\u21921.34 (eased)"
+  },
+  {
+   "start": 111.97,
+   "end": 115.66,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 952.5,
+   "cy": 301.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 115.66,
+   "end": 119.85,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 944.2,
+   "cy": 301.5,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "med pull-out 1.27\u21921.20 (eased)"
+  },
+  {
+   "start": 119.85,
+   "end": 121.3,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 955.5,
+   "cy": 298.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 121.3,
+   "end": 125.38,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 948.0,
+   "cy": 296.2,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 125.38,
+   "end": 127.08,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 944.2,
+   "cy": 297.8,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 127.08,
+   "end": 128.42,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 128.42,
+   "end": 132.08,
+   "frame": "wide",
+   "z0": 1.07,
+   "z1": 1.01,
+   "cx": 914.2,
+   "cy": 296.2,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide pull-out 1.07\u21921.01 (cut)"
+  },
+  {
+   "start": 132.08,
+   "end": 135.88,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 927.0,
+   "cy": 292.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 135.88,
+   "end": 139.16,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 949.5,
+   "cy": 265.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 139.16,
+   "end": 144.64,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 946.5,
+   "cy": 279.0,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "med pull-out 1.27\u21921.20 (eased)"
+  },
+  {
+   "start": 144.64,
+   "end": 147.86,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 930.0,
+   "cy": 278.2,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 147.86,
+   "end": 152.2,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 152.2,
+   "end": 155.08,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 155.08,
+   "end": 161.04,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 939.0,
+   "cy": 273.0,
+   "shift": 0.0,
+   "ease_in": true,
+   "label": "med pull-out 1.27\u21921.20 (eased)"
+  },
+  {
+   "start": 161.04,
+   "end": 162.86,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 925.5,
+   "cy": 271.5,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 162.86,
+   "end": 166.41,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 924.8,
+   "cy": 298.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 166.41,
+   "end": 168.5,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
+   "cx": 931.5,
+   "cy": 289.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
+  },
+  {
+   "start": 168.5,
+   "end": 172.84,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 937.5,
+   "cy": 291.0,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 172.84,
+   "end": 177.42,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 177.42,
+   "end": 182.36,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 182.36,
+   "end": 184.58,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 955.5,
+   "cy": 280.5,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 184.58,
+   "end": 190.26,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 949.5,
+   "cy": 276.0,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 190.26,
+   "end": 193.2,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 193.2,
+   "end": 196.44,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 941.2,
+   "cy": 294.8,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 196.44,
+   "end": 200.38,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 945.8,
+   "cy": 285.8,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 200.38,
+   "end": 203.91,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 948.0,
+   "cy": 325.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 203.91,
+   "end": 207.81,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 207.81,
+   "end": 212.045,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 951.0,
+   "cy": 312.0,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 212.045,
+   "end": 216.28,
+   "frame": "wide",
+   "z0": 1.0,
+   "z1": 1.07,
+   "cx": 943.5,
+   "cy": 319.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide push-in 1.00\u21921.07 (cut)"
+  },
+  {
+   "start": 216.28,
+   "end": 220.28,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 948.0,
+   "cy": 300.0,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 220.28,
+   "end": 223.58,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 936.0,
+   "cy": 301.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 223.58,
+   "end": 226.88,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 938.2,
+   "cy": 293.2,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 226.88,
+   "end": 229.64,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 229.64,
+   "end": 232.24,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 948.0,
+   "cy": 304.5,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
+  },
+  {
+   "start": 232.24,
+   "end": 234.32,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 942.8,
+   "cy": 312.8,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 234.32,
+   "end": 240.72,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 952.5,
+   "cy": 306.0,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
+  },
+  {
+   "start": 240.72,
+   "end": 242.52,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 242.52,
+   "end": 245.02,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 955.5,
+   "cy": 304.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 245.02,
+   "end": 246.42,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 949.5,
+   "cy": 324.8,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
+  },
+  {
+   "start": 246.42,
+   "end": 249.5,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 249.5,
+   "end": 253.0,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 960.8,
+   "cy": 313.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 253.0,
+   "end": 257.22,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 966.0,
+   "cy": 303.0,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 257.22,
+   "end": 261.44,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 953.2,
+   "cy": 298.5,
+   "shift": -1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 261.44,
+   "end": 265.56,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 967.5,
+   "cy": 289.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 265.56,
+   "end": 269.68,
+   "frame": "wide",
+   "z0": 1.07,
+   "z1": 1.01,
+   "cx": 960.0,
+   "cy": 303.8,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "wide pull-out 1.07\u21921.01 (cut)"
+  },
+  {
+   "start": 269.68,
+   "end": 271.44,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 955.5,
+   "cy": 310.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 271.44,
+   "end": 274.06,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 950.2,
+   "cy": 305.2,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 274.06,
+   "end": 275.7,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 952.5,
+   "cy": 298.5,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "close push-in 1.34\u21921.44 (eased)"
+  },
+  {
+   "start": 275.7,
+   "end": 278.26,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 278.26,
+   "end": 281.38,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 937.5,
+   "cy": 292.5,
+   "shift": 0.0,
+   "ease_in": false,
+   "label": "med pull-out 1.27\u21921.20 (cut)"
+  },
+  {
+   "start": 281.38,
+   "end": 286.36,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 942.0,
+   "cy": 297.0,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 286.36,
+   "end": 289.887,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 957.0,
+   "cy": 298.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med pull-out 1.27\u21921.20 (cut)"
+  },
+  {
+   "start": 289.887,
+   "end": 293.413,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 957.0,
+   "cy": 297.0,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "close pull-out 1.44\u21921.34 (eased)"
+  },
+  {
+   "start": 293.413,
+   "end": 296.94,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 948.0,
+   "cy": 273.0,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 296.94,
+   "end": 301.63,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 952.5,
+   "cy": 290.2,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med pull-out 1.27\u21921.20 (cut)"
+  },
+  {
+   "start": 301.63,
+   "end": 307.96,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 948.8,
+   "cy": 289.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 307.96,
+   "end": 311.8,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 967.5,
+   "cy": 295.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 311.8,
+   "end": 313.23,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 313.23,
+   "end": 315.95,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 315.95,
+   "end": 318.47,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 318.47,
+   "end": 323.47,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  },
+  {
+   "start": 323.47,
+   "end": 327.86,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 954.0,
+   "cy": 288.0,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 327.86,
+   "end": 331.24,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 957.0,
+   "cy": 312.0,
+   "shift": 1.0,
+   "ease_in": true,
+   "label": "med push-in 1.20\u21921.27 (eased)"
+  },
+  {
+   "start": 331.24,
+   "end": 335.02,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 963.8,
+   "cy": 320.2,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 335.02,
+   "end": 338.8,
+   "frame": "med",
+   "z0": 1.27,
+   "z1": 1.2,
+   "cx": 964.5,
+   "cy": 328.5,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "med pull-out 1.27\u21921.20 (cut)"
+  },
+  {
+   "start": 338.8,
+   "end": 343.34,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 952.5,
+   "cy": 295.5,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 343.34,
+   "end": 345.17,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 942.8,
+   "cy": 297.8,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 345.17,
+   "end": 347.22,
+   "frame": "close",
+   "z0": 1.34,
+   "z1": 1.44,
+   "cx": 946.5,
+   "cy": 315.0,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "close push-in 1.34\u21921.44 (cut)"
+  },
+  {
+   "start": 347.22,
+   "end": 352.64,
+   "frame": "close",
+   "z0": 1.44,
+   "z1": 1.34,
+   "cx": 961.5,
+   "cy": 309.0,
+   "shift": -1.0,
+   "ease_in": false,
+   "label": "close pull-out 1.44\u21921.34 (cut)"
+  },
+  {
+   "start": 352.64,
+   "end": 354.92,
+   "frame": "med",
+   "z0": 1.2,
+   "z1": 1.27,
+   "cx": 937.5,
+   "cy": 297.8,
+   "shift": 1.0,
+   "ease_in": false,
+   "label": "med push-in 1.20\u21921.27 (cut)"
+  },
+  {
+   "start": 354.92,
+   "end": 356.38,
+   "frame": "hidden",
+   "z0": 1.0,
+   "z1": 1.0,
+   "cx": 948.0,
+   "cy": 300.0,
+   "ease_in": false,
+   "label": null
+  }
+ ],
+ "bumps": [
+  1.0,
+  2.54,
+  9.44,
+  16.06,
+  24.2,
+  39.84,
+  49.6,
+  55.96,
+  60.2,
+  62.78,
+  77.52,
+  84.08,
+  119.16,
+  123.98,
+  134.38,
+  136.38,
+  162.04,
+  165.48,
+  169.7,
+  183.38,
+  194.66,
+  199.16,
+  201.36,
+  210.86,
+  225.52,
+  231.26,
+  236.0,
+  244.2,
+  251.48,
+  263.04,
+  270.12,
+  272.94,
+  282.48,
+  308.26,
+  325.64,
+  329.94,
+  337.38,
+  345.86,
+  347.54,
+  353.78
+ ],
+ "texts": [
+  {
+   "type": "stack",
+   "lead": "What are you trying to",
+   "hero": "prove?",
+   "start": 0.0,
+   "hero_at": 1.0,
+   "end": 1.6199999999999999,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "What are you trying to prove?"
+  },
+  {
+   "type": "stack",
+   "lead": "Who are you trying to",
+   "hero": "satisfy?",
+   "start": 1.7,
+   "hero_at": 2.54,
+   "end": 3.49,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Who are you trying to satisfy?"
+  },
+  {
+   "type": "wordlist",
+   "items": [
+    {
+     "text": "The society",
+     "at": 3.54
+    },
+    {
+     "text": "your parents",
+     "at": 4.7
+    },
+    {
+     "text": "your cousin",
+     "at": 6.0
+    },
+    {
+     "text": "your aunt",
+     "at": 6.88
+    }
+   ],
+   "final": "or yourself?",
+   "final_at": 7.88,
+   "start": 3.54,
+   "end": 8.62,
+   "side": "L",
+   "label": "The society / your parents / your cousin / your aunt / or yourself?"
+  },
+  {
+   "type": "stack",
+   "lead": "Who do you want to",
+   "hero": "live for?",
+   "start": 8.7,
+   "hero_at": 9.44,
+   "end": 12.22,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Who do you want to live for?"
+  },
+  {
+   "type": "stack",
+   "lead": "We're not here to follow",
+   "hero": "other people's script",
+   "start": 14.54,
+   "hero_at": 16.06,
+   "end": 18.2,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "We're not here to follow other people's script"
+  },
+  {
+   "type": "stack",
+   "lead": "We're here to write our own",
+   "hero": "destiny.",
+   "start": 22.4,
+   "hero_at": 24.2,
+   "end": 25.47,
+   "side": "R",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "We're here to write our own destiny."
+  },
+  {
+   "type": "counter",
+   "lead": "This year I personally closed",
+   "prefix": "$",
+   "steps": [
+    {
+     "value": 60000000,
+     "at": 32.32
+    }
+   ],
+   "suffix": "+",
+   "sub": "in personal production",
+   "start": 30.48,
+   "end": 34.99,
+   "side": "L",
+   "tone": "ink",
+   "label": "$60M closed counter"
+  },
+  {
+   "type": "marker",
+   "text": "not to impress you.",
+   "lead": "I'm telling you this",
+   "start": 35.04,
+   "end": 37.290000000000006,
+   "side": "R",
+   "y": 0.3,
+   "label": "I'm telling you this not to impress you."
+  },
+  {
+   "type": "stack",
+   "lead": "I know",
+   "hero": "both sides.",
+   "start": 39.12,
+   "hero_at": 39.84,
+   "end": 41.26,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "I know both sides."
+  },
+  {
+   "type": "stack",
+   "lead": "the difference between",
+   "hero": "homeless",
+   "start": 48.44,
+   "hero_at": 49.6,
+   "end": 50.059999999999995,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "the difference between homeless\u2026"
+  },
+  {
+   "type": "stack",
+   "lead": "It's not complicated\u2026",
+   "hero": "but very, very difficult.",
+   "start": 54.08,
+   "hero_at": 55.96,
+   "end": 57.86,
+   "side": "L",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "It's not complicated\u2026 but very, very difficult."
+  },
+  {
+   "type": "stack",
+   "lead": "Everything is",
+   "hero": "programmed.",
+   "start": 59.5,
+   "hero_at": 60.2,
+   "end": 61.13,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Everything is programmed."
+  },
+  {
+   "type": "stack",
+   "lead": "Everything is basically",
+   "hero": "preset.",
+   "start": 61.18,
+   "hero_at": 62.78,
+   "end": 64.30000000000001,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Everything is basically preset."
+  },
+  {
+   "type": "stack",
+   "lead": "Someone else wrote",
+   "hero": "a script for me.",
+   "start": 75.9,
+   "hero_at": 77.52,
+   "end": 81.34,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Someone else wrote a script for me."
+  },
+  {
+   "type": "stack",
+   "lead": "What if I don't want",
+   "hero": "that type of life?",
+   "start": 83.16,
+   "hero_at": 84.08,
+   "end": 85.13000000000001,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "What if I don't want that type of life?"
+  },
+  {
+   "type": "marker",
+   "text": "No one asked me.",
+   "lead": "",
+   "start": 85.18,
+   "end": 88.01,
+   "side": "L",
+   "y": 0.3,
+   "label": "No one asked me."
+  },
+  {
+   "type": "counter",
+   "lead": "with student loans",
+   "prefix": "$",
+   "steps": [
+    {
+     "value": 100000,
+     "at": 100.34
+    },
+    {
+     "value": 200000,
+     "at": 101.46
+    }
+   ],
+   "suffix": "",
+   "sub": "in debt",
+   "start": 98.36,
+   "end": 103.75,
+   "side": "R",
+   "tone": "red",
+   "label": "$200K student debt counter"
+  },
+  {
+   "type": "marker",
+   "text": "Now what?",
+   "lead": "",
+   "start": 105.4,
+   "end": 106.83,
+   "side": "R",
+   "y": 0.24,
+   "label": "Now what?"
+  },
+  {
+   "type": "chips",
+   "lead": "Competing for",
+   "items": [
+    {
+     "text": "$60K",
+     "at": 108.9
+    },
+    {
+     "text": "$100K",
+     "at": 109.78
+    },
+    {
+     "text": "$200K",
+     "at": 110.52
+    }
+   ],
+   "start": 108.17,
+   "end": 112.74,
+   "side": "L",
+   "tone": "ink",
+   "label": "Salary chips $60K / $100K / $200K"
+  },
+  {
+   "type": "marker",
+   "text": "Why?",
+   "lead": "",
+   "start": 115.66,
+   "end": 116.69,
+   "side": "R",
+   "y": 0.28,
+   "label": "Why?"
+  },
+  {
+   "type": "stack",
+   "lead": "I can teach you to make money in",
+   "hero": "six months.",
+   "start": 116.74,
+   "hero_at": 119.16,
+   "end": 119.92,
+   "side": "L",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "I can teach you to make money in six months."
+  },
+  {
+   "type": "stack",
+   "lead": "College for the sake of money?",
+   "hero": "Do not do that.",
+   "start": 121.3,
+   "hero_at": 123.98,
+   "end": 125.41,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "College for the sake of money? Do not do that."
+  },
+  {
+   "type": "stack",
+   "lead": "We need good doctors",
+   "hero": "but not for money.",
+   "start": 132.08,
+   "hero_at": 134.38,
+   "end": 135.82999999999998,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "We need good doctors but not for money."
+  },
+  {
+   "type": "stack",
+   "lead": "If it's your",
+   "hero": "passion, do it.",
+   "start": 135.88,
+   "hero_at": 136.38,
+   "end": 137.67,
+   "side": "R",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "If it's your passion, do it."
+  },
+  {
+   "type": "chips",
+   "lead": "Other ways to make money",
+   "items": [
+    {
+     "text": "much easier",
+     "at": 141.48
+    },
+    {
+     "text": "much faster",
+     "at": 142.72
+    },
+    {
+     "text": "more flexible",
+     "at": 143.78
+    }
+   ],
+   "start": 139.16,
+   "end": 144.76999999999998,
+   "side": "L",
+   "tone": "ink",
+   "label": "Easier / faster / more flexible chips"
+  },
+  {
+   "type": "stack",
+   "lead": "As long as you work,",
+   "hero": "you make money.",
+   "start": 161.04,
+   "hero_at": 162.04,
+   "end": 162.81,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "As long as you work, you make money."
+  },
+  {
+   "type": "stack",
+   "lead": "Mortgage & loan origination",
+   "hero": "is not like that.",
+   "start": 162.86,
+   "hero_at": 165.48,
+   "end": 166.39,
+   "side": "L",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "Mortgage & loan origination is not like that."
+  },
+  {
+   "type": "stack",
+   "lead": "You don't have to physically",
+   "hero": "be anywhere.",
+   "start": 168.5,
+   "hero_at": 169.7,
+   "end": 172.79,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "You don't have to physically be anywhere."
+  },
+  {
+   "type": "stack",
+   "lead": "There is",
+   "hero": "no limitation.",
+   "start": 182.36,
+   "hero_at": 183.38,
+   "end": 184.53,
+   "side": "L",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "There is no limitation."
+  },
+  {
+   "type": "chips",
+   "lead": "As long as you know how to",
+   "items": [
+    {
+     "text": "promote yourself",
+     "at": 185.8
+    },
+    {
+     "text": "prospect",
+     "at": 187.92
+    }
+   ],
+   "start": 184.58,
+   "end": 190.16,
+   "side": "R",
+   "tone": "ink",
+   "label": "As long as you know how to promote yourself \u00b7 prospect"
+  },
+  {
+   "type": "stack",
+   "lead": "Consistent.",
+   "hero": "Not one-time money.",
+   "start": 193.48,
+   "hero_at": 194.66,
+   "end": 196.39,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Consistent. Not one-time money."
+  },
+  {
+   "type": "stack",
+   "lead": "The formula that helps you",
+   "hero": "do it consistently.",
+   "start": 196.44,
+   "hero_at": 199.16,
+   "end": 200.32999999999998,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "The formula that helps you do it consistently."
+  },
+  {
+   "type": "stack",
+   "lead": "Here's what I mean by",
+   "hero": "complicated vs. difficult",
+   "start": 200.38,
+   "hero_at": 201.36,
+   "end": 203.88,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Here's what I mean by complicated vs. difficult"
+  },
+  {
+   "type": "stack",
+   "lead": "Six figures in",
+   "hero": "less than a month.",
+   "start": 207.86,
+   "hero_at": 210.86,
+   "end": 211.57,
+   "side": "R",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "Six figures in less than a month."
+  },
+  {
+   "type": "chips",
+   "lead": "It takes a lot of",
+   "items": [
+    {
+     "text": "effort",
+     "at": 217.8
+    },
+    {
+     "text": "resistance",
+     "at": 219.16
+    }
+   ],
+   "start": 216.28,
+   "end": 220.23,
+   "side": "L",
+   "tone": "ink",
+   "label": "It takes a lot of effort \u00b7 resistance"
+  },
+  {
+   "type": "stack",
+   "lead": "The voice in your head that pushes you to",
+   "hero": "quit.",
+   "start": 220.28,
+   "hero_at": 225.52,
+   "end": 226.82999999999998,
+   "side": "R",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "The voice in your head that pushes you to quit."
+  },
+  {
+   "type": "stack",
+   "lead": "I'm gonna",
+   "hero": "make it happen.",
+   "start": 229.66,
+   "hero_at": 231.26,
+   "end": 233.12,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "I'm gonna make it happen."
+  },
+  {
+   "type": "stack",
+   "lead": "The vehicle I use:",
+   "hero": "the mortgage industry",
+   "start": 234.32,
+   "hero_at": 236.0,
+   "end": 240.67,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "The vehicle I use: the mortgage industry"
+  },
+  {
+   "type": "stack",
+   "lead": "\u2026and you get",
+   "hero": "paid well.",
+   "start": 243.36,
+   "hero_at": 244.2,
+   "end": 246.36999999999998,
+   "side": "L",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "\u2026and you get paid well."
+  },
+  {
+   "type": "stack",
+   "lead": "Not just a course about mortgages.",
+   "hero": "This is the mindset.",
+   "start": 249.52,
+   "hero_at": 251.48,
+   "end": 252.95,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Not just a course about mortgages. This is the mindset."
+  },
+  {
+   "type": "chips",
+   "lead": "I'm gonna teach you how to",
+   "items": [
+    {
+     "text": "think",
+     "at": 254.54
+    },
+    {
+     "text": "generate business",
+     "at": 255.58
+    },
+    {
+     "text": "prospect",
+     "at": 257.36
+    },
+    {
+     "text": "fill your pipeline",
+     "at": 258.92
+    },
+    {
+     "text": "communicate",
+     "at": 260.72
+    }
+   ],
+   "start": 253.0,
+   "end": 261.39,
+   "side": "L",
+   "tone": "ink",
+   "label": "I'm gonna teach you how to think \u00b7 generate business \u00b7 prospect \u00b7 fill your pipeline \u00b7 communicate"
+  },
+  {
+   "type": "stack",
+   "lead": "See the opportunity",
+   "hero": "everyone walks past.",
+   "start": 261.44,
+   "hero_at": 263.04,
+   "end": 265.01,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "See the opportunity everyone walks past."
+  },
+  {
+   "type": "stack",
+   "lead": "This is a",
+   "hero": "lifetime career.",
+   "start": 269.68,
+   "hero_at": 270.12,
+   "end": 271.39,
+   "side": "L",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "This is a lifetime career."
+  },
+  {
+   "type": "stack",
+   "lead": "That's why I built",
+   "hero": "Offscript.",
+   "start": 271.44,
+   "hero_at": 272.94,
+   "end": 274.90000000000003,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "That's why I built Offscript."
+  },
+  {
+   "type": "stack",
+   "lead": "Why no one talks about",
+   "hero": "the mortgage industry",
+   "start": 281.38,
+   "hero_at": 282.48,
+   "end": 286.31,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "Why no one talks about the mortgage industry"
+  },
+  {
+   "type": "chips",
+   "lead": "A career with",
+   "items": [
+    {
+     "text": "flexibility",
+     "at": 288.16
+    },
+    {
+     "text": "anywhere in the world",
+     "at": 294.12
+    },
+    {
+     "text": "no limitation",
+     "at": 295.66
+    }
+   ],
+   "start": 286.36,
+   "end": 296.89,
+   "side": "R",
+   "tone": "ink",
+   "label": "A career with flexibility \u00b7 anywhere in the world \u00b7 no limitation"
+  },
+  {
+   "type": "chips",
+   "lead": "The difference between",
+   "items": [
+    {
+     "text": "shops",
+     "at": 302.9
+    },
+    {
+     "text": "retail",
+     "at": 303.84
+    },
+    {
+     "text": "brokers",
+     "at": 304.88
+    },
+    {
+     "text": "banks",
+     "at": 305.86
+    },
+    {
+     "text": "lenders",
+     "at": 307.08
+    }
+   ],
+   "start": 301.68,
+   "end": 307.90999999999997,
+   "side": "R",
+   "tone": "ink",
+   "label": "The difference between shops \u00b7 retail \u00b7 brokers \u00b7 banks \u00b7 lenders"
+  },
+  {
+   "type": "stack",
+   "lead": "What's behind",
+   "hero": "the scenes.",
+   "start": 307.96,
+   "hero_at": 308.26,
+   "end": 311.75,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "What's behind the scenes."
+  },
+  {
+   "type": "stack",
+   "lead": "For people done living",
+   "hero": "someone else's script.",
+   "start": 323.52,
+   "hero_at": 325.64,
+   "end": 327.81,
+   "side": "L",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "For people done living someone else's script."
+  },
+  {
+   "type": "stack",
+   "lead": "\u2026and ready to do",
+   "hero": "the difficult work.",
+   "start": 327.86,
+   "hero_at": 329.94,
+   "end": 331.19,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "\u2026and ready to do the difficult work."
+  },
+  {
+   "type": "stack",
+   "lead": "I personally teach and handhold you.",
+   "hero": "I don't scale my time.",
+   "start": 331.24,
+   "hero_at": 337.38,
+   "end": 338.75,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "I personally teach and handhold you. I don't scale my time."
+  },
+  {
+   "type": "chips",
+   "lead": "If you're serious about",
+   "items": [
+    {
+     "text": "the mindset",
+     "at": 340.14
+    },
+    {
+     "text": "the work",
+     "at": 341.36
+    },
+    {
+     "text": "making money",
+     "at": 342.48
+    }
+   ],
+   "start": 338.8,
+   "end": 343.39,
+   "side": "R",
+   "tone": "ink",
+   "label": "If you're serious about the mindset \u00b7 the work \u00b7 making money"
+  },
+  {
+   "type": "stack",
+   "lead": "I read every",
+   "hero": "application myself.",
+   "start": 345.22,
+   "hero_at": 345.86,
+   "end": 347.17,
+   "side": "R",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "I read every application myself."
+  },
+  {
+   "type": "stack",
+   "lead": "I'm gonna",
+   "hero": "handpick",
+   "start": 347.22,
+   "hero_at": 347.54,
+   "end": 352.59,
+   "side": "L",
+   "accent": false,
+   "hero_font": "serif",
+   "label": "I'm gonna handpick the ones\u2026"
+  },
+  {
+   "type": "stack",
+   "lead": "If you're ready,",
+   "hero": "see you on the other side.",
+   "start": 352.64,
+   "hero_at": 353.78,
+   "end": 354.91999999999996,
+   "side": "R",
+   "accent": true,
+   "hero_font": "serif",
+   "label": "If you're ready, see you on the other side."
+  }
+ ],
+ "graphics": [
+  {
+   "type": "offscript_title",
+   "start": 25.970000000000002,
+   "end": 29.29,
+   "label": "OFF-SCRIPT title reveal",
+   "fullscreen": false,
+   "params": {
+    "strike_at": 26.46,
+    "welcome_at": 27.6,
+    "side": "L"
+   }
+  },
+  {
+   "type": "script_page",
+   "start": 64.4,
+   "end": 73.91,
+   "label": "The script you were handed (full-screen)",
+   "fullscreen": true,
+   "params": {
+    "header": "THE SCRIPT YOU WERE HANDED",
+    "scenes": [
+     {
+      "text": "GO TO SCHOOL",
+      "at": 66.0
+     },
+     {
+      "text": "GET YOUR DEGREE",
+      "at": 66.8
+     },
+     {
+      "text": "GET GRADUATED",
+      "at": 68.02
+     },
+     {
+      "text": "GET A JOB",
+      "at": 69.14
+     },
+     {
+      "text": "RETIRE AT 60\u201365",
+      "at": 70.72
+     }
+    ],
+    "strike_at": 73.06
+   }
+  },
+  {
+   "type": "split",
+   "start": 203.91,
+   "end": 207.81,
+   "label": "Complicated vs Difficult (full-screen)",
+   "fullscreen": true,
+   "params": {
+    "left": {
+     "title": "COMPLICATED",
+     "sub": "hard to understand",
+     "at": 203.96,
+     "sub_at": 204.84
+    },
+    "right": {
+     "title": "DIFFICULT",
+     "sub": "hard to do",
+     "at": 206.02,
+     "sub_at": 206.92
+    }
+   }
+  },
+  {
+   "type": "guarantee",
+   "start": 296.94,
+   "end": 301.63,
+   "label": "Hold your hand / investment back badge",
+   "fullscreen": false,
+   "params": {
+    "lead": "I hold your hand until you make money",
+    "line_at": 297.86,
+    "badge": "OR YOUR INVESTMENT BACK",
+    "badge_at": 299.32,
+    "side": "L"
+   }
+  },
+  {
+   "type": "checklist",
+   "start": 311.8,
+   "end": 323.46999999999997,
+   "label": "Not for you if\u2026 (full-screen)",
+   "fullscreen": true,
+   "params": {
+    "header": "THIS COURSE IS NOT FOR EVERYONE",
+    "header_at": 311.8,
+    "rows": [
+     {
+      "text": "You want passive income",
+      "at": 313.36,
+      "x_at": 314.96
+     },
+     {
+      "text": "You want a shortcut",
+      "at": 316.02,
+      "x_at": 317.32
+     },
+     {
+      "text": "You don't want to do the job",
+      "at": 318.64,
+      "x_at": 321.88
+     }
+    ]
+   }
+  },
+  {
+   "type": "apply_button",
+   "start": 343.34,
+   "end": 345.17,
+   "label": "Click below & apply button",
+   "fullscreen": false,
+   "params": {
+    "click_at": 344.54,
+    "side": "L"
+   }
+  },
+  {
+   "type": "endcard",
+   "start": 354.91999999999996,
+   "end": 356.38,
+   "label": "Welcome to Offscript end card",
+   "fullscreen": true,
+   "params": {
+    "welcome_at": 355.02
+   }
+  }
+ ],
+ "broll": [
+  {
+   "clip": "5978",
+   "start": 41.28,
+   "end": 42.76,
+   "label": "Homeless before",
+   "clip_in": 3.0,
+   "caption": "BEFORE",
+   "chips": []
+  },
+  {
+   "clip": "18304",
+   "start": 42.78,
+   "end": 46.67,
+   "label": "Made millions",
+   "clip_in": 1.0,
+   "caption": "AFTER",
+   "chips": []
+  },
+  {
+   "clip": "11814",
+   "start": 50.08,
+   "end": 54.03,
+   "label": "Largest investor deal, South Florida",
+   "clip_in": 0.5,
+   "caption": "SOUTH FLORIDA",
+   "chips": []
+  },
+  {
+   "clip": "8861",
+   "start": 89.2,
+   "end": 93.84,
+   "label": "Cost of college",
+   "clip_in": 1.0,
+   "caption": null,
+   "chips": [
+    {
+     "text": "5 years",
+     "at": 92.18
+    },
+    {
+     "text": "10 years",
+     "at": 93.02
+    }
+   ]
+  },
+  {
+   "clip": "15923",
+   "start": 95.48,
+   "end": 98.34,
+   "label": "10\u201315 years of college",
+   "clip_in": 1.0,
+   "caption": null,
+   "chips": [
+    {
+     "text": "10 years",
+     "at": 96.8
+    },
+    {
+     "text": "15 years",
+     "at": 97.6
+    }
+   ]
+  },
+  {
+   "clip": "6052",
+   "start": 103.8,
+   "end": 108.03999999999999,
+   "label": "Competing for jobs",
+   "clip_in": 2.0,
+   "caption": null,
+   "chips": []
+  },
+  {
+   "clip": "16108",
+   "start": 127.08,
+   "end": 128.42,
+   "label": "Lawyer",
+   "clip_in": 1.0,
+   "caption": null,
+   "chips": []
+  },
+  {
+   "clip": "29933",
+   "start": 128.44,
+   "end": 129.61999999999998,
+   "label": "Doctor",
+   "clip_in": 2.0,
+   "caption": null,
+   "chips": []
+  },
+  {
+   "clip": "7632",
+   "start": 147.86,
+   "end": 152.2,
+   "label": "Doctor seeing patients",
+   "clip_in": 4.0,
+   "caption": null,
+   "chips": []
+  },
+  {
+   "clip": "22246",
+   "start": 152.22,
+   "end": 155.08,
+   "label": "Vacation",
+   "clip_in": 3.0,
+   "caption": null,
+   "chips": []
+  },
+  {
+   "clip": "4204",
+   "start": 172.84,
+   "end": 177.42,
+   "label": "Travel: Canada, Bahamas",
+   "clip_in": 6.0,
+   "caption": null,
+   "chips": [
+    {
+     "text": "Canada",
+     "at": 175.34
+    },
+    {
+     "text": "Bahamas",
+     "at": 176.54
+    }
+   ]
+  },
+  {
+   "clip": "17049",
+   "start": 177.44,
+   "end": 182.36,
+   "label": "Closing loans in TX / MI / CA",
+   "clip_in": 2.0,
+   "caption": null,
+   "chips": [
+    {
+     "text": "Texas",
+     "at": 178.72
+    },
+    {
+     "text": "Michigan",
+     "at": 180.26
+    },
+    {
+     "text": "California",
+     "at": 181.84
+    }
+   ]
+  },
+  {
+   "clip": "6724",
+   "start": 190.26,
+   "end": 193.2,
+   "label": "Work from anywhere",
+   "clip_in": 2.0,
+   "caption": "ANYWHERE IN THE WORLD",
+   "chips": []
+  },
+  {
+   "clip": "40265",
+   "start": 226.88,
+   "end": 229.64,
+   "label": "Get up again and again",
+   "clip_in": 0.5,
+   "caption": "AGAIN & AGAIN",
+   "chips": []
+  },
+  {
+   "clip": "6518",
+   "start": 240.72,
+   "end": 242.51999999999998,
+   "label": "Help families buy homes",
+   "clip_in": 4.0,
+   "caption": null,
+   "chips": []
+  },
+  {
+   "clip": "36840",
+   "start": 242.54,
+   "end": 243.34,
+   "label": "Impact lives",
+   "clip_in": 3.0,
+   "caption": null,
+   "chips": []
+  },
+  {
+   "clip": "4280",
+   "start": 246.42,
+   "end": 249.5,
+   "label": "Flexible, work from anywhere",
+   "clip_in": 2.0,
+   "caption": null,
+   "chips": []
+  },
+  {
+   "clip": "18249",
+   "start": 275.7,
+   "end": 278.26,
+   "label": "How the money moves",
+   "clip_in": 1.0,
+   "caption": null,
+   "chips": [
+    {
+     "text": "how the money moves",
+     "at": 275.7
+    },
+    {
+     "text": "how the banks work",
+     "at": 277.02
+    }
+   ]
+  }
+ ],
+ "sfx": [],
+ "music": []
+}
