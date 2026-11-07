@@ -1,21 +1,21 @@
 {
- "updated": "17:46",
+ "updated": "17:59",
  "render": {
-  "state": "working",
-  "progress": 0.083,
-  "message": "Rendering v1.1 \u00b7 reference match \u00b7 1/12 parts (0:00\u20130:30)",
+  "state": "done",
+  "progress": 1.0,
+  "message": "v1.1 \u00b7 reference match ready for review",
   "headline": "Step 1 \u00b7 Motion graphics",
-  "detail": "1 of 12 parts rendered."
+  "detail": "v1.1 rebuilds all 30 reference motions. Switch to v1 to compare with the first pass, or press Compare with raw."
  },
  "steps": [
   {
    "title": "Motion graphics",
-   "desc": "v1 first pass done \u00b7 v1.1 rebuilds every reference motion",
-   "state": "active"
+   "desc": "v1.1 ready: all 30 reference motions placed. Waiting for your feedback before SFX.",
+   "state": "review"
   },
   {
    "title": "Sound effects",
-   "desc": "Whooshes, pops and risers on each motion beat",
+   "desc": "Whooshes, pops and risers on each motion beat (starts after you approve motion)",
    "state": "waiting"
   },
   {
@@ -71,16 +71,17 @@
    "detail": "all 30 reference motions mapped to lines (tagged [R1\u00b71]\u2026[R5\u00b76] in the edit log)"
   },
   {
-   "state": "live",
-   "title": "Rendering v1.1 \u00b7 reference match",
-   "detail": "1/12 parts playable now (0:00\u20130:30)"
+   "state": "ok",
+   "title": "v1.1 \u00b7 reference match rendered",
+   "detail": "all 30 reference motions placed, no SFX or music yet"
   }
  ],
  "specs": {
   "Source": "1920\u00d71080 \u00b7 60 fps \u00b7 HEVC \u00b7 5:56",
   "Output": "1920\u00d71080 \u00b7 30 fps \u00b7 H.264",
   "Preview": "1280\u00d7720 here, full-res master kept",
-  "Hook": "0:00\u20130:41 no B-roll (speaker only)"
+  "Hook": "0:00\u20130:41 no B-roll (speaker only)",
+  "Master": "1920\u00d71080 \u00b7 30 fps \u00b7 5:56 rendered (kept in the edit workspace)"
  },
  "versions": [
   {
@@ -99,7 +100,13 @@
    "edl": "data/edl.json",
    "parts": 12,
    "partDur": 30,
-   "ready": 1
+   "ready": 12
   }
- ]
+ ],
+ "raw": {
+  "path": "media/raw/",
+  "parts": 12,
+  "partDur": 30,
+  "ready": 12
+ }
 }
