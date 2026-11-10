@@ -1,0 +1,374 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Fredoka;src:url(assets/fonts/fredoka-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:Fredoka;src:url(assets/fonts/fredoka-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:Fredoka;src:url(assets/fonts/fredoka-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:InterX;src:url(assets/fonts/Inter-Light.otf);font-weight:300}
+@font-face{font-family:InterX;src:url(assets/fonts/Inter-Regular.otf);font-weight:400}
+@font-face{font-family:InterX;src:url(assets/fonts/Inter-Medium.otf);font-weight:500}
+@font-face{font-family:InterX;src:url(assets/fonts/Inter-SemiBold.otf);font-weight:600}
+@font-face{font-family:InterX;src:url(assets/fonts/Inter-Bold.otf);font-weight:700}
+@font-face{font-family:InterX;src:url(assets/fonts/Inter-ExtraBold.otf);font-weight:800}
+html,body{margin:0;background:#000}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:InterX,sans-serif;background:#000}
+.scene{position:absolute;inset:0;overflow:hidden;display:none;transform-origin:50% 45%}
+.abs{position:absolute}
+#s1cut,#s1raw,#s12cut,#s12raw{filter:brightness(1.16) contrast(1.04)}
+#s4vid{filter:brightness(1.12)}
+.full{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.ctr{position:absolute;left:0;width:1080px;text-align:center;white-space:nowrap}
+.fr{font-family:Fredoka,sans-serif}
+.L{display:inline-block;white-space:pre;will-change:transform,opacity}
+.W{display:inline-block;white-space:pre}
+.neon{color:#46c9ff;text-shadow:0 0 26px rgba(40,180,255,.75),0 0 6px rgba(150,228,255,.6)}
+.neon3d{color:#4dcbff;text-shadow:0 1px 0 #2fb0ee,0 2px 0 #27a0dc,0 3px 0 #1f8fc8,0 4px 0 #177fb4,0 5px 0 #116f9f,0 6px 0 #0c5f8a,0 0 34px rgba(40,180,255,.85)}
+.botgrad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 52%,rgba(0,0,0,.72) 76%,#000 90%)}
+.lightbg{position:absolute;inset:0;background:linear-gradient(118deg,rgba(255,255,255,0) 38%,rgba(255,255,255,.22) 50%,rgba(255,255,255,0) 64%),linear-gradient(155deg,#62aefa 0%,#9fcffd 42%,#c3e1fe 100%)}
+.darkbg{position:absolute;inset:0;background:radial-gradient(820px 1050px at 28% 44%,#0d5180 0%,#07304e 34%,#020b14 68%,#000 100%)}
+.darkbg2{position:absolute;inset:0;background:radial-gradient(760px 900px at 104% 100%,#1c72ab 0%,rgba(10,50,80,0) 70%),radial-gradient(720px 1050px at -6% 8%,#0b466f 0%,rgba(4,20,34,0) 70%),#000}
+.emo{position:absolute;font-family:"Noto Color Emoji";line-height:1;filter:drop-shadow(4px 0 0 #fff) drop-shadow(-4px 0 0 #fff) drop-shadow(0 4px 0 #fff) drop-shadow(0 -4px 0 #fff) drop-shadow(0 10px 14px rgba(0,40,120,.35))}
+#wm{position:absolute;left:0;width:1080px;top:1574px;text-align:center;font-weight:300;font-size:34px;color:rgba(255,255,255,.62);z-index:50;letter-spacing:.2px}
+#px{position:absolute;inset:0;z-index:40;pointer-events:none}
+/* editor mock */
+#ui{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:540px 900px;color:#8b8b95;font-size:13px}
+.pn{position:absolute;background:#222226;border:1px solid #2f2f35;border-radius:8px;box-shadow:0 18px 40px rgba(0,0,0,.55)}
+.row{display:flex;align-items:center;gap:8px;height:24px;padding:0 12px;white-space:nowrap}
+.sl{flex:1;height:2px;background:#4a4a52;position:relative}
+.sl i{position:absolute;top:-4px;width:9px;height:9px;border-radius:50%;border:1.5px solid #9a9aa4;background:#222226}
+.wheel{position:absolute;width:96px;height:96px;border-radius:50%;background:conic-gradient(#ff3b3b,#ffd13b,#48ff3b,#3bfff4,#3b5bff,#e03bff,#ff3b3b);-webkit-mask:radial-gradient(circle,transparent 31px,#000 32px,#000 44px,transparent 46px)}
+.tg{margin-left:auto;width:22px;height:11px;border-radius:6px;background:#d8d8de}
+</style></head>
+<body><div id="stage">
+
+<!-- S1 -->
+<div class="scene" id="s1">
+  <div class="full" id="s1bg" style="background-image:linear-gradient(rgba(255,255,255,.4) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.4) 2px,transparent 2px),linear-gradient(118deg,#1f9ef6 0%,#7fcaff 38%,#eef8ff 74%,#fff 100%);background-size:108px 108px,108px 108px,100% 100%"></div>
+  <div class="full" id="s1card"><img class="full" id="s1raw" style="transform-origin:50% 100%"></div>
+  <img class="full" id="s1cut" style="transform-origin:50% 100%">
+  <div class="botgrad"></div>
+  <div class="abs" id="s1time" style="left:716px;top:150px;font-size:30px;color:rgba(70,95,125,.6);font-weight:500">9:41 AM</div>
+  <div class="abs" id="s1bub" style="left:248px;top:200px;width:584px;height:140px;transform-origin:50% 100%">
+    <div class="abs" style="right:-6px;bottom:-14px;width:60px;height:46px;background:#27a5f6;border-radius:0 0 0 46px;transform:skewX(38deg)"></div>
+    <div class="abs fr" style="inset:0;border-radius:70px;background:linear-gradient(180deg,#52c2ff,#1f9df3);box-shadow:0 14px 34px rgba(20,100,190,.35),inset 0 3px 0 rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:62px;color:#fff;text-shadow:0 3px 10px rgba(0,70,150,.45)">Hi, my name is</div>
+  </div>
+  <div class="abs" id="s1blob" style="left:130px;top:1050px;width:820px;height:420px;background:radial-gradient(closest-side,rgba(2,10,28,.78),rgba(2,10,28,.45) 55%,rgba(2,10,28,0))"></div>
+  <div class="ctr neon3d" id="s1name" style="top:1104px;font-weight:800;font-size:168px;letter-spacing:-6px">Aminur</div>
+  <div class="abs" id="s1tag" style="left:0;width:1080px;top:1308px;display:flex;justify-content:center;align-items:center;gap:18px">
+    <img src="assets/avatar.jpg" style="width:70px;height:70px;border-radius:50%;border:3px solid #fff;object-fit:cover">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+      <div style="font-size:36px;color:#fff;font-weight:400;line-height:1">Aminur</div>
+      <div style="font-size:22px;font-weight:600;color:#fff;background:#1fb6ff;border-radius:8px;padding:3px 12px;box-shadow:0 0 14px rgba(40,190,255,.7)">video editor</div>
+    </div>
+    <div style="color:#45c9ff;font-size:46px;margin-left:6px;transform:translateY(22px);text-shadow:0 0 14px #2bb8ff">✦<span style="font-size:24px;position:relative;top:-28px">✦</span></div>
+  </div>
+</div>
+
+<!-- S2 campus -->
+<div class="scene" id="s2">
+  <img class="full" id="s2img" src="assets/campus.jpg" style="transform-origin:50% 70%">
+  <div class="full" style="background:linear-gradient(180deg,rgba(40,120,255,.10) 0%,rgba(255,255,255,0) 40%,rgba(205,232,255,0) 78%,rgba(205,232,255,.85) 100%)"></div>
+  <div class="ctr" id="s2a" style="top:452px;font-weight:300;font-size:66px;color:#fff;text-shadow:0 2px 16px rgba(10,80,200,.55)">I go to</div>
+  <div class="ctr fr" id="s2b" style="top:520px;font-weight:700;font-size:150px;color:#fff;text-shadow:0 5px 0 rgba(120,185,255,.75),0 0 40px rgba(20,110,255,.6)">University</div>
+  <div class="emo" id="s2e1" style="left:128px;top:372px;font-size:120px">💻</div>
+  <div class="emo" id="s2e2" style="left:838px;top:682px;font-size:120px">🎓</div>
+</div>
+
+<!-- S3 desk -->
+<div class="scene" id="s3">
+  <img class="full" id="s3img" src="assets/desk.jpg" style="transform-origin:50% 60%">
+  <div class="full" style="background:linear-gradient(180deg,rgba(60,140,240,.25) 0%,rgba(255,255,255,0) 35%)"></div>
+  <div class="ctr" id="s3a0" style="top:322px;font-weight:300;font-size:56px;color:#fff;text-shadow:0 2px 14px rgba(10,70,170,.45)">And alongside that,</div>
+  <div class="ctr" id="s3a" style="top:322px;font-weight:300;font-size:56px;color:#fff;text-shadow:0 2px 14px rgba(10,70,170,.45)">I work as a freelance</div>
+  <div class="ctr fr" id="s3b" style="top:382px;font-weight:700;font-size:124px;color:#fff;text-shadow:0 4px 0 rgba(150,200,255,.7),0 0 34px rgba(20,100,230,.5)">video editor</div>
+  <div class="abs" id="s3l1" style="left:0;top:478px;height:2px;width:150px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.7))"></div>
+  <div class="abs" id="s3l2" style="right:0;top:478px;height:2px;width:150px;background:linear-gradient(270deg,rgba(255,255,255,0),rgba(255,255,255,.7))"></div>
+  <div class="emo" id="s3e1" style="left:70px;top:900px;font-size:118px">🎨</div>
+  <div class="emo" id="s3e2" style="left:905px;top:1010px;font-size:118px">🎬</div>
+</div>
+
+<!-- S4 editor -->
+<div class="scene" id="s4" style="background:#19191d">
+  <div id="ui"></div>
+</div>
+
+<!-- S5 cards -->
+<div class="scene" id="s5">
+  <div class="lightbg"></div>
+  <div class="ctr" id="s5a" style="top:516px;font-weight:500;font-size:60px;color:#14324f">Mostly making</div>
+  <div class="ctr" id="s5b" style="top:592px;font-weight:800;font-size:80px;letter-spacing:-4px;color:#17a2f2;text-shadow:0 0 22px rgba(255,255,255,.7)">MOTION GRAPHICS</div>
+  <div class="ctr" id="s5c" style="top:592px;font-weight:800;font-size:80px;letter-spacing:-4px;color:#17a2f2;text-shadow:0 0 22px rgba(255,255,255,.7)">PROMO ADS</div>
+  <div class="abs" id="s5k1" style="border-radius:44px;background:#16171b;overflow:hidden;box-shadow:0 0 0 10px rgba(255,255,255,.38),0 0 0 13px rgba(90,170,255,.55),0 34px 60px rgba(30,90,170,.28)"></div>
+  <div class="abs" id="s5k2" style="border-radius:44px;background:#16171b;overflow:hidden;box-shadow:0 0 0 10px rgba(255,255,255,.38),0 0 0 13px rgba(90,170,255,.55),0 34px 60px rgba(30,90,170,.28)"></div>
+</div>
+
+<!-- S6 enjoy -->
+<div class="scene" id="s6">
+  <div class="darkbg"></div>
+  <div class="abs" id="s6ring" style="left:-150px;top:60px;width:1300px;height:1300px;border-radius:50%;border:2px solid rgba(70,180,255,.22);box-shadow:inset 0 0 120px rgba(20,120,200,.25)"></div>
+  <div class="ctr" id="s6a" style="top:742px;font-weight:300;font-size:62px;color:#fff">I really</div>
+  <div class="ctr neon" id="s6b" style="top:812px;font-weight:800;font-size:122px;letter-spacing:-6px">ENJOY IT</div>
+</div>
+
+<!-- S7 page -->
+<div class="scene" id="s7">
+  <div class="lightbg"></div>
+  <div class="abs" id="s7card" style="left:250px;width:580px;background:#fff;border-radius:46px;overflow:hidden;box-shadow:0 26px 60px rgba(30,100,190,.28)">
+    <div class="abs" id="s7A" style="inset:0">
+      <div class="abs" style="left:30px;top:30px;width:150px;height:150px;border-radius:50%;background:conic-gradient(#3aa8ff,#7be0ff,#3aa8ff);padding:5px;box-sizing:border-box"><img src="assets/avatar.jpg" style="width:100%;height:100%;border-radius:50%;border:4px solid #fff;box-sizing:border-box;object-fit:cover"></div>
+      <div class="abs" style="left:206px;top:34px;font-weight:700;font-size:32px;color:#111">aminur <span style="color:#3aa0f5;font-size:24px">●</span></div>
+      <div class="abs" style="left:206px;top:80px;font-size:19px;color:#56606c">Aminur | video editor | motion graphics</div>
+      <div class="abs" style="left:206px;top:118px;font-size:19px;color:#222;line-height:1.5">🎬 Motion graphics &amp; promo ads<br>💬 DM for edits</div>
+    </div>
+    <div class="abs" id="s7B" style="inset:0">
+      <div class="abs" style="left:0;top:0;right:0;height:128px;background:linear-gradient(120deg,#07162c,#0f3d7a 70%,#1b6fd0)"></div>
+      <div class="abs" style="right:34px;top:34px;text-align:right;color:#fff;font-weight:700;font-size:23px;line-height:1.25;letter-spacing:.5px"><span style="font-weight:400;font-size:17px;opacity:.85">I MAKE</span><br>MOTION GRAPHICS &amp; PROMO ADS</div>
+      <img class="abs" src="assets/avatar.jpg" style="left:30px;top:62px;width:118px;height:118px;border-radius:50%;border:5px solid #fff;object-fit:cover">
+      <div class="abs" style="left:30px;top:190px;font-weight:700;font-size:26px;color:#111">Aminur</div>
+      <div class="abs" style="left:30px;top:224px;font-size:17px;color:#66707c">Freelance video editor</div>
+      <div class="abs" style="right:30px;top:200px;font-size:16px;color:#333;border:1.5px solid #cfd6de;border-radius:20px;padding:6px 14px">Open to work</div>
+    </div>
+  </div>
+  <div class="ctr" id="s7t1" style="font-weight:500;font-size:48px;color:#17a2f2">building my own page</div>
+  <div class="ctr" id="s7t2" style="font-weight:500;font-size:48px;color:#17a2f2">more of my work here</div>
+  <div class="emo" id="s7hand" style="font-size:96px;left:0;top:0">👆</div>
+</div>
+
+<!-- S8 goal -->
+<div class="scene" id="s8">
+  <div class="darkbg2"></div>
+  <div class="ctr" id="s8a" style="top:760px;font-weight:300;font-size:62px;color:#fff">is simple</div>
+  <div class="ctr neon" id="s8b" style="top:828px;font-weight:800;font-size:124px;letter-spacing:-6px">MY GOAL</div>
+  <div class="ctr neon" id="s8c" style="top:458px;font-weight:800;font-size:76px;letter-spacing:-4px">KEEP GETTING BETTER</div>
+  <div class="ctr" id="s8d" style="top:550px;font-weight:300;font-size:58px;color:#fff">at editing</div>
+  <div class="abs" id="s8ph" style="left:538px;top:660px;width:4px;background:#2a9dff;box-shadow:0 0 12px rgba(42,157,255,.8)"><i style="position:absolute;left:-9px;top:-10px;width:22px;height:22px;background:#2a9dff;border-radius:6px 6px 11px 11px"></i></div>
+  <div id="s8bars"></div>
+  <div id="s8ic"></div>
+</div>
+
+<!-- S9 pill -->
+<div class="scene" id="s9">
+  <div class="lightbg" style="background:linear-gradient(118deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.28) 46%,rgba(255,255,255,0) 62%),linear-gradient(160deg,#6db4fb 0%,#b4d9fe 40%,#c6e2fe 100%)"></div>
+  <div class="abs" id="s9rip" style="border-radius:50%;background:radial-gradient(closest-side,rgba(90,170,255,.55),rgba(90,170,255,.25))"></div>
+  <div class="abs" id="s9dash" style="border:3px dashed rgba(60,150,245,.7);border-radius:70px"></div>
+  <div class="abs" id="s9pill" style="height:112px;border-radius:56px;background:linear-gradient(180deg,#62b8ff,#3899f4);box-shadow:0 16px 34px rgba(40,120,225,.38),inset 0 3px 0 rgba(255,255,255,.5);overflow:hidden">
+    <div class="ctr fr" id="s9w1" style="left:50%;width:700px;margin-left:-350px;top:10px;font-weight:600;font-size:74px;color:#fff;text-shadow:0 3px 10px rgba(0,60,150,.4)">work with</div>
+    <div class="ctr fr" id="s9w2" style="left:50%;width:700px;margin-left:-350px;top:10px;font-weight:600;font-size:74px;color:#fff;text-shadow:0 3px 10px rgba(0,60,150,.4)">good clients</div>
+  </div>
+  <div class="abs" id="s9ball" style="width:78px;height:78px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8fd0ff,#3a96f2 70%);box-shadow:16px 22px 28px rgba(30,90,175,.38)"></div>
+  <div class="ctr" id="s9t" style="top:928px;font-weight:600;font-size:40px;letter-spacing:1px;color:#17a2f2">ENJOY WHAT I DO</div>
+</div>
+
+<!-- S10 next -->
+<div class="scene" id="s10">
+  <div class="darkbg" style="background:radial-gradient(760px 900px at 104% 96%,#1a6aa0 0%,rgba(10,50,80,0) 70%),radial-gradient(820px 1050px at 30% 40%,#0a3d62 0%,#041a2b 40%,#000 78%)"></div>
+  <div class="ctr" id="s10a" style="top:772px;font-weight:300;font-size:58px;color:#fff"><span id="s10q1" style="display:inline-block;color:#2f8fca;transform:rotate(-14deg);margin-right:14px">?</span><span id="s10at">I have no idea</span><span id="s10q2" style="display:inline-block;color:#2f8fca;transform:rotate(12deg);margin-left:14px">?</span></div>
+  <div class="ctr fr neon" id="s10b" style="top:848px;font-weight:600;font-size:92px">what comes next</div>
+  <div class="abs" id="s10l" style="left:250px;top:966px;height:3px;background:linear-gradient(90deg,rgba(92,208,255,0),#7fdcff 30%,#7fdcff 70%,rgba(92,208,255,0));box-shadow:0 0 18px #2bb8ff"></div>
+</div>
+
+<!-- S11 work -->
+<div class="scene" id="s11">
+  <div class="full" style="background:linear-gradient(118deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.25) 48%,rgba(255,255,255,0) 66%),linear-gradient(180deg,#74b7fb 0%,#c9e3fd 52%,#edf6fe 100%)"></div>
+  <div id="s11cards"></div>
+  <svg class="full" viewBox="0 0 1080 1920"><path id="s11path" d="M 836 706 L 836 980 L 350 980" fill="none" stroke="#1c2836" stroke-width="4" stroke-linejoin="round"/><circle id="s11d1" cx="836" cy="706" r="10" fill="#1c2836"/><circle id="s11d2" cx="350" cy="980" r="10" fill="#1c2836"/></svg>
+  <div class="abs" id="s11t1" style="left:168px;top:738px;font-weight:400;font-size:42px;color:#63b0f6;white-space:nowrap">If you</div>
+  <div class="abs" id="s11t1b" style="left:168px;top:786px;font-weight:400;font-size:42px;color:#63b0f6;white-space:nowrap">want to see</div>
+  <div class="abs fr" id="s11t2" style="left:162px;top:836px;font-weight:700;font-size:104px;color:#1b98f2;white-space:nowrap;text-shadow:0 0 24px rgba(255,255,255,.6)">my work</div>
+  <div class="abs" id="s11t3" style="left:138px;top:1062px;font-weight:400;font-size:38px;color:#1b2a3a;white-space:nowrap">and follow my journey</div>
+  <div class="abs" id="s11t4" style="left:138px;top:1112px;font-weight:400;font-size:38px;color:#1b2a3a;white-space:nowrap">stay with me</div>
+  <div class="abs" id="s11sp" style="left:372px;top:1104px;color:#3aa6f5;font-size:44px">✦<span style="font-size:22px;position:relative;top:-24px">✦</span></div>
+  <svg class="abs" id="s11cur" width="70" height="70" viewBox="0 0 70 70" style="left:0;top:0"><path d="M6 8 L58 30 L34 38 L26 62 Z" fill="#1c2836" stroke="#1c2836" stroke-width="5" stroke-linejoin="round"/></svg>
+</div>
+
+<!-- S12 dm -->
+<div class="scene" id="s12">
+  <div class="full" style="background:linear-gradient(118deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.22) 48%,rgba(255,255,255,0) 66%),linear-gradient(180deg,#63aefa 0%,#a9d4fd 45%,#cfe6fe 100%)"></div>
+  <div class="full" id="s12win"><img class="full" id="s12raw" style="transform-origin:50% 100%"></div>
+  <img class="full" id="s12cut" style="transform-origin:50% 100%">
+  <div class="botgrad"></div>
+  <div class="ctr" id="s12a" style="top:300px;font-weight:500;font-size:92px;color:#12263a;word-spacing:44px">If you need</div>
+  <div class="abs" id="s12blob" style="left:150px;top:1010px;width:820px;height:420px;background:radial-gradient(closest-side,rgba(2,10,28,.72),rgba(2,10,28,.4) 55%,rgba(2,10,28,0))"></div>
+  <div class="abs fr" id="s12b" style="left:300px;top:1068px;font-weight:600;font-size:96px;color:#fff;white-space:nowrap;text-shadow:0 0 28px rgba(0,20,60,.85),0 4px 10px rgba(0,0,0,.5)"><span style="color:#74d6ff">a</span> video</div>
+  <div class="abs fr" id="s12c" style="left:520px;top:1172px;font-weight:600;font-size:96px;color:#dff5ff;white-space:nowrap;text-shadow:0 0 28px rgba(0,20,60,.85),0 0 18px rgba(60,190,255,.6)">editor</div>
+  <div class="abs" id="s12blob2" style="left:90px;top:960px;width:900px;height:560px;background:radial-gradient(closest-side,rgba(2,10,28,.8),rgba(2,10,28,.45) 55%,rgba(2,10,28,0))"></div>
+  <div class="ctr neon3d" id="s12dm" style="top:1030px;font-weight:800;font-size:210px;letter-spacing:-8px"><span id="s12dm1" class="W">DM</span><span class="W"> </span><span id="s12dm2" class="W">me</span></div>
+  <svg class="abs" id="s12chat" width="150" height="130" viewBox="0 0 150 130" style="left:465px;top:1290px;filter:drop-shadow(0 0 22px rgba(60,190,255,.9))"><path d="M75 8 C112 8 142 30 142 60 C142 90 112 112 75 112 C66 112 57 111 49 108 L20 122 L28 96 C15 86 8 74 8 60 C8 30 38 8 75 8Z" fill="#fff"/><circle cx="48" cy="60" r="9" fill="#3ab4f5"/><circle cx="75" cy="60" r="9" fill="#3ab4f5"/><circle cx="102" cy="60" r="9" fill="#3ab4f5"/></svg>
+</div>
+
+<canvas id="px" width="1080" height="1920"></canvas>
+<div id="wm">Aminur</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const p=(t,s,d)=>clamp((t-s)/d);
+const eo=x=>1-Math.pow(1-x,3);
+const eo5=x=>1-Math.pow(1-x,5);
+const ei=x=>x*x*x;
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const back=x=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const mix=(a,b,q)=>a+(b-a)*q;
+const SPEED=1.08;
+const SEGS=[["AB",0.05,3.27],["C",3.62,7.32],["D",7.62,11.82],["E",12.23,15.24],["FG",16.39,22.22],["H",22.45,26.05],["I",26.78,30.08],["J",32.48,35.28],["K",35.64,39.89],["L",40.31,43.39]];
+{let e=0;for(const s of SEGS){s.push(e);e+=s[2]-s[1];s.push(e);}}
+function srcFrame(t){const te=t*SPEED;let s=SEGS.find(s=>te>=s[3]&&te<s[4])||SEGS[SEGS.length-1];return Math.max(0,Math.min(1314,Math.round((s[1]+(te-s[3]))*30)));}
+const pad=(n,w)=>String(n).padStart(w,'0');
+const pending=[];
+function setImg(img,src){if(img.dataset.s===src)return;img.dataset.s=src;img.src=src;pending.push(img.decode().catch(()=>{}));}
+
+function split(el){if(el._l)return;const tx=el.textContent;el.textContent='';el._l=[];for(const ch of tx){const s=document.createElement('span');s.className='L';s.textContent=ch;el.appendChild(s);el._l.push(s);}}
+function splitW(el){if(el._w)return;const ws=el.textContent.split(' ');el.textContent='';el._w=[];ws.forEach((w,i)=>{const s=document.createElement('span');s.className='W';s.textContent=w+(i<ws.length-1?' ':'');el.appendChild(s);el._w.push(s);});}
+// letter reveal with blur; o: stag,dur,dy,dx,s0,blur
+function typeOn(el,t,start,o={}){split(el);const stag=o.stag??0.03,dur=o.dur??0.18,bl=o.blur??10;el._l.forEach((s,i)=>{const q=eo(p(t,start+i*stag,dur));s.style.opacity=q;s.style.filter=q<1?`blur(${((1-q)*bl).toFixed(2)}px)`:'none';s.style.transform=`translate(${((1-q)*(o.dx||0)).toFixed(2)}px,${((1-q)*(o.dy||0)).toFixed(2)}px) scale(${mix(o.s0??1,1,q).toFixed(4)})`;});}
+function popL(el,t,start,o={}){split(el);const stag=o.stag??0.08,dur=o.dur??0.3;el._l.forEach((s,i)=>{const x=p(t,start+i*stag,dur),q=back(x);s.style.opacity=clamp(x*4);s.style.transform=`translateY(${((1-q)*(o.dy??70)).toFixed(2)}px) rotate(${((1-q)*(i%2?-14:12)).toFixed(2)}deg) scale(${mix(.3,1,q).toFixed(4)})`;});}
+function wordsOn(el,t,times,o={}){splitW(el);const dur=o.dur??0.3;el._w.forEach((s,i)=>{const q=eo(p(t,times[i],dur));s.style.opacity=q;s.style.filter=q<1?`blur(${((1-q)*8).toFixed(2)}px)`:'none';s.style.transform=`translate(${((1-q)*(o.dx??50)).toFixed(2)}px,${((1-q)*(o.dy??46)).toFixed(2)}px)`;});}
+function fadeOut(el,t,start,dur=0.15,dy=0){const q=p(t,start,dur);if(q<=0)return;el.style.opacity=(parseFloat(el.style.opacity||1))*(1-q);el.style.filter=`blur(${(q*10).toFixed(2)}px)`;el.style.transform=(el.dataset.bt||'')+` translateY(${(-dy*q).toFixed(2)}px)`;}
+function reset(el){el.style.opacity=1;el.style.filter='none';el.style.transform=el.dataset.bt||'';}
+function pop(el,t,start,o={}){const x=p(t,start,o.dur??0.35),q=back(x);el.style.opacity=clamp(x*5);el.style.transform=`translate(${(o.fx??0)*(1-q)}px,${(o.fy??0)*(1-q)}px) rotate(${(mix(o.r0??-40,o.r??0,q)+ (o.bob?Math.sin((t-start)*2.2+(o.ph||0))*2.5:0)).toFixed(2)}deg) scale(${mix(0,1,q).toFixed(4)})`;if(o.bob&&x>=1)el.style.transform+=` translateY(${(Math.sin((t-start)*2.4+(o.ph||0))*7).toFixed(2)}px)`;}
+function sceneIn(el,tl,amt=0.14,dur=0.38){const q=eo5(p(tl,0,dur));el.style.transform=`scale(${(1+amt*(1-q)).toFixed(4)})`;el.style.filter=q<1?`blur(${((1-q)*14).toFixed(2)}px)`:'none';}
+
+// pixel dissolve
+const RND=[];{let s=1234567;const r=()=>{s=(s*1664525+1013904223)%4294967296;return s/4294967296};for(let i=0;i<40*72;i++)RND.push(r());}
+const BS=54,CW=20,CH=36,mc=document.createElement('canvas');mc.width=1080;mc.height=1920;const mx=mc.getContext('2d');const pxc=$('px').getContext('2d');
+function pixTh(i,j,cx,cy){const dx=(i+.5)/CW-cx,dy=((j+.5)/CH-cy)*1.6;const d=Math.min(1,Math.sqrt(dx*dx+dy*dy)/0.95);return 0.55*d+0.45*RND[j*CW+i];}
+function pixelMask(el,q,cx=.5,cy=.45){if(q>=1){el.style.webkitMaskImage='none';return;}mx.clearRect(0,0,1080,1920);mx.fillStyle='#000';const Q=q*1.08;for(let j=0;j<CH;j++)for(let i=0;i<CW;i++){const th=pixTh(i,j,cx,cy);if(Q>th)mx.fillRect(i*BS,j*BS,BS,BS);else if(Q>th-0.06){mx.globalAlpha=.5;mx.fillRect(i*BS,j*BS,BS,BS);mx.globalAlpha=1;}}
+ el.style.webkitMaskImage=`url(${mc.toDataURL()})`;el.style.webkitMaskSize='1080px 1920px';
+ // glitch blocks overlay
+ for(let j=0;j<CH;j++)for(let i=0;i<CW;i++){const th=pixTh(i,j,cx,cy);const d=Q-th;if(d>-0.12&&d<0.05&&RND[(j*CW+i+777)%RND.length]>.45){pxc.fillStyle=RND[(j*CW+i+99)%RND.length]>.5?'rgba(255,255,255,.28)':'rgba(70,170,255,.30)';pxc.fillRect(i*BS,j*BS,BS,BS);}}}
+
+// ---------- build static mock content ----------
+(function buildUI(){const ui=$('ui');let h='';
+ // toolbar
+ h+=`<div class="abs" style="left:40px;top:252px;display:flex;gap:13px;align-items:center">`+Array.from({length:11},(_,i)=>`<i style="width:13px;height:13px;border-radius:${i%3?3:7}px;${i==3?'background:#2f7df6':'border:1.5px solid #8b8b95'}"></i>`).join('')+`<span style="margin-left:26px">◉ ◈ ▣</span><span style="margin-left:18px">▪ Snapping &nbsp;⤢ ▦</span></div>`;
+ h+=`<div class="abs" style="left:26px;top:296px;font-weight:700;color:#d6d6dc;font-size:13px">≡ Caption</div><div class="abs" style="left:258px;top:292px;display:flex;gap:10px;align-items:center"><i style="width:10px;height:10px;background:#8b8b95"></i><b style="color:#c9c9d0">composition:comp1</b> ≡ <i style="width:10px;height:10px;background:#d6453d;margin-left:50px"></i><b style="color:#c9c9d0">Layer:Solid Layer</b></div>`;
+ // preview
+ h+=`<div class="abs" id="pv" style="left:214px;top:326px;width:620px;height:1064px;overflow:hidden;background:#000"><img id="s4vid" style="position:absolute;left:0;top:-19px;width:620px;height:1102px;object-fit:cover"><div class="abs" style="inset:0;background:linear-gradient(180deg,rgba(4,8,22,0) 38%,rgba(4,8,22,.72) 62%,rgba(4,8,22,.86) 100%)"></div>
+   <div class="abs" style="left:14px;top:12px;background:#e9e9ee;color:#333;font-size:12px;border-radius:5px;padding:3px 9px">comp 1 ▾</div>
+   <div class="ctr" id="s4a" style="width:620px;top:596px;font-weight:300;font-size:46px;color:#fff">I've been working in</div>
+   <div class="ctr fr neon" id="s4b" style="width:620px;top:646px;font-weight:600;font-size:96px">After Effects</div>
+   <div class="abs" id="s4n" style="left:0;width:620px;top:560px;display:flex;justify-content:center;align-items:center;gap:22px">
+     <div class="fr neon" id="s4four" style="font-weight:500;font-size:230px;line-height:1">4</div>
+     <div style="font-size:56px;color:#fff;font-weight:400;line-height:1.02;text-align:left"><div id="s4al">almost</div><div id="s4yr">years</div></div></div>
+ </div>`;
+ // transport
+ h+=`<div class="abs" style="left:250px;top:1404px;display:flex;gap:26px;align-items:center;font-size:12px"><span>◙</span><span style="background:#34343a;color:#ddd;padding:2px 10px;border-radius:4px;font-weight:700">0000654</span><span style="margin-left:330px">Draft 3D ▾</span></div>`;
+ // timeline
+ h+=`<div class="abs" style="left:0;top:1450px;width:720px;height:1px;background:#3a3a41"></div><div class="abs" style="left:0;top:1458px;width:720px;display:flex;justify-content:space-between;font-size:9px;color:#6d6d76">`+Array.from({length:12},(_,i)=>`<span>${i*10}f</span>`).join('')+`</div>`;
+ [['#8d8d9a',1500],['#d5453e',1530],['#ef8a25',1560],['#ff3fb5',1592]].forEach(([c,y],i)=>{h+=`<div class="abs tlb" style="left:0;top:${y}px;width:${700-i*6}px;height:27px;background:${c};border-radius:0 3px 3px 0"></div>`});
+ h+=`<div class="abs" style="left:428px;top:1446px;width:2px;height:186px;background:#3b8cff"></div>`;
+ // right panel
+ let r=`<div class="row" style="color:#c9c9d0;font-weight:700">▾ Creative</div><div class="row">Look <span style="margin-left:20px;color:#c9c9d0">None</span></div><div class="row">Intensity<span class="sl"><i style="left:78%"></i></span></div><div class="row" style="color:#c9c9d0">▾ Adjustments</div>`;
+ [['Faded Film',8],['Sharpen',52],['Vibrance',52],['Saturation',52]].forEach(([n,x])=>{r+=`<div class="row">${n}<span class="sl"><i style="left:${x}%"></i></span></div>`});
+ r+=`<div style="position:relative;height:150px"><div class="wheel" style="left:44px;top:22px"></div><div class="wheel" style="left:176px;top:22px"></div><div class="abs" style="left:52px;top:126px;font-size:10px">Shadow Tint</div><div class="abs" style="left:182px;top:126px;font-size:10px">Highlight Tint</div></div>`;
+ r+=`<div class="row" style="margin-top:6px">T̲T̲ &nbsp; 100 % <span style="margin-left:26px">▾</span></div><div class="row">A̲ &nbsp; 0 px <span style="margin-left:42px">▾</span></div><div class="row" style="font-weight:700;color:#aaa;font-size:16px">TT &nbsp;Tr</div><div class="row">☐ Ligatures</div><div class="row">— Less</div>`;
+ h+=`<div class="pn" id="pnR" style="left:786px;top:236px;width:330px;height:660px;padding-top:8px">${r}</div>`;
+ // left panel
+ let l=`<div class="row" style="color:#c9c9d0">Effect Controls ≡</div><div class="row" style="background:#2b2b30">Source • comp.mp4 <span style="margin-left:60px">03 • comp.mp4 ▾</span></div>`;
+ [['▾ fx Motion',''],['Ö Position','960.0 &nbsp; 540.0'],['Ö Scale','100.0'],['','☑ Uniform Scale'],['Ö Rotation','0.0'],['Ö Anchor Point','960.0 &nbsp; 540.0'],['Ö Anti-flicker','0.00'],['▾ fx Opacity',''],['Ö Opacity','100.0 %'],['Blend Mode','Normal ▾']].forEach(([a,b])=>{l+=`<div class="row" style="height:21px;font-size:11px"><span style="width:150px">${a}</span><span style="color:#3f8cff">${b}</span><span style="margin-left:auto">↺</span></div>`});
+ h+=`<div class="pn" id="pnL" style="left:-14px;top:1090px;width:350px;height:290px;padding-top:6px">${l}</div>`;
+ // bottom right
+ let b=`<div class="row" style="color:#c9c9d0">Essential Sound ≡</div><div class="row">Browse &nbsp;<b style="color:#ddd;border-bottom:2px solid #ddd">Edit</b></div><div class="row">Multiple Clips Selected</div><div class="row" style="justify-content:flex-end;font-size:10px">Clear Audio Type</div><div class="row">Preset <span class="sl" style="height:18px;background:#19191d;border:1px solid #3a3a41"></span></div>`;
+ ['▣ Dialogue','♫ Music','✧ SFX','⌇ Ambience'].forEach(n=>{b+=`<div class="row" style="height:36px;border-top:1px solid #2f2f35">${n}<span class="tg"></span></div>`});
+ h+=`<div class="pn" id="pnB" style="left:694px;top:1226px;width:420px;height:300px;padding-top:6px">${b}</div>`;
+ ui.innerHTML=h;
+ // S5 card 1: timeline mock
+ let k=`<div class="abs" style="left:0;top:0;right:0;height:34px;background:#202126;border-bottom:1px solid #303138"></div><div class="abs" style="left:18px;top:11px;display:flex;gap:8px">`+Array.from({length:9},(_,i)=>`<i style="width:11px;height:11px;border-radius:3px;background:${i==4?'#3b8cff':'#6a6b75'}"></i>`).join('')+`</div>`;
+ const cols=['#9d9dad','#9d9dad','#ff4fb3','#ff4fb3','#e9e9ef','#48c46c','#48c46c','#48c46c','#f09a2a','#f09a2a'];
+ cols.forEach((c,i)=>{const y=48+i*36;k+=`<div class="abs" style="left:0;top:${y}px;width:210px;height:30px;border-bottom:1px solid #26272d;display:flex;align-items:center;gap:7px;padding-left:14px;font-size:10px;color:#8b8b95;box-sizing:border-box"><i style="width:9px;height:9px;background:${c};border-radius:2px"></i>${pad(i+1,2)} layer_${i+1} <span style="margin-left:auto;margin-right:10px;color:#3f8cff">⌄ ◇</span></div><div class="abs" style="left:${220+((i*37)%90)}px;top:${y+3}px;width:${420-((i*53)%150)}px;height:24px;background:${c};border-radius:3px;opacity:.95"></div>`;});
+ k+=`<div class="abs" style="left:520px;top:0;width:2px;height:440px;background:#3b8cff"></div><div class="abs" style="left:512px;top:26px;width:18px;height:12px;background:#3b8cff;border-radius:2px 2px 8px 8px"></div>`;
+ $('s5k1').innerHTML=k;
+ // S5 card 2: graph editor
+ let g=`<div class="abs" style="left:0;top:0;right:0;height:38px;background:#202126;border-bottom:1px solid #303138;display:flex;align-items:center;gap:22px;padding-left:22px;color:#7f8089;font-size:16px">◯ ⬡ ⊓ ⊞ ✛</div><svg class="abs" style="left:0;top:38px" width="420" height="320" viewBox="0 0 420 320"><g stroke="#2c2d34" stroke-width="1">`+Array.from({length:7},(_,i)=>`<line x1="0" x2="420" y1="${40+i*40}" y2="${40+i*40}"/>`).join('')+`</g><line x1="30" x2="30" y1="10" y2="300" stroke="#44454e"/><line x1="30" x2="400" y1="270" y2="270" stroke="#44454e"/><path id="s5curve" d="M30 268 C120 266 128 40 150 40 C172 40 180 266 270 268" fill="none" stroke="#3b8cff" stroke-width="4" stroke-linecap="round"/><circle cx="150" cy="40" r="6" fill="#16171b" stroke="#fff" stroke-width="2"/>`+[[310,70],[360,70],[310,130],[360,130],[310,190],[360,190]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="none" stroke="#6a6b75" stroke-width="2"/>`).join('')+`</svg><div class="abs" style="left:26px;bottom:26px;right:26px;height:40px;border-radius:8px;background:#26272d;display:flex;align-items:center;justify-content:space-around;color:#8b8b95;font-size:15px">◁ ▢ ▷ ◇ ⤢</div>`;
+ $('s5k2').innerHTML=g;
+ // S8 bars + icons
+ const bars=[[232,772,350,-1],[648,772,160,1],[414,878,350,1],[392,984,340,-1]];
+ $('s8bars').innerHTML=bars.map((b,i)=>`<div class="abs s8bar" data-d="${b[3]}" style="left:${b[0]}px;top:${b[1]}px;width:${b[2]}px;height:66px;border-radius:24px;background:linear-gradient(180deg,#2a4257,#213549)"></div>`).join('')+[[110,790],[110,898],[280,898],[205,1004]].map(([x,y])=>`<div class="abs s8dot" style="left:${x}px;top:${y}px;width:9px;height:9px;border-radius:50%;background:#2a9dff;box-shadow:0 0 10px #2a9dff"></div>`).join('');
+ $('s8ic').innerHTML=[['M26 104 C40 40 70 26 106 28',26,104,106,28],['M24 104 C74 100 100 70 108 26',24,104,108,26]].map((c,i)=>`<svg class="abs s8i" style="left:${398+i*156}px;top:1180px" width="132" height="132" viewBox="0 0 132 132"><rect x="3" y="3" width="126" height="126" rx="30" fill="rgba(10,30,50,.5)" stroke="#fff" stroke-width="4"/><path d="${c[0]}" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/><circle cx="${c[1]}" cy="${c[2]}" r="7" fill="#fff"/><circle cx="${c[3]}" cy="${c[4]}" r="7" fill="#fff"/></svg>`).join('');
+ // S11 cards
+ const cards=[['w1',92,292,216,384,-4],['w2',652,146,216,384,3],['w3',76,1262,446,251,-2],['w4',558,1262,446,251,2],['w5',76,1540,446,251,1.5],['w6',558,1540,446,251,-1.5]];
+ $('s11cards').innerHTML=cards.map((c,i)=>`<div class="abs s11c" data-r="${c[5]}" style="left:${c[1]}px;top:${c[2]}px;width:${c[3]}px;height:${c[4]}px;border-radius:12px;overflow:hidden;background:#0c1422;box-shadow:0 0 0 4px rgba(70,155,255,.6),0 18px 34px rgba(30,80,150,.28)"><img data-w="${c[0]}" style="width:100%;height:100%;object-fit:cover;display:block"></div>`).join('');
+})();
+
+const T=[0,1.62,3.05,6.41,10.30,13.08,14.62,18.48,21.81,24.87,27.46,31.40,34.65];
+const ids=['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12'];
+
+function person(t,tl,rawEl,cutEl,sc){const f=srcFrame(t);setImg(rawEl,`assets/raw/f_${pad(f,4)}.jpg`);setImg(cutEl,`assets/cut/c_${pad(f,4)}.png`);rawEl.style.transform=cutEl.style.transform=`scale(${sc.toFixed(4)})`;const m=`linear-gradient(90deg,transparent 0%,#000 ${(8*(1-sc)/0.18).toFixed(2)}%,#000 ${(100-8*(1-sc)/0.18).toFixed(2)}%,transparent 100%)`;cutEl.style.webkitMaskImage=sc<0.995?m:'none';}
+
+const U={
+ s1(t){const tl=t;const sc=mix(1,0.82,eio(p(t,0.10,0.42)));person(t,tl,$('s1raw'),$('s1cut'),sc);
+  const q=eio(p(t,0.08,0.34));$('s1card').style.clipPath=`inset(${mix(0,430,q)}px ${mix(0,190,q)}px ${mix(0,640,q)}px ${mix(0,190,q)}px round ${mix(0,70,q)}px)`;$('s1card').style.opacity=1-p(t,0.40,0.2);$('s1cut').style.opacity=p(t,0.06,0.06);
+  const b=$('s1bub'),x=p(t,0.26,0.36),qb=back(x);b.style.opacity=clamp(x*4);b.style.transform=`translateY(${(1-qb)*150}px) rotate(${(1-qb)*-12}deg) scale(${mix(.45,1,qb)})`;$('s1time').style.opacity=p(t,0.5,0.2)*.9;
+  $('s1blob').style.opacity=p(t,0.3,0.3);popL($('s1name'),t,0.42,{stag:0.085,dur:0.34});
+  const tg=$('s1tag'),qt=eo(p(t,0.62,0.3));tg.style.opacity=qt;tg.style.transform=`translateY(${(1-qt)*30}px)`;},
+ s2(t){const tl=t-T[1];pixelMask($('s2'),p(t,1.42,0.42));$('s2img').style.transform=`scale(${mix(1.16,1.04,eo(p(tl,-0.2,1.9)))}) translateY(${mix(-30,0,eo(p(tl,-0.2,1.9)))}px)`;
+  typeOn($('s2a'),t,1.72,{stag:0.035});typeOn($('s2b'),t,2.08,{stag:0.04,dur:0.22,s0:1.25,dy:10});
+  pop($('s2e1'),t,2.0,{r:-18,r0:-70,bob:1});pop($('s2e2'),t,2.34,{r:14,r0:60,bob:1,ph:2});
+  const o=p(t,2.95,0.1);$('s2').style.transform=`scale(${1+o*0.1})`;$('s2').style.filter=o>0?`blur(${o*10}px)`:'none';},
+ s3(t){const tl=t-T[2];sceneIn($('s3'),tl,0.16,0.5);$('s3img').style.transform=`scale(${mix(1.06,1.0,p(tl,0,3.4))})`;
+  const a0=$('s3a0');typeOn(a0,t,3.14,{stag:0.028});a0.style.opacity=1-p(t,3.92,0.14);a0.style.transform=`translateY(${-18*p(t,3.92,0.14)}px)`;
+  typeOn($('s3a'),t,4.08,{stag:0.03});typeOn($('s3b'),t,5.36,{stag:0.04,dur:0.22,s0:1.25,dy:10});
+  const ql=eo(p(t,5.6,0.5));$('s3l1').style.width=$('s3l2').style.width=(ql*170)+'px';
+  pop($('s3e1'),t,4.55,{r:-14,r0:-80,bob:1});pop($('s3e2'),t,4.95,{r:16,r0:70,bob:1,ph:2});},
+ s4(t){const tl=t-T[3];const ui=$('ui');const zi=eo5(p(tl,0,0.45)),zo=eio(p(t,8.82,0.5));const sc=mix(mix(1.30,1.12,zi),0.86,zo)-0.03*p(tl,0.45,2.2)*(1-zo);ui.style.transform=`scale(${sc.toFixed(4)})`;ui.style.filter=zi<1?`blur(${(1-zi)*12}px)`:'none';
+  $('pnR').style.transform=`translateX(${(1-zi)*120-zo*24}px)`;$('pnL').style.transform=`translate(${-(1-zi)*120+zo*30}px,${zo*10}px)`;$('pnB').style.transform=`translate(${(1-zi)*90-zo*20}px,${(1-zi)*60}px)`;
+  setImg($('s4vid'),`assets/raw/f_${pad(srcFrame(t),4)}.jpg`);
+  const a=$('s4a'),b=$('s4b');typeOn(a,t,6.56,{stag:0.026});typeOn(b,t,7.48,{stag:0.035,dur:0.2,dy:14});const o=1-p(t,8.42,0.14);a.style.opacity=o;b.style.opacity=o;a.style.filter=b.style.filter=o<1?`blur(${(1-o)*10}px)`:'none';
+  typeOn($('s4al'),t,8.55,{stag:0.03});typeOn($('s4yr'),t,9.48,{stag:0.03});const f=$('s4four'),x=p(t,8.93,0.34),qf=back(x);f.style.opacity=clamp(x*5);f.style.transform=`scale(${mix(.2,1,qf)}) rotate(${(1-qf)*-18}deg)`;},
+ s5(t){const tl=t-T[4];sceneIn($('s5'),tl,0.08,0.3);typeOn($('s5a'),t,10.34,{stag:0.03});
+  const b=$('s5b'),c=$('s5c');typeOn(b,t,11.06,{stag:0.022,dx:-16});const ob=p(t,11.80,0.16);b.style.opacity=1-ob;b.style.transform=`translateY(${-34*ob}px)`;b.style.filter=ob>0?`blur(${ob*8}px)`:'none';typeOn(c,t,11.90,{stag:0.03,dx:-16});
+  const k1=$('s5k1'),k2=$('s5k2');const x=p(tl,0.04,0.42),qi=back(x),m=eio(p(t,11.78,0.42));
+  const w=mix(700,424,m),h=mix(430,446,m),l=mix(190,96,m),tp=mix(752,744,m);k1.style.left=l+'px';k1.style.top=tp+'px';k1.style.width=w+'px';k1.style.height=h+'px';k1.style.opacity=clamp(x*4);k1.style.transform=`scale(${mix(.35,1,qi)})`;
+  k2.style.left=mix(1180,560,m)+'px';k2.style.top='744px';k2.style.width='424px';k2.style.height='446px';k2.style.opacity=clamp(m*3);
+  const o=p(t,12.98,0.1);},
+ s6(t){const tl=t-T[5];pixelMask($('s6'),p(t,12.96,0.32),.5,.9);$('s6ring').style.transform=`scale(${mix(.7,1.02,eo(p(tl,-0.1,1.4)))})`;
+  typeOn($('s6a'),t,13.14,{stag:0.035});typeOn($('s6b'),t,13.72,{stag:0.04,dur:0.2,dy:24,s0:1.2});},
+ s7(t){const tl=t-T[6];pixelMask($('s7'),p(t,14.5,0.3),.5,.6);
+  const ci=eo5(p(t,14.58,0.5)),mv=eio(p(t,16.52,0.42));const top=mix(mix(1260,1030,ci),760,mv),h=mix(212,268,mv);const card=$('s7card');card.style.top=top+'px';card.style.height=h+'px';card.style.opacity=clamp(p(t,14.58,0.15));card.style.filter=ci<1?`blur(${(1-ci)*10}px)`:'none';
+  const pr=p(t,16.44,0.08)-p(t,16.52,0.1);card.style.transform=`scale(${1-0.05*pr})`;
+  $('s7A').style.opacity=1-p(t,16.56,0.16);$('s7B').style.opacity=p(t,16.6,0.2);
+  const t1=$('s7t1'),t2=$('s7t2');t1.style.top=(top+h+34)+'px';t2.style.top=(top+h+34)+'px';wordsOn(t1,t,[15.16,15.44,15.70,15.96]);const o1=1-p(t,16.5,0.14);t1.style.opacity=o1;wordsOn(t2,t,[16.88,17.30,17.52,17.70,17.98]);
+  const hd=$('s7hand');const a=eo(p(t,16.02,0.4)),bq=eio(p(t,16.62,0.5));let hx=mix(mix(-120,200,a),868,bq),hy=mix(mix(1420,1140,a),820+Math.sin(t*3)*8,bq);const press=p(t,16.44,0.06)-p(t,16.52,0.1);hd.style.transform=`translate(${hx}px,${hy}px) rotate(${mix(mix(30,-12,a),-28,bq)}deg) scale(${1-0.16*press})`;hd.style.opacity=p(t,16.02,0.1);},
+ s8(t){const tl=t-T[7];sceneIn($('s8'),tl,0.08,0.3);
+  const a=$('s8a'),b=$('s8b');typeOn(b,t,18.56,{stag:0.04,dur:0.2,dy:30,s0:1.2});typeOn(a,t,19.02,{stag:0.03});const o=p(t,19.76,0.14);a.style.opacity=b.style.opacity=1-o;a.style.transform=`translateY(${-70*o}px)`;b.style.transform=`translateY(${-70*o}px)`;
+  const c=$('s8c');splitW(c);[19.88,20.04,20.54].forEach((ts,i)=>{const w=c._w[i],q=eo(p(t,ts,0.22));w.style.opacity=q;w.style.transform=`translateY(${(1-q)*36}px) scale(${mix(1.2,1,q)})`;w.style.filter=q<1?`blur(${(1-q)*8}px)`:'none';});
+  typeOn($('s8d'),t,20.88,{stag:0.03});
+  const ph=$('s8ph'),ql=eo(p(t,19.98,0.5));ph.style.height=(ql*440)+'px';ph.style.opacity=p(t,19.96,0.06);
+  document.querySelectorAll('.s8bar').forEach((e,i)=>{const q=eo5(p(t,20.02+i*0.07,0.5));e.style.opacity=q;e.style.transform=`translateX(${(1-q)*460*parseFloat(e.dataset.d)}px)`;});
+  document.querySelectorAll('.s8dot').forEach((e,i)=>{e.style.opacity=p(t,20.6+i*0.08,0.15);});
+  document.querySelectorAll('.s8i').forEach((e,i)=>{const x=p(t,20.86+i*0.1,0.36),q=back(x);e.style.opacity=clamp(x*5);e.style.transform=`scale(${mix(.2,1,q)}) rotate(${(1-q)*(i?40:-40)}deg)`;});},
+ s9(t){const tl=t-T[8];sceneIn($('s9'),tl,0.06,0.25);
+  const g=eo5(p(t,21.83,0.34)),m=eio(p(t,22.38,0.26));const w=mix(0,384,g)+m*110;const pill=$('s9pill');pill.style.width=w+'px';pill.style.left=(540-w/2)+'px';pill.style.top='760px';
+  const pr=p(t,22.30,0.07)-p(t,22.38,0.12);pill.style.transform=`scale(${1-0.05*pr})`;
+  const d=$('s9dash'),dw=(w+34)*1.0;d.style.width=dw+'px';d.style.height='140px';d.style.left=(540-w/2-10+ (1-m)*16)+'px';d.style.top='743px';d.style.opacity=g;
+  const w1=$('s9w1'),w2=$('s9w2');w1.style.opacity=1-p(t,22.36,0.1);typeOn(w2,t,22.40,{stag:0.022,dy:16});
+  const ball=$('s9ball'),q=eo(p(t,21.86,0.38));const bx=mix(820,662,q),by=mix(1010,836,q);ball.style.transform=`translate(${bx}px,${by}px) scale(${mix(1.5,1,q)*(1-0.2*pr)},${1-0.2*pr})`;ball.style.opacity=p(t,21.86,0.08)*(1-p(t,22.9,0.25));ball.style.filter=q<1?`blur(${(1-q)*5}px)`:'none';
+  const rp=$('s9rip'),qr=eo(p(t,22.4,0.6));const rs=qr*640;rp.style.width=rp.style.height=rs+'px';rp.style.left=(540-rs/2)+'px';rp.style.top=(816-rs/2)+'px';rp.style.opacity=(qr>0?1:0)*(1-p(t,22.6,0.45));
+  wordsOn($('s9t'),t,[23.32,23.78,24.06,24.26],{dx:30,dy:40});},
+ s10(t){const tl=t-T[9];sceneIn($('s10'),tl,0.08,0.3);typeOn($('s10at'),t,24.92,{stag:0.035});
+  ['s10q1','s10q2'].forEach((id,i)=>{const e=$(id),q=back(p(t,25.3+i*0.12,0.3));e.style.opacity=clamp(p(t,25.3+i*0.12,0.1));e.style.transform=`rotate(${i?12:-14}deg) scale(${q})`;});
+  wordsOn($('s10b'),t,[25.84,26.38,26.76],{dx:0,dy:44,dur:0.28});
+  const l=$('s10l');l.style.width=(mix(0,580,eo(p(t,25.7,1.2))))+'px';l.style.opacity=p(t,25.7,0.1);},
+ s11(t){const tl=t-T[10];sceneIn($('s11'),tl,0.06,0.25);
+  document.querySelectorAll('.s11c').forEach((e,i)=>{const st=27.5+i*0.11,x=p(t,st,0.42),q=back(x),r=parseFloat(e.dataset.r);e.style.opacity=clamp(x*5);e.style.transform=`translateY(${Math.sin(t*1.6+i)*6}px) rotate(${mix(r*6,r,q)}deg) scale(${mix(0,1,q)})`;const im=e.firstChild;setImg(im,`assets/${im.dataset.w}/f_${pad(Math.max(0,Math.min(131,Math.round((t-27.46)*30))),3)}.jpg`);});
+  const path=$('s11path'),len=274+486,q=eio(p(t,27.56,0.95));path.style.strokeDasharray=len;path.style.strokeDashoffset=len*(1-q);$('s11d1').style.opacity=p(t,27.56,0.05);$('s11d2').style.opacity=p(t,30.25,0.1);
+  let d=q*len,cx,cy;if(d<274){cx=836;cy=706+d;}else{cx=836-(d-274);cy=980;}const out=eio(p(t,30.15,0.5));const cur=$('s11cur');cur.style.transform=`translate(${cx-30-out*200}px,${cy-20+out*520}px) rotate(${d<274?40:-18}deg)`;cur.style.opacity=p(t,27.56,0.05)*(1-p(t,30.4,0.25));
+  typeOn($('s11t1'),t,27.66,{stag:0.03});typeOn($('s11t1b'),t,27.98,{stag:0.03});typeOn($('s11t2'),t,28.52,{stag:0.04,dur:0.22,dy:16,s0:1.2});typeOn($('s11t3'),t,29.04,{stag:0.03});typeOn($('s11t4'),t,30.54,{stag:0.03});
+  const sp=$('s11sp'),qs=back(p(t,31.0,0.3));sp.style.opacity=p(t,31.0,0.1);sp.style.transform=`scale(${qs}) rotate(${(1-qs)*-60}deg)`;},
+ s12(t){const tl=t-T[11];sceneIn($('s12'),tl,0.06,0.25);const ex=eio(p(t,33.10,0.3));const sc=mix(0.82,1,ex);person(t,tl,$('s12raw'),$('s12cut'),sc);
+  $('s12win').style.clipPath=`inset(${mix(700,0,ex)}px ${mix(160,0,ex)}px ${mix(430,0,ex)}px ${mix(160,0,ex)}px round ${mix(64,0,ex)}px)`;$('s12cut').style.opacity=1-p(t,33.36,0.06);
+  const a=$('s12a');wordsOn(a,t,[31.52,31.80,31.98],{dx:0,dy:30,dur:0.22});const o=1-p(t,33.06,0.14);a.style.opacity=o;
+  const b=$('s12b'),c=$('s12c');typeOn(b,t,32.18,{stag:0.035,dy:14});typeOn(c,t,32.54,{stag:0.035,dy:14});b.style.opacity=c.style.opacity=o;$('s12blob').style.opacity=p(t,32.1,0.2)*o;
+  $('s12blob2').style.opacity=p(t,33.25,0.2);
+  const d1=$('s12dm1'),d2=$('s12dm2');[[d1,33.34],[d2,33.74]].forEach(([e,ts],i)=>{const x=p(t,ts,0.34),q=back(x);e.style.opacity=clamp(x*5);e.style.transform=`translateY(${(1-q)*90}px) scale(${mix(.3,1,q)}) rotate(${(1-q)*(i?10:-10)}deg)`;});
+  const ch=$('s12chat'),x=p(t,33.95,0.36),q=back(x);ch.style.opacity=clamp(x*5);ch.style.transform=`scale(${mix(.2,1,q)}) rotate(${(1-q)*-30}deg)`;},
+};
+// visibility windows: [start-lead, end+tail]
+const LEAD={s2:0.22,s6:0.14,s7:0.14},TAIL={s1:0.30,s5:0.24,s6:0.22};
+function update(t){pxc.clearRect(0,0,1080,1920);
+ ids.forEach((id,i)=>{const el=$(id);const a=T[i]-(LEAD[id]||0),b=T[i+1]+(TAIL[id]||0);const on=t>=a&&t<b;el.style.display=on?'block':'none';if(on)U[id](t);});}
+window.renderAt=async t=>{pending.length=0;update(t);await Promise.all(pending);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));};
+window.ready=(async()=>{await document.fonts.load('600 40px Fredoka');await document.fonts.load('700 40px Fredoka');await document.fonts.load('500 40px Fredoka');for(const w of [300,400,500,600,700,800])await document.fonts.load(w+' 40px InterX');await document.fonts.load('40px "Noto Color Emoji"','💻🎓🎨🎬👆');await document.fonts.ready;return true;})();
+</script>
+</body></html>

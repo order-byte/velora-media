@@ -1,0 +1,7 @@
+# rendered videos and footage of people stay out of this public repo
+reels/**/*.mp4
+reels/**/assets/avatar.jpg
+reels/**/assets/raw/
+reels/**/assets/cut/
+reels/**/assets/w[0-9]*/
+reels/**/work/
