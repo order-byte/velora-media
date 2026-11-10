@@ -1,5 +1,5 @@
-// Renders comp.html frame by frame. assets/raw (SDR frames of the raw take), assets/cut (person cutouts)
-// and assets/w1..w6 (work-clip frames) are generated from the source footage and are not kept in git.
+// Renders comp.html frame by frame, four sub-samples per frame for motion blur (blend with ffmpeg tmix).
+// assets/raw, assets/cut and assets/w1..w6 are generated from the source footage and are not kept in git.
 // usage: node render.js stills t1,t2,...  |  node render.js range start end worker nworkers outdir
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
@@ -23,8 +23,10 @@ const path = require('path'), fs = require('fs');
     fs.mkdirSync(out, { recursive: true });
     for (let f = a; f < b; f++) {
       if (f % n !== w) continue;
-      await page.evaluate(t => window.renderAt(t), f / 30);
-      await page.screenshot({ path: `${out}/f_${String(f).padStart(5, '0')}.jpg`, type: 'jpeg', quality: 95 });
+      for (let k = 0; k < 4; k++) {
+        await page.evaluate(t => window.renderAt(t), f / 30 + k * (0.5 / 30) / 4);
+        await page.screenshot({ path: `${out}/f_${String(f * 4 + k).padStart(6, '0')}.jpg`, type: 'jpeg', quality: 96 });
+      }
     }
   }
   await browser.close();
