@@ -2,7 +2,7 @@ import os, soundfile as sf, numpy as np, subprocess
 from scipy.signal import resample_poly
 S=os.environ.get("REEL_WORK", os.path.dirname(os.path.abspath(__file__))+"/work")  # holds ref/, music/, build/audio
 MUSIC_START=float(os.environ.get("MUSIC_START","0"))   # second of the music track where the reel starts
-MUSIC_DB=float(os.environ.get("MUSIC_DB","-12"))       # music level relative to the voice
+MUSIC_DB=float(os.environ.get("MUSIC_DB","-8"))       # music level relative to the voice
 SR=48000; TOTAL=34.65
 fx,sr=sf.read(S+"/ref/audio/sep/htdemucs/ref44/no_vocals.wav"); fx=resample_poly(fx,160,147,axis=0)
 voice,_=sf.read(S+"/build/audio/voice_final.wav")
