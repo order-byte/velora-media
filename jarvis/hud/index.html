@@ -162,6 +162,27 @@
   .x:hover{color:var(--text);border-color:var(--cyan)}
   .note{border:1px solid rgba(255,181,71,.35);background:rgba(255,181,71,.06);padding:10px 12px;font-size:13px;color:var(--amber);font-weight:500;line-height:1.45}
 
+  /* ---------- talk to JARVIS ---------- */
+  .heard{min-height:1.3em;font-size:13px;letter-spacing:1px;color:var(--amber);max-width:760px}
+  .cmd{display:flex;gap:8px;width:min(640px,100%)}
+  .cmd input{flex:1;min-width:0;background:rgba(3,10,20,.75);border:1px solid var(--line);padding:9px 12px;font-size:16px;color:var(--text);font-weight:500}
+  .cmd input::placeholder{color:var(--dim)}
+  .cmd input:focus{border-color:var(--cyan);outline:none;box-shadow:0 0 0 1px var(--cyan) inset}
+  .cmd .btn{padding:8px 14px}
+  .mic{flex:none;width:44px;border:1px solid var(--line);background:rgba(8,28,48,.85);color:var(--cyan-2);cursor:pointer;display:grid;place-items:center}
+  .mic:hover{border-color:var(--cyan)}
+  .mic svg{width:18px;height:18px}
+  .mic.on{background:var(--red);border-color:var(--red);color:var(--on-cyan);animation:micpulse 1s ease-in-out infinite}
+  @keyframes micpulse{50%{box-shadow:0 0 18px var(--red)}}
+  .examples{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:700px}
+  .chip{cursor:pointer;font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:transparent;color:var(--dim);padding:2px 11px;border-radius:999px}
+  .chip:hover{color:var(--text);border-color:var(--cyan)}
+  .infocard{position:fixed;left:50%;top:50%;z-index:31;width:min(480px,90vw);transform:translate(-50%,-50%);text-align:center;background:var(--panel-solid);border-color:var(--cyan);padding:18px 20px 22px}
+  .infocard .ph{justify-content:center}
+  .ic-big{font-family:var(--font-display);font-weight:700;font-size:clamp(40px,9vw,68px);color:var(--cyan-2);letter-spacing:4px;line-height:1.15;text-shadow:0 0 24px rgba(53,214,255,.5);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ic-sub{margin-top:6px;font-size:14px;letter-spacing:3px;color:var(--dim)}
+  body.info-open .voice .who, body.info-open .voice .heard, body.info-open .voice .subtitle{position:relative;z-index:32}
+
   /* ---------- responsive ---------- */
   @media (max-width:1100px){
     .main{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -230,15 +251,31 @@
       </div>
       <div class="voice">
         <div class="who" id="who">JARVIS · STANDING BY</div>
+        <div class="heard" id="heard" aria-live="polite"></div>
         <div class="subtitle" id="subtitle" aria-live="polite">Press Wake JARVIS to boot the system and hear your morning briefing.</div>
         <div class="wave" id="wave" aria-hidden="true"></div>
+        <form class="cmd" id="cmd" autocomplete="off">
+          <button class="mic" id="btn-mic" type="button" aria-label="Speak to JARVIS" title="Speak to JARVIS" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          </button>
+          <input id="cmd-input" type="text" maxlength="160" placeholder="Talk to JARVIS, e.g. “what time is it?”" aria-label="Command for JARVIS">
+          <button class="btn" type="submit">SEND</button>
+        </form>
+        <div class="examples" id="examples" aria-label="Example commands">
+          <button type="button" class="chip">Hello Jarvis</button>
+          <button type="button" class="chip">What time is it?</button>
+          <button type="button" class="chip">How did I sleep?</button>
+          <button type="button" class="chip">Show my messages</button>
+          <button type="button" class="chip">Tell me a joke</button>
+          <button type="button" class="chip">Send Rahul ₹500</button>
+        </div>
         <div class="controls">
           <button class="btn primary" id="btn-wake" type="button">▶ WAKE JARVIS</button>
           <button class="btn" id="btn-sfx" type="button">SOUND FX: ON</button>
           <button class="btn" id="btn-settings" type="button">TEST CONTROLS</button>
           <button class="btn" id="btn-full" type="button">FULLSCREEN</button>
         </div>
-        <div class="hint"><kbd>Space</kbd> wake / replay · <kbd>Esc</kbd> stop · <kbd>M</kbd> sound fx · <kbd>S</kbd> test controls · <kbd>F</kbd> fullscreen · click a panel to pull it forward</div>
+        <div class="hint"><kbd>Space</kbd> wake / replay · <kbd>/</kbd> type a command · <kbd>Esc</kbd> stop · <kbd>M</kbd> sound fx · <kbd>S</kbd> test controls · <kbd>F</kbd> fullscreen</div>
       </div>
     </section>
 
@@ -289,6 +326,11 @@
 </div>
 
 <div class="veil" id="veil" hidden></div>
+<div class="panel infocard" id="infocard" hidden role="dialog" aria-label="JARVIS info">
+  <div class="ph"><span id="ic-title">LOCAL TIME</span></div>
+  <div class="ic-big" id="ic-big">--:--</div>
+  <div class="ic-sub" id="ic-sub">—</div>
+</div>
 <div class="sweep" id="sweep" aria-hidden="true"></div>
 <div class="flash" id="flash" aria-hidden="true"></div>
 
@@ -301,7 +343,11 @@
   <div class="field"><label for="set-target">Sleep target (hours)</label><input id="set-target" type="number" min="5" max="10" step="0.5"></div>
   <div class="field"><label for="set-wake">Wake-up time</label><input id="set-wake" type="time"></div>
   <h3>VOICE</h3>
-  <div class="field"><label for="set-voice">Voice</label><select id="set-voice"></select></div>
+  <div class="field"><label for="set-vmode">JARVIS speaks with</label>
+    <select id="set-vmode"><option value="jarvis">JARVIS voice · ElevenLabs (Spuds Oxley)</option><option value="browser">Browser voice · temporary, reads any text</option></select></div>
+  <div class="field"><label for="set-vvol">Voice volume <span id="vvol-val"></span></label><input id="set-vvol" type="range" min="0" max="1" step="0.05"></div>
+  <p>The JARVIS voice uses lines recorded in ElevenLabs, so it always says "sir" and rounds the time to the nearest half hour. Exact numbers stay on screen. The settings below apply to the browser voice only.</p>
+  <div class="field"><label for="set-voice">Browser voice</label><select id="set-voice"></select></div>
   <div class="field"><label for="set-rate">Speed <span id="rate-val"></span></label><input id="set-rate" type="range" min="0.7" max="1.3" step="0.05"></div>
   <div class="field"><label for="set-pitch">Pitch <span id="pitch-val"></span></label><input id="set-pitch" type="range" min="0.6" max="1.4" step="0.05"></div>
   <h3>SOUND EFFECTS</h3>
@@ -313,7 +359,7 @@
     <button class="btn" id="btn-test" type="button">TEST VOICE</button>
     <button class="btn" id="btn-reset" type="button">RESET</button>
   </div>
-  <div class="note">Temporary voice: this uses your browser's built-in English speech. The ElevenLabs voice replaces it in a later build. Chrome and Edge have the best voices.</div>
+  <div class="note">Talk to JARVIS with the mic button (Chrome or Edge, or the Claude desktop app) or type in the command box. In this build JARVIS understands basic requests: greetings, time, date, sleep, tasks, messages, money, health, routine, jokes and status.</div>
 </aside>
 
 <script>
@@ -333,7 +379,7 @@
 
   /* ================= settings ================= */
   const KEY = 'jarvis.hud.settings.v1';
-  const DEFAULTS = { title: 'sir', sleepH: 6, sleepM: 40, targetH: 8, wake: '07:00', voiceURI: '', rate: 1, pitch: 0.95, sfx: true, sfxVol: 0.7 };
+  const DEFAULTS = { title: 'sir', sleepH: 6, sleepM: 40, targetH: 8, wake: '07:00', voiceURI: '', rate: 1, pitch: 0.95, sfx: true, sfxVol: 0.7, vmode: 'jarvis', vvol: 0.95 };
   const store = {
     get() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } },
     set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } },
@@ -369,6 +415,7 @@
 
     return {
       unlock() { ctx(); },
+      ctx: () => ctx(),
       setVolume,
       // airy fly-by: filtered noise sweep with a pan glide
       whoosh(dir = 'in', side = 0, dur = 0.5) {
@@ -568,6 +615,7 @@
   }
   function updateVoiceChip() {
     const v = pickVoice();
+    if (S.vmode === 'jarvis') { $('#chip-voice').textContent = 'ELEVENLABS · SPUDS'; return; }
     $('#chip-voice').textContent = synth ? `TEMP · ${v ? v.name.replace(/^(Microsoft|Google)\s+/i, '').split(/[\s-]/)[0].toUpperCase() : 'DEFAULT'}` : 'TEXT ONLY';
   }
   if (synth) {
@@ -580,6 +628,7 @@
   }
   function unlockAudio() {
     SFX.unlock();
+    if (S.vmode === 'jarvis') Voice.preloadAll();
     if (!synth) return;
     try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; synth.speak(u); } catch (e) { /* ignore */ }
   }
@@ -613,15 +662,146 @@
     });
   }
 
-  async function speakLines(lines, label, id) {
+  /* ================= JARVIS voice: ElevenLabs clips (Spuds Oxley) ================= */
+  const CLIPS = {
+    g_morning: 'Good morning, sir.', g_afternoon: 'Good afternoon, sir.', g_evening: 'Good evening, sir.', g_late: "You're up late, sir.",
+    s_on: "You got a full night's sleep. Right on target.",
+    s_over: 'You slept a little longer than your target. You should feel well rested.',
+    s_30: 'You slept about thirty minutes less than your target.',
+    s_60: 'You slept about an hour less than your target.',
+    s_90: 'You slept about an hour and a half less than your target.',
+    s_120: 'You slept about two hours less than your target.',
+    s_more: "You slept more than two hours short of your target. That's quite a deficit, sir.",
+    advice: "I'd suggest an early night tonight. I've marked lights out on your timeline.",
+    close: 'All systems are online.',
+    r_hello: 'Hello, sir. At your service.',
+    r_how: 'All systems running smoothly, sir. Thank you for asking.',
+    r_who: "I'm JARVIS, your personal assistant. Still in training, but learning quickly.",
+    r_time: "Here's the time, sir.", r_date: "Here's today's date.",
+    r_thanks: "You're welcome, sir.", r_night: "Good night, sir. I'll keep watch.",
+    r_can: 'For now, I can give you a briefing, tell you the time, check your sleep, and bring up any panel. More abilities are on the way.',
+    r_joke: "I'd tell you a joke about my code, sir, but it's still compiling.",
+    r_here: 'Always here, sir.', r_unknown: "I'm afraid I can't do that yet, sir. But I'm learning.",
+    r_ok: 'Right away, sir.', r_tasks: 'Here are your tasks for today.', r_msgs: 'Here are your messages.',
+    r_money: "Here's your money summary. Payments stay locked, as always.", r_health: "Here's your health summary.",
+    r_status: 'All systems are online, sir. Everything looks normal.', r_quiet: 'Going quiet, sir.', r_yes: 'Yes, sir?',
+    r_pay: "I can't make payments, sir. That's locked by design. You'll have to send the money yourself.",
+    r_routine: "Here's your routine for today.", r_standby: 'Standing by.',
+  };
+  const NUM = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+  for (let h = 1; h <= 12; h++) { CLIPS['t_' + h] = `It's about ${NUM[h]} o'clock.`; CLIPS['h_' + h] = `It's about half past ${NUM[h]}.`; }
+
+  const Voice = (() => {
+    const cache = new Map();
+    let gain = null, analyser = null, data = null, src = null, el = null, playing = false;
+    function chain() {
+      const ac = SFX.ctx(); if (!ac) return null;
+      if (!gain) {
+        gain = ac.createGain(); gain.gain.value = S.vvol;
+        analyser = ac.createAnalyser(); analyser.fftSize = 1024; data = new Uint8Array(analyser.fftSize);
+        gain.connect(analyser); analyser.connect(ac.destination);
+      }
+      return ac;
+    }
+    function load(id) {
+      if (cache.has(id)) return cache.get(id);
+      const p = (async () => {
+        const ac = chain(); if (!ac) return null;
+        try {
+          const r = await fetch(`voice/${id}.mp3`); if (!r.ok) return null;
+          return await ac.decodeAudioData(await r.arrayBuffer());
+        } catch (e) { return null; }
+      })();
+      cache.set(id, p); return p;
+    }
+    function stop() {
+      playing = false;
+      if (src) { try { src.stop(); } catch (e) { /* already stopped */ } src = null; }
+      if (el) { el.pause(); el = null; }
+    }
+    async function play(id) {
+      stop();
+      const ac = chain();
+      const buf = ac ? await load(id) : null;
+      if (buf) {
+        const s = ac.createBufferSource(); s.buffer = buf; s.connect(gain); src = s; playing = true;
+        const done = new Promise((res) => { s.onended = () => { if (src === s) { src = null; playing = false; } res(); }; });
+        s.start();
+        return { duration: buf.duration, measured: true, done };
+      }
+      // fallback for pages opened straight from disk, where fetch() is blocked
+      const a = new Audio(`voice/${id}.mp3`); a.volume = S.vvol; el = a;
+      try { await a.play(); } catch (e) { el = null; return null; }
+      playing = true;
+      const duration = Number.isFinite(a.duration) && a.duration > 0 ? a.duration : CLIPS[id].length / 15;
+      const done = new Promise((res) => { const end = () => { if (el === a) { el = null; playing = false; } res(); }; a.onended = end; a.onerror = end; a.onpause = end; });
+      return { duration, measured: false, done };
+    }
+    function level() {
+      if (!playing || !analyser || !src) return -1;
+      analyser.getByteTimeDomainData(data);
+      let sum = 0; for (let i = 0; i < data.length; i++) { const v = (data[i] - 128) / 128; sum += v * v; }
+      return Math.sqrt(sum / data.length);
+    }
+    return {
+      load, play, stop, level,
+      isPlaying: () => playing,
+      preloadAll() { Object.keys(CLIPS).forEach((id) => load(id)); },
+      setVolume() { if (gain) gain.gain.value = S.vvol; if (el) el.volume = S.vvol; },
+    };
+  })();
+
+  function timeClip(d) {
+    const r = Math.round((d.getHours() * 60 + d.getMinutes()) / 30) * 30;
+    const hh = Math.floor(r / 60) % 24; const h12 = hh % 12 || 12;
+    return (r % 60 === 30 ? 'h_' : 't_') + h12;
+  }
+  function sleepClip() {
+    const d = sleepModel().diff;
+    if (d < -15) return 's_over'; if (d <= 15) return 's_on'; if (d <= 45) return 's_30';
+    if (d <= 75) return 's_60'; if (d <= 105) return 's_90'; if (d <= 135) return 's_120'; return 's_more';
+  }
+  const clipLines = (ids) => ids.map((id) => ({ id, text: CLIPS[id] }));
+  function briefingLines(now) {
+    if (S.vmode !== 'jarvis') return buildBriefing(now).map((text) => ({ text }));
+    const h = now.getHours();
+    const ids = [h < 4 ? 'g_late' : h < 12 ? 'g_morning' : h < 17 ? 'g_afternoon' : 'g_evening', timeClip(now), sleepClip()];
+    if (sleepModel().diff > 15) ids.push('advice');
+    ids.push('close');
+    return clipLines(ids);
+  }
+
+  async function playClipLine(clipId, si, id) {
+    const h = await Voice.play(clipId);
+    if (id !== runId) { Voice.stop(); return; }
+    if (!h) { await speakOne(CLIPS[clipId], si, id); return; }
+    const list = wordEls[si] || [];
+    const total = list.reduce((a, w) => a + w.el.textContent.length + 1, 0) || 1;
+    let acc = 0; const cum = list.map((w) => (acc += w.el.textContent.length + 1) / total);
+    const t0 = performance.now();
+    const timer = setInterval(() => {
+      if (id !== runId) { clearInterval(timer); return; }
+      const p = (performance.now() - t0) / 1000 / h.duration;
+      let k = cum.findIndex((c) => c >= p); if (k < 0) k = list.length - 1;
+      lightWord(si, k); if (!h.measured) spike = 1;
+    }, 70);
+    await h.done; clearInterval(timer); lightSentence(si);
+  }
+
+  // lines: [{id?: clip id, text}]
+  async function say(lines, label, id) {
     if (id === undefined) { stopAll(false); id = ++runId; }
-    renderSubtitle(lines);
+    renderSubtitle(lines.map((l) => l.text));
     setMode('speaking', label);
     SFX.chime();
-    await wait(synth ? 260 : 120);
+    await wait(260);
     for (let i = 0; i < lines.length; i++) {
       if (id !== runId) return;
-      await speakOne(lines[i], i, id);
+      const L = lines[i];
+      if (S.vmode === 'jarvis' && L.id && CLIPS[L.id]) await playClipLine(L.id, i, id);
+      else await speakOne(L.text, i, id);
+      if (id !== runId) return;
+      if (S.vmode === 'jarvis' && i < lines.length - 1) await wait(200);
     }
     if (id !== runId) return;
     clearNow();
@@ -641,7 +821,7 @@
 
   /* ================= cinematic motion ================= */
   const topbar = $('#topbar'), timeline = $('#timeline');
-  const panels = $$('.panel');
+  const panels = $$('.col > .panel');
   const flyers = () => [topbar, ...panels, timeline];
   const EASE_IN = 'cubic-bezier(.16,.84,.3,1)';
   const EASE_OUT = 'cubic-bezier(.7,0,.84,0)';
@@ -692,7 +872,7 @@
   function resetMotion() {
     flyers().forEach((el) => { el.getAnimations().forEach((a) => a.cancel()); el._flyOut = null; });
     $('#bootlog').hidden = true;
-    core.reset();
+    core.reset(true);
   }
 
   // text decode: random glyphs resolve into the real value
@@ -789,12 +969,14 @@
 
     // 5. briefing
     woken = true;
-    speakLines(buildBriefing(new Date()), 'JARVIS · MORNING BRIEFING', id);
+    say(briefingLines(new Date()), 'JARVIS · MORNING BRIEFING', id);
   }
 
   function stopAll(resetMode = true) {
     closeFocus(true);
+    closeInfo(true);
     runId++;
+    Voice.stop();
     if (synth) { try { synth.cancel(); } catch (e) { /* ignore */ } }
     clearNow();
     resetMotion();
@@ -806,7 +988,7 @@
     unlockAudio();
     if (mode === 'speaking' || mode === 'booting') { stopAll(); return; }
     if (!woken) bootSequence();
-    else speakLines(buildBriefing(new Date()), 'JARVIS · MORNING BRIEFING');
+    else say(briefingLines(new Date()), 'JARVIS · MORNING BRIEFING');
   }
   wakeBtn.addEventListener('click', onWake);
 
@@ -864,7 +1046,7 @@
     p.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); focused && focused.panel === p ? closeFocus() : openFocus(p); } });
     p.addEventListener('pointerenter', () => { if (!focused) SFX.tick(); });
   });
-  veil.addEventListener('click', () => closeFocus());
+  veil.addEventListener('click', () => { if (infoOpen) closeInfo(); else closeFocus(); });
   window.addEventListener('resize', () => closeFocus(true));
   $$('.btn').forEach((b) => b.addEventListener('pointerenter', () => SFX.tick()));
 
@@ -873,16 +1055,16 @@
   const f = {
     title: $('#set-title'), sleepH: $('#set-sleep-h'), sleepM: $('#set-sleep-m'), targetH: $('#set-target'),
     wake: $('#set-wake'), voice: $('#set-voice'), rate: $('#set-rate'), pitch: $('#set-pitch'),
-    sfx: $('#set-sfx'), sfxVol: $('#set-sfxvol'),
+    sfx: $('#set-sfx'), sfxVol: $('#set-sfxvol'), vmode: $('#set-vmode'), vvol: $('#set-vvol'),
   };
   function labels() {
     $('#rate-val').textContent = `${(+S.rate).toFixed(2)}×`; $('#pitch-val').textContent = (+S.pitch).toFixed(2);
-    $('#sfxvol-val').textContent = `${Math.round(S.sfxVol * 100)}%`;
+    $('#sfxvol-val').textContent = `${Math.round(S.sfxVol * 100)}%`; $('#vvol-val').textContent = `${Math.round(S.vvol * 100)}%`;
     const b = $('#btn-sfx'); b.textContent = `SOUND FX: ${S.sfx ? 'ON' : 'OFF'}`; b.classList.toggle('off', !S.sfx);
   }
   function fillForm() {
     f.title.value = S.title; f.sleepH.value = S.sleepH; f.sleepM.value = S.sleepM; f.targetH.value = S.targetH;
-    f.wake.value = S.wake; f.rate.value = S.rate; f.pitch.value = S.pitch; f.sfx.checked = !!S.sfx; f.sfxVol.value = S.sfxVol;
+    f.wake.value = S.wake; f.rate.value = S.rate; f.pitch.value = S.pitch; f.sfx.checked = !!S.sfx; f.sfxVol.value = S.sfxVol; f.vmode.value = S.vmode; f.vvol.value = S.vvol;
     if (!f.voice.disabled) f.voice.value = voices.some((v) => v.voiceURI === S.voiceURI) ? S.voiceURI : '';
     labels();
   }
@@ -896,6 +1078,7 @@
     if (!f.voice.disabled) S.voiceURI = f.voice.value;
     S.rate = clamp(f.rate.value, 0.7, 1.3, 1); S.pitch = clamp(f.pitch.value, 0.6, 1.4, 1);
     S.sfx = f.sfx.checked; S.sfxVol = clamp(f.sfxVol.value, 0, 1, 0.7);
+    S.vmode = f.vmode.value === 'browser' ? 'browser' : 'jarvis'; S.vvol = clamp(f.vvol.value, 0, 1, 0.95); Voice.setVolume();
     labels(); SFX.setVolume(); save(); updateVoiceChip(); renderHealth(); renderTimeline();
   }
   Object.values(f).forEach((el) => { el.addEventListener('input', readForm); el.addEventListener('change', readForm); });
@@ -905,11 +1088,12 @@
   $('#btn-settings').addEventListener('click', () => { unlockAudio(); drawer.hidden ? openDrawer() : closeDrawer(); });
   $('#btn-close').addEventListener('click', closeDrawer);
   $('#btn-reboot').addEventListener('click', () => { unlockAudio(); closeDrawer(); bootSequence(); });
-  $('#btn-play').addEventListener('click', () => { unlockAudio(); woken = true; speakLines(buildBriefing(new Date()), 'JARVIS · MORNING BRIEFING'); });
+  $('#btn-play').addEventListener('click', () => { unlockAudio(); woken = true; say(briefingLines(new Date()), 'JARVIS · MORNING BRIEFING'); });
   $('#btn-test').addEventListener('click', () => {
     unlockAudio();
     const t = String(S.title || '').trim();
-    speakLines([`Hello${t ? ' ' + t : ''}. This is a voice test. Do you like how I sound?`], 'JARVIS · VOICE TEST');
+    if (S.vmode === 'jarvis') say(clipLines(['r_hello', 'r_how']), 'JARVIS · VOICE TEST');
+    else say([{ text: `Hello${t ? ' ' + t : ''}. This is a voice test. Do you like how I sound?` }], 'JARVIS · VOICE TEST');
   });
   $('#btn-reset').addEventListener('click', () => { const keepVoice = S.voiceURI; S = Object.assign({}, DEFAULTS, { voiceURI: keepVoice }); save(); fillForm(); readForm(); });
   function toggleSfx() { unlockAudio(); S.sfx = !S.sfx; save(); labels(); SFX.setVolume(); if (S.sfx) SFX.chime(); if (!drawer.hidden) f.sfx.checked = S.sfx; }
@@ -929,7 +1113,8 @@
     const tag = (e.target && e.target.tagName) || '';
     if (/INPUT|SELECT|TEXTAREA/.test(tag)) { if (e.key === 'Escape') closeDrawer(); return; }
     if (e.key === 'Escape') {
-      if (focused) closeFocus(); else if (!drawer.hidden) closeDrawer(); else stopAll();
+      if (infoOpen) closeInfo(); else if (focused) closeFocus(); else if (!drawer.hidden) closeDrawer(); else stopAll();
+    } else if (e.key === '/') { e.preventDefault(); cmdInput.focus();
     } else if (e.key === ' ' && (e.target === document.body || e.target === document.documentElement)) { e.preventDefault(); onWake(); }
     else if (e.key === 's' || e.key === 'S') { unlockAudio(); drawer.hidden ? openDrawer() : closeDrawer(); }
     else if (e.key === 'f' || e.key === 'F') { toggleFull(); }
@@ -958,6 +1143,142 @@
       upd(); b.addEventListener('levelchange', upd); b.addEventListener('chargingchange', upd);
     }).catch(() => {});
   }
+
+  /* ================= info card (time / date) ================= */
+  const infocard = $('#infocard');
+  let infoOpen = false, infoTimer = null;
+  function showInfo(kind) {
+    closeFocus(true); closeInfo(true);
+    const d = new Date();
+    if (kind === 'time') {
+      $('#ic-title').textContent = 'LOCAL TIME';
+      $('#ic-big').textContent = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      $('#ic-sub').textContent = d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
+    } else {
+      $('#ic-title').textContent = 'TODAY';
+      $('#ic-big').textContent = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }).toUpperCase();
+      $('#ic-sub').textContent = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric' }).toUpperCase().replace(',', ' ·');
+    }
+    infoOpen = true; veil.hidden = false; infocard.hidden = false; document.body.classList.add('info-open');
+    veil.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, fill: 'forwards' });
+    infocard.animate(reduceMotion ? [{ opacity: 0 }, { opacity: 1 }] : [
+      { transform: 'translate(-50%,-50%) perspective(900px) rotateX(75deg) scale(.4)', opacity: 0 },
+      { transform: 'translate(-50%,-50%) perspective(900px) rotateX(-6deg) scale(1.04)', opacity: 1, offset: 0.7 },
+      { transform: 'translate(-50%,-50%)', opacity: 1 },
+    ], { duration: 620, easing: EASE_IN });
+    SFX.whoosh('in', 0, 0.5); SFX.servo(0.35, true);
+    setTimeout(() => { if (infoOpen) { SFX.lock(1.2); decode($('#ic-big'), 420); } }, 480);
+    infoTimer = setTimeout(() => closeInfo(), 7000);
+  }
+  function closeInfo(instant) {
+    if (!infoOpen) return;
+    infoOpen = false; clearTimeout(infoTimer); document.body.classList.remove('info-open');
+    const done = () => { infocard.hidden = true; infocard.getAnimations().forEach((a) => a.cancel()); if (!focused) { veil.hidden = true; veil.getAnimations().forEach((a) => a.cancel()); } };
+    if (instant) { done(); return; }
+    veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
+    SFX.whoosh('out', 0, 0.35);
+    infocard.animate([{ transform: 'translate(-50%,-50%)', opacity: 1 }, { transform: 'translate(-50%,-50%) perspective(900px) rotateX(-70deg) scale(.5)', opacity: 0 }],
+      { duration: reduceMotion ? 80 : 320, easing: EASE_OUT, fill: 'forwards' }).finished.then(done).catch(done);
+  }
+  infocard.addEventListener('click', () => closeInfo());
+
+  function pulseTimeline() {
+    timeline.animate([{ boxShadow: '0 0 0 0 rgba(53,214,255,0)' }, { boxShadow: '0 -6px 30px 0 rgba(53,214,255,.55)' }, { boxShadow: '0 0 0 0 rgba(53,214,255,0)' }], { duration: 1400, easing: 'ease-in-out' });
+    flyTimelineEvents(0);
+  }
+
+  /* ================= talk to JARVIS: basic commands ================= */
+  const cmdInput = $('#cmd-input'), heardEl = $('#heard');
+  const PANEL = { tasks: panels[0], comms: panels[1], finance: panels[2], health: panels[3] };
+  function reply(ids, opts = {}) {
+    const p = say(clipLines(ids), 'JARVIS · REPLY');
+    if (opts.focus && PANEL[opts.focus]) setTimeout(() => openFocus(PANEL[opts.focus]), 260);
+    return p;
+  }
+  const INTENTS = [
+    [/\b(send|transfer|pay|wire|give)\b.*(money|rupees?|rs\.?|inr|taka|dollars?|payment|₹|\$|\d)|\b(pay|upi|gpay|phonepe|paytm)\b/, () => reply(['r_pay'], { focus: 'finance' })],
+    [/\bgood ?night\b/, () => reply(['r_night'])],
+    [/\b(brief|briefing|morning report|daily report|update me)\b/, () => say(briefingLines(new Date()), 'JARVIS · MORNING BRIEFING')],
+    [/\b(time|clock)\b/, () => { const p = reply(['r_time', timeClip(new Date())]); showInfo('time'); return p; }],
+    [/\b(date|what day|which day)\b|\btoday'?s date\b/, () => { const p = reply(['r_date']); showInfo('date'); return p; }],
+    [/\b(sleep|slept|rested|bedtime)\b/, () => reply(sleepModel().diff > 15 ? [sleepClip(), 'advice'] : [sleepClip()], { focus: 'health' })],
+    [/\bhow are (you|u)\b|\bhow'?s it going\b|\bhow do you do\b|\byou ok\b/, () => reply(['r_how'])],
+    [/\bwho are (you|u)\b|\byour name\b|\bwhat are you\b|\bintroduce\b/, () => reply(['r_who'])],
+    [/\bwhat can you do\b|\bhelp\b|\babilities\b|\bfeatures\b|\bcommands\b/, () => reply(['r_can'])],
+    [/\b(joke|funny|laugh)\b/, () => reply(['r_joke'])],
+    [/\b(thank|thanks|thank you|cheers|appreciate)\b/, () => reply(['r_thanks'])],
+    [/\b(tasks?|to-?dos?|pending|work list)\b/, () => reply(['r_tasks'], { focus: 'tasks' })],
+    [/\b(messages?|inbox|mails?|emails?|e-mails?|whatsapp|sms|texts?)\b/, () => reply(['r_msgs'], { focus: 'comms' })],
+    [/\b(money|finances?|spend|spent|spending|expenses?|income|bank|balance|savings?|budget)\b/, () => reply(['r_money'], { focus: 'finance' })],
+    [/\b(health|steps|exercise|walk|walking|fitness|workout)\b/, () => reply(['r_health'], { focus: 'health' })],
+    [/\b(routine|schedule|plan my day|my day|timeline)\b/, () => { const p = reply(['r_routine']); pulseTimeline(); return p; }],
+    [/\b(status|systems?|diagnostics?)\b/, () => reply(['r_status'])],
+    [/\b(mute|quiet|silence|shut up)\b/, () => reply(['r_quiet']).then(() => { if (S.sfx) toggleSfx(); })],
+    [/\bfull ?screen\b/, () => { toggleFull(); return reply(['r_ok']); }],
+    [/\b(reboot|restart|boot up|boot)\b/, () => bootSequence()],
+    [/\b(settings|controls)\b/, () => { openDrawer(); return reply(['r_ok']); }],
+    [/\b(stop|never ?mind|cancel|stand ?by)\b/, () => reply(['r_standby'])],
+    [/\b(hello|hi|hey|hiya|yo|greetings|good (morning|afternoon|evening))\b/, () => reply(['r_hello'])],
+  ];
+  function runCommand(raw) {
+    const text = String(raw || '').trim(); if (!text) return;
+    unlockAudio(); woken = true;
+    heardEl.textContent = `YOU › ${text}`;
+    SFX.chatter(4);
+    const t = text.toLowerCase().replace(/[’']/g, "'");
+    if (/^\W*(hey |ok |okay )?jarvis\W*$/.test(t) || /^\W*(are you there|you there)\W*$/.test(t)) { reply([t.includes('there') ? 'r_here' : 'r_yes']); return; }
+    const body = t.replace(/^\W*(hey |ok |okay )?jarvis\b[\s,.!?]*/, '');
+    for (const [re, fn] of INTENTS) { if (re.test(body)) { fn(); return; } }
+    reply(['r_unknown']);
+  }
+  $('#cmd').addEventListener('submit', (e) => { e.preventDefault(); const v = cmdInput.value; cmdInput.value = ''; runCommand(v); });
+  $$('#examples .chip').forEach((c) => c.addEventListener('click', () => runCommand(c.textContent)));
+
+  // voice input: Claude's dictation inside claude.ai, the browser's speech recognition elsewhere
+  const micBtn = $('#btn-mic');
+  let dict = null, sr = null, listening = false, heardBuf = '';
+  function micState(on) { listening = on; micBtn.classList.toggle('on', on); micBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); }
+  function finishListening() { const t = heardBuf.trim(); heardBuf = ''; cmdInput.value = ''; if (t) runCommand(t); }
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('dictation').then((d) => {
+      if (!d) return;
+      dict = d; micBtn.hidden = false;
+      d.onPartial(({ text }) => { if (text) cmdInput.value = (heardBuf + text).trim(); });
+      d.onFinal(({ text }) => { heardBuf += text; cmdInput.value = heardBuf.trim(); if (heardBuf.trim()) d.stop().catch(() => {}); });
+      d.onState(({ state, reason }) => {
+        micState(state !== 'idle');
+        if (state === 'idle') {
+          if (reason === 'not_granted' || reason === 'unavailable') { micBtn.hidden = true; heardEl.textContent = 'Voice input is off here. Type your command instead.'; }
+          finishListening();
+        }
+      });
+    }).catch(() => {});
+  } else {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      sr = new SR(); sr.lang = 'en-US'; sr.interimResults = true; sr.continuous = false; micBtn.hidden = false;
+      sr.onresult = (e) => { let fin = '', tmp = ''; for (const r of e.results) { if (r.isFinal) fin += r[0].transcript; else tmp += r[0].transcript; } heardBuf = fin; cmdInput.value = (fin || tmp).trim(); };
+      sr.onend = () => { micState(false); finishListening(); };
+      sr.onerror = (e) => { micState(false); if (e.error === 'not-allowed') { micBtn.hidden = true; heardEl.textContent = 'Microphone blocked. Type your command instead.'; } };
+    }
+  }
+  micBtn.addEventListener('click', () => {
+    if (dict) {
+      if (listening) { dict.stop().catch(() => {}); return; }
+      heardBuf = ''; cmdInput.value = '';
+      const started = dict.start();
+      stopAll(); unlockAudio(); SFX.beep(1320, 0.06, 0.1); heardEl.textContent = 'Listening…';
+      started.catch((err) => {
+        micState(false);
+        if (err && (err.code === 'not_granted' || err.code === 'unavailable')) { micBtn.hidden = true; heardEl.textContent = 'Voice input is off here. Type your command instead.'; }
+        else if (err && err.code !== 'stopped') heardEl.textContent = 'Could not start listening. Try again or type your command.';
+      });
+    } else if (sr) {
+      if (listening) { sr.stop(); return; }
+      heardBuf = ''; cmdInput.value = '';
+      try { sr.start(); micState(true); stopAll(); unlockAudio(); SFX.beep(1320, 0.06, 0.1); heardEl.textContent = 'Listening…'; } catch (e) { micState(false); }
+    }
+  });
 
   /* ================= health panel ================= */
   function renderHealth() {
@@ -1027,7 +1348,7 @@
       return new Promise((r) => { if (this.resolve) this.resolve(); this.resolve = r; });
     },
     reset() {
-      this.build = 1; this.target = 1; this.from = 1; lit.fill(true);
+      this.build = 1; this.target = 1; this.from = 1; lit.fill(true); litAt.fill(-1e9);
       if (this.resolve) { const r = this.resolve; this.resolve = null; r(); }
     },
   };
@@ -1061,7 +1382,10 @@
     spin += (targetSpin - spin) * Math.min(1, dt * 2);
     rot += spin * dt;
     let target = 0;
-    if (mode === 'speaking') target = 0.22 + 0.3 * (0.5 + 0.5 * Math.sin(now / 95)) * (0.5 + 0.5 * Math.sin(now / 241)) + spike * 0.55;
+    const lv = Voice.level();
+    if (mode === 'speaking' && lv >= 0) target = Math.min(1, lv * 5.5);
+    else if (mode === 'speaking' && S.vmode === 'jarvis') target = 0.06 + spike * 0.5;
+    else if (mode === 'speaking') target = 0.22 + 0.3 * (0.5 + 0.5 * Math.sin(now / 95)) * (0.5 + 0.5 * Math.sin(now / 241)) + spike * 0.55;
     else if (mode === 'booting') target = 0.1 + 0.25 * core.build * (0.5 + 0.5 * Math.sin(now / 70));
     spike *= Math.pow(0.015, dt);
     amp += (target - amp) * Math.min(1, dt * 12);
