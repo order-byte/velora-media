@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>JARVIS Project Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  :root{
+    --bg:#040c17; --panel:#0a1a2b; --panel2:#0d2236; --line:#163f5a; --cyan:#35d6ff; --cyan2:#8ceaff;
+    --text:#dcecf5; --dim:#86a6bb; --amber:#ffb547; --green:#4dffb0; --red:#ff6b86;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{font-family:'Hind Siliguri',sans-serif;color:var(--text);font-size:10.4pt;line-height:1.62}
+  .hud{font-family:'Orbitron',sans-serif}
+  .en{font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.2px}
+  b,strong{font-weight:600;color:#fff}
+
+  /* ---------- COVER ---------- */
+  .cover{width:210mm;height:297mm;position:relative;z-index:10;background:var(--bg);overflow:hidden;break-after:page}
+  .cover .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(53,214,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(53,214,255,.06) 1px,transparent 1px);background-size:9mm 9mm}
+  .cover .glow{position:absolute;right:-60mm;top:40mm;width:220mm;height:220mm;background:radial-gradient(circle,rgba(53,214,255,.22),rgba(53,214,255,.04) 45%,transparent 70%)}
+  .cover svg.rings{position:absolute;right:-52mm;top:62mm;width:175mm;height:175mm}
+  .cover .inner{position:absolute;left:18mm;top:22mm;right:18mm;bottom:20mm}
+  .cover .kicker{font-family:'Orbitron';font-size:8.5pt;letter-spacing:4px;color:var(--cyan)}
+  .cover h1{font-family:'Orbitron';font-weight:900;font-size:44pt;letter-spacing:8px;color:#fff;margin-top:58mm;line-height:1.05;text-shadow:0 0 18px rgba(53,214,255,.55)}
+  .cover .tag{font-family:'Rajdhani';font-size:13pt;letter-spacing:5px;color:var(--cyan2);margin-top:4mm}
+  .cover .sub{font-size:17pt;font-weight:600;margin-top:12mm;max-width:96mm;line-height:1.45}
+  .cover .sub2{font-size:11pt;color:var(--dim);margin-top:4mm;max-width:105mm}
+  .cover .meta{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;border-top:1px solid var(--line);padding-top:5mm}
+  .cover .meta div{font-family:'Rajdhani';font-size:8.5pt;letter-spacing:1.5px;color:var(--dim)}
+  .cover .meta b{display:block;font-size:10.5pt;color:var(--text);letter-spacing:.5px;margin-top:1mm}
+  .cover .meta .amber{color:var(--amber)}
+
+  /* ---------- FLOW ---------- */
+  .flow{padding:15mm 16mm 21mm;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .footer{position:fixed;left:0;right:0;bottom:0;height:13mm;z-index:5;background:var(--bg);display:flex;justify-content:space-between;align-items:center;padding:0 16mm;border-top:1px solid rgba(53,214,255,.18);font-family:'Rajdhani';font-size:8pt;letter-spacing:2px;color:var(--dim)}
+  .footer span:first-child{color:var(--cyan)}
+  .pb{break-before:page}
+  .sec{display:flex;align-items:center;gap:4mm;margin-bottom:1.5mm}
+  .sec .num{font-family:'Orbitron';font-weight:800;font-size:9pt;color:var(--bg);background:var(--cyan);padding:1mm 2.6mm;clip-path:polygon(0 0,100% 0,100% 70%,85% 100%,0 100%)}
+  .sec .lab{font-family:'Orbitron';font-size:9pt;letter-spacing:4px;color:var(--cyan)}
+  .sec .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+  h2{font-size:20pt;font-weight:700;line-height:1.3;margin-bottom:4mm;color:#fff}
+  h3{font-size:12.5pt;font-weight:600;color:var(--cyan2);margin:5mm 0 2mm}
+  p{margin-bottom:2.6mm}
+  .lead{font-size:11.3pt;color:#eaf6fc}
+  .dim{color:var(--dim)}
+  ul.list{list-style:none;margin:1mm 0 3mm}
+  ul.list li{position:relative;padding-left:5mm;margin-bottom:1.3mm}
+  ul.list li::before{content:"";position:absolute;left:.5mm;top:2.5mm;width:1.8mm;height:1.8mm;background:var(--cyan);transform:rotate(45deg)}
+  .avoid{break-inside:avoid}
+
+  .card{background:var(--panel);border:1px solid var(--line);padding:4mm 4.5mm;position:relative;break-inside:avoid;
+        clip-path:polygon(0 0,calc(100% - 4mm) 0,100% 4mm,100% 100%,0 100%)}
+  .card::before{content:"";position:absolute;left:0;top:0;width:16mm;height:.6mm;background:var(--cyan)}
+  .card.amber::before{background:var(--amber)} .card.red::before{background:var(--red)} .card.green::before{background:var(--green)}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm}
+  .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:3.5mm}
+  .kpi .v{font-family:'Orbitron';font-weight:700;font-size:17pt;color:var(--cyan2);line-height:1.2}
+  .kpi .l{font-size:9.2pt;color:var(--dim);line-height:1.4;margin-top:1mm}
+  .pr .t{font-family:'Orbitron';font-size:8.6pt;letter-spacing:2px;color:var(--cyan);margin-bottom:1.5mm}
+  .pr.amber .t{color:var(--amber)}
+  .pr p{margin:0;font-size:9.8pt;line-height:1.55}
+
+  .toc{columns:2;column-gap:8mm;margin-top:2mm}
+  .toc div{display:flex;gap:3mm;padding:1.3mm 0;border-bottom:1px dashed rgba(53,214,255,.15);break-inside:avoid;font-size:10pt}
+  .toc .n{font-family:'Orbitron';font-size:8.5pt;color:var(--cyan);width:7mm;padding-top:.6mm}
+
+  /* steps */
+  .steps{position:relative;margin:2mm 0 4mm 2mm;padding-left:8mm;border-left:1px solid var(--line)}
+  .step{position:relative;margin-bottom:2.2mm}
+  .step::before{content:"";position:absolute;left:-10.1mm;top:1.6mm;width:3mm;height:3mm;background:var(--bg);border:.5mm solid var(--cyan);transform:rotate(45deg)}
+  .step .tt{font-family:'Rajdhani';font-weight:700;color:var(--cyan2);font-size:10pt;letter-spacing:1px;margin-right:2mm}
+
+  /* dialogue / script */
+  .script{background:linear-gradient(180deg,#071a2b,#06121f);border:1px solid var(--line);border-left:.8mm solid var(--cyan);padding:4mm 5mm;break-inside:avoid;margin:2mm 0 4mm}
+  .script .who{font-family:'Orbitron';font-size:7.8pt;letter-spacing:3px;color:var(--cyan);margin-bottom:1.5mm}
+  .script .line{font-family:'Rajdhani';font-weight:600;font-size:11.4pt;line-height:1.5;color:#eaf8ff}
+  .script .you{font-family:'Rajdhani';font-weight:600;font-size:11.4pt;color:var(--amber)}
+  .script .row{margin-bottom:1.6mm;display:grid;grid-template-columns:19mm 1fr;align-items:baseline}
+  .script .row:last-child{margin-bottom:0}
+  .script .k{font-family:'Orbitron';font-size:7.5pt;letter-spacing:2px;display:inline-block;width:19mm;color:var(--dim)}
+
+  /* alerts list */
+  .alerts .a{display:grid;grid-template-columns:20mm 1fr;gap:3mm;padding:1.1mm 0;border-bottom:1px dashed rgba(53,214,255,.14);break-inside:avoid}
+  .alerts .a .tm{font-family:'Orbitron';font-size:8.5pt;color:var(--amber);padding-top:.8mm}
+  .alerts .a .qt{font-family:'Rajdhani';font-weight:600;font-size:11pt;color:#eaf8ff;line-height:1.4}
+  .alerts .a .d{font-size:9pt;color:var(--dim);line-height:1.4}
+
+  /* figure */
+  .fig{border:1px solid var(--line);margin:2mm 0 2mm}
+  .fig img{display:block;width:100%}
+  .cap{font-size:8.8pt;color:var(--dim);margin-bottom:4mm}
+
+  /* module cards */
+  .cols2{display:flex;gap:4mm;align-items:flex-start}
+  .cols2 .col{flex:1;min-width:0;display:flex;flex-direction:column;gap:4mm}
+  .mod{display:flex;flex-direction:column}
+  .mod .hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:.5mm}
+  .mod .code{font-family:'Orbitron';font-size:8pt;color:var(--dim);letter-spacing:2px}
+  .mod .ph{font-family:'Rajdhani';font-weight:700;font-size:8.2pt;letter-spacing:1.5px;color:var(--bg);background:var(--cyan);padding:0 2mm}
+  .mod .ph.p2{background:#5fb8ff} .mod .ph.p3{background:var(--green)} .mod .ph.p4{background:#c39bff} .mod .ph.p5{background:var(--amber)} .mod .ph.p6{background:#ff8fb1}
+  .mod h4{font-family:'Orbitron';font-size:10.5pt;letter-spacing:1.5px;color:#fff;margin:.5mm 0 1.6mm;font-weight:700}
+  .mod ul{list-style:none}
+  .mod li{position:relative;padding-left:4mm;font-size:9.4pt;line-height:1.5;margin-bottom:1mm}
+  .mod li::before{content:"›";position:absolute;left:0;top:-.2mm;color:var(--cyan);font-weight:700}
+  .mod .ex{font-family:'Rajdhani';font-weight:600;font-size:10pt;color:var(--cyan2)}
+  .mod .lock{color:var(--amber)}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin:2mm 0 4mm;font-size:9.4pt;line-height:1.45}
+  th{font-family:'Orbitron','Hind Siliguri';font-size:7.8pt;letter-spacing:.8px;color:var(--cyan);text-align:left;font-weight:600;padding:2.2mm 2.5mm;border-bottom:1px solid var(--cyan);background:#071628}
+  td{padding:2.2mm 2.5mm;border-bottom:1px solid rgba(53,214,255,.13);vertical-align:top}
+  tr{break-inside:avoid}
+  tr:nth-child(even) td{background:rgba(13,34,54,.55)}
+  .pill{display:inline-block;font-family:'Rajdhani';font-weight:700;font-size:8.4pt;letter-spacing:1px;padding:0 2mm;border:1px solid currentColor;white-space:nowrap}
+  .ok{color:var(--green)} .mid{color:var(--amber)} .no{color:var(--red)} .cy{color:var(--cyan2)}
+  td .en{font-size:10.2pt}
+
+  .callout{border:1px solid rgba(255,181,71,.45);background:rgba(255,181,71,.07);padding:3.5mm 4.5mm;margin:2mm 0 4mm;break-inside:avoid}
+  .callout .t{font-family:'Orbitron';font-size:8.2pt;letter-spacing:2px;color:var(--amber);margin-bottom:1.2mm}
+  .callout.red{border-color:rgba(255,107,134,.5);background:rgba(255,107,134,.07)}
+  .callout.red .t{color:var(--red)}
+  .callout.cyan{border-color:rgba(53,214,255,.45);background:rgba(53,214,255,.06)}
+  .callout.cyan .t{color:var(--cyan)}
+  .callout p:last-child{margin-bottom:0}
+
+  /* gantt */
+  .gantt{margin:3mm 0 4mm;break-inside:avoid}
+  .gantt .hdr,.gantt .r{display:grid;grid-template-columns:44mm repeat(12,1fr);align-items:center}
+  .gantt .hdr div{font-family:'Orbitron';font-size:6.8pt;color:var(--dim);text-align:center;padding-bottom:1.5mm;border-bottom:1px solid var(--line)}
+  .gantt .hdr div:first-child{text-align:left}
+  .gantt .r{height:9mm;border-bottom:1px dashed rgba(53,214,255,.1);background-image:repeating-linear-gradient(90deg,transparent 0,transparent calc((100% - 44mm)/12 - 1px),rgba(53,214,255,.07) calc((100% - 44mm)/12 - 1px),rgba(53,214,255,.07) calc((100% - 44mm)/12));background-position:44mm 0;background-repeat:no-repeat;background-size:calc(100% - 44mm) 100%}
+  .gantt .nm{font-size:9pt;line-height:1.25;padding-right:2mm}
+  .gantt .nm b{font-family:'Orbitron';font-size:7.4pt;letter-spacing:1px;color:var(--cyan);display:block}
+  .gantt .bar{height:4.2mm;background:linear-gradient(90deg,var(--cyan),#1b8fb8);box-shadow:0 0 6px rgba(53,214,255,.4)}
+  .gantt .bar.amber{background:linear-gradient(90deg,var(--amber),#c27a12)}
+  .gantt .bar.dash{background:repeating-linear-gradient(90deg,var(--cyan) 0 3mm,transparent 3mm 4.5mm);box-shadow:none}
+  .mvp{font-family:'Orbitron';font-size:7pt;letter-spacing:1.5px;color:var(--amber)}
+
+  .q{display:grid;grid-template-columns:9mm 1fr;gap:2mm;padding:2.2mm 0;border-bottom:1px dashed rgba(53,214,255,.15);break-inside:avoid}
+  .q .n{font-family:'Orbitron';font-weight:700;color:var(--cyan);font-size:10pt}
+  .q .h{font-weight:600;color:#fff}
+  .q .o{font-size:9.2pt;color:var(--dim)}
+
+  .src{font-size:8.6pt;line-height:1.5;color:var(--dim);word-break:break-all}
+  .src div{margin-bottom:1.2mm;break-inside:avoid}
+  .src b{color:var(--text);font-weight:600;word-break:normal}
+  .src a{color:var(--cyan2);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="footer"><span>J.A.R.V.I.S · PROJECT BLUEPRINT v1.0</span><span>PERSONAL · 11 NOV 2026</span></div>
+
+<!-- ===================== COVER ===================== -->
+<div class="cover">
+  <div class="grid"></div><div class="glow"></div>
+  <svg class="rings" viewBox="-300 -300 600 600">
+    <circle r="290" fill="none" stroke="#163f5a" stroke-width="1"/>
+    <g id="ct" stroke="#35d6ff" stroke-opacity=".5"></g>
+    <circle r="250" fill="none" stroke="#35d6ff" stroke-opacity=".35" stroke-dasharray="2 7"/>
+    <path d="M -215 -70 A 226 226 0 0 1 66 -216" fill="none" stroke="#35d6ff" stroke-width="7" stroke-opacity=".85"/>
+    <path d="M 130 185 A 226 226 0 0 1 -160 158" fill="none" stroke="#35d6ff" stroke-width="7" stroke-opacity=".5"/>
+    <path d="M 222 -42 A 226 226 0 0 1 205 96" fill="none" stroke="#ffb547" stroke-width="7"/>
+    <circle r="200" fill="none" stroke="#0f3a55" stroke-width="16"/>
+    <circle r="200" fill="none" stroke="#35d6ff" stroke-width="16" stroke-opacity=".25" stroke-dasharray="44 20"/>
+    <circle r="160" fill="none" stroke="#35d6ff" stroke-width="1.5" stroke-opacity=".7"/>
+    <defs><radialGradient id="cg" r="1"><stop offset="0" stop-color="#eafcff"/><stop offset=".28" stop-color="#8ceaff"/><stop offset=".62" stop-color="#1590c0" stop-opacity=".5"/><stop offset="1" stop-color="#03263c" stop-opacity="0"/></radialGradient></defs>
+    <circle r="132" fill="url(#cg)"/>
+    <polygon points="0,-78 68,39 -68,39" fill="none" stroke="#eafcff" stroke-width="2.4"/>
+    <polygon points="0,-50 44,25 -44,25" fill="none" stroke="#eafcff" stroke-width="1.5" stroke-opacity=".5"/>
+    <circle r="22" fill="#eafcff"/>
+  </svg>
+  <div class="inner">
+    <div class="kicker">PROJECT BLUEPRINT · v1.0</div>
+    <h1>J.A.R.V.I.S</h1>
+    <div class="tag">PERSONAL AI OPERATING SYSTEM</div>
+    <div class="sub">তোমার ল্যাপটপের জন্য নিজস্ব AI অ্যাসিস্ট্যান্ট: কী কী থাকবে, কীভাবে বানাব, কত সময় আর কত খরচ লাগবে</div>
+    <div class="sub2">ফিচার লিস্ট · আর্কিটেকচার · রোডম্যাপ · খরচ · তোমার সিদ্ধান্ত</div>
+    <div class="meta">
+      <div>DATE<b>11 Nov 2026</b></div>
+      <div>STATUS<b class="amber">PLAN · AWAITING GO</b></div>
+      <div>SYSTEM LANGUAGE<b>English</b></div>
+      <div>VOICE ENGINE<b>ElevenLabs</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="flow">
+
+<!-- ===================== SUMMARY ===================== -->
+<div class="sec"><span class="num">00</span><span class="lab">OVERVIEW</span><span class="rule"></span></div>
+<h2>এক নজরে</h2>
+<p class="lead">আমরা এমন একটা JARVIS বানাব যেটা ল্যাপটপ খুললেই নিজে থেকে চালু হবে, তোমার সাথে <b>ইংলিশে কথা বলবে</b> (ElevenLabs-এর ভয়েসে), আর তোমার পুরো দিনটা এক স্ক্রিনে দেখাবে: কী কাজ বাকি, কে মেসেজ করেছে, কোন মেল জরুরি, কোথা থেকে কত টাকা ঢুকল, কত খরচ হলো, কতটা ঘুমিয়েছ, কতটা হেঁটেছ। আর কখন খেতে হবে, কখন স্নান, কখন ঘুমাতে যেতে হবে, সেটাও ঠিক সময়ে মনে করিয়ে দেবে।</p>
+
+<div class="g4" style="margin:4mm 0 5mm">
+  <div class="card kpi"><div class="v">15</div><div class="l">ফিচার মডিউল</div></div>
+  <div class="card kpi"><div class="v">6</div><div class="l">ধাপে (Phase) কাজ</div></div>
+  <div class="card kpi amber"><div class="v" style="color:var(--amber)">~4 wk</div><div class="l">প্রথম চালু ভার্সন (MVP)</div></div>
+  <div class="card kpi"><div class="v">~10–12</div><div class="l">সপ্তাহে পুরো v1 (আনুমানিক)</div></div>
+</div>
+
+<h3>৪টা নিয়ম, যার উপর পুরো সিস্টেম দাঁড়িয়ে</h3>
+<div class="g2">
+  <div class="card pr"><div class="t">01 · ENGLISH-FIRST</div><p>UI, কমান্ড, নোটিফিকেশন, ভয়েস সবকিছু ইংলিশে। ভয়েস তৈরি হবে <b>ElevenLabs</b> দিয়ে, JARVIS-এর জন্য আলাদা করে ডিজাইন করা নিজস্ব কণ্ঠে। আমাদের প্ল্যানিং-এর কথাবার্তা বাংলায় চলবে।</p></div>
+  <div class="card pr"><div class="t">02 · LOCAL-FIRST & PRIVATE</div><p>তোমার সব ডেটা তোমার ল্যাপটপেই, এনক্রিপ্ট করে রাখা থাকবে। ক্লাউড AI-এর কাছে যাবে শুধু কাজের জন্য যতটুকু দরকার, আর অ্যাকাউন্ট নম্বরের মতো জিনিস মাস্ক করে।</p></div>
+  <div class="card pr"><div class="t">03 · READ ALL, ACT WITH PERMISSION</div><p>সব দেখবে, সব বুঝবে, ড্রাফট বানিয়ে রাখবে। কিন্তু মেসেজ বা মেল পাঠানোর আগে তোমার একটা <b>"Yes"</b> লাগবে। চাইলে কিছু trusted contact-এর জন্য এই নিয়ম শিথিল করা যাবে।</p></div>
+  <div class="card pr amber"><div class="t">04 · MONEY = READ-ONLY</div><p>টাকার হিসাব পুরোটা জানবে: আয়, খরচ, সেভিংস। কিন্তু <b>টাকা পাঠানো বা পেমেন্ট কোনোদিন করবে না।</b> এটা কোডের ভিতরেই লক করা থাকবে। টাকা সবসময় তুমি নিজে পাঠাবে।</p></div>
+</div>
+
+<h3>এই ডকুমেন্টে যা আছে</h3>
+<div class="toc">
+  <div><span class="n">01</span>ল্যাপটপ খুললেই কী হবে: দৈনিক অভিজ্ঞতা</div>
+  <div><span class="n">02</span>HUD ইন্টারফেস: কেমন দেখতে হবে</div>
+  <div><span class="n">03</span>১৫টা ফিচার মডিউল</div>
+  <div><span class="n">04</span>পারমিশন সিস্টেম: কী করবে, কী করবে না</div>
+  <div><span class="n">05</span>ডেটা কোথা থেকে আসবে</div>
+  <div><span class="n">06</span>সিস্টেম আর্কিটেকচার</div>
+  <div><span class="n">07</span>টেকনোলজি স্ট্যাক</div>
+  <div><span class="n">08</span>রোডম্যাপ: কোন ধাপে কী বানাব</div>
+  <div><span class="n">09</span>মাসিক খরচ</div>
+  <div><span class="n">10</span>যা যা লাগবে (হার্ডওয়্যার ও অ্যাকাউন্ট)</div>
+  <div><span class="n">11</span>সীমাবদ্ধতা ও ঝুঁকি: সোজাসুজি</div>
+  <div><span class="n">12</span>শুরুর আগে তোমার সিদ্ধান্ত</div>
+  <div><span class="n">13</span>পরের ধাপ ও রিসার্চ সোর্স</div>
+</div>
+
+<!-- ===================== 01 EXPERIENCE ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">01</span><span class="lab">DAILY EXPERIENCE</span><span class="rule"></span></div>
+<h2>ল্যাপটপ খুললেই কী হবে</h2>
+<p>JARVIS একটা ব্যাকগ্রাউন্ড সার্ভিস হিসেবে সবসময় চালু থাকবে (Windows/macOS স্টার্টআপে অটো-স্টার্ট)। তুমি ল্যাপটপ খুলে আনলক করলেই এই ক্রমে কাজ হবে:</p>
+<div class="steps">
+  <div class="step"><span class="tt">T+0s · WAKE</span>ল্যাপটপ আনলক হতেই JARVIS জেগে ওঠে। HUD-এর বুট অ্যানিমেশন শুরু হয়।</div>
+  <div class="step"><span class="tt">T+1s · PRESENCE</span>ওয়েবক্যামে তোমাকে চিনে নেয় (অপশনাল)। অন্য কেউ হলে ব্রিফিং দেবে না।</div>
+  <div class="step"><span class="tt">T+2s · SYNC</span>Gmail, WhatsApp, SMS, ব্যাংক/UPI অ্যালার্ট, ক্যালেন্ডার, ঘড়ি বা ফোন থেকে রাতের ঘুম আর হাঁটার ডেটা, আবহাওয়া: সব একসাথে টেনে আনে।</div>
+  <div class="step"><span class="tt">T+3s · TRIAGE</span>AI সবকিছু <b>Urgent / High / Low</b>-এ সাজায়। প্রোমো আর স্প্যাম লুকিয়ে ফেলে, শুধু সংখ্যাটা দেখায়।</div>
+  <div class="step"><span class="tt">T+4s · BRIEFING</span>HUD ভরে ওঠে আর JARVIS ৩০–৬০ সেকেন্ডের একটা ভয়েস ব্রিফিং দেয়।</div>
+  <div class="step"><span class="tt">THEN · TALK</span>তুমি মুখে উত্তর দাও: "Read the urgent ones", "Reply to Rahul…", "Plan my day"।</div>
+</div>
+
+<div class="script">
+  <div class="who">SAMPLE MORNING BRIEFING · ENGLISH VOICE</div>
+  <div class="line">"Good morning, sir. It's 8:14, 27 degrees and sunny.<br>
+  You slept 6 hours 40 minutes, about 80 minutes short of your target.<br>
+  Five tasks today. The client invoice is due at 11.<br>
+  Two messages need you: your boss is asking about the report, and Rahul wrote about a payment.<br>
+  ₹12,000 came in from your freelance client via UPI. Spending this month is ₹21,340, within budget.<br>
+  Shall I read the urgent messages first?"</div>
+</div>
+
+<h3>সারাদিন JARVIS নিজে থেকে যা বলবে (Proactive Signals)</h3>
+<div class="alerts">
+  <div class="a"><div class="tm">10:45</div><div><div class="qt">"Sir, the client invoice is due in 15 minutes."</div><div class="d">ডেডলাইনের আগে রিমাইন্ডার</div></div></div>
+  <div class="a"><div class="tm">13:30</div><div><div class="qt">"Lunch time. You've been at the desk for 2 hours 40 minutes."</div><div class="d">খাওয়ার সময় আর একটানা বসে থাকার হিসাব</div></div></div>
+  <div class="a"><div class="tm">LIVE</div><div><div class="qt">"₹4,999 debited at Amazon. That's your third shopping order this week."</div><div class="d">খরচের অ্যালার্ট আর অভ্যাসের প্যাটার্ন</div></div></div>
+  <div class="a"><div class="tm">LIVE</div><div><div class="qt">"Your mother called twice. Want me to remind you after this meeting?"</div><div class="d">ফোনের নোটিফিকেশন থেকে জরুরি জিনিস তুলে আনা</div></div></div>
+  <div class="a"><div class="tm">18:30</div><div><div class="qt">"You're at 4,200 steps. A 30-minute walk now gets you to your goal."</div><div class="d">হাঁটা আর এক্সারসাইজের লক্ষ্য</div></div></div>
+  <div class="a"><div class="tm">22:00</div><div><div class="qt">"Screens off in 30 minutes, sir. Tomorrow starts at 7."</div><div class="d">ঘুমের আগে wind-down সিগন্যাল</div></div></div>
+  <div class="a"><div class="tm">22:30</div><div><div class="qt">"Bedtime. Eight hours tonight clears your sleep debt."</div><div class="d">ঘুমের ঘাটতি হিসাব করে শোয়ার সময়</div></div></div>
+  <div class="a"><div class="tm">SUN 20:00</div><div><div class="qt">"Your weekly report is ready. Three things to improve this week…"</div><div class="d">সাপ্তাহিক রিপোর্ট</div></div></div>
+</div>
+
+<!-- ===================== 02 INTERFACE ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">02</span><span class="lab">INTERFACE CONCEPT</span><span class="rule"></span></div>
+<h2>HUD ইন্টারফেস: কেমন দেখতে হবে</h2>
+<p>তোমার পাঠানো ছবির স্টাইলটাই নিচ্ছি: গাঢ় নীল ব্যাকগ্রাউন্ড, সায়ান লাইট, মাঝখানে জ্বলজ্বলে "কোর"। তবে ছবির প্যানেলগুলো শুধু CPU-গ্রাফ আর সাজসজ্জা, আমাদের প্রতিটা প্যানেলে থাকবে <b>তোমার আসল দরকারি তথ্য</b>। নিচে প্রথম কনসেপ্ট (নমুনা ডেটা দিয়ে):</p>
+<div class="fig"><img src="hud-mockup.png" alt="JARVIS HUD concept"></div>
+<div class="cap" style="margin-bottom:2.5mm">কনসেপ্ট মকআপ · নমুনা ডেটা। ফাইনাল ভার্সনে কোর 3D-তে ঘুরবে, কথা বললে পালস করবে, প্যানেলগুলো অ্যানিমেট হবে।</div>
+
+<div class="g2">
+  <div>
+    <ul class="list">
+      <li><b>Top bar:</b> সময়, আবহাওয়া, CPU/RAM/ব্যাটারি/নেট, মাইক চালু কিনা।</li>
+      <li><b>Core:</b> JARVIS-এর "হৃদয়"। শুনলে জ্বলবে, ভাবলে ঘুরবে, কথা বললে পালস করবে, অ্যালার্টে রং বদলাবে।</li>
+      <li><b>Tasks:</b> আজকের কাজ, ডেডলাইন অনুযায়ী লাল/হলুদ/নীল।</li>
+      <li><b>Comms:</b> WhatsApp/Mail/SMS-এর সংখ্যা আর AI-বাছাই করা জরুরি মেসেজ।</li>
+    </ul>
+  </div>
+  <div>
+    <ul class="list">
+      <li><b>Finance:</b> মাসের আয়-ব্যয়, সেভিংস রেট, আজকের লেনদেন। পাশে লেখা থাকবে "NO PAYMENTS"।</li>
+      <li><b>Health:</b> স্টেপস, ঘুম, ঘুমের ঘাটতি, সাপ্তাহিক এক্সারসাইজ, স্ক্রিন টাইম।</li>
+      <li><b>Routine timeline:</b> সারাদিনের রুটিন আর এখন তুমি কোথায় আছ।</li>
+      <li><b>Voice strip:</b> JARVIS যা বলছে তার লাইভ সাবটাইটেল।</li>
+    </ul>
+  </div>
+</div>
+<h3 style="margin-top:2mm">ইন্টারফেসকে আরও অ্যাডভান্স করতে যা যোগ হবে</h3>
+<div class="g4">
+  <div class="card pr"><div class="t">FULL HUD</div><p>ফুলস্ক্রিন। সকালের ব্রিফিং বা "Show me everything" বললে।</p></div>
+  <div class="card pr"><div class="t">WIDGET</div><p>কাজের সময় কোণে ছোট কোর আর জরুরি অ্যালার্ট।</p></div>
+  <div class="card pr"><div class="t">FOCUS</div><p>শুধু এখনকার কাজ আর টাইমার, ডিস্ট্র্যাকশন ব্লক।</p></div>
+  <div class="card pr"><div class="t">NIGHT</div><p>রাতে লাল-কমলা টোন, কম আলো, চোখে কম চাপ।</p></div>
+</div>
+<p class="dim" style="margin-top:2.5mm;margin-bottom:0">আরও থাকবে: Three.js দিয়ে 3D কোর ও পার্টিকেল ইফেক্ট, প্যানেলে ক্লিক করলে বড় হয়ে ডিটেইল ভিউ, কিবোর্ড শর্টকাট, মাল্টি-মনিটর সাপোর্ট, আর স্মুথ 60fps অ্যানিমেশন।</p>
+
+<!-- ===================== 03 MODULES ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">03</span><span class="lab">FEATURE MODULES</span><span class="rule"></span></div>
+<h2>১৫টা মডিউল: JARVIS কী কী পারবে</h2>
+<p>তুমি যা যা বলেছ সব এখানে আছে। তার সাথে রিসার্চ করে আরও কিছু দরকারি জিনিস যোগ করেছি। প্রতিটা কার্ডের উপরে লেখা আছে কোন Phase-এ বানাব (রোডম্যাপ: সেকশন 08)।</p>
+
+<div class="cols2">
+<div class="col">
+  <div class="card mod"><div class="hd"><span class="code">M01</span><span class="ph">PHASE 1</span></div><h4>CORE BRAIN</h4><ul>
+    <li>Claude (Opus 5.5) মাথা হিসেবে কাজ করবে। সাধারণ ইংলিশে বলা কথা বুঝবে, নিজে প্ল্যান করে একাধিক ধাপের কাজ করবে।</li>
+    <li class="ex">"Find my landlord's last email and remind me to pay rent on the 5th."</li>
+    <li>মেল, মেসেজ, ক্যালেন্ডার, ফাইল, সিস্টেম, সবকিছু ব্রেনের সাথে "টুল" হিসেবে যুক্ত থাকবে।</li>
+    <li>কথার প্রসঙ্গ মনে রাখবে, যেমন "reply to <i>him</i>" বললে বুঝবে কাকে।</li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M02</span><span class="ph">PHASE 1</span></div><h4>VOICE</h4><ul>
+    <li>Wake word <span class="ex">"Hey Jarvis"</span>। অফলাইনে, ফ্রিতে চলবে (openWakeWord-এ রেডিমেড মডেল আছে)।</li>
+    <li>কথা থেকে টেক্সট: ElevenLabs Scribe (রিয়েলটাইম), অথবা লোকাল faster-whisper (ফ্রি)।</li>
+    <li>JARVIS-এর কণ্ঠ: <b>ElevenLabs Flash v2.5 স্ট্রিমিং</b>, যাতে উত্তর আসে দ্রুত। Voice Design দিয়ে নিজস্ব শান্ত "British butler" কণ্ঠ।</li>
+    <li>কথার মাঝে থামিয়ে দেওয়া যাবে (barge-in)। push-to-talk হটকি আর টাইপ করে কথা বলার অপশনও থাকবে।</li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M03</span><span class="ph">PHASE 1</span></div><h4>HUD INTERFACE</h4><ul>
+    <li>Full HUD, Widget, Focus, Night: চারটে মোড।</li>
+    <li>লাইভ ডেটা, অ্যানিমেটেড 3D কোর, অ্যালার্টে রং বদল।</li>
+    <li>ক্লিক বা ভয়েস দিয়ে যেকোনো প্যানেল খোলা: <span class="ex">"Show me my spending."</span></li></ul></div>
+</div>
+<div class="col">
+  <div class="card mod"><div class="hd"><span class="code">M04</span><span class="ph p2">PHASE 2</span></div><h4>COMMUNICATION HUB</h4><ul>
+    <li><b>Gmail:</b> পড়া, জরুরি বাছাই, সারাংশ, রিপ্লাই ড্রাফট, তোমার কনফার্মেশনে পাঠানো।</li>
+    <li><b>WhatsApp:</b> নোটিফিকেশন থেকে নতুন মেসেজ পড়া। পাঠানো হবে অফিসিয়াল WhatsApp Desktop দিয়ে, তুমি "Yes" বলার পর।</li>
+    <li><b>SMS:</b> ফোন কম্প্যানিয়ন অ্যাপের মাধ্যমে।</li>
+    <li>প্রায়োরিটি স্কোর (কে পাঠিয়েছে, বিষয়, টাকা বা ডেডলাইন), আর গ্রুপ চ্যাটের এক লাইনের সারাংশ।</li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M05</span><span class="ph p2">PHASE 1–2</span></div><h4>TASKS & CALENDAR</h4><ul>
+    <li>Google Calendar + Google Tasks (অথবা Todoist/Notion, তুমি যেটা ব্যবহার করো)।</li>
+    <li>মেল/মেসেজ থেকে কাজ খুঁজে বের করবে: "send the file by Friday" দেখলে টাস্ক বানানোর সাজেশন দেবে।</li>
+    <li>ডেডলাইনের আগে রিমাইন্ডার, মিটিংয়ের আগে ছোট প্রস্তুতির নোট।</li>
+    <li><span class="ex">"Plan my day"</span>: কাজ, মিটিং আর রুটিন মিলিয়ে দিনের প্ল্যান।</li></ul></div>
+  <div class="card mod amber"><div class="hd"><span class="code">M06</span><span class="ph p3">PHASE 3</span></div><h4>MONEY · READ-ONLY</h4><ul>
+    <li>প্রতিটা লেনদেন ধরা হবে: ব্যাংক SMS, ইমেল অ্যালার্ট, UPI অ্যাপের নোটিফিকেশন আর মাসিক স্টেটমেন্ট থেকে।</li>
+    <li>কোথা থেকে টাকা ঢুকছে, কোথায় খরচ হচ্ছে (food, travel, bills… নিজে থেকে ক্যাটাগরি করবে)।</li>
+    <li>সেভিংস রেট, বাজেট, বিল ও সাবস্ক্রিপশন রিমাইন্ডার, অস্বাভাবিক খরচে অ্যালার্ট।</li>
+    <li class="ex">"Can I afford a ₹30k phone this month?"</li>
+    <li class="lock">🔒 পেমেন্ট/ট্রান্সফার কোনোদিন নয়। OTP মেসেজ পড়বে না, মাস্ক করে রাখবে।</li></ul></div>
+</div>
+</div>
+<div class="pb"></div>
+<div class="cols2">
+<div class="col">
+  <div class="card mod"><div class="hd"><span class="code">M07</span><span class="ph p4">PHASE 4</span></div><h4>HEALTH & ACTIVITY</h4><ul>
+    <li>ঘুম (কতক্ষণ + কোন স্টেজ), স্টেপস, এক্সারসাইজ, হার্ট রেট: ফোন/ঘড়ি থেকে (Health Connect / Apple Health)।</li>
+    <li>ল্যাপটপে কতক্ষণ, কোন অ্যাপে কত সময় কাটালে (ActivityWatch)।</li>
+    <li>জল খাওয়া আর খাবারের লগ: মুখে বলে, বা ছবি তুলে আনুমানিক ক্যালোরি।</li>
+    <li>চোখের বিশ্রাম (20-20-20 নিয়ম), অনেকক্ষণ বসে থাকলে উঠতে বলা।</li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M08</span><span class="ph p4">PHASE 4</span></div><h4>ROUTINE ENGINE</h4><ul>
+    <li>তোমার লক্ষ্য অনুযায়ী রোজের রুটিন: ওঠা, স্নান, খাওয়া, কাজের ব্লক, এক্সারসাইজ, ঘুম।</li>
+    <li>শোয়ার সময়ের হিসাব: <b>ওঠার সময় − ঘুমের দরকার (7.5–8 ঘণ্টা) − 30 মিনিট wind-down</b>।</li>
+    <li>ক্যালেন্ডার, ঘুমের ঘাটতি আর কাজের চাপ দেখে রুটিন নিজে অ্যাডজাস্ট করবে।</li>
+    <li>রিমাইন্ডার ধাপে ধাপে বাড়বে: প্রথমে HUD, তারপর ভয়েস, তারপর ফোনে পুশ।</li>
+    <li>তুমি আসলে কী করছ দেখে শিখবে, যাতে রুটিন বাস্তবসম্মত থাকে।</li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M09</span><span class="ph p5">PHASE 5</span></div><h4>REPORTS & INSIGHTS</h4><ul>
+    <li>রাতে ২ মিনিটের রিক্যাপ: আজ কী হলো, কাল কী আছে।</li>
+    <li>প্রতি রবিবার <b>Weekly Report</b>: ঘুম, হাঁটা, এক্সারসাইজ, খরচ, সেভিংস, স্ক্রিন টাইম, কত কাজ শেষ হলো।</li>
+    <li>প্রতি সপ্তাহে "Top 3 improvements": নির্দিষ্ট আর মাপা যায় এমন পরামর্শ।</li>
+    <li>মাসিক রিপোর্ট, ট্রেন্ড চার্ট, PDF এক্সপোর্ট।</li></ul></div>
+</div>
+<div class="col">
+  <div class="card mod"><div class="hd"><span class="code">M10</span><span class="ph">PHASE 1</span></div><h4>LAPTOP CONTROL</h4><ul>
+    <li>অ্যাপ খোলা/বন্ধ, ফাইল খোঁজা, ভলিউম/ব্রাইটনেস, স্ক্রিনশট, ক্লিপবোর্ড হিস্ট্রি।</li>
+    <li>CPU/RAM/ব্যাটারি/নেটওয়ার্ক মনিটর (তোমার ছবির মতো), ব্যাটারি হেলথ অ্যালার্ট।</li>
+    <li>Lock/Sleep/Shutdown, Downloads ফোল্ডার গোছানো।</li>
+    <li>Focus mode: সোশ্যাল মিডিয়া আর ডিস্ট্র্যাকশন ব্লক।</li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M11</span><span class="ph p2">PHASE 2</span></div><h4>KNOWLEDGE & WEB</h4><ul>
+    <li>ওয়েব সার্চ, তোমার পছন্দের টপিকে নিউজ ব্রিফিং, আবহাওয়া।</li>
+    <li>আর্টিকেল, YouTube ভিডিও, PDF-এর সারাংশ।</li>
+    <li>নিজের ডকুমেন্টে প্রশ্ন: <span class="ex">"What does my rent agreement say about the notice period?"</span></li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M12</span><span class="ph p5">PHASE 5</span></div><h4>MEMORY & PEOPLE</h4><ul>
+    <li>তোমার পছন্দ, অভ্যাস আর আগের সিদ্ধান্ত মনে রাখবে।</li>
+    <li>মানুষের খোঁজ: জন্মদিন, শেষ কবে কথা হয়েছে, কাকে কী কথা দিয়েছ।</li>
+    <li class="ex">"Remind me to ask Rahul about the deposit next time he messages."</li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M13</span><span class="ph">PHASE 1 → 6</span></div><h4>SECURITY & PRIVACY</h4><ul>
+    <li>এনক্রিপ্টেড লোকাল ডেটাবেস। পাসওয়ার্ড আর API key থাকবে OS keychain-এ।</li>
+    <li>প্রতিটা অ্যাকশনের অডিট লগ, অর্থাৎ JARVIS কী করেছে সব দেখা যাবে।</li>
+    <li><span class="ex">"Privacy mode"</span>: এক কমান্ডে মাইক আর ক্যামেরা বন্ধ।</li>
+    <li>তুমি উঠে গেলে অটো-লক, ভুল পাসওয়ার্ড দিলে intruder snapshot (অপশনাল)।</li></ul></div>
+</div>
+</div>
+<div class="pb"></div>
+<div class="g2">
+  <div class="card mod"><div class="hd"><span class="code">M14</span><span class="ph p2">PHASE 2</span></div><h4>PHONE COMPANION & REMOTE</h4><ul>
+    <li>Android অ্যাপ: নোটিফিকেশন আর SMS ল্যাপটপে পাঠাবে, হেলথ ডেটা সিঙ্ক করবে, JARVIS-এর অ্যালার্ট ফোনে দেখাবে।</li>
+    <li>বাইরে থাকলেও Telegram বট দিয়ে JARVIS-এর সাথে কথা: <span class="ex">"What's pending today?"</span></li></ul></div>
+  <div class="card mod"><div class="hd"><span class="code">M15</span><span class="ph p6">PHASE 6</span></div><h4>POWER-UPS</h4><ul>
+    <li>Smart home (Home Assistant): <span class="ex">"Jarvis, lights off."</span></li>
+    <li>Screen memory: <span class="ex">"What was I working on yesterday at 3 pm?"</span></li>
+    <li>মিটিং ট্রান্সক্রিপশন + সারাংশ, জার্নাল আর মুড চেক-ইন।</li>
+    <li>রসিদ স্ক্যান (OCR) করে খরচে যোগ। লোকাল AI দিয়ে অফলাইনে বেসিক কমান্ড।</li></ul></div>
+</div>
+
+<!-- ===================== 04 PERMISSIONS ===================== -->
+<div class="sec" style="margin-top:3mm"><span class="num">04</span><span class="lab">PERMISSION SYSTEM</span><span class="rule"></span></div>
+<h2>কী করবে, আর কী কখনো করবে না</h2>
+<p>JARVIS-এর ক্ষমতা যত বেশি, নিয়মও তত পরিষ্কার হওয়া দরকার। প্রতিটা কাজ ৫টা লেভেলের একটায় পড়বে। এই লেভেল AI নিজে বদলাতে পারবে না, এটা কোডে বাঁধা "Permission Gate"।</p>
+<table>
+  <tr><th style="width:24%">LEVEL</th><th style="width:38%">কী ধরনের কাজ</th><th>কীভাবে হবে</th></tr>
+  <tr><td><span class="pill ok">L0 · READ</span></td><td>মেল, মেসেজ, ব্যাংক অ্যালার্ট, হেলথ, ক্যালেন্ডার পড়া</td><td>নিজে থেকে, সবসময়</td></tr>
+  <tr><td><span class="pill cy">L1 · DRAFT</span></td><td>রিপ্লাই ড্রাফট, টাস্ক সাজেশন, রুটিন বদলের প্রস্তাব</td><td>বানিয়ে রাখবে, তুমি দেখে নেবে</td></tr>
+  <tr><td><span class="pill mid">L2 · CONFIRM</span></td><td>WhatsApp/মেল পাঠানো, ক্যালেন্ডার ইভেন্ট বানানো/মোছা, অ্যাপ বন্ধ করা</td><td>"Shall I send it?" জিজ্ঞেস করবে। "Yes" বললে তবেই। চাইলে কিছু trusted contact-এর (যেমন মা) জন্য সরাসরি পাঠাবে (সেকশন 12)</td></tr>
+  <tr><td><span class="pill ok">L3 · AUTO</span></td><td>রিমাইন্ডার, নোট, ভলিউম, রিপোর্ট তৈরি: যা সহজে ফেরানো যায়</td><td>নিজে থেকে করবে, লগে লিখে রাখবে</td></tr>
+  <tr><td><span class="pill no">⛔ NEVER</span></td><td>টাকা পাঠানো/পেমেন্ট/UPI, OTP পড়া বা ফরোয়ার্ড, পাসওয়ার্ড শেয়ার, মেল/মেসেজ চিরতরে মোছা, না জিজ্ঞেস করে সোশ্যাল মিডিয়ায় পোস্ট</td><td>কোনো অবস্থাতেই না। কমান্ড দিলেও না</td></tr>
+</table>
+
+<div class="g2" style="margin-top:2mm">
+<div class="script" style="margin:0">
+  <div class="who">EXAMPLE · MESSAGE (L2)</div>
+  <div class="row"><span class="k">YOU</span><span class="you">"Jarvis, tell Rahul I'll call him at six."</span></div>
+  <div class="row"><span class="k">JARVIS</span><span class="line">"Draft for Rahul on WhatsApp: <i>Hey Rahul, I'll call you at 6.</i> Shall I send it?"</span></div>
+  <div class="row"><span class="k">YOU</span><span class="you">"Yes."</span></div>
+  <div class="row"><span class="k">JARVIS</span><span class="line">"Sent."</span></div>
+</div>
+<div class="script" style="border-left-color:var(--amber);margin:0">
+  <div class="who" style="color:var(--amber)">EXAMPLE · MONEY (NEVER)</div>
+  <div class="row"><span class="k">YOU</span><span class="you">"Send Rahul five thousand rupees."</span></div>
+  <div class="row"><span class="k">JARVIS</span><span class="line">"I can't make payments, sir. That's locked by design. I've opened your UPI app and set a reminder for 7 pm in case you'd like to do it later."</span></div>
+</div>
+</div>
+
+<!-- ===================== 05 DATA SOURCES ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">05</span><span class="lab">DATA SOURCES</span><span class="rule"></span></div>
+<h2>ডেটা কোথা থেকে আসবে</h2>
+<p>এটা সবচেয়ে জরুরি অংশ। সব অ্যাপ নিজের ডেটা সহজে দেয় না। রিসার্চ করে প্রতিটার সবচেয়ে নিরাপদ আর কাজের পথ বেছেছি:</p>
+<table>
+  <tr><th style="width:17%">ডেটা</th><th style="width:37%">কীভাবে আনব</th><th style="width:13%">কঠিনতা</th><th>নোট</th></tr>
+  <tr><td><b>Gmail</b></td><td>Gmail API (অফিসিয়াল, OAuth লগইন)</td><td><span class="pill ok">EASY</span></td><td>পুরো অ্যাক্সেস: পড়া, ড্রাফট, পাঠানো।</td></tr>
+  <tr><td><b>Calendar / Tasks</b></td><td>Google Calendar ও Tasks API</td><td><span class="pill ok">EASY</span></td><td>Todoist/Notion হলে ওদের API।</td></tr>
+  <tr><td><b>WhatsApp: পড়া</b></td><td>(ক) Android ফোনের নোটিফিকেশন ল্যাপটপে ফরোয়ার্ড, অথবা (খ) ল্যাপটপে WhatsApp Desktop-এর নোটিফিকেশন পড়া (Windows notification listener)</td><td><span class="pill mid">MEDIUM</span></td><td>অফিসিয়াল অ্যাপ ছোঁয়া হয় না, তাই ban-এর ভয় নেই। শুধু নোটিফিকেশনে যা আসে সেটাই দেখা যাবে।</td></tr>
+  <tr><td><b>WhatsApp: পাঠানো</b></td><td>অফিসিয়াল click-to-chat লিংক (wa.me) দিয়ে WhatsApp Desktop-এ চ্যাট খুলে, মেসেজ বসিয়ে, তোমার "Yes"-এর পর Send চাপা</td><td><span class="pill mid">MEDIUM</span></td><td>কম সংখ্যায়, সাধারণ ব্যবহারের মতো, তাই নিরাপদ।</td></tr>
+  <tr><td><b>SMS</b></td><td>Android কম্প্যানিয়ন অ্যাপ</td><td><span class="pill mid">MEDIUM</span></td><td>iPhone-এ সম্ভব না (Apple অনুমতি দেয় না)।</td></tr>
+  <tr><td><b>ব্যাংক / UPI</b></td><td>ব্যাংকের SMS + ইমেল অ্যালার্ট + UPI অ্যাপ নোটিফিকেশন পার্স করা। মাসে একবার স্টেটমেন্ট ইমপোর্ট করে মিলিয়ে নেওয়া</td><td><span class="pill mid">MEDIUM</span></td><td>প্রতি ব্যাংকের জন্য আলাদা parser + AI fallback। ওপেন-সোর্স রেফারেন্স আছে (PennyWise AI, Cashiro)।</td></tr>
+  <tr><td><b>ঘুম / হাঁটা / এক্সারসাইজ</b></td><td>Android: <b>Health Connect</b> (কম্প্যানিয়ন অ্যাপ দিয়ে)। iPhone: Apple Health থেকে Shortcuts অটোমেশনে এক্সপোর্ট</td><td><span class="pill mid">MEDIUM</span></td><td>পুরনো Google Fit API 2026-এ বন্ধ হচ্ছে, তাই Health Connect-ই ঠিক পথ। ঘড়ি/ব্যান্ড থাকলে ঘুমের ডেটা অনেক ভালো পাওয়া যায়।</td></tr>
+  <tr><td><b>স্ক্রিন টাইম</b></td><td>ActivityWatch (ওপেন সোর্স, লোকাল API)</td><td><span class="pill ok">EASY</span></td><td>কোন অ্যাপ/সাইটে কত সময়, সব ল্যাপটপেই থাকে।</td></tr>
+  <tr><td><b>আবহাওয়া / নিউজ</b></td><td>Open-Meteo (ফ্রি), নিউজ RSS/API</td><td><span class="pill ok">EASY</span></td><td>—</td></tr>
+</table>
+
+<div class="callout red">
+  <div class="t">⚠ WHAT WE AVOID ON PURPOSE</div>
+  <p><b>অনানুষ্ঠানিক WhatsApp লাইব্রেরি (Baileys, whatsapp-web.js):</b> এগুলো দিয়ে পুরো চ্যাট হিস্ট্রি পড়া যায়, কিন্তু WhatsApp-এর নিয়ম ভাঙে। নম্বর <b>চিরতরে ban</b> হয়ে যেতে পারে, কোনো সতর্কতা ছাড়াই। তোমার মেইন নম্বরে এই ঝুঁকি নেব না।</p>
+  <p><b>Account Aggregator (ব্যাংকের অফিসিয়াল ডেটা-শেয়ারিং):</b> এতে RBI-রেগুলেটেড প্রতিষ্ঠান হতে হয়, ব্যক্তিগত প্রজেক্টে পাওয়া যায় না। তাই অ্যালার্ট পার্সিং-ই আমাদের পথ।</p>
+</div>
+
+<!-- ===================== 06 ARCHITECTURE ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">06</span><span class="lab">ARCHITECTURE</span><span class="rule"></span></div>
+<h2>সিস্টেম আর্কিটেকচার</h2>
+<p>তিনটে ভাগ: বাঁদিকে যেখান থেকে তথ্য আসে, মাঝখানে ল্যাপটপে চলা JARVIS Core, ডানদিকে যেভাবে JARVIS তোমার সাথে কথা বলে বা কাজ করে।</p>
+
+<svg viewBox="0 0 700 440" style="width:100%;margin:2mm 0 3mm" font-family="Rajdhani" font-weight="600">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#35d6ff"/></marker>
+  </defs>
+  <g font-family="Orbitron" font-size="9" letter-spacing="2" fill="#35d6ff" text-anchor="middle">
+    <text x="90" y="20">INPUTS</text><text x="350" y="20">JARVIS CORE · ON YOUR LAPTOP</text><text x="610" y="20">OUTPUTS</text>
+  </g>
+  <!-- inputs -->
+  <g>
+    <g transform="translate(10,34)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Microphone</text><text x="10" y="32" fill="#86a6bb" font-size="10">"Hey Jarvis" · push-to-talk</text></g>
+    <g transform="translate(10,88)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Keyboard / Hotkey</text><text x="10" y="32" fill="#86a6bb" font-size="10">typed commands</text></g>
+    <g transform="translate(10,142)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Webcam</text><text x="10" y="32" fill="#86a6bb" font-size="10">presence · face check</text></g>
+    <g transform="translate(10,196)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Phone Companion</text><text x="10" y="32" fill="#86a6bb" font-size="10">notifications · SMS · health</text></g>
+    <g transform="translate(10,250)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Google APIs</text><text x="10" y="32" fill="#86a6bb" font-size="10">Gmail · Calendar · Tasks</text></g>
+    <g transform="translate(10,304)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Laptop Sensors</text><text x="10" y="32" fill="#86a6bb" font-size="10">ActivityWatch · system stats</text></g>
+    <g transform="translate(10,358)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">WhatsApp Desktop</text><text x="10" y="32" fill="#86a6bb" font-size="10">notifications in · send out</text></g>
+  </g>
+  <g stroke="#35d6ff" stroke-width="1.2" marker-end="url(#ar)">
+    <line x1="172" y1="55" x2="213" y2="55"/><line x1="172" y1="109" x2="213" y2="109"/><line x1="172" y1="163" x2="213" y2="163"/>
+    <line x1="172" y1="217" x2="213" y2="217"/><line x1="172" y1="271" x2="213" y2="271"/><line x1="172" y1="325" x2="213" y2="325"/><line x1="172" y1="379" x2="213" y2="379"/>
+  </g>
+  <!-- core -->
+  <rect x="215" y="30" width="270" height="400" fill="#06182a" stroke="#35d6ff" stroke-width="1.4"/>
+  <g>
+    <g transform="translate(230,44)"><rect width="240" height="40" fill="#0d2236" stroke="#163f5a"/><text x="10" y="16" fill="#fff" font-size="12">Voice Pipeline</text><text x="10" y="31" fill="#86a6bb" font-size="10">wake word → speech-to-text → text</text></g>
+    <g transform="translate(230,96)"><rect width="240" height="56" fill="#0e3550" stroke="#35d6ff" stroke-width="1.4"/><text x="10" y="19" fill="#8ceaff" font-size="13">Orchestrator Agent</text><text x="10" y="35" fill="#dcecf5" font-size="10.5">Claude Opus 5.5 · tool use · planning</text><text x="10" y="49" fill="#86a6bb" font-size="10">understands, decides, calls connectors</text></g>
+    <g transform="translate(230,164)"><rect width="240" height="40" fill="#2a1d08" stroke="#ffb547"/><text x="10" y="16" fill="#ffb547" font-size="12">Permission Gate</text><text x="10" y="31" fill="#d9b98a" font-size="10">read · draft · confirm · auto · NEVER</text></g>
+    <g transform="translate(230,216)"><rect width="240" height="40" fill="#0d2236" stroke="#163f5a"/><text x="10" y="16" fill="#fff" font-size="12">Connectors</text><text x="10" y="31" fill="#86a6bb" font-size="10">mail · WhatsApp · SMS · money · health · system</text></g>
+    <g transform="translate(230,268)"><rect width="240" height="40" fill="#0d2236" stroke="#163f5a"/><text x="10" y="16" fill="#fff" font-size="12">Scheduler + Routine Engine</text><text x="10" y="31" fill="#86a6bb" font-size="10">reminders · briefings · bedtime logic</text></g>
+    <g transform="translate(230,320)"><rect width="240" height="40" fill="#0d2236" stroke="#163f5a"/><text x="10" y="16" fill="#fff" font-size="12">Memory + Data Store</text><text x="10" y="31" fill="#86a6bb" font-size="10">encrypted SQLite · vector search · audit log</text></g>
+    <g transform="translate(230,372)"><rect width="240" height="44" fill="#0d2236" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Local API (WebSocket)</text><text x="10" y="33" fill="#86a6bb" font-size="10">live state → HUD · report generator</text></g>
+  </g>
+  <g stroke="#35d6ff" stroke-opacity=".6" stroke-width="1">
+    <line x1="350" y1="84" x2="350" y2="96"/><line x1="350" y1="152" x2="350" y2="164"/><line x1="350" y1="204" x2="350" y2="216"/>
+    <line x1="350" y1="256" x2="350" y2="268"/><line x1="350" y1="308" x2="350" y2="320"/><line x1="350" y1="360" x2="350" y2="372"/>
+  </g>
+  <!-- outputs -->
+  <g stroke="#35d6ff" stroke-width="1.2" marker-end="url(#ar)">
+    <line x1="487" y1="55" x2="528" y2="55"/><line x1="487" y1="109" x2="528" y2="109"/><line x1="487" y1="163" x2="528" y2="163"/>
+    <line x1="487" y1="217" x2="528" y2="217"/><line x1="487" y1="271" x2="528" y2="271"/><line x1="487" y1="325" x2="528" y2="325"/>
+  </g>
+  <g>
+    <g transform="translate(530,34)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">HUD App</text><text x="10" y="32" fill="#86a6bb" font-size="10">Tauri · React · Three.js</text></g>
+    <g transform="translate(530,88)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Voice Output</text><text x="10" y="32" fill="#86a6bb" font-size="10">ElevenLabs TTS · streaming</text></g>
+    <g transform="translate(530,142)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Actions</text><text x="10" y="32" fill="#86a6bb" font-size="10">send message · open apps</text></g>
+    <g transform="translate(530,196)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Desktop Notifications</text><text x="10" y="32" fill="#86a6bb" font-size="10">silent alerts · reminders</text></g>
+    <g transform="translate(530,250)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Phone Push / Telegram</text><text x="10" y="32" fill="#86a6bb" font-size="10">when you're away</text></g>
+    <g transform="translate(530,304)"><rect width="160" height="42" fill="#0a1a2b" stroke="#163f5a"/><text x="10" y="17" fill="#fff" font-size="12">Reports</text><text x="10" y="32" fill="#86a6bb" font-size="10">daily · weekly · monthly PDF</text></g>
+    <g transform="translate(530,368)"><rect width="160" height="48" fill="none" stroke="#163f5a" stroke-dasharray="3 3"/><text x="10" y="18" fill="#86a6bb" font-size="10">Cloud calls only for:</text><text x="10" y="34" fill="#dcecf5" font-size="10.5">Claude API · ElevenLabs · Google</text></g>
+  </g>
+</svg>
+
+<h3>একটা কমান্ড ভিতরে ভিতরে কীভাবে চলে</h3>
+<p class="dim" style="margin-bottom:1.5mm">উদাহরণ: <span class="en cy">"Hey Jarvis, reply to Rahul that I'll call him at six."</span></p>
+<div class="steps">
+  <div class="step"><span class="tt">1 · WAKE</span>ল্যাপটপেই wake word ধরা পড়ে, বাইরে কিছু যায় না।</div>
+  <div class="step"><span class="tt">2 · HEAR</span>Speech-to-text তোমার কথাকে টেক্সট বানায়।</div>
+  <div class="step"><span class="tt">3 · THINK</span>Claude বোঝে কাজটা কী, WhatsApp connector দিয়ে Rahul-এর শেষ মেসেজ খোঁজে, রিপ্লাই ড্রাফট করে।</div>
+  <div class="step"><span class="tt">4 · GATE</span>মেসেজ পাঠানো L2 কাজ, তাই Permission Gate তোমার কনফার্মেশন চায়।</div>
+  <div class="step"><span class="tt">5 · ACT</span>"Yes" শুনে WhatsApp Desktop দিয়ে পাঠায়।</div>
+  <div class="step"><span class="tt">6 · REPORT</span>অডিট লগে লেখে, HUD আপডেট করে, ElevenLabs ভয়েসে বলে "Sent."</div>
+</div>
+
+<!-- ===================== 07 TECH STACK ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">07</span><span class="lab">TECH STACK</span><span class="rule"></span></div>
+<h2>টেকনোলজি স্ট্যাক</h2>
+<table>
+  <tr><th style="width:21%">লেয়ার</th><th style="width:35%">যা ব্যবহার করব</th><th>কেন</th></tr>
+  <tr><td>ডেস্কটপ অ্যাপ (HUD)</td><td class="en">Tauri 2 + React + TypeScript + Three.js</td><td>Electron-এর চেয়ে অনেক কম RAM খায়, সারাদিন চালু থাকার জন্য ভালো। WebGL-এ সমস্যা হলে Electron-এ যাওয়া যাবে।</td></tr>
+  <tr><td>কোর সার্ভিস</td><td class="en">Python 3.12 + FastAPI + WebSocket</td><td>ভয়েস আর AI-এর সব লাইব্রেরি Python-এ সবচেয়ে ভালো পাওয়া যায়।</td></tr>
+  <tr><td>AI ব্রেন</td><td class="en">Claude API · Claude Opus 5.5</td><td>টুল ব্যবহার, একাধিক ধাপের প্ল্যানিং, লম্বা কনটেক্সট। prompt caching দিয়ে খরচ কমানো যায়।</td></tr>
+  <tr><td>Wake word</td><td class="en">openWakeWord ("hey jarvis")</td><td>ফ্রি, অফলাইন, কোনো API key লাগে না।</td></tr>
+  <tr><td>কথা → টেক্সট</td><td class="en">ElevenLabs Scribe · or faster-whisper</td><td>ElevenLabs-এ রিয়েলটাইম, আর whisper লোকালে ফ্রি। দুটোই টেস্ট করে ঠিক করব।</td></tr>
+  <tr><td>টেক্সট → কণ্ঠ</td><td class="en">ElevenLabs Flash v2.5 (streaming)</td><td>কম ল্যাটেন্সি, প্রাকৃতিক ইংলিশ। Voice Design দিয়ে JARVIS-এর নিজস্ব কণ্ঠ।</td></tr>
+  <tr><td>ডেটাবেস</td><td class="en">SQLite + SQLCipher + sqlite-vec</td><td>এক ফাইলে সব, এনক্রিপ্টেড। মেমরি সার্চের জন্য vector index।</td></tr>
+  <tr><td>শিডিউলার</td><td class="en">APScheduler</td><td>রিমাইন্ডার, ব্রিফিং, রিপোর্টের টাইমিং।</td></tr>
+  <tr><td>ফোন কম্প্যানিয়ন</td><td class="en">Android app (Kotlin)</td><td>নোটিফিকেশন, SMS, Health Connect। শুরুতে দ্রুত টেস্টের জন্য MacroDroid/Tasker দিয়েও চালানো যায়।</td></tr>
+  <tr><td>স্ক্রিন টাইম</td><td class="en">ActivityWatch</td><td>ওপেন সোর্স, লোকাল REST API।</td></tr>
+  <tr><td>চার্ট / রিপোর্ট</td><td class="en">ECharts + HTML → PDF</td><td>সুন্দর চার্ট, একই ডিজাইনে PDF রিপোর্ট।</td></tr>
+  <tr><td>সিক্রেটস</td><td class="en">Windows Credential Manager / macOS Keychain</td><td>API key কোডে বা ফাইলে খোলা থাকবে না।</td></tr>
+  <tr><td>রিমোট</td><td class="en">Telegram Bot API</td><td>ফ্রি, যেকোনো জায়গা থেকে JARVIS-কে মেসেজ।</td></tr>
+</table>
+
+<!-- ===================== 08 ROADMAP ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">08</span><span class="lab">ROADMAP</span><span class="rule"></span></div>
+<h2>কোন ধাপে কী বানাব</h2>
+<p>একসাথে সব না বানিয়ে ধাপে ধাপে এগোব। প্রতিটা Phase শেষে তুমি হাতে-কলমে চালিয়ে দেখবে, তারপর পরেরটা। সময় আনুমানিক, তোমার টেস্টিং আর ফিডব্যাকের উপর নির্ভর করবে।</p>
+
+<div class="gantt">
+  <div class="hdr"><div>PHASE</div><div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div><div>W7</div><div>W8</div><div>W9</div><div>W10</div><div>W11</div><div>W12</div></div>
+  <div class="r"><div class="nm"><b>P0 · SETUP</b>অ্যাকাউন্ট, key, স্ট্রাকচার</div><div class="bar amber" style="grid-column:2/3;width:30%"></div></div>
+  <div class="r"><div class="nm"><b>P1 · CORE</b>HUD + ভয়েস + ব্রেন</div><div class="bar" style="grid-column:2/4"></div></div>
+  <div class="r"><div class="nm"><b>P2 · COMMS</b>মেল, WhatsApp, SMS</div><div class="bar" style="grid-column:4/6"></div></div>
+  <div class="r"><div class="nm"><b>P3 · MONEY</b>আয়-ব্যয়, বাজেট</div><div class="bar" style="grid-column:6/8"></div></div>
+  <div class="r"><div class="nm"><b>P4 · BODY</b>হেলথ + রুটিন</div><div class="bar" style="grid-column:8/10"></div></div>
+  <div class="r"><div class="nm"><b>P5 · INSIGHT</b>রিপোর্ট + মেমরি</div><div class="bar" style="grid-column:10/12"></div></div>
+  <div class="r"><div class="nm"><b>P6 · POWER-UPS</b>চলতেই থাকবে</div><div class="bar dash" style="grid-column:12/14"></div></div>
+</div>
+<p class="mvp">◆ MVP = END OF WEEK 4 · <span style="font-family:'Hind Siliguri';letter-spacing:0;font-size:9pt">ভয়েস + HUD + মেল + WhatsApp + ক্যালেন্ডার + মর্নিং ব্রিফিং</span></p>
+
+<table>
+  <tr><th style="width:18%">PHASE</th><th style="width:47%">যা তৈরি হবে</th><th>শেষে তুমি যা করতে পারবে</th></tr>
+  <tr><td><b class="cy">P0 · SETUP</b><br><span class="dim">2–3 দিন</span></td><td>তোমার উত্তর (সেকশন 12), Anthropic + ElevenLabs + Google Cloud অ্যাকাউন্ট ও key, প্রজেক্ট স্ট্রাকচার, JARVIS-এর কণ্ঠ ডিজাইন</td><td>JARVIS-এর ভয়েস শুনে পছন্দ করা</td></tr>
+  <tr><td><b class="cy">P1 · CORE</b><br><span class="dim">~2 সপ্তাহ</span></td><td>HUD অ্যাপ, "Hey Jarvis" ভয়েস লুপ, Claude ব্রেন + টুল, সিস্টেম স্ট্যাটস, আবহাওয়া, অটো-স্টার্ট, Gmail + Calendar দিয়ে প্রথম মর্নিং ব্রিফিং</td><td>ল্যাপটপ খুললেই ব্রিফিং। ভয়েসে অ্যাপ খোলা, প্রশ্ন করা, মেল শোনা</td></tr>
+  <tr><td><b class="cy">P2 · COMMS</b><br><span class="dim">~2 সপ্তাহ</span></td><td>ফোন কম্প্যানিয়ন, WhatsApp/SMS পড়া, AI প্রায়োরিটি, কনফার্ম করে পাঠানো, মেল ড্রাফট, Telegram রিমোট, নিউজ/ওয়েব</td><td><b>MVP:</b> মুখে বলে মেসেজ আর মেল পাঠানো</td></tr>
+  <tr><td><b class="cy">P3 · MONEY</b><br><span class="dim">~2 সপ্তাহ</span></td><td>ব্যাংক/UPI parser, অটো ক্যাটাগরি, ফাইন্যান্স প্যানেল, বাজেট, বিল রিমাইন্ডার, অস্বাভাবিক খরচের অ্যালার্ট</td><td>"How much did I spend on food this month?"</td></tr>
+  <tr><td><b class="cy">P4 · BODY</b><br><span class="dim">~2 সপ্তাহ</span></td><td>Health Connect সিঙ্ক, ActivityWatch, রুটিন ইঞ্জিন, ঘুমের হিসাব, ধাপে ধাপে রিমাইন্ডার</td><td>রোজের রুটিন আর সময়মতো খাওয়া-স্নান-ঘুমের সিগন্যাল</td></tr>
+  <tr><td><b class="cy">P5 · INSIGHT</b><br><span class="dim">~1–2 সপ্তাহ</span></td><td>নাইটলি রিক্যাপ, Weekly ও Monthly PDF রিপোর্ট, Memory & People</td><td>রবিবার রিপোর্ট আর উন্নতির পরামর্শ</td></tr>
+  <tr><td><b class="cy">P6 · POWER-UPS</b><br><span class="dim">চলমান</span></td><td>সিকিউরিটি/ফেস প্রেজেন্স, স্মার্ট হোম, স্ক্রিন মেমরি, মিটিং নোট, অফলাইন মোড</td><td>যা দরকার মনে হবে, যোগ করতে থাকব</td></tr>
+</table>
+
+<!-- ===================== 09 COST ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">09</span><span class="lab">MONTHLY COST</span><span class="rule"></span></div>
+<h2>মাসিক খরচ (আনুমানিক)</h2>
+<table>
+  <tr><th style="width:27%">জিনিস</th><th style="width:43%">কী জন্য / হিসাব</th><th>মাসে</th></tr>
+  <tr><td><b>Claude API</b><br><span class="dim">Opus 5.5</span></td><td>ব্রেন: কমান্ড, সারাংশ, রিপোর্ট। দাম $4 / 1M input token, $20 / 1M output token। একেকটা কমান্ডে মোটামুটি $0.01–0.03। caching দিয়ে আরও কম।</td><td><b>$25–70</b></td></tr>
+  <tr><td><b>ElevenLabs</b><br><span class="dim">TTS (+ Scribe)</span></td><td>Starter প্ল্যান (~$6) হালকা ব্যবহারে। রোজ ব্রিফিং আর অনেক কথাবার্তা হলে Creator (~$22)। Flash মডেলে প্রতি অক্ষরে অর্ধেক credit লাগে।</td><td><b>$6–22</b></td></tr>
+  <tr><td>Google APIs</td><td>Gmail, Calendar, Tasks: ব্যক্তিগত ব্যবহারে ফ্রি কোটা যথেষ্ট</td><td>$0</td></tr>
+  <tr><td>ওপেন সোর্স</td><td>openWakeWord, ActivityWatch, SQLite, Tauri, faster-whisper</td><td>$0</td></tr>
+  <tr><td>অন্যান্য</td><td>Open-Meteo আবহাওয়া, Telegram বট</td><td>$0</td></tr>
+  <tr><td><b class="cy">মোট</b></td><td>ব্যবহার কতটা হচ্ছে তার উপর নির্ভর করবে</td><td><b class="cy">≈ $30–95</b></td></tr>
+</table>
+<div class="callout cyan">
+  <div class="t">COST CONTROL</div>
+  <p>HUD-এ একটা "API usage meter" থাকবে আর তুমি মাসিক লিমিট সেট করবে। লিমিটের কাছে গেলে JARVIS আগে থেকে জানাবে। পিছনে চলা মেসেজ-বাছাইয়ের কাজে ছোট, সস্তা মডেল (যেমন Claude Haiku 5.5) দিলে খরচ অনেক কমে। সেটা চাইবে কিনা তোমার সিদ্ধান্ত। দাম বদলাতে পারে, শুরুর আগে অফিসিয়াল পেজে মিলিয়ে নেব।</p>
+</div>
+
+<!-- ===================== 10 REQUIREMENTS ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">10</span><span class="lab">REQUIREMENTS</span><span class="rule"></span></div>
+<h2>যা যা লাগবে</h2>
+<div class="g2">
+  <div class="card pr"><div class="t">LAPTOP</div><p>Windows 11 বা macOS। <b>16 GB RAM</b> ভালো (লোকাল whisper না চালালে 8 GB-তেও চলবে)। ভালো মাইক বা হেডসেট। ওয়েবক্যাম (অপশনাল, presence-এর জন্য)। ইন্টারনেট, কারণ ব্রেন আর ভয়েস ক্লাউডে চলে।</p></div>
+  <div class="card pr"><div class="t">PHONE</div><p><b>Android হলে সবচেয়ে ভালো।</b> iPhone হলে অন্য অ্যাপের নোটিফিকেশন বা SMS পড়া যায় না (Apple অনুমতি দেয় না)। তখন WhatsApp Desktop আর ব্যাংকের ইমেল অ্যালার্ট দিয়ে কাজ চালাব।</p></div>
+  <div class="card pr"><div class="t">WATCH / BAND (OPTIONAL)</div><p>ঘুমের ডেটা ঠিকঠাক পেতে খুব কাজে লাগে। Health Connect-এ সিঙ্ক হয় এমন যেকোনোটা চলবে (Samsung, Pixel/Fitbit, Mi/Amazfit ইত্যাদি)। তোমার মডেল দেখে নিশ্চিত করব।</p></div>
+  <div class="card pr"><div class="t">ACCOUNTS & KEYS</div><p>Anthropic API key, ElevenLabs API key, Google Cloud প্রজেক্ট (Gmail/Calendar OAuth), Telegram বট (অপশনাল)। সেটআপের প্রতিটা স্টেপ আমি দেখিয়ে দেব।</p></div>
+</div>
+
+<!-- ===================== 11 LIMITS ===================== -->
+<div class="sec" style="margin-top:6mm"><span class="num">11</span><span class="lab">LIMITS & RISKS</span><span class="rule"></span></div>
+<h2>সীমাবদ্ধতা ও ঝুঁকি: সোজাসুজি</h2>
+<p>শুরুতেই পরিষ্কার থাকা ভালো, কী সম্ভব আর কী সম্ভব না:</p>
+<table>
+  <tr><th style="width:26%">বিষয়</th><th>বাস্তবতা ও আমাদের সমাধান</th></tr>
+  <tr><td><b>WhatsApp</b></td><td>পার্সোনাল অ্যাকাউন্টের অফিসিয়াল API নেই। নোটিফিকেশনে যা আসে সেটাই পড়তে পারব: পুরনো চ্যাট হিস্ট্রি না, আর mute করা চ্যাট না (যদি না ওগুলোর নোটিফিকেশন চালু রাখো)। বিনিময়ে নম্বর ban হওয়ার কোনো ঝুঁকি নেই।</td></tr>
+  <tr><td><b>ব্যাংক ডেটা</b></td><td>ব্যক্তিগত API নেই, তাই অ্যালার্ট পার্স করব। ব্যাংক মেসেজের ফরম্যাট বদলালে parser আপডেট লাগবে। AI fallback থাকায় বেশিরভাগ সময় নিজেই সামলে নেবে।</td></tr>
+  <tr><td><b>হেলথ ডেটা</b></td><td>ল্যাপটপ নিজে স্টেপ গুনতে পারে না। ফোন সাথে রাখতে হবে, আর ঘুমের জন্য ঘড়ি/ব্যান্ড পরে ঘুমোলে ডেটা ভালো হয়।</td></tr>
+  <tr><td><b>মুভির JARVIS</b></td><td>হলোগ্রাম, স্যুট বা পুরোপুরি স্বাধীন AI এখনো বাস্তবে নেই। কিন্তু ভয়েস, HUD, নিজে থেকে সিগন্যাল দেওয়া, সব জেনে থাকা: এই অভিজ্ঞতাটা খুব কাছাকাছি হবে।</td></tr>
+  <tr><td><b>কণ্ঠ</b></td><td>মুভির অভিনেতার আসল কণ্ঠ ক্লোন করা আইনত আর নৈতিকভাবে ঠিক না। তাই ElevenLabs Voice Design দিয়ে একই রকম শান্ত, ভদ্র, British-butler ধাঁচের <b>নিজস্ব</b> কণ্ঠ বানাব।</td></tr>
+  <tr><td><b>ইন্টারনেট</b></td><td>Claude আর ElevenLabs ক্লাউডে চলে। নেট না থাকলে শুধু বেসিক কাজ (রিমাইন্ডার, সিস্টেম কন্ট্রোল, আগের ডেটা দেখা) চলবে।</td></tr>
+  <tr><td><b>প্রাইভেসি</b></td><td>ক্লাউড AI-কে শুধু দরকারি অংশ পাঠানো হবে। অ্যাকাউন্ট নম্বর মাস্ক করা থাকবে। OTP কখনো পাঠানো হবে না।</td></tr>
+  <tr><td><b>খরচ</b></td><td>যত বেশি কথা, তত API খরচ। usage meter আর মাসিক লিমিট দিয়ে নিয়ন্ত্রণে রাখব।</td></tr>
+</table>
+
+<!-- ===================== 12 DECISIONS ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">12</span><span class="lab">YOUR DECISIONS</span><span class="rule"></span></div>
+<h2>শুরুর আগে তোমার কাছ থেকে যা জানা দরকার</h2>
+<p>এগুলোর উত্তর পেলেই Phase 0 শুরু করতে পারব। যেটা জানো না, "পরে বলব" লিখে দিও। আমি ডিফল্ট ধরে এগিয়ে যাব।</p>
+<div class="q"><div class="n">01</div><div><div class="h">ল্যাপটপের OS কোনটা?</div><div class="o">Windows 11 / macOS / Linux, আর RAM কত?</div></div></div>
+<div class="q"><div class="n">02</div><div><div class="h">ফোন Android না iPhone? মডেল কী?</div><div class="o">WhatsApp/SMS/হেলথ ডেটা কীভাবে আনব সেটা এর উপর নির্ভর করে।</div></div></div>
+<div class="q"><div class="n">03</div><div><div class="h">স্মার্টওয়াচ বা ফিটনেস ব্যান্ড আছে?</div><div class="o">থাকলে কোন কোম্পানি/মডেল।</div></div></div>
+<div class="q"><div class="n">04</div><div><div class="h">কোন ব্যাংক আর কোন UPI অ্যাপ ব্যবহার করো?</div><div class="o">ব্যাংক অ্যালার্ট SMS-এ আসে, ইমেলে, নাকি দুটোতেই? টাকার আয়ের মূল উৎস কী কী?</div></div></div>
+<div class="q"><div class="n">05</div><div><div class="h">ক'টা Gmail অ্যাকাউন্ট? কাজ আর ক্যালেন্ডার কোথায় রাখো?</div><div class="o">Google Calendar/Tasks, Todoist, Notion, নাকি এখনো কিছুই না?</div></div></div>
+<div class="q"><div class="n">06</div><div><div class="h">WhatsApp: নোটিফিকেশন-ভিত্তিক নিরাপদ পদ্ধতিতে রাজি?</div><div class="o">ল্যাপটপে WhatsApp Desktop ইনস্টল আছে?</div></div></div>
+<div class="q"><div class="n">07</div><div><div class="h">মেসেজ পাঠানোর নিয়ম কী হবে?</div><div class="o">সবসময় কনফার্ম করে পাঠাবে, নাকি কিছু trusted contact-এ সরাসরি?</div></div></div>
+<div class="q"><div class="n">08</div><div><div class="h">JARVIS-এর কণ্ঠ কেমন চাও?</div><div class="o">British butler / American / গভীর / নারী কণ্ঠ। Wake word "Hey Jarvis" চলবে? তোমাকে কী বলে ডাকবে: "sir", তোমার নাম, নাকি অন্য কিছু?</div></div></div>
+<div class="q"><div class="n">09</div><div><div class="h">API-র জন্য মাসিক বাজেট কত রাখতে চাও?</div><div class="o">সেকশন 09 দেখে একটা লিমিট বলো, ওই অনুযায়ী সেটআপ করব।</div></div></div>
+<div class="q"><div class="n">10</div><div><div class="h">তোমার দিনের রুটিন আর লক্ষ্য কী?</div><div class="o">কখন উঠতে চাও, অফিস/কলেজের সময়, খাবারের অভ্যাস, ঘুম আর এক্সারসাইজের লক্ষ্য (যেমন রোজ 8,000 স্টেপ, সপ্তাহে 150 মিনিট এক্সারসাইজ)।</div></div></div>
+<div class="q"><div class="n">11</div><div><div class="h">ফিচার যোগ বা বাদ?</div><div class="o">১৫টা মডিউলের মধ্যে কোনটা আগে চাও, কোনটা লাগবে না, বা নতুন কিছু চাও?</div></div></div>
+
+<!-- ===================== 13 NEXT ===================== -->
+<div class="pb"></div>
+<div class="sec"><span class="num">13</span><span class="lab">NEXT STEPS</span><span class="rule"></span></div>
+<h2>পরের ধাপ</h2>
+<div class="g3">
+  <div class="card pr"><div class="t">STEP 1</div><p>PDF-টা পড়ো। সেকশন 12-র প্রশ্নগুলোর উত্তর দাও।</p></div>
+  <div class="card pr"><div class="t">STEP 2</div><p>কিছু যোগ বা বাদ দিতে চাইলে বলো, প্ল্যান আপডেট করে দেব।</p></div>
+  <div class="card pr amber"><div class="t">STEP 3 · GO</div><p>"শুরু করো" বললেই Phase 0 আর Phase 1 শুরু।</p></div>
+</div>
+
+<!-- ===================== SOURCES ===================== -->
+<div class="sec" style="margin-top:9mm"><span class="num">A</span><span class="lab">RESEARCH SOURCES</span><span class="rule"></span></div>
+<h2>রিসার্চে যা দেখেছি</h2>
+<p class="dim">প্ল্যান বানানোর সময় এই সোর্সগুলো দেখা হয়েছে (নভেম্বর 2026)। কিছু তথ্য থার্ড-পার্টি সাইট থেকে নেওয়া। দাম আর তারিখগুলো কাজ শুরুর আগে অফিসিয়াল পেজে মিলিয়ে নেব।</p>
+<div class="src">
+  <div><b>Open-source JARVIS projects:</b> <a href="https://github.com/topics/jarvis-ai">github.com/topics/jarvis-ai</a> · <a href="https://github.com/PersonalJarvis/PersonalJarvis">github.com/PersonalJarvis/PersonalJarvis</a></div>
+  <div><b>WhatsApp automation &amp; ban risk:</b> <a href="https://zylos.ai/research/2026-01-26-whatsapp-api-automation">zylos.ai/research/2026-01-26-whatsapp-api-automation</a> · <a href="https://kraya-blog-platform.vercel.app/whatsapp-automation-ban-risk">kraya-blog-platform.vercel.app/whatsapp-automation-ban-risk</a></div>
+  <div><b>Windows notification listener:</b> <a href="https://learn.microsoft.com/en-us/uwp/api/windows.ui.notifications.management.usernotificationlistener">learn.microsoft.com/…/usernotificationlistener</a></div>
+  <div><b>Android → PC notifications:</b> <a href="https://www.ctrl.blog/entry/review-kde-connect/">ctrl.blog/entry/review-kde-connect</a></div>
+  <div><b>Google Fit end-of-service / Health Connect:</b> <a href="https://developer.android.com/health-and-fitness/guides/health-connect/migrate/fit-apis-end-of-service">developer.android.com/…/fit-apis-end-of-service</a> · <a href="https://developer.android.com/health-and-fitness/guides/health-connect/migrate/migration-faq">developer.android.com/…/migration-faq</a></div>
+  <div><b>Fitbit Web API migration:</b> <a href="https://openwearables.io/blog/fitbit-web-api-shutdown-2026-migration-guide">openwearables.io/blog/fitbit-web-api-shutdown-2026-migration-guide</a></div>
+  <div><b>Wearables (Gadgetbridge):</b> <a href="https://gadgetbridge.org/gadgets/wearables/xiaomi/">gadgetbridge.org/gadgets/wearables/xiaomi</a></div>
+  <div><b>Account Aggregator framework:</b> <a href="https://financialservices.gov.in/beta/en/account-aggregator-framework">financialservices.gov.in/beta/en/account-aggregator-framework</a></div>
+  <div><b>Bank SMS / UPI parsers:</b> <a href="https://f-droid.org/en/packages/com.ritesh.cashiro/">f-droid.org/…/com.ritesh.cashiro</a> · <a href="https://dev.to/githubopensource/pennywise-ai-your-privacy-first-ai-powered-expense-tracker-53n6">dev.to/…/pennywise-ai</a> · <a href="https://pub.dev/packages/upi_sms_parser/changelog">pub.dev/packages/upi_sms_parser</a></div>
+  <div><b>Wake word:</b> <a href="https://violawake.pages.dev/blog/open-source-vs-proprietary-wake-word-detection-2026">violawake.pages.dev/…/open-source-vs-proprietary-wake-word-detection-2026</a> · <a href="https://community.home-assistant.io/t/fyi-picovoice-confirmed-free-tier-accesskeys-will-stop-working-after-june-30-2026/1012744">community.home-assistant.io/…/picovoice-free-tier</a></div>
+  <div><b>ElevenLabs latency &amp; pricing:</b> <a href="https://elevenlabs.io/docs/eleven-api/best-practices/latency-optimization">elevenlabs.io/docs/…/latency-optimization</a> · <a href="https://bigvu.tv/blog/elevenlabs-pricing-2026-plans-credits-commercial-rights-api-costs/">bigvu.tv/blog/elevenlabs-pricing-2026</a> · <a href="https://gradium.ai/content/best-low-latency-tts-apis-2026">gradium.ai/content/best-low-latency-tts-apis-2026</a></div>
+  <div><b>Claude API pricing:</b> <a href="https://platform.claude.com/docs/en/about-claude/pricing">platform.claude.com/docs/en/about-claude/pricing</a></div>
+  <div><b>Screen time:</b> <a href="https://activitywatch.net/">activitywatch.net</a> · <b>Screen memory:</b> <a href="https://screenpi.pe/about">screenpi.pe/about</a></div>
+  <div><b>Tauri vs Electron:</b> <a href="https://moklabs-research.pages.dev/reports/technology/2026-03-20-tauri-vs-electron-desktop-framework-decision">moklabs-research.pages.dev/…/tauri-vs-electron</a> · <a href="https://tech-insider.org/tauri-vs-electron-2026/">tech-insider.org/tauri-vs-electron-2026</a></div>
+  <div><b>MCP connectors for personal assistants:</b> <a href="https://blog.premai.io/25-best-mcp-servers-for-ai-agents-complete-setup-guide-2026">blog.premai.io/25-best-mcp-servers-for-ai-agents-complete-setup-guide-2026</a></div>
+</div>
+
+</div><!-- /flow -->
+
+<script>
+  const g=document.getElementById('ct');let s='';
+  for(let i=0;i<120;i++){const a=i*3*Math.PI/180;const r1=272,r2=i%5===0?290:281;
+    s+=`<line x1="${(Math.cos(a)*r1).toFixed(1)}" y1="${(Math.sin(a)*r1).toFixed(1)}" x2="${(Math.cos(a)*r2).toFixed(1)}" y2="${(Math.sin(a)*r2).toFixed(1)}"/>`;}
+  g.innerHTML=s;
+</script>
+</body>
+</html>

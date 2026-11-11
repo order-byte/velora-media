@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JARVIS HUD concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#030a14; --panel:rgba(8,28,48,.62); --line:#0f4c6e; --cyan:#35d6ff; --cyan2:#7fe8ff;
+    --dim:#5d8aa6; --text:#d9f3ff; --amber:#ffb547; --green:#4dffb0; --red:#ff5c7a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1600px;height:900px;background:var(--bg);overflow:hidden}
+  body{font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--text);position:relative}
+  .grid{position:absolute;inset:0;background-image:
+      linear-gradient(rgba(53,214,255,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(53,214,255,.05) 1px,transparent 1px);
+      background-size:40px 40px}
+  .glow{position:absolute;left:50%;top:47%;width:900px;height:900px;transform:translate(-50%,-50%);
+      background:radial-gradient(circle,rgba(53,214,255,.18) 0%,rgba(53,214,255,.05) 35%,transparent 65%)}
+  .panel{position:absolute;background:var(--panel);border:1px solid var(--line);
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+      padding:12px 16px}
+  .panel::before{content:"";position:absolute;left:0;top:0;width:60px;height:2px;background:var(--cyan)}
+  .ph{display:flex;justify-content:space-between;align-items:center;font-family:'Orbitron';font-size:12px;
+      letter-spacing:2px;color:var(--cyan);margin-bottom:8px}
+  .ph .tag{font-family:'Rajdhani';font-size:12px;color:var(--dim);letter-spacing:1px}
+  .row{display:flex;justify-content:space-between;align-items:center;font-size:16px;padding:4px 0;border-bottom:1px dashed rgba(53,214,255,.12)}
+  .row:last-child{border-bottom:none}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:middle}
+  .hi{color:var(--amber)} .ok{color:var(--green)} .bad{color:var(--red)}
+  .big{font-family:'Orbitron';font-weight:700;font-size:26px;color:var(--cyan2)}
+  .lbl{font-size:12px;color:var(--dim);letter-spacing:1px}
+  .bar{height:6px;background:rgba(53,214,255,.12);margin-top:4px;position:relative}
+  .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--cyan)}
+  .top{position:absolute;left:0;right:0;top:0;height:54px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 28px;border-bottom:1px solid var(--line);background:rgba(3,14,26,.8)}
+  .brand{font-family:'Orbitron';font-weight:800;letter-spacing:6px;color:var(--cyan);font-size:20px}
+  .brand small{font-size:11px;letter-spacing:2px;color:var(--dim);margin-left:12px}
+  .status{display:flex;gap:22px;font-size:13px;color:var(--dim);letter-spacing:1px}
+  .status b{color:var(--text);font-weight:600}
+  .clock{font-family:'Orbitron';font-size:22px;color:var(--cyan2);letter-spacing:2px}
+  .clock small{font-size:12px;color:var(--dim);margin-left:8px;font-family:'Rajdhani'}
+  .voice{position:absolute;left:50%;transform:translateX(-50%);top:668px;width:700px;text-align:center}
+  .voice .who{font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--cyan)}
+  .voice p{font-size:19px;line-height:1.45;margin-top:6px;color:var(--text)}
+  .wave{display:flex;gap:3px;justify-content:center;align-items:center;height:26px;margin-top:8px}
+  .wave span{width:3px;background:var(--cyan);opacity:.85}
+  .tl{position:absolute;left:28px;right:28px;bottom:22px;height:92px}
+  .tlbar{position:absolute;left:0;right:0;top:44px;height:4px;background:rgba(53,214,255,.18)}
+  .tlfill{position:absolute;left:0;top:44px;height:4px;width:31%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+  .ev{position:absolute;top:30px;transform:translateX(-50%);text-align:center;font-size:13px;color:var(--dim)}
+  .ev .m{width:10px;height:10px;border:2px solid var(--cyan);background:var(--bg);margin:7px auto 6px;transform:rotate(45deg)}
+  .ev.done .m{background:var(--cyan)}
+  .ev.now .m{background:var(--amber);border-color:var(--amber);box-shadow:0 0 12px var(--amber)}
+  .ev.now span{color:var(--amber)}
+  .ev b{display:block;color:var(--text);font-weight:600;font-size:13px}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="glow"></div>
+
+<div class="top">
+  <div class="brand">J.A.R.V.I.S <small>PERSONAL OS · v1.0 CONCEPT</small></div>
+  <div class="status">
+    <span>MIC <b class="ok">● LISTENING</b></span>
+    <span>CPU <b>23%</b></span><span>RAM <b>9.1 / 16 GB</b></span>
+    <span>BATTERY <b>82%</b></span><span>NET <b>48 Mbps</b></span>
+    <span>WEATHER <b>27°C ☀</b></span>
+  </div>
+  <div class="clock">08:14:32<small>WED · 11 NOV 2026</small></div>
+</div>
+
+<!-- LEFT COLUMN -->
+<div class="panel" style="left:28px;top:76px;width:360px;height:236px">
+  <div class="ph">TODAY · TASKS <span class="tag">5 PENDING</span></div>
+  <div class="row"><span><span class="dot" style="background:var(--red)"></span>Send invoice to client</span><span class="bad">11:00</span></div>
+  <div class="row"><span><span class="dot" style="background:var(--amber)"></span>Finish project report</span><span class="hi">TODAY</span></div>
+  <div class="row"><span><span class="dot" style="background:var(--amber)"></span>Pay electricity bill</span><span class="hi">2 DAYS</span></div>
+  <div class="row"><span><span class="dot" style="background:var(--cyan)"></span>Call Mom</span><span>EVENING</span></div>
+  <div class="row"><span><span class="dot" style="background:var(--cyan)"></span>30-minute walk</span><span>18:30</span></div>
+</div>
+
+<div class="panel" style="left:28px;top:328px;width:360px;height:250px">
+  <div class="ph">COMMS · INBOX <span class="tag">AI PRIORITY SORT</span></div>
+  <div style="display:flex;gap:10px;margin-bottom:8px">
+    <div style="flex:1"><div class="big">12</div><div class="lbl">WHATSAPP</div></div>
+    <div style="flex:1"><div class="big">27</div><div class="lbl">EMAIL</div></div>
+    <div style="flex:1"><div class="big">4</div><div class="lbl">SMS</div></div>
+  </div>
+  <div class="row"><span><span class="dot" style="background:var(--red)"></span>Boss (Mail): "Report status?"</span><span class="bad">URGENT</span></div>
+  <div class="row"><span><span class="dot" style="background:var(--amber)"></span>Rahul (WA): about the payment</span><span class="hi">HIGH</span></div>
+  <div class="row"><span><span class="dot" style="background:var(--cyan)"></span>Family group: 18 new</span><span>LOW</span></div>
+  <div class="row"><span><span class="dot" style="background:var(--dim)"></span>23 promo mails hidden</span><span>—</span></div>
+</div>
+
+<!-- RIGHT COLUMN -->
+<div class="panel" style="right:28px;top:76px;width:380px;height:236px">
+  <div class="ph">FINANCE · READ-ONLY <span class="tag">🔒 NO PAYMENTS</span></div>
+  <div style="display:flex;gap:14px">
+    <div style="flex:1"><div class="lbl">IN · THIS MONTH</div><div class="big" style="color:var(--green)">₹48,500</div></div>
+    <div style="flex:1"><div class="lbl">OUT · THIS MONTH</div><div class="big" style="color:var(--amber)">₹21,340</div></div>
+  </div>
+  <svg width="346" height="56" style="margin:6px 0 2px">
+    <polyline fill="none" stroke="#35d6ff" stroke-width="2" points="0,40 30,36 60,42 90,30 120,33 150,22 180,26 210,18 240,24 270,14 300,17 346,8"/>
+    <polyline fill="none" stroke="#ffb547" stroke-width="1.5" stroke-dasharray="4 3" points="0,46 30,44 60,40 90,45 120,38 150,41 180,35 210,39 240,33 270,36 300,30 346,32"/>
+  </svg>
+  <div class="row"><span>Savings rate</span><span class="ok">56% ▲</span></div>
+  <div class="row"><span>Today: freelance client (UPI)</span><span class="ok">+₹12,000</span></div>
+</div>
+
+<div class="panel" style="right:28px;top:328px;width:380px;height:250px">
+  <div class="ph">BODY · HEALTH <span class="tag">WATCH SYNC 07:52</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <svg width="96" height="96" viewBox="0 0 96 96">
+      <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(53,214,255,.15)" stroke-width="8"/>
+      <circle cx="48" cy="48" r="40" fill="none" stroke="#35d6ff" stroke-width="8" stroke-dasharray="251" stroke-dashoffset="133" transform="rotate(-90 48 48)" stroke-linecap="round"/>
+      <text x="48" y="46" text-anchor="middle" fill="#d9f3ff" font-family="Orbitron" font-size="15" font-weight="700">4,210</text>
+      <text x="48" y="62" text-anchor="middle" fill="#5d8aa6" font-family="Rajdhani" font-size="11">/ 8,000 STEPS</text>
+    </svg>
+    <div style="flex:1">
+      <div class="lbl">SLEEP · LAST NIGHT</div><div class="big" style="font-size:22px">6h 40m</div>
+      <div class="bar"><i style="width:83%"></i></div>
+      <div class="lbl" style="margin-top:6px">SLEEP DEBT: 1h 20m</div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:8px"><span>Exercise this week</span><span class="hi">90 / 150 min</span></div>
+  <div class="row"><span>Screen time today</span><span>1h 52m</span></div>
+</div>
+
+<!-- CORE -->
+<svg style="position:absolute;left:50%;top:330px;transform:translate(-50%,-50%)" width="560" height="560" viewBox="-280 -280 560 560">
+  <defs>
+    <radialGradient id="core" r="1">
+      <stop offset="0" stop-color="#e9fbff"/><stop offset=".25" stop-color="#7fe8ff"/>
+      <stop offset=".6" stop-color="#1590c0" stop-opacity=".55"/><stop offset="1" stop-color="#03263c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle r="262" fill="none" stroke="#0f4c6e" stroke-width="1"/>
+  <g stroke="#35d6ff" stroke-opacity=".55"><g id="ticks"></g></g>
+  <circle r="232" fill="none" stroke="#35d6ff" stroke-opacity=".35" stroke-width="1" stroke-dasharray="2 6"/>
+  <path d="M -200 -60 A 209 209 0 0 1 60 -200" fill="none" stroke="#35d6ff" stroke-width="6" stroke-opacity=".8"/>
+  <path d="M 120 170 A 209 209 0 0 1 -150 145" fill="none" stroke="#35d6ff" stroke-width="6" stroke-opacity=".5"/>
+  <path d="M 205 -40 A 209 209 0 0 1 190 90" fill="none" stroke="#ffb547" stroke-width="6" stroke-opacity=".85"/>
+  <circle r="185" fill="none" stroke="#0f4c6e" stroke-width="14"/>
+  <circle r="185" fill="none" stroke="#35d6ff" stroke-width="14" stroke-opacity=".25" stroke-dasharray="40 18"/>
+  <circle r="150" fill="none" stroke="#35d6ff" stroke-width="1.5" stroke-opacity=".7"/>
+  <circle r="128" fill="none" stroke="#35d6ff" stroke-width="1" stroke-opacity=".4" stroke-dasharray="1 4"/>
+  <circle r="120" fill="url(#core)"/>
+  <g fill="none" stroke="#e9fbff" stroke-width="2" stroke-opacity=".9">
+    <polygon points="0,-70 61,35 -61,35"/>
+    <polygon points="0,-46 40,23 -40,23" stroke-opacity=".5"/>
+  </g>
+  <circle r="20" fill="#e9fbff" fill-opacity=".9"/>
+  <g font-family="Rajdhani" font-size="12" fill="#7fe8ff" letter-spacing="2" text-anchor="middle">
+    <text x="0" y="-240">VOICE</text>
+    <text x="236" y="5">MEMORY</text>
+    <text x="0" y="252">AUTOMATION</text>
+    <text x="-238" y="5">VISION</text>
+  </g>
+</svg>
+<div style="position:absolute;left:50%;top:618px;transform:translateX(-50%);text-align:center">
+  <div style="font-family:Orbitron;font-size:13px;letter-spacing:6px;color:var(--cyan)">SYSTEMS ONLINE</div>
+</div>
+
+<div class="voice">
+  <div class="who">JARVIS · SPEAKING</div>
+  <p>"Good morning, sir. You have 5 pending tasks and 2 urgent messages. ₹12,000 came in this morning. You slept a little short last night — I'd suggest lights out by 10:30 tonight."</p>
+  <div class="wave" id="wave"></div>
+</div>
+
+<!-- ROUTINE TIMELINE -->
+<div class="tl">
+  <div style="font-family:Orbitron;font-size:12px;letter-spacing:2px;color:var(--cyan)">TODAY · ROUTINE ENGINE</div>
+  <div class="tlbar"></div><div class="tlfill"></div>
+  <div class="ev done" style="left:2%"><b>07:00</b><div class="m"></div><span>Wake up</span></div>
+  <div class="ev done" style="left:12%"><b>07:30</b><div class="m"></div><span>Shower</span></div>
+  <div class="ev done" style="left:20%"><b>08:00</b><div class="m"></div><span>Breakfast</span></div>
+  <div class="ev now" style="left:31%"><b>08:30</b><div class="m"></div><span>Deep work</span></div>
+  <div class="ev" style="left:46%"><b>13:30</b><div class="m"></div><span>Lunch</span></div>
+  <div class="ev" style="left:58%"><b>16:30</b><div class="m"></div><span>Break + water</span></div>
+  <div class="ev" style="left:68%"><b>18:30</b><div class="m"></div><span>Walk</span></div>
+  <div class="ev" style="left:78%"><b>20:30</b><div class="m"></div><span>Dinner</span></div>
+  <div class="ev" style="left:88%"><b>22:00</b><div class="m"></div><span>Screens off</span></div>
+  <div class="ev" style="left:97%"><b>22:30</b><div class="m"></div><span>Sleep</span></div>
+</div>
+
+<script>
+  const g=document.getElementById('ticks');let s='';
+  for(let i=0;i<120;i++){const a=i*3*Math.PI/180;const r1=248,r2=i%5===0?262:255;
+    s+=`<line x1="${(Math.cos(a)*r1).toFixed(1)}" y1="${(Math.sin(a)*r1).toFixed(1)}" x2="${(Math.cos(a)*r2).toFixed(1)}" y2="${(Math.sin(a)*r2).toFixed(1)}"/>`;}
+  g.innerHTML=s;
+  const w=document.getElementById('wave');let h='';
+  for(let i=0;i<48;i++){const v=4+Math.abs(Math.sin(i*0.55)*Math.cos(i*0.21))*22;h+=`<span style="height:${v.toFixed(0)}px"></span>`;}
+  w.innerHTML=h;
+</script>
+</body>
+</html>
