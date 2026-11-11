@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JARVIS HUD</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one-screen HUD. Side panels flank a live canvas core; voice strip under the core; routine timeline along the bottom. */
+  :root{
+    color-scheme: dark;
+    --bg:#030a14;
+    --bg-2:#06121f;
+    --panel:rgba(8,28,48,.66);
+    --line:#0f4c6e;
+    --line-soft:rgba(53,214,255,.14);
+    --grid:rgba(53,214,255,.045);
+    --cyan:#35d6ff;
+    --cyan-2:#8ceaff;
+    --text:#d9f3ff;
+    --dim:#6f95ae;
+    --amber:#ffb547;
+    --green:#4dffb0;
+    --red:#ff5c7a;
+    --on-cyan:#03121f;
+    --font-display:'Orbitron', 'Rajdhani', system-ui, sans-serif;
+    --font-ui:'Rajdhani', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html{height:100%}
+  body{
+    margin:0; height:100%;
+    background-color:var(--bg);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:40px 40px;
+    color:var(--text); font-family:var(--font-ui); font-weight:600; font-size:15px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,select{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--cyan-2);outline-offset:2px}
+
+  .app{min-height:100%;display:grid;grid-template-rows:auto minmax(440px,1fr) auto;gap:14px;padding-block:12px}
+
+  /* ---------- top bar ---------- */
+  .top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .brand{font-family:var(--font-display);font-weight:800;letter-spacing:6px;color:var(--cyan);font-size:20px;white-space:nowrap}
+  .brand small{font-size:10px;letter-spacing:2px;color:var(--dim);margin-left:10px;font-weight:500}
+  .chips{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;letter-spacing:1px;color:var(--dim)}
+  .chips b{color:var(--text);font-weight:600}
+  .chips .ok{color:var(--green)} .chips .warn{color:var(--amber)}
+  .clock{font-family:var(--font-display);font-size:22px;color:var(--cyan-2);letter-spacing:2px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .clock small{display:block;font-family:var(--font-ui);font-size:11px;letter-spacing:2px;color:var(--dim);text-align:right}
+
+  /* ---------- main ---------- */
+  .main{display:grid;grid-template-columns:minmax(250px,330px) minmax(0,1fr) minmax(250px,350px);gap:18px;min-height:0}
+  .col{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .panel{position:relative;background:var(--panel);border:1px solid var(--line);padding:12px 16px 14px;overflow:hidden;
+    clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+  .panel::before{content:"";position:absolute;left:0;top:0;width:60px;height:2px;background:var(--cyan)}
+  .panel::after{content:"";position:absolute;left:0;right:0;top:-40%;height:40%;opacity:0;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(53,214,255,.18),transparent)}
+  body.booting .panel::after{animation:scan 1.1s ease-in-out 1}
+  @keyframes scan{0%{top:-40%;opacity:1}100%{top:110%;opacity:0}}
+  .ph{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--font-display);font-size:11px;letter-spacing:2px;color:var(--cyan);margin-bottom:8px}
+  .tag{font-family:var(--font-ui);font-size:11px;letter-spacing:1px;color:var(--dim);border:1px solid var(--line);padding:0 6px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;padding:4px 0;border-bottom:1px dashed var(--line-soft)}
+  .row:last-child{border-bottom:none}
+  .row span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row span:last-child{flex:none;font-variant-numeric:tabular-nums}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:middle;background:var(--cyan)}
+  .dot.red{background:var(--red)} .dot.amber{background:var(--amber)} .dot.dim{background:var(--dim)}
+  .c-red{color:var(--red)} .c-amber{color:var(--amber)} .c-green{color:var(--green)} .c-dim{color:var(--dim)}
+  .big{font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--cyan-2);line-height:1.15;font-variant-numeric:tabular-nums}
+  .lbl{font-size:11px;color:var(--dim);letter-spacing:1px}
+  .stats{display:flex;gap:10px;margin-bottom:6px}.stats>div{flex:1;min-width:0}
+  .bar{height:6px;background:rgba(53,214,255,.12);margin-top:5px;position:relative;overflow:hidden}
+  .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--cyan);transition:width .6s ease}
+  .bar i.short{background:var(--amber)}
+  .spark{display:block;width:100%;height:46px;margin:4px 0 2px}
+  .health{display:flex;gap:14px;align-items:center}
+  .health svg{flex:none}
+
+  /* ---------- center ---------- */
+  .center{display:flex;flex-direction:column;min-width:0;min-height:0}
+  .core-wrap{position:relative;flex:1;min-height:300px}
+  #core{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .core-status{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-family:var(--font-display);font-size:12px;letter-spacing:6px;color:var(--cyan);white-space:nowrap;text-shadow:0 0 12px rgba(53,214,255,.6)}
+  .bootlog{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(380px,90%);font-family:var(--font-mono);font-size:12px;line-height:1.7;color:var(--cyan-2);background:rgba(3,10,20,.82);border:1px solid var(--line);padding:12px 14px;white-space:pre}
+  .bootlog .ok{color:var(--green)}
+
+  .voice{text-align:center;padding-top:6px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .who{font-family:var(--font-display);font-size:11px;letter-spacing:3px;color:var(--cyan)}
+  .subtitle{max-width:760px;min-height:3.1em;font-size:19px;line-height:1.5;color:var(--dim);text-wrap:balance}
+  .subtitle .w{transition:color .15s ease}
+  .subtitle .w.on{color:var(--text)}
+  .subtitle .w.now{color:var(--cyan-2);text-shadow:0 0 10px rgba(53,214,255,.55)}
+  .wave{display:flex;gap:3px;justify-content:center;align-items:center;height:28px}
+  .wave span{width:3px;height:3px;background:var(--cyan);opacity:.85}
+  .controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+  .btn{cursor:pointer;border:1px solid var(--line);background:rgba(8,28,48,.8);color:var(--cyan-2);font-family:var(--font-display);font-size:11px;letter-spacing:2px;padding:10px 16px;
+    clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+  .btn:hover{border-color:var(--cyan);color:var(--text)}
+  .btn.primary{background:var(--cyan);color:var(--on-cyan);border-color:var(--cyan);font-weight:700}
+  .btn.primary:hover{background:var(--cyan-2)}
+  .hint{font-size:12px;color:var(--dim);letter-spacing:1px}
+  .hint kbd{font-family:var(--font-mono);font-size:11px;border:1px solid var(--line);padding:0 5px;color:var(--text)}
+
+  /* ---------- timeline ---------- */
+  .tl-wrap{overflow-x:auto;border-top:1px solid var(--line);padding-top:10px}
+  .tl-head{display:flex;justify-content:space-between;gap:10px;font-family:var(--font-display);font-size:11px;letter-spacing:2px;color:var(--cyan)}
+  .tl-head span:last-child{font-family:var(--font-ui);color:var(--dim);letter-spacing:1px}
+  .tl{position:relative;height:96px;min-width:920px;margin:0 30px}
+  .tl-line{position:absolute;left:0;right:0;top:47px;height:4px;background:rgba(53,214,255,.18)}
+  .tl-fill{position:absolute;left:0;top:47px;height:4px;width:0;background:var(--cyan);box-shadow:0 0 10px var(--cyan);transition:width .8s ease}
+  .tl-now{position:absolute;top:36px;width:2px;height:26px;background:var(--amber);box-shadow:0 0 10px var(--amber);transform:translateX(-1px)}
+  .ev{position:absolute;top:0;height:96px;width:0}
+  .ev .m{position:absolute;left:-6px;top:43px;width:12px;height:12px;border:2px solid var(--cyan);background:var(--bg);transform:rotate(45deg)}
+  .ev.done .m{background:var(--cyan)}
+  .ev.next .m{border-color:var(--amber);background:var(--amber);box-shadow:0 0 10px var(--amber)}
+  .ev .t{position:absolute;left:0;transform:translateX(-50%);text-align:center;white-space:nowrap;font-size:13px;line-height:1.2;color:var(--dim)}
+  .ev .t b{display:block;color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+  .ev.next .t{color:var(--amber)}
+  .ev.down .t{top:60px}
+  .ev.up .t{top:4px}
+
+  /* ---------- settings drawer ---------- */
+  .drawer{position:fixed;top:0;right:0;bottom:0;z-index:20;width:min(380px,100%);background:var(--bg-2);border-left:1px solid var(--line);
+    padding:calc(18px + env(safe-area-inset-top,0px)) calc(20px + env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) 20px;
+    overflow-y:auto;box-shadow:-20px 0 40px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:14px}
+  .drawer h2{margin:0;font-family:var(--font-display);font-size:14px;letter-spacing:3px;color:var(--cyan)}
+  .drawer p{margin:0;font-size:14px;color:var(--dim);font-weight:500;line-height:1.45}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field label,.field .lab{font-size:12px;letter-spacing:1.5px;color:var(--dim)}
+  .field input,.field select{background:var(--bg);border:1px solid var(--line);padding:8px 10px;font-size:15px;width:100%}
+  .field input[type=range]{padding:0;border:none;accent-color:var(--cyan)}
+  .pair{display:flex;gap:8px;align-items:center}
+  .pair input{width:auto;flex:1;min-width:0}
+  .pair span{color:var(--dim);font-size:13px}
+  .drawer .controls{justify-content:flex-start}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center}
+  .x{cursor:pointer;background:none;border:1px solid var(--line);color:var(--dim);width:32px;height:32px;font-size:18px;line-height:1}
+  .x:hover{color:var(--text);border-color:var(--cyan)}
+  .note{border:1px solid rgba(255,181,71,.35);background:rgba(255,181,71,.06);padding:10px 12px;font-size:13px;color:var(--amber);font-weight:500;line-height:1.45}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1100px){
+    .main{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+    .center{grid-column:1 / -1;order:-1}
+    .core-wrap{min-height:min(70vw,440px)}
+  }
+  @media (max-width:640px){
+    .main{grid-template-columns:minmax(0,1fr)}
+    .brand{font-size:17px;letter-spacing:4px}
+    .brand small{display:none}
+    .subtitle{font-size:17px}
+    .core-wrap{min-height:min(88vw,380px)}
+    .hint{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    body.booting .panel::after{animation:none}
+    .bar i,.tl-fill,.subtitle .w{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <header class="top">
+    <div class="brand">J.A.R.V.I.S <small>PERSONAL OS · BUILD 0.1 · INTERFACE TEST</small></div>
+    <div class="chips" aria-label="System status">
+      <span>VOICE <b class="warn" id="chip-voice">TEMP</b></span>
+      <span>MIC <b>OFF</b></span>
+      <span>BATTERY <b id="chip-battery">—</b></span>
+      <span>NET <b id="chip-net">—</b></span>
+      <span>CORES <b id="chip-cores">—</b></span>
+    </div>
+    <div class="clock" id="clock">--:--:--<small id="date">—</small></div>
+  </header>
+
+  <main class="main">
+    <section class="col" aria-label="Tasks and messages">
+      <div class="panel">
+        <div class="ph">TODAY · TASKS <span class="tag">DEMO</span></div>
+        <div class="row"><span><i class="dot red"></i>Send invoice to client</span><span class="c-red">11:00</span></div>
+        <div class="row"><span><i class="dot amber"></i>Finish project report</span><span class="c-amber">TODAY</span></div>
+        <div class="row"><span><i class="dot amber"></i>Pay electricity bill</span><span class="c-amber">2 DAYS</span></div>
+        <div class="row"><span><i class="dot"></i>Call Mom</span><span>EVENING</span></div>
+        <div class="row"><span><i class="dot"></i>30-minute walk</span><span>18:30</span></div>
+      </div>
+      <div class="panel">
+        <div class="ph">COMMS · INBOX <span class="tag">DEMO</span></div>
+        <div class="stats">
+          <div><div class="big">12</div><div class="lbl">WHATSAPP</div></div>
+          <div><div class="big">27</div><div class="lbl">EMAIL</div></div>
+          <div><div class="big">4</div><div class="lbl">SMS</div></div>
+        </div>
+        <div class="row"><span><i class="dot red"></i>Boss (Mail): "Report status?"</span><span class="c-red">URGENT</span></div>
+        <div class="row"><span><i class="dot amber"></i>Rahul (WA): about the payment</span><span class="c-amber">HIGH</span></div>
+        <div class="row"><span><i class="dot"></i>Family group: 18 new</span><span>LOW</span></div>
+        <div class="row"><span><i class="dot dim"></i>23 promo mails hidden</span><span class="c-dim">—</span></div>
+      </div>
+    </section>
+
+    <section class="center" aria-label="JARVIS core">
+      <div class="core-wrap">
+        <canvas id="core" aria-hidden="true"></canvas>
+        <div class="bootlog" id="bootlog" hidden></div>
+        <div class="core-status" id="core-status">STANDBY</div>
+      </div>
+      <div class="voice">
+        <div class="who" id="who">JARVIS · STANDING BY</div>
+        <div class="subtitle" id="subtitle" aria-live="polite">Press Wake JARVIS to hear your morning briefing.</div>
+        <div class="wave" id="wave" aria-hidden="true"></div>
+        <div class="controls">
+          <button class="btn primary" id="btn-wake" type="button">▶ WAKE JARVIS</button>
+          <button class="btn" id="btn-settings" type="button">TEST CONTROLS</button>
+          <button class="btn" id="btn-full" type="button">FULLSCREEN</button>
+        </div>
+        <div class="hint"><kbd>Space</kbd> briefing · <kbd>Esc</kbd> stop · <kbd>S</kbd> test controls · <kbd>F</kbd> fullscreen</div>
+      </div>
+    </section>
+
+    <section class="col" aria-label="Money and health">
+      <div class="panel">
+        <div class="ph">FINANCE · READ-ONLY <span class="tag">DEMO</span></div>
+        <div class="stats">
+          <div><div class="lbl">IN · THIS MONTH</div><div class="big c-green">₹48,500</div></div>
+          <div><div class="lbl">OUT · THIS MONTH</div><div class="big c-amber">₹21,340</div></div>
+        </div>
+        <svg class="spark" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true">
+          <polyline fill="none" stroke="var(--cyan)" stroke-width="2" vector-effect="non-scaling-stroke" points="0,34 27,31 55,36 82,26 109,28 136,19 164,22 191,15 218,20 245,11 273,14 300,6"/>
+          <polyline fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="4 3" vector-effect="non-scaling-stroke" points="0,40 27,38 55,35 82,39 109,33 136,36 164,30 191,34 218,29 245,31 273,26 300,27"/>
+        </svg>
+        <div class="row"><span>Savings rate</span><span class="c-green">56% ▲</span></div>
+        <div class="row"><span>Payments</span><span class="c-dim">🔒 LOCKED</span></div>
+      </div>
+      <div class="panel">
+        <div class="ph">BODY · HEALTH <span class="tag">TEST DATA</span></div>
+        <div class="health">
+          <svg width="92" height="92" viewBox="0 0 96 96" aria-hidden="true">
+            <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(53,214,255,.15)" stroke-width="8"/>
+            <circle cx="48" cy="48" r="40" fill="none" stroke="var(--cyan)" stroke-width="8" stroke-dasharray="251" stroke-dashoffset="133" transform="rotate(-90 48 48)" stroke-linecap="round"/>
+            <text x="48" y="46" text-anchor="middle" fill="var(--text)" font-family="Orbitron, sans-serif" font-size="15" font-weight="700">4,210</text>
+            <text x="48" y="62" text-anchor="middle" fill="var(--dim)" font-family="Rajdhani, sans-serif" font-size="11">/ 8,000 STEPS</text>
+          </svg>
+          <div style="flex:1;min-width:0">
+            <div class="lbl">SLEEP · LAST NIGHT</div>
+            <div class="big" id="h-sleep">6h 40m</div>
+            <div class="bar"><i id="h-sleep-bar" style="width:83%"></i></div>
+            <div class="lbl" id="h-sleep-note" style="margin-top:6px">SLEEP DEBT: 1h 20m</div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:8px"><span>Exercise this week</span><span class="c-amber">90 / 150 min</span></div>
+        <div class="row"><span>Tonight: lights out</span><span id="h-lights">22:30</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="tl-wrap" aria-label="Today's routine">
+    <div class="tl-head"><span>TODAY · ROUTINE</span><span id="tl-meta">WAKE 07:00 · SLEEP 23:00</span></div>
+    <div class="tl" id="tl">
+      <div class="tl-line"></div><div class="tl-fill" id="tl-fill"></div><div class="tl-now" id="tl-now"></div>
+    </div>
+  </footer>
+</div>
+
+<aside class="drawer" id="drawer" hidden aria-label="Test controls">
+  <div class="drawer-head"><h2>TEST CONTROLS</h2><button class="x" id="btn-close" type="button" aria-label="Close test controls">×</button></div>
+  <p>This build has no live data yet. Change these values to hear different briefings.</p>
+  <div class="field"><label for="set-title">Address me as</label><input id="set-title" type="text" maxlength="24" placeholder="sir"></div>
+  <div class="field"><span class="lab">Sleep last night</span>
+    <div class="pair"><input id="set-sleep-h" type="number" min="0" max="14" step="1" aria-label="Hours slept"><span>h</span><input id="set-sleep-m" type="number" min="0" max="59" step="5" aria-label="Minutes slept"><span>m</span></div></div>
+  <div class="field"><label for="set-target">Sleep target (hours)</label><input id="set-target" type="number" min="5" max="10" step="0.5"></div>
+  <div class="field"><label for="set-wake">Wake-up time</label><input id="set-wake" type="time"></div>
+  <div class="field"><label for="set-voice">Voice</label><select id="set-voice"></select></div>
+  <div class="field"><label for="set-rate">Speed <span id="rate-val"></span></label><input id="set-rate" type="range" min="0.7" max="1.3" step="0.05"></div>
+  <div class="field"><label for="set-pitch">Pitch <span id="pitch-val"></span></label><input id="set-pitch" type="range" min="0.6" max="1.4" step="0.05"></div>
+  <div class="controls">
+    <button class="btn primary" id="btn-play" type="button">▶ PLAY BRIEFING</button>
+    <button class="btn" id="btn-test" type="button">TEST VOICE</button>
+    <button class="btn" id="btn-reset" type="button">RESET</button>
+  </div>
+  <div class="note">Temporary voice: this uses your browser's built-in English speech. The ElevenLabs voice replaces it in a later build. Chrome and Edge have the best voices.</div>
+</aside>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const css = getComputedStyle(document.documentElement);
+  const C = {
+    cyan: css.getPropertyValue('--cyan').trim() || '#35d6ff',
+    cyan2: css.getPropertyValue('--cyan-2').trim() || '#8ceaff',
+    line: css.getPropertyValue('--line').trim() || '#0f4c6e',
+    amber: css.getPropertyValue('--amber').trim() || '#ffb547',
+    text: css.getPropertyValue('--text').trim() || '#d9f3ff',
+  };
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- settings ---------------- */
+  const KEY = 'jarvis.hud.settings.v1';
+  const DEFAULTS = { title: 'sir', sleepH: 6, sleepM: 40, targetH: 8, wake: '07:00', voiceURI: '', rate: 1, pitch: 0.95 };
+  const store = {
+    get() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } },
+    set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } },
+  };
+  let S = Object.assign({}, DEFAULTS, store.get());
+  const save = () => store.set(S);
+
+  /* ---------------- time helpers ---------------- */
+  const pad = (n) => String(n).padStart(2, '0');
+  const parseHM = (s) => { const [h, m] = String(s || '07:00').split(':').map(Number); return ((h || 0) * 60 + (m || 0)); };
+  const norm = (m) => ((m % 1440) + 1440) % 1440;
+  const hm24 = (m) => { m = norm(m); return `${pad(Math.floor(m / 60))}:${pad(m % 60)}`; };
+  const speak12 = (m) => { m = norm(m); let h = Math.floor(m / 60); const mm = m % 60; const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return mm ? `${h}:${pad(mm)} ${ap}` : `${h} ${ap}`; };
+  const ordinal = (n) => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
+  const durWords = (mins) => {
+    mins = Math.round(mins); const h = Math.floor(mins / 60), m = mins % 60; const parts = [];
+    if (h) parts.push(`${h} ${h === 1 ? 'hour' : 'hours'}`);
+    if (m) parts.push(`${m} ${m === 1 ? 'minute' : 'minutes'}`);
+    return parts.join(' and ') || '0 minutes';
+  };
+  const durShort = (mins) => { mins = Math.max(0, Math.round(mins)); return `${Math.floor(mins / 60)}h ${pad(mins % 60)}m`; };
+  const targetWords = () => `${String(S.targetH).replace(/\.0$/, '')}-hour`;
+
+  function sleepModel() {
+    const slept = Math.max(0, (+S.sleepH || 0) * 60 + (+S.sleepM || 0));
+    const target = Math.max(60, (+S.targetH || 8) * 60);
+    const wake = parseHM(S.wake);
+    const sleepAt = norm(wake - target);
+    const lightsOut = norm(sleepAt - 30);
+    return { slept, target, diff: target - slept, wake, sleepAt, lightsOut };
+  }
+
+  /* ---------------- briefing ---------------- */
+  function buildBriefing(now) {
+    const h = now.getHours();
+    const greet = h < 4 ? 'Good evening' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    const title = String(S.title || '').trim();
+    const sm = sleepModel();
+    const day = now.toLocaleDateString('en-US', { weekday: 'long' });
+    const month = now.toLocaleDateString('en-US', { month: 'long' });
+    const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    const out = [`${greet}${title ? ', ' + title : ''}.`, `It's ${time} on ${day}, ${month} ${ordinal(now.getDate())}.`];
+    if (sm.diff > 15) {
+      out.push(`You slept ${durWords(sm.slept)} last night, about ${durWords(sm.diff)} short of your ${targetWords()} target.`);
+      out.push(`I'd suggest lights out by ${speak12(sm.lightsOut)} tonight.`);
+    } else if (sm.diff < -15) {
+      out.push(`You slept ${durWords(sm.slept)} last night, a little over your ${targetWords()} target.`);
+      out.push('You should be well rested today.');
+    } else {
+      out.push(`You slept ${durWords(sm.slept)} last night, right on target.`);
+      out.push(`Keep the same rhythm tonight. Lights out by ${speak12(sm.lightsOut)}.`);
+    }
+    out.push('All systems are online.');
+    return out;
+  }
+
+  /* ---------------- subtitles ---------------- */
+  const subEl = $('#subtitle');
+  let wordEls = []; // per sentence: [{el, start, end}]
+  function renderSubtitle(sentences) {
+    subEl.textContent = '';
+    wordEls = sentences.map((s, si) => {
+      const list = []; const re = /\S+/g; let m;
+      while ((m = re.exec(s))) {
+        const el = document.createElement('span'); el.className = 'w'; el.textContent = m[0];
+        list.push({ el, start: m.index, end: m.index + m[0].length });
+        subEl.appendChild(el); subEl.appendChild(document.createTextNode(' '));
+      }
+      return list;
+    });
+  }
+  let nowEl = null;
+  function lightWord(si, wi) {
+    const list = wordEls[si]; if (!list || !list[wi]) return;
+    for (let i = 0; i <= wi; i++) list[i].el.classList.add('on');
+    for (let s = 0; s < si; s++) wordEls[s].forEach((w) => w.el.classList.add('on'));
+    if (nowEl) nowEl.classList.remove('now');
+    nowEl = list[wi].el; nowEl.classList.add('now');
+  }
+  function lightByChar(si, ci) {
+    const list = wordEls[si] || []; let idx = 0;
+    for (let i = 0; i < list.length; i++) { if (list[i].start <= ci) idx = i; }
+    lightWord(si, idx);
+  }
+  function lightSentence(si) { const list = wordEls[si] || []; if (list.length) lightWord(si, list.length - 1); }
+  function clearNow() { if (nowEl) nowEl.classList.remove('now'); nowEl = null; }
+
+  /* ---------------- speech (temporary browser voice) ---------------- */
+  const synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+  let voices = [];
+  const keep = [];
+  const PREFERRED = [/daniel/i, /google uk english male/i, /ryan/i, /george/i, /arthur/i, /oliver/i, /thomas/i, /guy/i, /en-gb/i];
+  function loadVoices() {
+    if (!synth) return;
+    voices = synth.getVoices().filter((v) => /^en([-_]|$)/i.test(v.lang));
+    const sel = $('#set-voice'); sel.textContent = '';
+    const auto = document.createElement('option'); auto.value = ''; auto.textContent = 'Auto (best English voice)'; sel.appendChild(auto);
+    voices.forEach((v) => { const o = document.createElement('option'); o.value = v.voiceURI; o.textContent = `${v.name} · ${v.lang}`; sel.appendChild(o); });
+    sel.value = voices.some((v) => v.voiceURI === S.voiceURI) ? S.voiceURI : '';
+    updateVoiceChip();
+  }
+  function pickVoice() {
+    if (!voices.length) return null;
+    const chosen = voices.find((v) => v.voiceURI === S.voiceURI);
+    if (chosen) return chosen;
+    for (const re of PREFERRED) { const v = voices.find((x) => re.test(x.name) || re.test(x.lang)); if (v) return v; }
+    return voices[0];
+  }
+  function updateVoiceChip() {
+    const v = pickVoice();
+    $('#chip-voice').textContent = synth ? `TEMP · ${v ? v.name.replace(/^(Microsoft|Google)\s+/i, '').split(/[\s-]/)[0].toUpperCase() : 'DEFAULT'}` : 'TEXT ONLY';
+  }
+  if (synth) {
+    loadVoices();
+    if (typeof synth.addEventListener === 'function') synth.addEventListener('voiceschanged', loadVoices);
+    else synth.onvoiceschanged = loadVoices;
+  } else {
+    const sel = $('#set-voice'); const o = document.createElement('option'); o.textContent = 'Speech is not available in this browser'; sel.appendChild(o); sel.disabled = true;
+    updateVoiceChip();
+  }
+  function unlockSpeech() {
+    if (!synth) return;
+    try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; synth.speak(u); } catch (e) { /* ignore */ }
+  }
+
+  let runId = 0;
+  let spike = 0;
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  function speakOne(text, si, id) {
+    return new Promise((resolve) => {
+      const list = wordEls[si] || [];
+      const perWord = 60000 / (170 * (+S.rate || 1));
+      let done = false, gotBoundary = false, timer = null, w = 0;
+      const finish = () => { if (done) return; done = true; clearInterval(timer); lightSentence(si); resolve(); };
+      const startTimer = () => {
+        if (timer || done) return;
+        timer = setInterval(() => {
+          if (gotBoundary || id !== runId) { clearInterval(timer); return; }
+          if (w < list.length) { lightWord(si, w++); spike = 1; } else clearInterval(timer);
+        }, perWord);
+      };
+      if (!synth) { startTimer(); setTimeout(finish, list.length * perWord + 350); return; }
+      const u = new SpeechSynthesisUtterance(text);
+      const v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-GB';
+      u.rate = +S.rate || 1; u.pitch = +S.pitch || 1;
+      u.onstart = () => { setTimeout(() => { if (!gotBoundary) startTimer(); }, 400); };
+      u.onboundary = (e) => { if (e.name && e.name !== 'word') return; gotBoundary = true; clearInterval(timer); lightByChar(si, e.charIndex); spike = 1; };
+      u.onend = finish; u.onerror = finish;
+      keep.push(u); if (keep.length > 20) keep.shift();
+      synth.speak(u);
+      setTimeout(finish, Math.max(5000, (text.length * 110) / (+S.rate || 1)));
+    });
+  }
+
+  async function speakLines(lines, label) {
+    stopSpeaking(false);
+    const id = ++runId;
+    renderSubtitle(lines);
+    setMode('speaking', label);
+    if (synth) await wait(80);
+    for (let i = 0; i < lines.length; i++) {
+      if (id !== runId) return;
+      await speakOne(lines[i], i, id);
+    }
+    if (id !== runId) return;
+    clearNow();
+    setMode('idle');
+  }
+
+  function stopSpeaking(resetMode = true) {
+    runId++;
+    if (synth) { try { synth.cancel(); } catch (e) { /* ignore */ } }
+    clearNow();
+    if (resetMode) setMode('idle');
+  }
+
+  /* ---------------- modes ---------------- */
+  let woken = false;
+  const wakeBtn = $('#btn-wake');
+  function setMode(mode, label) {
+    document.body.dataset.mode = mode;
+    const who = $('#who'), status = $('#core-status');
+    if (mode === 'speaking') { who.textContent = label || 'JARVIS · SPEAKING'; status.textContent = 'SPEAKING'; wakeBtn.textContent = '■ STOP'; }
+    else if (mode === 'booting') { who.textContent = 'JARVIS · BOOTING'; status.textContent = 'INITIALIZING'; wakeBtn.textContent = '■ STOP'; }
+    else { who.textContent = woken ? 'JARVIS · READY' : 'JARVIS · STANDING BY'; status.textContent = woken ? 'SYSTEMS ONLINE' : 'STANDBY'; wakeBtn.textContent = woken ? '↻ REPLAY BRIEFING' : '▶ WAKE JARVIS'; }
+  }
+
+  async function boot() {
+    const id = ++runId;
+    setMode('booting');
+    document.body.classList.add('booting');
+    const log = $('#bootlog'); log.hidden = false; log.textContent = '';
+    const lines = [
+      ['INITIALIZING J.A.R.V.I.S CORE', ''],
+      ['CLOCK SYNC ............ ', 'OK'],
+      ['DISPLAY ............... ', 'HUD 0.1'],
+      ['VOICE ENGINE .......... ', 'TEMP'],
+      ['DATA FEEDS ............ ', 'DEMO SET'],
+      ['ALL SYSTEMS ........... ', 'ONLINE'],
+    ];
+    for (const [a, b] of lines) {
+      if (id !== runId) break;
+      const div = document.createElement('div'); div.textContent = a;
+      if (b) { const s = document.createElement('span'); s.className = 'ok'; s.textContent = b; div.appendChild(s); }
+      log.appendChild(div);
+      await wait(reduceMotion ? 120 : 330);
+    }
+    await wait(reduceMotion ? 200 : 650);
+    log.hidden = true;
+    document.body.classList.remove('booting');
+    if (id !== runId) return;
+    woken = true;
+    speakLines(buildBriefing(new Date()), 'JARVIS · MORNING BRIEFING');
+  }
+
+  function onWake() {
+    const mode = document.body.dataset.mode;
+    if (mode === 'speaking' || mode === 'booting') { $('#bootlog').hidden = true; document.body.classList.remove('booting'); stopSpeaking(); return; }
+    unlockSpeech();
+    if (!woken) boot();
+    else speakLines(buildBriefing(new Date()), 'JARVIS · MORNING BRIEFING');
+  }
+  wakeBtn.addEventListener('click', onWake);
+
+  /* ---------------- drawer ---------------- */
+  const drawer = $('#drawer');
+  const f = {
+    title: $('#set-title'), sleepH: $('#set-sleep-h'), sleepM: $('#set-sleep-m'), targetH: $('#set-target'),
+    wake: $('#set-wake'), voice: $('#set-voice'), rate: $('#set-rate'), pitch: $('#set-pitch'),
+  };
+  function fillForm() {
+    f.title.value = S.title; f.sleepH.value = S.sleepH; f.sleepM.value = S.sleepM; f.targetH.value = S.targetH;
+    f.wake.value = S.wake; f.rate.value = S.rate; f.pitch.value = S.pitch;
+    if (!f.voice.disabled) f.voice.value = voices.some((v) => v.voiceURI === S.voiceURI) ? S.voiceURI : '';
+    $('#rate-val').textContent = `${(+S.rate).toFixed(2)}×`; $('#pitch-val').textContent = (+S.pitch).toFixed(2);
+  }
+  const clamp = (v, lo, hi, d) => { v = parseFloat(v); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
+  function readForm() {
+    S.title = f.title.value.slice(0, 24);
+    S.sleepH = clamp(f.sleepH.value, 0, 14, DEFAULTS.sleepH);
+    S.sleepM = clamp(f.sleepM.value, 0, 59, DEFAULTS.sleepM);
+    S.targetH = clamp(f.targetH.value, 5, 10, DEFAULTS.targetH);
+    S.wake = f.wake.value || DEFAULTS.wake;
+    if (!f.voice.disabled) S.voiceURI = f.voice.value;
+    S.rate = clamp(f.rate.value, 0.7, 1.3, 1); S.pitch = clamp(f.pitch.value, 0.6, 1.4, 1);
+    $('#rate-val').textContent = `${S.rate.toFixed(2)}×`; $('#pitch-val').textContent = S.pitch.toFixed(2);
+    save(); updateVoiceChip(); renderHealth(); renderTimeline();
+  }
+  Object.values(f).forEach((el) => { el.addEventListener('input', readForm); el.addEventListener('change', readForm); });
+  let lastFocus = null;
+  function openDrawer() { lastFocus = document.activeElement; fillForm(); drawer.hidden = false; f.title.focus(); }
+  function closeDrawer() { drawer.hidden = true; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+  $('#btn-settings').addEventListener('click', () => (drawer.hidden ? openDrawer() : closeDrawer()));
+  $('#btn-close').addEventListener('click', closeDrawer);
+  $('#btn-play').addEventListener('click', () => { unlockSpeech(); woken = true; speakLines(buildBriefing(new Date()), 'JARVIS · MORNING BRIEFING'); });
+  $('#btn-test').addEventListener('click', () => {
+    unlockSpeech();
+    const t = String(S.title || '').trim();
+    speakLines([`Hello${t ? ' ' + t : ''}. This is a voice test. Do you like how I sound?`], 'JARVIS · VOICE TEST');
+  });
+  $('#btn-reset').addEventListener('click', () => { const keepVoice = S.voiceURI; S = Object.assign({}, DEFAULTS, { voiceURI: keepVoice }); save(); fillForm(); readForm(); });
+
+  /* ---------------- fullscreen ---------------- */
+  function toggleFull() {
+    try {
+      if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); }
+      else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen().catch(() => {}); }
+    } catch (e) { /* not allowed here */ }
+  }
+  $('#btn-full').addEventListener('click', toggleFull);
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName) || '';
+    if (/INPUT|SELECT|TEXTAREA/.test(tag)) { if (e.key === 'Escape') closeDrawer(); return; }
+    if (e.key === ' ' && e.target === document.body) { e.preventDefault(); onWake(); }
+    else if (e.key === 'Escape') { if (!drawer.hidden) closeDrawer(); else { $('#bootlog').hidden = true; document.body.classList.remove('booting'); stopSpeaking(); } }
+    else if (e.key === 's' || e.key === 'S') { drawer.hidden ? openDrawer() : closeDrawer(); }
+    else if (e.key === 'f' || e.key === 'F') { toggleFull(); }
+  });
+
+  /* ---------------- clock + status chips ---------------- */
+  function tick() {
+    const d = new Date();
+    $('#clock').firstChild.nodeValue = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    $('#date').textContent = d.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase().replace(/,/g, ' ·');
+    if (d.getSeconds() === 0) renderTimeline();
+  }
+  tick(); setInterval(tick, 1000);
+
+  $('#chip-cores').textContent = navigator.hardwareConcurrency ? String(navigator.hardwareConcurrency) : '—';
+  function net() {
+    const on = navigator.onLine !== false; const c = navigator.connection;
+    const el = $('#chip-net'); el.textContent = on ? (c && c.downlink ? `ONLINE · ${c.downlink} Mbps` : 'ONLINE') : 'OFFLINE';
+    el.className = on ? 'ok' : 'warn';
+  }
+  net(); window.addEventListener('online', net); window.addEventListener('offline', net);
+  if (navigator.getBattery) {
+    navigator.getBattery().then((b) => {
+      const upd = () => { $('#chip-battery').textContent = `${Math.round(b.level * 100)}%${b.charging ? ' ⚡' : ''}`; };
+      upd(); b.addEventListener('levelchange', upd); b.addEventListener('chargingchange', upd);
+    }).catch(() => {});
+  }
+
+  /* ---------------- health panel ---------------- */
+  function renderHealth() {
+    const sm = sleepModel();
+    $('#h-sleep').textContent = durShort(sm.slept);
+    const bar = $('#h-sleep-bar'); bar.style.width = `${Math.min(100, (sm.slept / sm.target) * 100)}%`;
+    bar.classList.toggle('short', sm.diff > 15);
+    const note = $('#h-sleep-note');
+    note.textContent = sm.diff > 15 ? `SLEEP DEBT: ${durShort(sm.diff)}` : sm.diff < -15 ? `OVER TARGET: ${durShort(-sm.diff)}` : 'ON TARGET';
+    note.className = `lbl ${sm.diff > 15 ? 'c-amber' : 'c-green'}`;
+    $('#h-lights').textContent = hm24(sm.lightsOut);
+  }
+
+  /* ---------------- routine timeline ---------------- */
+  function renderTimeline() {
+    const sm = sleepModel();
+    const start = sm.wake; let end = sm.sleepAt; if (end <= start) end += 1440;
+    const rel = (m) => { let x = m; if (x < start) x += 1440; return x; };
+    const items = [
+      [sm.wake, 'Wake up'], [sm.wake + 30, 'Shower'], [sm.wake + 60, 'Breakfast'], [sm.wake + 90, 'Deep work'],
+      [parseHM('13:30'), 'Lunch'], [parseHM('16:30'), 'Break + water'], [parseHM('18:30'), 'Walk'], [parseHM('20:30'), 'Dinner'],
+      [sm.lightsOut - 30, 'Screens off'], [sm.lightsOut, 'Lights out'], [sm.sleepAt, 'Sleep'],
+    ].map(([m, label]) => ({ t: rel(norm(m)), label, clock: hm24(m) }))
+     .filter((x) => x.t >= start && x.t <= end)
+     .sort((a, b) => a.t - b.t);
+    const now = new Date(); const nowM = rel(now.getHours() * 60 + now.getMinutes());
+    const pct = (t) => ((t - start) / (end - start)) * 100;
+    const tl = $('#tl'); tl.querySelectorAll('.ev').forEach((n) => n.remove());
+    let nextIdx = items.findIndex((x) => x.t > nowM);
+    items.forEach((x, i) => {
+      const ev = document.createElement('div');
+      ev.className = `ev ${i % 2 ? 'up' : 'down'}${x.t <= nowM ? ' done' : ''}${i === nextIdx ? ' next' : ''}`;
+      ev.style.left = `${pct(x.t)}%`;
+      const m = document.createElement('div'); m.className = 'm';
+      const t = document.createElement('div'); t.className = 't';
+      const b = document.createElement('b'); b.textContent = x.clock; t.appendChild(b); t.appendChild(document.createTextNode(x.label));
+      ev.appendChild(m); ev.appendChild(t); tl.appendChild(ev);
+    });
+    const p = Math.max(0, Math.min(100, pct(nowM)));
+    $('#tl-fill').style.width = `${p}%`;
+    const nowEl2 = $('#tl-now'); nowEl2.style.left = `${p}%`; nowEl2.hidden = !(nowM >= start && nowM <= end);
+    $('#tl-meta').textContent = `WAKE ${hm24(sm.wake)} · SLEEP ${hm24(sm.sleepAt)}${nextIdx >= 0 ? ' · NEXT: ' + items[nextIdx].label.toUpperCase() + ' ' + items[nextIdx].clock : ''}`;
+  }
+  renderHealth(); renderTimeline();
+
+  /* ---------------- waveform ---------------- */
+  const wave = $('#wave'); const bars = [];
+  for (let i = 0; i < 48; i++) { const s = document.createElement('span'); wave.appendChild(s); bars.push(s); }
+
+  /* ---------------- core canvas ---------------- */
+  const cv = $('#core'); const ctx = cv.getContext('2d');
+  let W = 0, H = 0, DPR = 1;
+  function resize() {
+    const r = cv.parentElement.getBoundingClientRect();
+    DPR = Math.min(2, window.devicePixelRatio || 1); W = Math.max(1, r.width); H = Math.max(1, r.height);
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(cv.parentElement); else window.addEventListener('resize', resize);
+  resize();
+
+  const rgba = (hex, a) => { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`; };
+  function ring(cx, cy, r, w, color, dash) { ctx.beginPath(); ctx.setLineDash(dash || []); ctx.lineWidth = w; ctx.strokeStyle = color; ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
+  function arc(cx, cy, r, a0, a1, w, color, glow) { ctx.save(); if (glow) { ctx.shadowColor = color; ctx.shadowBlur = glow; } ctx.beginPath(); ctx.lineWidth = w; ctx.strokeStyle = color; ctx.arc(cx, cy, r, a0, a1); ctx.stroke(); ctx.restore(); }
+
+  let rot = 0, spin = 0.1, amp = 0, power = 0.5, last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const mode = document.body.dataset.mode || 'idle';
+    const targetSpin = reduceMotion ? 0.02 : mode === 'booting' ? 2.4 : mode === 'speaking' ? 0.5 : 0.1;
+    spin += (targetSpin - spin) * Math.min(1, dt * 2);
+    rot += spin * dt;
+    let target = 0;
+    if (mode === 'speaking') target = 0.22 + 0.3 * (0.5 + 0.5 * Math.sin(now / 95)) * (0.5 + 0.5 * Math.sin(now / 241)) + spike * 0.55;
+    else if (mode === 'booting') target = 0.18 + 0.12 * Math.sin(now / 70);
+    spike *= Math.pow(0.015, dt);
+    amp += (target - amp) * Math.min(1, dt * 12);
+    power += ((woken || mode !== 'idle' ? 1 : 0.55) - power) * Math.min(1, dt * 1.6);
+    draw(now);
+    for (let i = 0; i < bars.length; i++) {
+      const n = Math.abs(Math.sin(i * 0.55 + now / 120)) * Math.abs(Math.cos(i * 0.21 - now / 310));
+      bars[i].style.height = `${(3 + amp * 26 * (0.3 + 0.7 * n)).toFixed(1)}px`;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function draw(now) {
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const cx = W / 2, cy = H / 2 - 8;
+    const R = Math.max(40, Math.min(W, H - 30) / 2 * 0.96);
+    const P = power;
+
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.15);
+    g.addColorStop(0, rgba(C.cyan, 0.2 * P)); g.addColorStop(0.45, rgba(C.cyan, 0.06 * P)); g.addColorStop(1, rgba(C.cyan, 0));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+    ring(cx, cy, R, 1, rgba(C.line, 1));
+    // tick ring
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot * 0.12);
+    ctx.strokeStyle = rgba(C.cyan, 0.5 * P); ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i < 120; i++) {
+      const a = (i / 120) * Math.PI * 2; const r1 = R * 0.955, r2 = i % 5 === 0 ? R : R * 0.982;
+      ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2);
+    }
+    ctx.stroke(); ctx.restore();
+    ring(cx, cy, R * 0.885, 1, rgba(C.cyan, 0.35 * P), [2, 7]);
+
+    // rotating arcs
+    const a = rot * 0.6, glow = 6 + amp * 18;
+    arc(cx, cy, R * 0.8, a + 3.5, a + 4.9, R * 0.022, rgba(C.cyan, 0.9 * P), glow);
+    arc(cx, cy, R * 0.8, a + 0.6, a + 2.0, R * 0.022, rgba(C.cyan, 0.5 * P), 0);
+    arc(cx, cy, R * 0.8, -rot * 0.45 + 5.8, -rot * 0.45 + 6.5, R * 0.022, rgba(C.amber, 0.9 * P), glow * 0.6);
+
+    // segmented ring
+    ring(cx, cy, R * 0.7, R * 0.055, rgba(C.line, 0.9));
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-rot * 0.3);
+    ctx.beginPath(); ctx.setLineDash([R * 0.13, R * 0.055]); ctx.lineWidth = R * 0.055; ctx.strokeStyle = rgba(C.cyan, (0.22 + amp * 0.35) * P);
+    ctx.arc(0, 0, R * 0.7, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+
+    ring(cx, cy, R * 0.57, 1.5, rgba(C.cyan, 0.7 * P));
+
+    // voice bars
+    if (amp > 0.01) {
+      ctx.save(); ctx.translate(cx, cy); ctx.strokeStyle = rgba(C.cyan2, 0.85); ctx.lineWidth = Math.max(1.5, R * 0.008);
+      ctx.beginPath();
+      for (let i = 0; i < 90; i++) {
+        const an = (i / 90) * Math.PI * 2;
+        const n = 0.25 + 0.75 * Math.abs(Math.sin(i * 0.9 + now / 110) * Math.cos(i * 0.37 - now / 260));
+        const len = R * 0.085 * amp * n * 2.2;
+        const r1 = R * 0.585;
+        ctx.moveTo(Math.cos(an) * r1, Math.sin(an) * r1); ctx.lineTo(Math.cos(an) * (r1 + len), Math.sin(an) * (r1 + len));
+      }
+      ctx.stroke(); ctx.restore();
+    }
+
+    ring(cx, cy, R * 0.49, 1, rgba(C.cyan, 0.4 * P), [1, 4]);
+
+    // core glow
+    const cr = R * 0.45 * (1 + amp * 0.07);
+    const cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, cr);
+    cg.addColorStop(0, rgba('#eafcff', 0.95 * P)); cg.addColorStop(0.28, rgba(C.cyan2, 0.9 * P));
+    cg.addColorStop(0.62, rgba('#1590c0', 0.5 * P)); cg.addColorStop(1, rgba('#03263c', 0));
+    ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(cx, cy, cr, 0, Math.PI * 2); ctx.fill();
+
+    // triangle
+    const tri = (r, alpha, w) => {
+      ctx.beginPath();
+      for (let i = 0; i < 3; i++) { const an = -Math.PI / 2 + (i * 2 * Math.PI) / 3; const x = cx + Math.cos(an) * r, y = cy + Math.sin(an) * r; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.closePath(); ctx.lineWidth = w; ctx.strokeStyle = rgba('#eafcff', alpha); ctx.stroke();
+    };
+    ctx.save(); ctx.shadowColor = C.cyan2; ctx.shadowBlur = 10 + amp * 20;
+    tri(R * 0.27, 0.9 * P, 2); tri(R * 0.18, 0.5 * P, 1.5);
+    ctx.beginPath(); ctx.fillStyle = rgba('#eafcff', (0.75 + amp * 0.25) * P); ctx.arc(cx, cy, R * 0.07 * (1 + amp * 0.25), 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    // labels
+    ctx.save();
+    ctx.fillStyle = rgba(C.cyan2, 0.8 * P); ctx.font = `600 ${Math.max(10, Math.round(R * 0.042))}px Rajdhani, sans-serif`;
+    if ('letterSpacing' in ctx) ctx.letterSpacing = '2px';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const lr = R * 0.925;
+    ctx.fillText('VOICE', cx, cy - lr); ctx.fillText('AUTOMATION', cx, cy + lr);
+    ctx.fillText('MEMORY', cx + lr - R * 0.06, cy); ctx.fillText('VISION', cx - lr + R * 0.06, cy);
+    ctx.restore();
+  }
+
+  setMode('idle');
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
