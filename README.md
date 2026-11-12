@@ -1,6 +1,6 @@
-# Velora Media — SFX Pack landing page
+# Aminur Rex SFX Pack — landing page
 
-A fast, static landing page for selling the Velora sound-effects pack to video editors.
+A fast, static landing page for selling the Aminur Rex sound-effects pack to video editors.
 Apple-style UI in the Files-app sky blue, with light and dark mode.
 
 No framework and no build step. It is plain HTML, CSS and JS, so it runs on any static host.
@@ -41,8 +41,10 @@ Until a preview has a `src`, the page plays a demo sound generated in the browse
 The logos are files in `assets/logos/`. To change one, replace its file with a square image (SVG or PNG, at least 128 px)
 and keep the name, or add a new `<li class="logo-chip">` in `index.html`. The two rows loop automatically.
 
-Sources: Premiere Pro and Final Cut Pro from Wikimedia Commons, After Effects from the Iconify "logos" set,
-DaVinci Resolve, Filmora and Kdenlive from Simple Icons (CC0), and CapCut from Wikimedia Commons (public domain).
+Each logo gets a glossy finish and an occasional moving glint automatically, shaped to the logo itself.
+
+Sources: Premiere Pro from Wikimedia Commons and After Effects from the Iconify "logos" set; Final Cut Pro,
+DaVinci Resolve, CapCut, Alight Motion and Filmora are cut-outs of icon images supplied by the site owner.
 All logos are trademarks of their owners and are shown only to say which apps the pack works with.
 
 ### Before launch, double-check

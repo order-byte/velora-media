@@ -1,13 +1,13 @@
 /*
  * ─────────────────────────────────────────────────────────────
- *  Velora — store settings
+ *  Aminur Rex SFX Pack — store settings
  *  Edit this file to change prices, checkout links and previews.
  *  No build step: save the file and refresh the page.
  * ─────────────────────────────────────────────────────────────
  */
-window.VELORA_CONFIG = {
-  brand: "Velora Media",
-  productName: "Velora SFX Pack",
+window.STORE_CONFIG = {
+  brand: "Aminur Rex",
+  productName: "Aminur Rex SFX Pack",
 
   /* Prices in Indian Rupees. `inrOriginal` is shown struck through. */
   price: {

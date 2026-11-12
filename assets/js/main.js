@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Velora SFX — page behaviour
+   Aminur Rex SFX Pack — page behaviour
    - Currency: ₹ INR in India, $ USD elsewhere (time-zone based, switchable)
    - Sound previews (real files from config, or demo sounds synthesised in-browser)
    - Hero timeline "Play the edit" demo
@@ -8,7 +8,7 @@
 (() => {
   "use strict";
 
-  const C = window.VELORA_CONFIG || {};
+  const C = window.STORE_CONFIG || {};
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
@@ -22,8 +22,8 @@
      Pricing & currency
      ====================================================================== */
   const Pricing = (() => {
-    const KEY_CUR = "velora.currency";
-    const KEY_RATE = "velora.inrUsd";
+    const KEY_CUR = "store.currency";
+    const KEY_RATE = "store.inrUsd";
     const RATE_TTL = 12 * 60 * 60 * 1000;
     const price = Object.assign({ inr: 99, inrOriginal: 199 }, C.price);
 
@@ -784,6 +784,12 @@
      Logo marquee: fill each row wider than the screen, then loop it
      ====================================================================== */
   function initMarquee() {
+    // Mask each logo's gloss to the logo's own shape (absolute URL, so it works from the stylesheet).
+    $$(".logo-chip__icon").forEach((icon) => {
+      const img = $("img", icon);
+      if (img && img.src) icon.style.setProperty("--logo", `url("${img.src}")`);
+    });
+
     $$("[data-marquee] .marquee__row").forEach((row) => {
       const set = $(".marquee__set", row);
       if (!set || !set.children.length) return;
