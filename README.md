@@ -38,8 +38,15 @@ Until a preview has a `src`, the page plays a demo sound generated in the browse
 
 ### After purchase: the download page
 
-Buyers land on `download.html` after paying. It shows a **Download full pack** button and one download per
-category, plus how-to-use steps. Everything on it comes from `downloads/manifest.json`.
+Buyers land on `download.html` after paying.
+
+**Current setup: Google Drive.** `delivery.fullPackUrl` in `assets/js/config.js` points to the pack's Drive folder.
+The page then shows one **Open your pack in Google Drive** button (opens in a new tab) and how to save it
+from Drive. The folder must stay shared as "Anyone with the link". To switch back to the ZIPs in
+`downloads/`, set `fullPackUrl` to `""`.
+
+With `fullPackUrl` empty, the page shows a **Download full pack** button and one download per category,
+all read from `downloads/manifest.json`.
 
 **Updating the pack**
 

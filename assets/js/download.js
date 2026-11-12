@@ -71,6 +71,24 @@
     setFullLink(delivery.fullPackUrl);
   }
 
+  /* The pack lives in Google Drive (or another site): one button that opens it, plus how to save it. */
+  function renderExternal(url) {
+    setFullLink(url);
+    const drive = /drive\.google\.com/i.test(url);
+    const where = drive ? "Google Drive" : "a new tab";
+    $("[data-full-label]").textContent = drive ? "Open your pack in Google Drive" : "Open your sound pack";
+    $("[data-pack-meta]").textContent = `Every sound, sorted into category folders. Opens in ${where}.`;
+    $("[data-full-note]").textContent = drive
+      ? "On a computer: open the folder, then click Download at the top to save it all as a ZIP. On a phone: open it in a browser and use ⋮ → Download."
+      : "Your pack opens in a new tab. Save it from there.";
+    const section = $("[data-category-section]");
+    if (section) section.hidden = true;
+    const step = $("[data-step-get]");
+    if (step && drive) {
+      step.innerHTML = "<strong>Download the pack.</strong> In Google Drive, choose Download. Drive saves the folders as a ZIP; unzip it on your computer or phone.";
+    }
+  }
+
   async function init() {
     if (new URLSearchParams(location.search).has("test")) $("[data-test-banner]").hidden = false;
     $$("[data-year]").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
@@ -79,6 +97,11 @@
     const help = $("[data-contact-help]");
     if (help && contact.instagram) {
       help.innerHTML = `Message <a href="${escapeHTML(contact.instagram)}" target="_blank" rel="noopener">Aminur Rex on Instagram</a>.`;
+    }
+
+    if (delivery.fullPackUrl && isExternal(delivery.fullPackUrl)) {
+      renderExternal(delivery.fullPackUrl);
+      return;
     }
 
     try {

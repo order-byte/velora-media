@@ -52,7 +52,8 @@ window.STORE_CONFIG = {
    */
   delivery: {
     manifest: "downloads/manifest.json",
-    fullPackUrl: "",
+    // The pack in Google Drive (folder shared as "Anyone with the link").
+    fullPackUrl: "https://drive.google.com/drive/folders/1mwBhxkkKt74TQOyBpvkO95EfA0b6Fk-p?usp=sharing",
   },
 
   /*
