@@ -1,123 +1,55 @@
 # Aminur Rex SFX Pack — landing page
 
-A fast, static landing page for selling the Aminur Rex sound-effects pack to video editors.
+A fast, static store page for the Aminur Rex sound-effects pack, built for video editors.
 Apple-style UI in the Files-app sky blue, with light and dark mode.
 
-No framework and no build step. It is plain HTML, CSS and JS, so it runs on any static host.
+**Live:** https://order-byte.github.io/velora-media/
+
+There is no framework and no build step. The site is plain HTML, CSS and JS, served by GitHub Pages from `main`.
 
 ## What's on the page
 
-- **Hero**: headline, launch price (₹199 → **₹99**), Buy button, and an editor-timeline mock with a **Play the edit** demo.
-- **Sound previews**: tap-to-play cards with real waveforms.
-- **Features** (bento grid), **How it works** (3 steps), **Pricing** card, **FAQ** and a final call to action.
-- **Currency**: visitors in India see **₹ INR**. Everyone else sees **$ USD**, converted at the live exchange rate.
-  An iOS-style switch lets anyone change currency, and the choice is remembered.
-- **Mobile**: a sticky bottom **Buy** bar, plus a bottom-sheet checkout summary.
+- **Hero**: headline, launch price (₹199 → **₹99**) and Buy button.
+- **Demo edit**: an editor timeline. **Play the edit** plays UI-style sounds that are generated in the browser for this page.
+- **Works with**: real editor app logos in two slowly scrolling rows.
+- **What's inside**: the pack's 14 category folders in a Files-style window, plus the key numbers.
+- **Features**, **How it works**, and a **Pricing** card with trust points: secure checkout, payment options, instant delivery.
+- **FAQ** and a final call to action.
+- **Currency**: visitors in India see **₹ INR**. Everyone else sees an approximate **$ USD** price, and can switch.
+- **Mobile**: a sticky Buy bar at the bottom.
+
+## Payments and delivery
+
+- Every **Buy** button opens the SuperProfile product page: https://superprofile.bio/vp/aminur-rex-sfx-pack
+- SuperProfile takes payment by UPI, cards or netbanking. Buyers abroad pay in their own currency.
+- After payment, SuperProfile delivers the pack and emails the download link. The pack's link is never in this site's code.
+- `download.html` is a thank-you page that explains where buyers find their link.
 
 ## Editing — `assets/js/config.js`
-
-Almost everything you'll want to change is in this one file:
 
 | Setting | What it does |
 | --- | --- |
 | `price.inr` / `price.inrOriginal` | Sale price and the struck-through price, in rupees. |
 | `fixedUSD` | `null` converts INR → USD at the live rate. Set `{ price: 2.99, original: 5.99 }` to use your own dollar prices. |
-| `checkoutUrl.INR` / `checkoutUrl.USD` | Payment links (Razorpay, Cashfree, Instamojo, Gumroad, Lemon Squeezy…). While both are empty, **Buy** opens a "checkout opening soon" sheet. |
-| `contact` | Optional email / WhatsApp / Instagram links for the footer and checkout sheet. |
-| `previews` | The sound cards. Set `src` to a real preview file, e.g. `assets/audio/whoosh.mp3`. |
+| `checkoutUrl.INR` / `checkoutUrl.USD` | Payment links. With only `INR` set, everyone uses that link. If both are empty, **Buy** opens a "checkout opening soon" sheet. |
+| `delivery.method` | `"platform"` (live): the payment platform delivers the pack. `"link"`: a button to `delivery.fullPackUrl`, which is publicly visible. `"zip"`: ZIPs built by `tools/build_pack.py`. |
+| `testMode` | `true` adds a "Test purchase" button to the checkout sheet. Keep `false` on the live site. |
+| `contact` | Optional email / WhatsApp / Instagram links for the footer and help text. |
 
-Text such as headlines, features, FAQ and license wording is in `index.html`.
+All page text (headlines, features, FAQ, license wording) is in `index.html`.
 
-### Adding real sound previews
-
-1. Put short preview files (mp3/m4a/wav) in `assets/audio/`.
-2. Set each preview's `src` in `config.js`.
-
-Until a preview has a `src`, the page plays a demo sound generated in the browser and shows a small
-"Demo previews" note. That note disappears once every preview has a real file.
-
-### After purchase: the download page
-
-Buyers land on `download.html` after paying.
-
-How the page behaves depends on `delivery.method` in `assets/js/config.js`:
-
-| method | What buyers get |
-| --- | --- |
-| `"platform"` (live setting) | The payment platform shows and emails the download link. `download.html` thanks the buyer and explains where to find it. No private link is in the public code. |
-| `"link"` | A button to `delivery.fullPackUrl`, e.g. a Google Drive link. Anyone can read that link in the site's code. |
-| `"zip"` | A full-pack ZIP and one ZIP per category, from `downloads/manifest.json`. |
-
-**Updating the pack**
-
-1. Put sounds in category folders inside `pack/Aminur Rex SFX Pack/`
-   (e.g. `01 Whooshes & Transitions/Aminur Rex - Whoosh 01.wav`). The number prefix only sets the order.
-2. Run:
-
-   ```bash
-   python3 tools/build_pack.py
-   ```
-
-   This rebuilds every ZIP and the manifest in `downloads/`.
-
-The pack currently holds 8 original demo sounds, used to test the flow.
-
-**Connecting payments**
-
-- In your payment provider, set the success / redirect URL to `https://<your-site>/download.html`.
-- Put the checkout links in `checkoutUrl` and set `testMode: false` in `assets/js/config.js`.
-- While `testMode` is on, the checkout sheet has a **Test purchase** button that goes straight to the download page.
-
-**Keep the real pack private.** A static site can't check who paid, so anyone with the download link can
-use it, and if this GitHub repo is public, anyone can download the files in `downloads/` directly.
-For the real pack, either host the ZIP privately (e.g. a Google Drive link in `delivery.fullPackUrl`)
-or let the payment platform deliver the file (Instamojo, Gumroad, Lemon Squeezy and similar email it
-after payment).
-
-### Editor logos ("works with" strip)
+### Editor logos
 
 The logos are files in `assets/logos/`. To change one, replace its file with a square image (SVG or PNG, at least 128 px)
-and keep the name, or add a new `<li class="logo-chip">` in `index.html`. The two rows loop automatically.
+and keep the same name. Each logo gets a glossy finish and an occasional glint automatically.
 
-Each logo gets a glossy finish and an occasional moving glint automatically, shaped to the logo itself.
-
-Sources: Premiere Pro from Wikimedia Commons and After Effects from the Iconify "logos" set; Final Cut Pro,
+Sources: Premiere Pro from Wikimedia Commons and After Effects from the Iconify "logos" set. Final Cut Pro,
 DaVinci Resolve, CapCut, Alight Motion and Filmora are cut-outs of icon images supplied by the site owner.
 All logos are trademarks of their owners and are shown only to say which apps the pack works with.
 
-### Before launch, double-check
+## Updating the live site
 
-These are written as sensible defaults. Change them if they don't match your actual terms:
-
-- "Royalty-free" / client-use license wording (features, pricing list, FAQ)
-- "Free future updates"
-- "Instant download link" (depends on your payment provider)
-- If you charge a fixed dollar amount at checkout, set `fixedUSD` so the page shows the same price.
-
-## Going live
-
-**1. Hosting (GitHub Pages)**
-
-1. Merge this branch into `main`.
-2. In the repo, open **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**,
-   then select `main` and `/ (root)`, and click **Save**.
-3. After a minute or two the site is live at `https://order-byte.github.io/velora-media/`.
-
-`.nojekyll` tells GitHub Pages to serve the files exactly as they are.
-
-**2. Payments (creator platform, e.g. Instamojo, Cosmofeed or Superprofile)**
-
-1. Create an account and finish KYC (PAN + bank account).
-2. Create a digital product, *Aminur Rex SFX Pack*, priced at ₹99 (₹199 as the original price, if the platform supports it).
-3. As the product's content, add the pack: a Google Drive link that only buyers receive, or an uploaded ZIP.
-4. If the platform can redirect after payment, use `https://order-byte.github.io/velora-media/download.html`.
-5. Put the product's payment link in `checkoutUrl.INR` in `assets/js/config.js`. Visitors outside India
-   use the same link unless you add a separate `checkoutUrl.USD`.
-
-**3. Before announcing**
-
-- `testMode` is `false`.
-- Do a real ₹99 purchase yourself and confirm the download link arrives.
+Changes merged into `main` go live on GitHub Pages within a minute or two.
 
 ## Run locally
 
@@ -127,22 +59,17 @@ python3 -m http.server 8000
 
 Then open http://localhost:8000.
 
-## Deploy
-
-Upload the folder to any static host: GitHub Pages (Settings → Pages → deploy from branch), Netlify, Vercel or Cloudflare Pages.
-
 ## Files
 
 ```
-index.html             Page markup and copy
+index.html             Store page markup and copy
+download.html          Thank-you page after payment
 assets/css/styles.css  Design system and layout
-assets/js/config.js    Prices, checkout links, previews
-assets/js/main.js      Currency, audio previews, buy flow, animations
-download.html          Page buyers see after paying
-assets/js/download.js  Lists the pack on the download page
-pack/                  The sound files, in category folders
-downloads/             Built ZIPs + manifest.json (from tools/build_pack.py)
-tools/build_pack.py    Rebuilds downloads/ from pack/
-assets/logos/          Editor app logos for the "works with" strip
+assets/js/config.js    Prices, checkout link, delivery settings
+assets/js/main.js      Currency, demo edit audio, buy flow, animations
+assets/js/download.js  Thank-you page behaviour
+assets/logos/          Editor app logos
 assets/favicon.svg     App icon
+tools/build_pack.py    Optional: builds ZIPs + manifest from pack/ (for delivery.method "zip")
+.nojekyll              Tells GitHub Pages to serve files as they are
 ```
