@@ -1,0 +1,829 @@
+/* ==========================================================================
+   Velora SFX — page behaviour
+   - Currency: ₹ INR in India, $ USD elsewhere (time-zone based, switchable)
+   - Sound previews (real files from config, or demo sounds synthesised in-browser)
+   - Hero timeline "Play the edit" demo
+   - Buy flow, sticky mobile buy bar, reveal animations
+   ========================================================================== */
+(() => {
+  "use strict";
+
+  const C = window.VELORA_CONFIG || {};
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch { /* private mode */ } },
+  };
+  const escapeHTML = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  /* ======================================================================
+     Pricing & currency
+     ====================================================================== */
+  const Pricing = (() => {
+    const KEY_CUR = "velora.currency";
+    const KEY_RATE = "velora.inrUsd";
+    const RATE_TTL = 12 * 60 * 60 * 1000;
+    const price = Object.assign({ inr: 99, inrOriginal: 199 }, C.price);
+
+    const state = {
+      currency: "INR",
+      how: "auto",
+      rate: Number(C.fallbackInrToUsd) || 0.0113,
+      live: false,
+      fetching: false,
+    };
+
+    const fmtINR = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+    const fmtUSD = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const fmt = (v, cur) => (cur === "INR" ? fmtINR : fmtUSD).format(v);
+    const round2 = (v) => Math.round(v * 100) / 100;
+
+    function detect() {
+      const saved = store.get(KEY_CUR);
+      if (saved === "INR" || saved === "USD") return { currency: saved, how: "saved" };
+
+      let tz = "";
+      try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch { /* ignore */ }
+      const indiaZones = C.indiaTimeZones || ["Asia/Kolkata", "Asia/Calcutta"];
+      if (tz) return { currency: indiaZones.includes(tz) ? "INR" : "USD", how: "auto" };
+
+      // No time zone available: fall back to the browser's language region.
+      const langs = navigator.languages || [navigator.language || ""];
+      return { currency: langs.some((l) => /-IN$/i.test(l)) ? "INR" : "USD", how: "auto" };
+    }
+
+    function amounts(cur = state.currency) {
+      if (cur === "INR") return { now: price.inr, was: price.inrOriginal };
+      if (C.fixedUSD && C.fixedUSD.price) {
+        return { now: Number(C.fixedUSD.price), was: Number(C.fixedUSD.original || C.fixedUSD.price) };
+      }
+      return { now: round2(price.inr * state.rate), was: round2(price.inrOriginal * state.rate) };
+    }
+
+    function render() {
+      const cur = state.currency;
+      const { now, was } = amounts();
+      const save = round2(Math.max(0, was - now));
+      const pct = was > 0 ? Math.round((1 - now / was) * 100) : 0;
+
+      $$("[data-price]").forEach((el) => { el.textContent = fmt(now, cur); });
+      $$("[data-price-original]").forEach((el) => { el.textContent = fmt(was, cur); });
+      $$("[data-save]").forEach((el) => { el.textContent = fmt(save, cur); });
+      $$("[data-discount]").forEach((el) => { el.textContent = `${pct}% off`; });
+      $$("[data-discount-pct]").forEach((el) => { el.textContent = `${pct}%`; });
+      $$("[data-currency-label]").forEach((el) => { el.textContent = cur === "INR" ? "₹ INR" : "$ USD"; });
+      $$("[data-currency-switch]").forEach((el) => { el.textContent = cur === "INR" ? "Switch to $ USD" : "Switch to ₹ INR"; });
+
+      $$("[data-segmented]").forEach((seg) => {
+        seg.dataset.active = cur;
+        $$("[data-currency]", seg).forEach((btn) => {
+          const on = btn.dataset.currency === cur;
+          btn.setAttribute("aria-checked", String(on));
+          btn.tabIndex = on ? 0 : -1;
+        });
+      });
+
+      const geo = state.how === "saved"
+        ? (cur === "INR" ? "Showing prices in ₹ INR." : "Showing prices in $ USD.")
+        : (cur === "INR" ? "Prices shown in ₹ INR for India." : "You're outside India, so prices are shown in $ USD.");
+      $$("[data-geo-note]").forEach((el) => { el.textContent = geo; });
+
+      $$("[data-rate-note]").forEach((el) => {
+        const converted = cur === "USD" && !(C.fixedUSD && C.fixedUSD.price);
+        el.hidden = !converted;
+        if (converted) {
+          el.textContent = `Converted from ${fmt(price.inr, "INR")} at ${state.live ? "today's" : "an approximate"} exchange rate. Your bank may round it slightly.`;
+        }
+      });
+
+      document.documentElement.dataset.currency = cur;
+    }
+
+    async function loadRate() {
+      if ((C.fixedUSD && C.fixedUSD.price) || state.live || state.fetching) return;
+
+      try {
+        const cached = JSON.parse(store.get(KEY_RATE) || "null");
+        if (cached && cached.r > 0 && Date.now() - cached.t < RATE_TTL) {
+          state.rate = cached.r;
+          state.live = true;
+          render();
+          return;
+        }
+      } catch { /* ignore bad cache */ }
+
+      if (!C.rateApi || !window.fetch) return;
+      state.fetching = true;
+      const ctrl = "AbortController" in window ? new AbortController() : null;
+      const timer = ctrl && setTimeout(() => ctrl.abort(), 5000);
+      try {
+        const res = await fetch(C.rateApi, { signal: ctrl && ctrl.signal, cache: "no-store" });
+        const data = await res.json();
+        const r = data && data.rates && Number(data.rates.USD);
+        if (r > 0 && r < 1) {
+          state.rate = r;
+          state.live = true;
+          store.set(KEY_RATE, JSON.stringify({ r, t: Date.now() }));
+          render();
+        }
+      } catch { /* keep fallback rate */ }
+      finally {
+        state.fetching = false;
+        if (timer) clearTimeout(timer);
+      }
+    }
+
+    function set(cur, { save = true } = {}) {
+      if (cur !== "INR" && cur !== "USD") return;
+      state.currency = cur;
+      if (save) { state.how = "saved"; store.set(KEY_CUR, cur); }
+      render();
+      if (cur === "USD") loadRate();
+    }
+
+    function init() {
+      const d = detect();
+      state.currency = d.currency;
+      state.how = d.how;
+      render();
+      if (state.currency === "USD") loadRate();
+
+      document.addEventListener("click", (e) => {
+        const pick = e.target.closest("[data-currency]");
+        if (pick) { set(pick.dataset.currency); return; }
+        if (e.target.closest("[data-currency-switch]")) set(state.currency === "INR" ? "USD" : "INR");
+      });
+
+      // Arrow keys move between segments (radio-group pattern).
+      $$("[data-segmented]").forEach((seg) => {
+        seg.addEventListener("keydown", (e) => {
+          if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) return;
+          e.preventDefault();
+          set(state.currency === "INR" ? "USD" : "INR");
+          const active = $(`[data-currency="${state.currency}"]`, seg);
+          if (active) active.focus();
+        });
+      });
+    }
+
+    return { init, get currency() { return state.currency; } };
+  })();
+
+  /* ======================================================================
+     Audio: playback + demo synthesis
+     ====================================================================== */
+  const Player = (() => {
+    let ctx = null;
+    let current = null;
+
+    function audio() {
+      if (!ctx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        ctx = new AC();
+        // Let iPhone play even with the silent switch on (Safari 17+).
+        try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch { /* ignore */ }
+      }
+      if (ctx.state === "suspended") ctx.resume();
+      return ctx;
+    }
+
+    function stopAll() {
+      if (!current) return;
+      const session = current;
+      current = null;
+      session.sources.forEach((s) => { try { s.stop(); } catch { /* already stopped */ } });
+      try { session.out.disconnect(); } catch { /* ignore */ }
+      if (session.onStop) session.onStop();
+    }
+
+    /** list: [{ buffer, at }] — `at` is seconds from start. */
+    function play(list, onStop) {
+      stopAll();
+      const c = audio();
+      if (!c) return null;
+      const t0 = c.currentTime + 0.06;
+      const out = c.createGain();
+      out.gain.value = 0.9;
+      out.connect(c.destination);
+      const sources = list.map(({ buffer, at = 0 }) => {
+        const s = c.createBufferSource();
+        s.buffer = buffer;
+        s.connect(out);
+        s.start(t0 + at);
+        return s;
+      });
+      current = { sources, out, onStop, t0 };
+      return current;
+    }
+
+    return {
+      audio,
+      play,
+      stopAll,
+      isCurrent: (s) => s !== null && s === current,
+      elapsed: (s) => (ctx ? ctx.currentTime - s.t0 : 0),
+    };
+  })();
+
+  const Synth = (() => {
+    const SR = 44100;
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    const cache = new Map();
+
+    const rng = (seed) => {
+      let s = (seed >>> 0) % 2147483647 || 1;
+      return () => (s = (s * 16807) % 2147483647) / 2147483647;
+    };
+
+    function noiseSrc(ctx, sec, seed = 7) {
+      const len = Math.max(1, Math.floor(ctx.sampleRate * sec));
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      const r = rng(seed);
+      for (let i = 0; i < len; i++) d[i] = r() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      return src;
+    }
+
+    function gainEnv(ctx, points) {
+      const g = ctx.createGain();
+      const [t0, v0] = points[0];
+      g.gain.setValueAtTime(v0, t0);
+      for (let i = 1; i < points.length; i++) {
+        const [t, v, kind] = points[i];
+        if (kind === "set") g.gain.setValueAtTime(v, t);
+        else if (kind === "lin") g.gain.linearRampToValueAtTime(v, t);
+        else g.gain.exponentialRampToValueAtTime(Math.max(v, 0.0001), t);
+      }
+      return g;
+    }
+
+    function filter(ctx, type, freq, q) {
+      const f = ctx.createBiquadFilter();
+      f.type = type;
+      f.frequency.value = freq;
+      if (q != null) f.Q.value = q;
+      return f;
+    }
+
+    function panner(ctx, from, to, dur) {
+      if (!ctx.createStereoPanner) return null;
+      const p = ctx.createStereoPanner();
+      p.pan.setValueAtTime(from, 0);
+      if (to !== undefined) p.pan.linearRampToValueAtTime(to, dur);
+      return p;
+    }
+
+    function reverb(ctx, seconds, decay, seed) {
+      const len = Math.floor(ctx.sampleRate * seconds);
+      const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+      for (let ch = 0; ch < 2; ch++) {
+        const d = buf.getChannelData(ch);
+        const r = rng(seed + ch * 101);
+        for (let i = 0; i < len; i++) d[i] = (r() * 2 - 1) * Math.pow(1 - i / len, decay);
+      }
+      const conv = ctx.createConvolver();
+      conv.buffer = buf;
+      return conv;
+    }
+
+    function softClip(ctx, amount) {
+      const ws = ctx.createWaveShaper();
+      const n = 2048;
+      const curve = new Float32Array(n);
+      for (let i = 0; i < n; i++) {
+        const x = (i / (n - 1)) * 2 - 1;
+        curve[i] = Math.tanh(x * amount) / Math.tanh(amount);
+      }
+      ws.curve = curve;
+      return ws;
+    }
+
+    function airSweep(ctx, out, { dur, seed, type = "bandpass", q, f0, fPeak, f1, peakAt, gain = 1, pan }) {
+      const n = noiseSrc(ctx, dur, seed);
+      const f = filter(ctx, type, f0, q);
+      f.frequency.setValueAtTime(f0, 0);
+      f.frequency.exponentialRampToValueAtTime(fPeak, dur * peakAt);
+      f.frequency.exponentialRampToValueAtTime(f1, dur);
+      const g = gainEnv(ctx, [[0, 0.0001], [dur * peakAt, gain], [dur, 0.0001]]);
+      n.connect(f).connect(g);
+      const p = pan ? panner(ctx, pan[0], pan[1], dur) : null;
+      if (p) g.connect(p).connect(out); else g.connect(out);
+      n.start(0);
+    }
+
+    const recipes = {
+      whoosh: {
+        dur: 1.2,
+        build(ctx, out) {
+          airSweep(ctx, out, { dur: 1.2, seed: 3, q: 0.9, f0: 220, fPeak: 2600, f1: 320, peakAt: 0.52, gain: 1, pan: [-0.85, 0.85] });
+          airSweep(ctx, out, { dur: 1.2, seed: 5, type: "highpass", f0: 1500, fPeak: 5200, f1: 1800, peakAt: 0.52, gain: 0.22, pan: [-0.6, 0.6] });
+        },
+      },
+      swish: {
+        dur: 0.6,
+        build(ctx, out) {
+          airSweep(ctx, out, { dur: 0.55, seed: 19, q: 1.8, f0: 1100, fPeak: 5600, f1: 1700, peakAt: 0.38, gain: 1, pan: [0.8, -0.8] });
+        },
+      },
+      impact: {
+        dur: 2.0,
+        build(ctx, out) {
+          const verb = reverb(ctx, 1.8, 2.6, 21);
+          const wet = ctx.createGain();
+          wet.gain.value = 0.32;
+          verb.connect(wet).connect(out);
+
+          const body = ctx.createOscillator();
+          body.type = "sine";
+          body.frequency.setValueAtTime(160, 0);
+          body.frequency.exponentialRampToValueAtTime(42, 0.45);
+          const bodyEnv = gainEnv(ctx, [[0, 0.0001], [0.006, 1], [1.5, 0.0001]]);
+          const clip = softClip(ctx, 3);
+          body.connect(bodyEnv).connect(clip);
+          clip.connect(out);
+          clip.connect(verb);
+
+          const crack = noiseSrc(ctx, 0.5, 9);
+          const lp = filter(ctx, "lowpass", 5000);
+          lp.frequency.setValueAtTime(5000, 0);
+          lp.frequency.exponentialRampToValueAtTime(400, 0.25);
+          const crackEnv = gainEnv(ctx, [[0, 0.0001], [0.003, 0.9], [0.35, 0.0001]]);
+          crack.connect(lp).connect(crackEnv);
+          crackEnv.connect(out);
+          crackEnv.connect(verb);
+
+          const rumble = noiseSrc(ctx, 1.9, 13);
+          const rumbleEnv = gainEnv(ctx, [[0, 0.0001], [0.02, 0.5], [1.85, 0.0001]]);
+          rumble.connect(filter(ctx, "lowpass", 260)).connect(rumbleEnv).connect(out);
+
+          body.start(0); body.stop(1.6);
+          crack.start(0);
+          rumble.start(0);
+        },
+      },
+      riser: {
+        dur: 2.6,
+        build(ctx, out) {
+          const d = 2.4;
+          const master = gainEnv(ctx, [[0, 0.0001], [d, 0.9], [d, 0.9, "set"], [d + 0.06, 0.0001]]);
+          master.connect(out);
+
+          const trem = ctx.createGain();
+          trem.gain.value = 0.7;
+          const lfo = ctx.createOscillator();
+          lfo.frequency.setValueAtTime(3, 0);
+          lfo.frequency.exponentialRampToValueAtTime(18, d);
+          const lfoAmt = ctx.createGain();
+          lfoAmt.gain.value = 0.3;
+          lfo.connect(lfoAmt).connect(trem.gain);
+          trem.connect(master);
+
+          const lp = filter(ctx, "lowpass", 300, 6);
+          lp.frequency.setValueAtTime(300, 0);
+          lp.frequency.exponentialRampToValueAtTime(7000, d);
+          lp.connect(trem);
+
+          [-27, 0, 21].forEach((detune) => {
+            const o = ctx.createOscillator();
+            o.type = "sawtooth";
+            o.detune.value = detune;
+            o.frequency.setValueAtTime(110, 0);
+            o.frequency.exponentialRampToValueAtTime(880, d);
+            const g = ctx.createGain();
+            g.gain.value = 0.25;
+            o.connect(g).connect(lp);
+            o.start(0);
+            o.stop(d + 0.1);
+          });
+
+          const air = noiseSrc(ctx, d + 0.1, 17);
+          const hp = filter(ctx, "highpass", 400);
+          hp.frequency.setValueAtTime(400, 0);
+          hp.frequency.exponentialRampToValueAtTime(9000, d);
+          const airGain = ctx.createGain();
+          airGain.gain.value = 0.35;
+          air.connect(hp).connect(airGain).connect(trem);
+
+          lfo.start(0); lfo.stop(d + 0.1);
+          air.start(0);
+        },
+      },
+      glitch: {
+        dur: 1.0,
+        build(ctx, out) {
+          const r = rng(42);
+          const master = ctx.createGain();
+          master.gain.value = 0.8;
+          master.connect(out);
+          let t = 0.005;
+          while (t < 0.88) {
+            const len = 0.02 + r() * 0.06;
+            const g = ctx.createGain();
+            g.gain.setValueAtTime(0, t);
+            g.gain.linearRampToValueAtTime(0.9, t + 0.002);
+            g.gain.setValueAtTime(0.9, t + len - 0.004);
+            g.gain.linearRampToValueAtTime(0, t + len);
+            if (r() < 0.55) {
+              const o = ctx.createOscillator();
+              o.type = r() < 0.5 ? "square" : "sawtooth";
+              o.frequency.setValueAtTime(120 + r() * 1800, t);
+              if (r() < 0.5) o.frequency.exponentialRampToValueAtTime(60 + r() * 3000, t + len);
+              o.connect(g);
+              o.start(t);
+              o.stop(t + len + 0.01);
+            } else {
+              const n = noiseSrc(ctx, len + 0.01, Math.floor(r() * 1000) + 1);
+              n.connect(filter(ctx, "bandpass", 500 + r() * 6000, 4)).connect(g);
+              n.start(t);
+            }
+            const p = panner(ctx, (r() * 2 - 1) * 0.8);
+            if (p) g.connect(p).connect(master); else g.connect(master);
+            t += len + (r() < 0.3 ? r() * 0.05 : 0);
+          }
+        },
+      },
+      subdrop: {
+        dur: 2.4,
+        build(ctx, out) {
+          const env = gainEnv(ctx, [[0, 0.0001], [0.02, 1], [0.3, 1, "set"], [2.3, 0.0001]]);
+          const clip = softClip(ctx, 1.8);
+          env.connect(clip).connect(out);
+          const o = ctx.createOscillator();
+          o.frequency.setValueAtTime(110, 0);
+          o.frequency.exponentialRampToValueAtTime(30, 1.9);
+          o.connect(env);
+          const h = ctx.createOscillator();
+          h.type = "triangle";
+          h.frequency.setValueAtTime(220, 0);
+          h.frequency.exponentialRampToValueAtTime(60, 1.9);
+          const hg = ctx.createGain();
+          hg.gain.value = 0.28;
+          h.connect(hg).connect(env);
+          o.start(0); o.stop(2.35);
+          h.start(0); h.stop(2.35);
+        },
+      },
+      pop: {
+        dur: 0.4,
+        build(ctx, out) {
+          const o = ctx.createOscillator();
+          o.frequency.setValueAtTime(260, 0);
+          o.frequency.exponentialRampToValueAtTime(1150, 0.045);
+          o.frequency.exponentialRampToValueAtTime(900, 0.2);
+          o.connect(gainEnv(ctx, [[0, 0.0001], [0.004, 1], [0.28, 0.0001]])).connect(out);
+          o.start(0); o.stop(0.35);
+          const n = noiseSrc(ctx, 0.03, 77);
+          n.connect(filter(ctx, "highpass", 3000)).connect(gainEnv(ctx, [[0, 0.4], [0.025, 0.0001]])).connect(out);
+          n.start(0);
+        },
+      },
+      click: {
+        dur: 0.3,
+        build(ctx, out) {
+          const tick = (t, f, v) => {
+            const o = ctx.createOscillator();
+            o.type = "triangle";
+            o.frequency.setValueAtTime(f, t);
+            o.frequency.exponentialRampToValueAtTime(f * 0.6, t + 0.04);
+            o.connect(gainEnv(ctx, [[t, 0.0001], [t + 0.002, v], [t + 0.05, 0.0001]])).connect(out);
+            o.start(t);
+            o.stop(t + 0.06);
+          };
+          tick(0.002, 2400, 1);
+          tick(0.075, 1800, 0.6);
+          const n = noiseSrc(ctx, 0.012, 5);
+          n.connect(filter(ctx, "highpass", 4000)).connect(gainEnv(ctx, [[0, 0.5], [0.01, 0.0001]])).connect(out);
+          n.start(0);
+        },
+      },
+    };
+
+    function finish(buf) {
+      let peak = 0;
+      const chans = [];
+      for (let c = 0; c < buf.numberOfChannels; c++) chans.push(buf.getChannelData(c));
+      chans.forEach((d) => { for (let i = 0; i < d.length; i++) { const a = Math.abs(d[i]); if (a > peak) peak = a; } });
+      const k = peak > 0 ? 0.89 / peak : 1;
+      const fade = Math.floor(buf.sampleRate * 0.01);
+      chans.forEach((d) => {
+        for (let i = 0; i < d.length; i++) d[i] *= k;
+        for (let i = 0; i < fade; i++) d[d.length - 1 - i] *= i / fade;
+      });
+      return buf;
+    }
+
+    function render(key) {
+      if (cache.has(key)) return cache.get(key);
+      const recipe = recipes[key];
+      const job = (async () => {
+        if (!recipe) throw new Error(`Unknown synth "${key}"`);
+        if (!OAC) throw new Error("Web Audio not supported");
+        const ctx = new OAC(2, Math.ceil(SR * recipe.dur), SR);
+        recipe.build(ctx, ctx.destination);
+        return finish(await ctx.startRendering());
+      })();
+      cache.set(key, job);
+      return job;
+    }
+
+    function decode(url) {
+      if (cache.has(url)) return cache.get(url);
+      const job = (async () => {
+        if (!OAC) throw new Error("Web Audio not supported");
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Could not load ${url}`);
+        const data = await res.arrayBuffer();
+        return new OAC(2, 1, SR).decodeAudioData(data);
+      })();
+      cache.set(url, job);
+      return job;
+    }
+
+    function peaks(buf, count) {
+      const chans = [];
+      for (let c = 0; c < buf.numberOfChannels; c++) chans.push(buf.getChannelData(c));
+      const step = Math.max(1, Math.floor(buf.length / count));
+      const out = new Array(count).fill(0);
+      for (let b = 0; b < count; b++) {
+        let m = 0;
+        const end = Math.min(buf.length, (b + 1) * step);
+        for (let i = b * step; i < end; i += 3) {
+          for (const d of chans) { const a = Math.abs(d[i]); if (a > m) m = a; }
+        }
+        out[b] = m;
+      }
+      const max = Math.max(...out) || 1;
+      return out.map((v) => Math.max(0.06, Math.pow(v / max, 0.65)));
+    }
+
+    return { render, decode, peaks };
+  })();
+
+  const bufferFor = (item) => (item.src ? Synth.decode(item.src) : Synth.render(item.synth));
+
+  /* ======================================================================
+     Sound preview cards
+     ====================================================================== */
+  function initSounds() {
+    const grid = $("#sound-grid");
+    if (!grid) return;
+    const items = Array.isArray(C.previews) ? C.previews : [];
+    const tints = ["#1A8CFF", "#5E5CE6", "#FF9F0A", "#FF375F", "#30B0C7", "#BF5AF2", "#34C759", "#FF6B3D"];
+    const BARS = 48;
+    const flatBars = Array.from({ length: BARS }, (_, i) => `<i style="--h:${12 + Math.round(Math.abs(Math.sin(i * 0.7)) * 18)}%"></i>`).join("");
+
+    const note = $("[data-demo-note]");
+    if (note) note.hidden = !items.some((p) => !p.src);
+
+    const cards = items.map((item, i) => {
+      const card = document.createElement("article");
+      card.className = "sound-card reveal";
+      card.style.setProperty("--tint", item.tint || tints[i % tints.length]);
+      card.style.setProperty("--d", String(i % 4));
+      const name = escapeHTML(item.name || "Sound");
+      card.innerHTML = `
+        <div class="sound-card__top">
+          <span class="sound-card__icon" aria-hidden="true"><svg><use href="#s-${escapeHTML(item.icon || "wind")}"/></svg></span>
+          <div class="sound-card__meta">
+            <h3>${name}</h3>
+            <p><span>${escapeHTML(item.category || "")}</span><span data-dur></span></p>
+          </div>
+          <button class="sound-card__play" type="button" aria-label="Play ${name}">
+            <svg class="i-play" aria-hidden="true"><use href="#i-play"/></svg>
+            <svg class="i-pause" aria-hidden="true"><use href="#i-pause"/></svg>
+          </button>
+        </div>
+        <div class="wave" aria-hidden="true">
+          <div class="wave__bars">${flatBars}</div>
+          <div class="wave__bars wave__bars--progress">${flatBars}</div>
+        </div>`;
+      grid.appendChild(card);
+      return { card, item };
+    });
+
+    function paint({ card, item }) {
+      bufferFor(item).then((buf) => {
+        const heights = Synth.peaks(buf, BARS);
+        $$(".wave__bars", card).forEach((row) => {
+          Array.from(row.children).forEach((bar, j) => { bar.style.setProperty("--h", `${Math.round(heights[j] * 100)}%`); });
+        });
+        const dur = $("[data-dur]", card);
+        if (dur) dur.textContent = ` · ${buf.duration.toFixed(1)}s`;
+        card.classList.add("is-ready");
+      }).catch(() => { card.classList.add("is-error", "is-ready"); });
+    }
+
+    // Prepare waveforms once the section is close to the viewport.
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) { cards.forEach(paint); io.disconnect(); }
+      }, { rootMargin: "600px 0px" });
+      io.observe(grid);
+    } else {
+      cards.forEach(paint);
+    }
+
+    let request = 0;
+    cards.forEach(({ card, item }) => {
+      const btn = $(".sound-card__play", card);
+      const label = `Play ${item.name || "sound"}`;
+
+      btn.addEventListener("click", async () => {
+        if (card.classList.contains("is-playing")) { Player.stopAll(); return; }
+        if (!Player.audio()) return; // unlock audio inside the tap
+        const mine = ++request;
+        card.classList.add("is-loading");
+        let buf;
+        try { buf = await bufferFor(item); } catch { card.classList.remove("is-loading"); card.classList.add("is-error"); return; }
+        card.classList.remove("is-loading");
+        if (mine !== request) return; // another sound was tapped meanwhile
+
+        const reset = () => {
+          card.classList.remove("is-playing");
+          card.style.setProperty("--p", "0");
+          btn.setAttribute("aria-label", label);
+        };
+        const session = Player.play([{ buffer: buf }], reset);
+        if (!session) return;
+        card.classList.add("is-playing");
+        btn.setAttribute("aria-label", `Stop ${item.name || "sound"}`);
+
+        const tick = () => {
+          if (!Player.isCurrent(session)) return;
+          const p = Player.elapsed(session) / buf.duration;
+          card.style.setProperty("--p", String(clamp01(p)));
+          if (p >= 1) { Player.stopAll(); return; }
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    });
+  }
+
+  /* ======================================================================
+     Hero timeline demo
+     ====================================================================== */
+  function initReel() {
+    const reel = $("#reel");
+    if (!reel) return;
+    const btn = $("[data-reel-play]", reel);
+    const label = $("[data-reel-label]", reel);
+    const icon = $("use", btn);
+    const T = parseFloat(getComputedStyle(reel).getPropertyValue("--T")) || 7.2;
+    const clips = $$("[data-sound]", reel).map((el) => ({
+      el,
+      key: el.dataset.sound,
+      start: parseFloat(el.style.getPropertyValue("--s")) || 0,
+      len: parseFloat(el.style.getPropertyValue("--l")) || 1,
+    }));
+
+    // Draw real waveforms into the timeline clips.
+    const draw = () => clips.forEach((clip) => {
+      Synth.render(clip.key).then((buf) => {
+        const wave = $(".clip__wave", clip.el);
+        if (!wave) return;
+        const count = Math.max(8, Math.round((clip.len / T) * 90));
+        wave.innerHTML = Synth.peaks(buf, count).map((h) => `<i style="height:${Math.round(h * 100)}%"></i>`).join("");
+      }).catch(() => {});
+    });
+    if ("requestIdleCallback" in window) requestIdleCallback(draw, { timeout: 1200 }); else setTimeout(draw, 300);
+
+    const setUI = (playing) => {
+      reel.classList.toggle("is-playing", playing);
+      btn.setAttribute("aria-pressed", String(playing));
+      if (label) label.textContent = playing ? "Stop" : "Play the edit";
+      if (icon) icon.setAttribute("href", playing ? "#i-pause" : "#i-play");
+      if (!playing) {
+        reel.style.setProperty("--p", "0");
+        clips.forEach((c) => c.el.classList.remove("is-hit"));
+      }
+    };
+
+    btn.addEventListener("click", async () => {
+      if (reel.classList.contains("is-playing")) { Player.stopAll(); return; }
+      if (!Player.audio()) return;
+      setUI(true);
+      let buffers;
+      try { buffers = await Promise.all(clips.map((c) => Synth.render(c.key))); } catch { setUI(false); return; }
+      if (!reel.classList.contains("is-playing")) return;
+      const session = Player.play(clips.map((c, i) => ({ buffer: buffers[i], at: c.start })), () => setUI(false));
+      if (!session) { setUI(false); return; }
+
+      const tick = () => {
+        if (!Player.isCurrent(session)) return;
+        const t = Math.max(0, Player.elapsed(session));
+        reel.style.setProperty("--p", String(clamp01(t / T)));
+        clips.forEach((c) => c.el.classList.toggle("is-hit", t >= c.start && t <= c.start + c.len * 0.85));
+        if (t >= T) { Player.stopAll(); return; }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+
+  /* ======================================================================
+     Buy flow
+     ====================================================================== */
+  function initBuy() {
+    const sheet = $("#buy-sheet");
+    const urls = C.checkoutUrl || {};
+
+    const open = () => {
+      if (!sheet) return;
+      if (typeof sheet.showModal === "function") sheet.showModal(); else sheet.setAttribute("open", "");
+    };
+    const close = () => {
+      if (!sheet) return;
+      if (typeof sheet.close === "function") sheet.close(); else sheet.removeAttribute("open");
+    };
+
+    document.addEventListener("click", (e) => {
+      const buy = e.target.closest("[data-buy]");
+      if (buy) {
+        e.preventDefault();
+        const url = urls[Pricing.currency] || urls.INR || urls.USD;
+        if (url) window.location.href = url; else open();
+        return;
+      }
+      if (e.target.closest("[data-sheet-close]")) close();
+    });
+    if (sheet) sheet.addEventListener("click", (e) => { if (e.target === sheet) close(); });
+
+    // Contact links (footer + sheet) — only rendered when configured.
+    const contact = C.contact || {};
+    const links = [];
+    if (contact.email) links.push({ href: `mailto:${contact.email}`, text: "Email", icon: "i-mail" });
+    if (contact.whatsapp) links.push({ href: contact.whatsapp, text: "WhatsApp", icon: "i-chat" });
+    if (contact.instagram) links.push({ href: contact.instagram, text: "Instagram", icon: "i-camera" });
+    if (links.length) {
+      const html = (withIcon) => links.map((l) => {
+        const ext = l.href.startsWith("http") ? ' target="_blank" rel="noopener"' : "";
+        const ico = withIcon ? `<svg class="ico" aria-hidden="true"><use href="#${l.icon}"/></svg>` : "";
+        return `<a href="${escapeHTML(l.href)}"${ext}>${ico}${l.text}</a>`;
+      }).join("");
+      $$("[data-contact-links]").forEach((el) => { el.innerHTML = html(false); });
+      $$("[data-sheet-contact]").forEach((el) => { el.innerHTML = html(true); el.hidden = false; });
+    }
+  }
+
+  /* ======================================================================
+     Chrome: nav, buy bar, reveal, year
+     ====================================================================== */
+  function initChrome() {
+    const nav = $("#nav");
+    if (nav) {
+      const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 4);
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
+
+    $$("[data-year]").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
+
+    const reveals = $$(".reveal");
+    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+      reveals.forEach((el) => io.observe(el));
+    } else {
+      reveals.forEach((el) => el.classList.add("is-in"));
+    }
+
+    // Mobile buy bar: shown while no other Buy button is on screen.
+    const bar = $("[data-buybar]");
+    const watched = $$("[data-cta-watch]");
+    if (bar && watched.length && "IntersectionObserver" in window) {
+      const onScreen = new Set();
+      let scrolled = false;
+      const update = () => {
+        const show = scrolled && onScreen.size === 0;
+        bar.classList.toggle("is-visible", show);
+        bar.setAttribute("aria-hidden", String(!show));
+        bar.inert = !show;
+      };
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) onScreen.add(e.target); else onScreen.delete(e.target); });
+        update();
+      });
+      watched.forEach((el) => io.observe(el));
+      window.addEventListener("scroll", () => {
+        const s = window.scrollY > 300;
+        if (s !== scrolled) { scrolled = s; update(); }
+      }, { passive: true });
+    }
+  }
+
+  /* ====================================================================== */
+  Pricing.init();
+  initSounds(); // before initChrome so the new cards get reveal animations
+  initChrome();
+  initReel();
+  initBuy();
+})();

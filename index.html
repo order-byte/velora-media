@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Velora SFX Pack — Sound effects for video editors</title>
+  <meta name="description" content="The sound effects behind every cut — whooshes, impacts, risers, glitches and more. Drag-and-drop ready for Premiere Pro, Final Cut, DaVinci Resolve, CapCut and every editor. Launch price ₹99.">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Velora SFX Pack — Sound that makes every cut hit">
+  <meta property="og:description" content="Pro sound effects for video editors. Whooshes, impacts, risers, glitches and more. Launch price ₹99.">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <script>document.documentElement.classList.add('js');</script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <!-- Icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="g-files" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#6CC6FF"/>
+        <stop offset="1" stop-color="#1A86F5"/>
+      </linearGradient>
+      <linearGradient id="g-folder-back" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3FA2F3"/>
+        <stop offset="1" stop-color="#2088EA"/>
+      </linearGradient>
+      <linearGradient id="g-folder-front" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#8CD3FF"/>
+        <stop offset="1" stop-color="#4EAEF9"/>
+      </linearGradient>
+    </defs>
+
+    <symbol id="i-logo" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3.7" y="9.5" width="2.2" height="5" rx="1.1"/><rect x="7.3" y="6.5" width="2.2" height="11" rx="1.1"/><rect x="10.9" y="3.5" width="2.2" height="17" rx="1.1"/><rect x="14.5" y="6" width="2.2" height="12" rx="1.1"/><rect x="18.1" y="9" width="2.2" height="6" rx="1.1"/></g></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.6v12.8a1 1 0 0 0 1.52.86l10.4-6.4a1 1 0 0 0 0-1.72L9.52 4.74A1 1 0 0 0 8 5.6z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><g fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.2 4.2L19 7"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></g></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path fill="currentColor" d="M13.2 2.2 4.6 13.1a.8.8 0 0 0 .63 1.3H11l-1.1 7.2c-.1.7.8 1.1 1.3.5l8.6-10.9a.8.8 0 0 0-.63-1.3H13.4l1.1-7.2c.1-.7-.8-1.1-1.3-.5z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5.6c0 4.4-2.9 7.7-7 9.4-4.1-1.7-7-5-7-9.4V6z"/><path d="M8.8 12l2.2 2.2 4.2-4.4"/></g></symbol>
+    <symbol id="i-devices" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="14" height="10" rx="1.8"/><path d="M1.5 18.5h13"/><rect x="17.5" y="8.5" width="5" height="11" rx="1.4"/></g></symbol>
+    <symbol id="i-infinity" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15.5C5 15.5 3 13.9 3 12s2-3.5 4.5-3.5c3.5 0 5.5 7 9 7 2.5 0 4.5-1.6 4.5-3.5s-2-3.5-4.5-3.5c-3.5 0-5.5 7-9 7z"/></symbol>
+    <symbol id="i-headphones" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-4a8 8 0 0 1 16 0v4"/><path d="M4 16a2 2 0 0 1 2-2h1.5v6H6a2 2 0 0 1-2-2zM20 16a2 2 0 0 0-2-2h-1.5v6H18a2 2 0 0 0 2-2z"/></g></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8h13l-1 12.5h-11z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></g></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11.5M7 10.5l5 5 5-5M5 20h14"/></g></symbol>
+    <symbol id="i-timeline" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M7 10h6M10 14h7"/></g></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M9.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M7 7l10 10M17 7 7 17"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></g></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".6" fill="currentColor"/></g></symbol>
+
+    <!-- Sound category icons -->
+    <symbol id="s-wind" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5h10.5a2.75 2.75 0 1 0-2.75-2.75M3 12.5h15a3 3 0 1 1-3 3M3 16.5h7"/></symbol>
+    <symbol id="s-burst" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></g></symbol>
+    <symbol id="s-rise" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 19l6-6 4 3 8-9M15 7h6v6"/></symbol>
+    <symbol id="s-glitch" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M2 12h4l2-6 4 12 3-9 2 3h5"/></symbol>
+    <symbol id="s-swish" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 15c3-5.5 8-7.5 15-5.5M14.5 5.5 18.5 9.5 14 12"/></symbol>
+    <symbol id="s-drop" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v13M6.5 11l5.5 5.5 5.5-5.5M5 20.5h14"/></symbol>
+    <symbol id="s-sparkle" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.8l1.9 5.4 5.4 1.9-5.4 1.9L12 17.4l-1.9-5.4-5.4-1.9 5.4-1.9zM18.5 15.5l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z"/></symbol>
+    <symbol id="s-tap" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8.5l11 4.2-4.6 1.6-1.6 4.6z"/><path d="M4.5 4.5l1.6 1.6M9 2.5v2.2M2.5 9h2.2"/></g></symbol>
+
+    <!-- Files-style folder -->
+    <symbol id="i-folder" viewBox="0 0 64 50">
+      <path fill="url(#g-folder-back)" d="M3 7a4 4 0 0 1 4-4h14.2a4 4 0 0 1 2.9 1.2L27.6 8H57a4 4 0 0 1 4 4v32a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/>
+      <rect x="3" y="13" width="58" height="35" rx="4" fill="url(#g-folder-front)"/>
+      <rect x="3" y="13" width="58" height="1.4" rx=".7" fill="#ffffff" opacity=".55"/>
+    </symbol>
+  </svg>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ───────── Navigation ───────── -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#top" aria-label="Velora — back to top">
+        <span class="app-icon app-icon--xs" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+        <span class="brand__name">Velora <span class="brand__sub">SFX</span></span>
+      </a>
+      <nav class="nav__links" aria-label="Sections">
+        <a href="#sounds">Sounds</a>
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="btn btn--sm" href="#pricing" data-buy>Buy <span class="nav__price" data-price>₹99</span></a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ───────── Hero ───────── -->
+    <section class="hero" id="top">
+      <div class="container hero__inner">
+        <span class="app-icon app-icon--xl reveal" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+
+        <p class="eyebrow reveal" style="--d:1">
+          <span class="eyebrow__pill">New</span>
+          <span>Launch offer — <span data-discount>50% off</span></span>
+        </p>
+
+        <h1 class="hero__title reveal" style="--d:2">
+          Sound that makes<br><span class="text-gradient">every cut hit.</span>
+        </h1>
+
+        <p class="hero__sub reveal" style="--d:3">
+          The exact sound effects I use in my own edits — whooshes, impacts, risers, glitches and more.
+          Drag, drop, done.
+        </p>
+
+        <div class="hero__price reveal" style="--d:4" aria-label="Price">
+          <s class="price-old" data-price-original>₹199</s>
+          <span class="price-now" data-price>₹99</span>
+          <span class="badge" data-discount>50% off</span>
+        </div>
+
+        <div class="hero__cta reveal" style="--d:5" data-cta-watch>
+          <button class="btn btn--lg" type="button" data-buy>
+            <svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>
+            Buy now
+          </button>
+          <a class="link-arrow" href="#sounds">Listen to samples<svg class="ico" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+        </div>
+
+        <p class="hero__meta reveal" style="--d:6">
+          One-time payment · Instant download ·
+          <span data-currency-label>₹ INR</span>
+          <button class="text-btn" type="button" data-currency-switch>Switch to $ USD</button>
+        </p>
+      </div>
+
+      <!-- Editor timeline mock -->
+      <div class="container">
+        <div class="editor reveal" id="reel" style="--T:7.2; --d:3">
+          <div class="editor__bar">
+            <span class="editor__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="editor__title">Untitled Edit — Timeline</span>
+            <button class="editor__play" type="button" data-reel-play aria-pressed="false">
+              <svg class="ico" aria-hidden="true"><use href="#i-play"/></svg>
+              <span data-reel-label>Play the edit</span>
+            </button>
+          </div>
+
+          <div class="editor__body">
+            <span class="editor__label" aria-hidden="true"></span>
+            <div class="editor__ruler" aria-hidden="true">
+              <span style="--s:0">0s</span><span style="--s:1">1s</span><span style="--s:2">2s</span><span style="--s:3">3s</span>
+              <span style="--s:4">4s</span><span style="--s:5">5s</span><span style="--s:6">6s</span><span style="--s:7">7s</span>
+            </div>
+
+            <span class="editor__label">V1</span>
+            <div class="lane" aria-label="Video track">
+              <div class="clip clip--video clip--shot1" style="--s:0; --l:1.3"><span class="clip__label">Shot 01</span></div>
+              <div class="clip clip--video clip--shot2" style="--s:1.3; --l:3.5"><span class="clip__label">Shot 02</span></div>
+              <div class="clip clip--video clip--shot3" style="--s:4.8; --l:2.4"><span class="clip__label">Shot 03</span></div>
+            </div>
+
+            <span class="editor__label">SFX 1</span>
+            <div class="lane" aria-label="Sound effects track 1">
+              <div class="clip clip--sfx" data-sound="whoosh" style="--s:0.68; --l:1.2"><span class="clip__label">Whoosh</span><span class="clip__wave"></span></div>
+              <div class="clip clip--sfx" data-sound="riser" style="--s:2.4; --l:2.6"><span class="clip__label">Riser</span><span class="clip__wave"></span></div>
+            </div>
+
+            <span class="editor__label">SFX 2</span>
+            <div class="lane" aria-label="Sound effects track 2">
+              <div class="clip clip--sfx" data-sound="impact" style="--s:1.3; --l:2.0"><span class="clip__label">Impact</span><span class="clip__wave"></span></div>
+              <div class="clip clip--sfx" data-sound="subdrop" style="--s:4.8; --l:2.4"><span class="clip__label">Sub Drop</span><span class="clip__wave"></span></div>
+            </div>
+
+            <div class="editor__playhead" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── Works with ───────── -->
+    <section class="works" aria-labelledby="works-title">
+      <div class="container">
+        <p class="works__title" id="works-title">Drag-and-drop ready for every editor</p>
+        <ul class="works__list">
+          <li>Premiere Pro</li>
+          <li>Final Cut Pro</li>
+          <li>DaVinci Resolve</li>
+          <li>After Effects</li>
+          <li>CapCut</li>
+          <li>VN Editor</li>
+          <li>Filmora</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ───────── Sounds ───────── -->
+    <section class="section section--alt" id="sounds" aria-labelledby="sounds-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker"><svg class="ico" aria-hidden="true"><use href="#i-headphones"/></svg> Listen</p>
+          <h2 id="sounds-title">Hear it first.<br>Then feel it in your edit.</h2>
+          <p class="lead">Tap any sound to play it. Headphones recommended.</p>
+        </header>
+
+        <div class="sound-grid" id="sound-grid"></div>
+        <p class="fineprint" data-demo-note hidden>Demo previews. Real samples from the pack are coming soon.</p>
+      </div>
+    </section>
+
+    <!-- ───────── Features ───────── -->
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker">Why editors love it</p>
+          <h2 id="features-title">Everything an edit needs.<br>Nothing it doesn't.</h2>
+        </header>
+
+        <div class="bento">
+          <article class="tile tile--hero reveal">
+            <div class="tile__text">
+              <h3>Organized like your Files app.</h3>
+              <p>Every sound lives in a clearly named folder. Find the right whoosh in seconds — not minutes of scrolling.</p>
+            </div>
+            <div class="finder" aria-hidden="true">
+              <div class="finder__item"><svg class="folder"><use href="#i-folder"/></svg><span>Whooshes</span></div>
+              <div class="finder__item is-selected"><svg class="folder"><use href="#i-folder"/></svg><span>Impacts</span></div>
+              <div class="finder__item"><svg class="folder"><use href="#i-folder"/></svg><span>Risers</span></div>
+              <div class="finder__item"><svg class="folder"><use href="#i-folder"/></svg><span>Glitches</span></div>
+              <div class="finder__item"><svg class="folder"><use href="#i-folder"/></svg><span>Pops &amp; UI</span></div>
+              <div class="finder__item"><svg class="folder"><use href="#i-folder"/></svg><span>Bass Drops</span></div>
+            </div>
+          </article>
+
+          <article class="tile reveal" style="--d:1">
+            <span class="tile__icon tile__icon--blue" aria-hidden="true"><svg><use href="#i-timeline"/></svg></span>
+            <h3>Picked from real edits.</h3>
+            <p>Not random downloads — these are the sounds I actually reach for in my own projects.</p>
+          </article>
+
+          <article class="tile reveal" style="--d:2">
+            <span class="tile__icon tile__icon--green" aria-hidden="true"><svg><use href="#i-shield"/></svg></span>
+            <h3>Royalty-free.</h3>
+            <p>Use them on YouTube, Reels, Shorts and client work. No credits, no claims.</p>
+          </article>
+
+          <article class="tile reveal" style="--d:1">
+            <span class="tile__icon tile__icon--orange" aria-hidden="true"><svg><use href="#i-bolt"/></svg></span>
+            <h3>Instant download.</h3>
+            <p>Pay once and your download link is ready right away.</p>
+          </article>
+
+          <article class="tile reveal" style="--d:2">
+            <span class="tile__icon tile__icon--indigo" aria-hidden="true"><svg><use href="#i-devices"/></svg></span>
+            <h3>Works everywhere.</h3>
+            <p>Mac, Windows, Android or iPhone — any app that takes audio files.</p>
+          </article>
+
+          <article class="tile reveal" style="--d:3">
+            <span class="tile__icon tile__icon--pink" aria-hidden="true"><svg><use href="#i-infinity"/></svg></span>
+            <h3>Yours forever.</h3>
+            <p>One-time payment. No subscription. Free updates when new sounds join the pack.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── How it works ───────── -->
+    <section class="section section--alt" id="how" aria-labelledby="how-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker">How it works</p>
+          <h2 id="how-title">From checkout to timeline<br>in under a minute.</h2>
+        </header>
+
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="step__num">1</span>
+            <span class="step__icon" aria-hidden="true"><svg><use href="#i-bag"/></svg></span>
+            <h3>Tap Buy.</h3>
+            <p>Pay securely in ₹ or $. One payment, no account needed.</p>
+          </li>
+          <li class="step reveal" style="--d:1">
+            <span class="step__num">2</span>
+            <span class="step__icon" aria-hidden="true"><svg><use href="#i-download"/></svg></span>
+            <h3>Download the pack.</h3>
+            <p>Your download link arrives instantly after payment.</p>
+          </li>
+          <li class="step reveal" style="--d:2">
+            <span class="step__num">3</span>
+            <span class="step__icon" aria-hidden="true"><svg><use href="#i-timeline"/></svg></span>
+            <h3>Drop it in your edit.</h3>
+            <p>Drag a sound onto your timeline and hear the cut hit.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ───────── Pricing ───────── -->
+    <section class="section" id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker">Pricing</p>
+          <h2 id="pricing-title">One pack. One price.<br>Yours to keep.</h2>
+        </header>
+
+        <div class="currency reveal">
+          <div class="segmented" role="radiogroup" aria-label="Currency" data-segmented data-active="INR">
+            <span class="segmented__thumb" aria-hidden="true"></span>
+            <button type="button" role="radio" aria-checked="true" data-currency="INR">₹ INR</button>
+            <button type="button" role="radio" aria-checked="false" data-currency="USD">$ USD</button>
+          </div>
+          <p class="currency__note" data-geo-note>Prices shown in ₹ INR for India.</p>
+        </div>
+
+        <article class="price-card reveal" data-cta-watch>
+          <span class="price-card__ribbon">Launch offer · <span data-discount>50% off</span></span>
+          <span class="app-icon app-icon--lg" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+          <h3 class="price-card__name">Velora SFX Pack</h3>
+          <p class="price-card__desc">The complete sound effects pack for video editors.</p>
+
+          <div class="price-card__price">
+            <s class="price-old" data-price-original>₹199</s>
+            <span class="price-big" data-price>₹99</span>
+          </div>
+          <p class="price-card__save">You save <strong data-save>₹100</strong> (<span data-discount-pct>50%</span>)</p>
+          <p class="price-card__rate" data-rate-note hidden></p>
+
+          <button class="btn btn--lg btn--block" type="button" data-buy>
+            Buy now — <span data-price>₹99</span>
+          </button>
+
+          <ul class="checks">
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Every sound category in the pack</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Royalty-free for personal &amp; client work</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Instant download link</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Works in every editing app</li>
+            <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Free future updates</li>
+          </ul>
+
+          <p class="price-card__secure"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg>Secure checkout · One-time payment</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ───────── FAQ ───────── -->
+    <section class="section section--alt" id="faq" aria-labelledby="faq-title">
+      <div class="container container--narrow">
+        <header class="section__head reveal">
+          <p class="kicker">FAQ</p>
+          <h2 id="faq-title">Questions? Answers.</h2>
+        </header>
+
+        <div class="faq reveal">
+          <details>
+            <summary>Who is this pack for?<svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <p>YouTubers, reel editors, freelancers and anyone who wants their edits to sound as good as they look.</p>
+          </details>
+          <details>
+            <summary>Which editing apps does it work with?<svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <p>Any app that accepts audio files — Premiere Pro, Final Cut Pro, DaVinci Resolve, After Effects, CapCut, VN, Filmora and more, on Mac, Windows, Android or iPhone.</p>
+          </details>
+          <details>
+            <summary>How do I get the sounds after paying?<svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <p>Right after checkout you get a download link. Download the pack, unzip it, and drag any sound onto your timeline.</p>
+          </details>
+          <details>
+            <summary>Can I use these in client or monetized videos?<svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <p>Yes. Use them in YouTube videos, Instagram Reels, ads and client projects. You just can't resell or share the sound files themselves.</p>
+          </details>
+          <details>
+            <summary>I'm outside India. Can I still buy?<svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <p>Of course. Visitors outside India see prices in US dollars automatically, and you can switch between ₹ INR and $ USD at any time in the pricing section.</p>
+          </details>
+          <details>
+            <summary>Is this a subscription?<svg class="ico" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <p>No. It's a single one-time payment. Buy once and keep the pack forever.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── Final CTA ───────── -->
+    <section class="section section--tight">
+      <div class="container">
+        <div class="cta-card reveal" data-cta-watch>
+          <span class="app-icon app-icon--lg app-icon--glass" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+          <h2>Make your next edit<br>sound expensive.</h2>
+          <p>Get the full Velora SFX Pack for <s data-price-original>₹199</s> <strong data-price>₹99</strong>.</p>
+          <button class="btn btn--lg btn--white" type="button" data-buy>Buy now</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ───────── Footer ───────── -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="app-icon app-icon--xs" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+        <span>Velora Media</span>
+      </div>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="#sounds">Sounds</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <span data-contact-links></span>
+      </nav>
+      <p class="footer__legal">© <span data-year>2026</span> Velora Media. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ───────── Mobile buy bar ───────── -->
+  <div class="buybar" data-buybar aria-hidden="true" inert>
+    <div class="buybar__info">
+      <strong>Velora SFX Pack</strong>
+      <span><s data-price-original>₹199</s> <b data-price>₹99</b></span>
+    </div>
+    <button class="btn btn--sm btn--buybar" type="button" data-buy>Buy now</button>
+  </div>
+
+  <!-- ───────── Checkout sheet (shown until a checkout link is configured) ───────── -->
+  <dialog class="sheet" id="buy-sheet" aria-labelledby="sheet-title">
+    <div class="sheet__panel">
+      <span class="sheet__grabber" aria-hidden="true"></span>
+      <button class="sheet__close" type="button" data-sheet-close aria-label="Close"><svg class="ico"><use href="#i-close"/></svg></button>
+
+      <div class="sheet__head">
+        <span class="app-icon app-icon--md" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+        <div>
+          <h2 id="sheet-title">Velora SFX Pack</h2>
+          <p>Sound effects for video editors</p>
+        </div>
+      </div>
+
+      <dl class="sheet__rows">
+        <div><dt>Pack price</dt><dd data-price-original>₹199</dd></div>
+        <div><dt>Launch discount</dt><dd class="is-good">− <span data-save>₹100</span></dd></div>
+        <div class="is-total"><dt>Total</dt><dd data-price>₹99</dd></div>
+      </dl>
+
+      <div class="sheet__notice">
+        <svg class="ico" aria-hidden="true"><use href="#i-bolt"/></svg>
+        <p><strong>Checkout opens very soon.</strong> We're putting the final touches on the pack — check back shortly to grab it at the launch price.</p>
+      </div>
+
+      <div class="sheet__contact" data-sheet-contact hidden></div>
+
+      <button class="btn btn--lg btn--block" type="button" data-sheet-close>Got it</button>
+    </div>
+  </dialog>
+</body>
+</html>
