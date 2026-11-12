@@ -36,6 +36,15 @@ Text such as headlines, features, FAQ and license wording is in `index.html`.
 Until a preview has a `src`, the page plays a demo sound generated in the browser and shows a small
 "Demo previews" note. That note disappears once every preview has a real file.
 
+### Editor logos ("works with" strip)
+
+The logos are files in `assets/logos/`. To change one, replace its file with a square image (SVG or PNG, at least 128 px)
+and keep the name, or add a new `<li class="logo-chip">` in `index.html`. The two rows loop automatically.
+
+Sources: Premiere Pro and Final Cut Pro from Wikimedia Commons, After Effects from the Iconify "logos" set,
+DaVinci Resolve, Filmora and Kdenlive from Simple Icons (CC0), and CapCut from Wikimedia Commons (public domain).
+All logos are trademarks of their owners and are shown only to say which apps the pack works with.
+
 ### Before launch, double-check
 
 These are written as sensible defaults. Change them if they don't match your actual terms:
@@ -64,5 +73,6 @@ index.html             Page markup and copy
 assets/css/styles.css  Design system and layout
 assets/js/config.js    Prices, checkout links, previews
 assets/js/main.js      Currency, audio previews, buy flow, animations
+assets/logos/          Editor app logos for the "works with" strip
 assets/favicon.svg     App icon
 ```

@@ -176,18 +176,39 @@
      ====================================================================== */
   const Player = (() => {
     let ctx = null;
+    let analyser = null;
     let current = null;
+    const listeners = new Set();
+    const notify = (playing) => listeners.forEach((fn) => fn(playing));
 
     function audio() {
       if (!ctx) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
         ctx = new AC();
+        analyser = ctx.createAnalyser();
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.72;
+        analyser.connect(ctx.destination);
         // Let iPhone play even with the silent switch on (Safari 17+).
         try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch { /* ignore */ }
       }
       if (ctx.state === "suspended") ctx.resume();
       return ctx;
+    }
+
+    /** Loudness (0–1) of `edges.length - 1` frequency bands of whatever is playing. */
+    const bins = new Uint8Array(128);
+    function levels(edges) {
+      if (!analyser || !current) return null;
+      analyser.getByteFrequencyData(bins);
+      const out = [];
+      for (let i = 0; i < edges.length - 1; i++) {
+        let sum = 0;
+        for (let k = edges[i]; k < edges[i + 1]; k++) sum += bins[k];
+        out.push(sum / (edges[i + 1] - edges[i]) / 255);
+      }
+      return out;
     }
 
     function stopAll() {
@@ -197,6 +218,7 @@
       session.sources.forEach((s) => { try { s.stop(); } catch { /* already stopped */ } });
       try { session.out.disconnect(); } catch { /* ignore */ }
       if (session.onStop) session.onStop();
+      notify(false);
     }
 
     /** list: [{ buffer, at }] — `at` is seconds from start. */
@@ -207,7 +229,7 @@
       const t0 = c.currentTime + 0.06;
       const out = c.createGain();
       out.gain.value = 0.9;
-      out.connect(c.destination);
+      out.connect(analyser || c.destination);
       const sources = list.map(({ buffer, at = 0 }) => {
         const s = c.createBufferSource();
         s.buffer = buffer;
@@ -216,6 +238,7 @@
         return s;
       });
       current = { sources, out, onStop, t0 };
+      notify(true);
       return current;
     }
 
@@ -223,6 +246,8 @@
       audio,
       play,
       stopAll,
+      levels,
+      subscribe: (fn) => listeners.add(fn),
       isCurrent: (s) => s !== null && s === current,
       elapsed: (s) => (ctx ? ctx.currentTime - s.t0 : 0),
     };
@@ -726,6 +751,68 @@
   }
 
   /* ======================================================================
+     App icon equaliser: the icon's bars follow whatever sound is playing
+     ====================================================================== */
+  function initEqualiser() {
+    const icons = $$("[data-eq]");
+    if (!icons.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const bars = icons.map((icon) => $$(".eq rect", icon));
+    const EDGES = [1, 3, 8, 20, 45, 100];  // ~170 Hz per bin: bass … air
+    const ORDER = [3, 1, 0, 2, 4];         // loudest band (bass) in the middle bar
+    let raf = 0;
+
+    const frame = () => {
+      const lv = Player.levels(EDGES);
+      if (lv) {
+        bars.forEach((set) => set.forEach((bar, i) => {
+          const v = 0.42 + 0.58 * Math.min(1, lv[ORDER[i]] * 1.4);
+          bar.style.setProperty("--lv", v.toFixed(3));
+        }));
+      }
+      raf = requestAnimationFrame(frame);
+    };
+
+    Player.subscribe((playing) => {
+      cancelAnimationFrame(raf);
+      icons.forEach((icon) => icon.classList.toggle("is-live", playing));
+      if (playing) raf = requestAnimationFrame(frame);
+      else bars.forEach((set) => set.forEach((bar) => bar.style.removeProperty("--lv")));
+    });
+  }
+
+  /* ======================================================================
+     Logo marquee: fill each row wider than the screen, then loop it
+     ====================================================================== */
+  function initMarquee() {
+    $$("[data-marquee] .marquee__row").forEach((row) => {
+      const set = $(".marquee__set", row);
+      if (!set || !set.children.length) return;
+      const originals = Array.from(set.children);
+      row.classList.add("is-running");
+
+      // Repeat the logos until one set is wider than the largest marquee (1240px).
+      let guard = 0;
+      while (set.getBoundingClientRect().width < 1400 && guard++ < 12) {
+        originals.forEach((li) => {
+          const copy = li.cloneNode(true);
+          copy.setAttribute("aria-hidden", "true");
+          copy.dataset.clone = "";
+          set.appendChild(copy);
+        });
+      }
+
+      // A second identical set makes the -50% loop seamless.
+      const twin = set.cloneNode(true);
+      twin.setAttribute("aria-hidden", "true");
+      twin.dataset.clone = "";
+      row.appendChild(twin);
+
+      const speed = 34; // px per second: slow and calm
+      row.style.setProperty("--dur", `${Math.round(set.getBoundingClientRect().width / speed)}s`);
+    });
+  }
+
+  /* ======================================================================
      Buy flow
      ====================================================================== */
   function initBuy() {
@@ -812,5 +899,7 @@
   initSounds();
   initChrome();
   initReel();
+  initEqualiser();
+  initMarquee();
   initBuy();
 })();

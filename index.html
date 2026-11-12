@@ -28,10 +28,6 @@
   <!-- Icon sprite -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id="g-files" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#6CC6FF"/>
-        <stop offset="1" stop-color="#1A86F5"/>
-      </linearGradient>
       <linearGradient id="g-folder-back" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stop-color="#3FA2F3"/>
         <stop offset="1" stop-color="#2088EA"/>
@@ -42,7 +38,72 @@
       </linearGradient>
     </defs>
 
-    <symbol id="i-logo" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3.7" y="9.5" width="2.2" height="5" rx="1.1"/><rect x="7.3" y="6.5" width="2.2" height="11" rx="1.1"/><rect x="10.9" y="3.5" width="2.2" height="17" rx="1.1"/><rect x="14.5" y="6" width="2.2" height="12" rx="1.1"/><rect x="18.1" y="9" width="2.2" height="6" rx="1.1"/></g></symbol>
+    <!-- App icon: glass squircle, lens and waveform -->
+    <defs>
+      <clipPath id="ai-clip"><path d="M0 30C0 7.5 7.5 0 30 0h40c22.5 0 30 7.5 30 30v40c0 22.5-7.5 30-30 30H30C7.5 100 0 92.5 0 70z"/></clipPath>
+      <linearGradient id="ai-bg" x1=".15" y1="0" x2=".85" y2="1">
+        <stop offset="0" stop-color="#9BE0FF"/>
+        <stop offset=".42" stop-color="#3FAAFF"/>
+        <stop offset=".8" stop-color="#1477F2"/>
+        <stop offset="1" stop-color="#0A5BD3"/>
+      </linearGradient>
+      <radialGradient id="ai-depth" cx=".5" cy="1.08" r=".75">
+        <stop offset="0" stop-color="#0640A8" stop-opacity=".6"/>
+        <stop offset="1" stop-color="#0640A8" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="ai-sheen" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff" stop-opacity=".42"/>
+        <stop offset=".46" stop-color="#fff" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="ai-rim" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff" stop-opacity=".85"/>
+        <stop offset=".45" stop-color="#fff" stop-opacity=".08"/>
+        <stop offset="1" stop-color="#fff" stop-opacity=".3"/>
+      </linearGradient>
+      <linearGradient id="ai-lens" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff" stop-opacity=".34"/>
+        <stop offset="1" stop-color="#fff" stop-opacity=".06"/>
+      </linearGradient>
+      <linearGradient id="ai-lens-rim" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff" stop-opacity=".95"/>
+        <stop offset=".5" stop-color="#fff" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#fff" stop-opacity=".45"/>
+      </linearGradient>
+      <linearGradient id="ai-bar" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff"/>
+        <stop offset="1" stop-color="#CBE9FF"/>
+      </linearGradient>
+      <filter id="ai-lens-shadow" x="-30%" y="-30%" width="160%" height="170%">
+        <feDropShadow dx="0" dy="3" stdDeviation="3.2" flood-color="#0543AE" flood-opacity=".38"/>
+      </filter>
+      <filter id="ai-bar-shadow" x="-80%" y="-30%" width="260%" height="160%">
+        <feDropShadow dx="0" dy="1.4" stdDeviation="1.3" flood-color="#0645B2" flood-opacity=".5"/>
+      </filter>
+    </defs>
+    <symbol id="i-appicon-base" viewBox="0 0 100 100">
+      <g clip-path="url(#ai-clip)">
+        <rect width="100" height="100" fill="url(#ai-bg)"/>
+        <rect width="100" height="100" fill="url(#ai-depth)"/>
+        <rect width="100" height="100" fill="url(#ai-sheen)"/>
+        <circle cx="50" cy="51" r="31" fill="url(#ai-lens)" filter="url(#ai-lens-shadow)"/>
+        <circle cx="50" cy="51" r="30.5" fill="none" stroke="url(#ai-lens-rim)" stroke-width="1"/>
+        <path d="M28.6 39.5a25 25 0 0 1 13-11.6" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M0 30C0 7.5 7.5 0 30 0h40c22.5 0 30 7.5 30 30v40c0 22.5-7.5 30-30 30H30C7.5 100 0 92.5 0 70z" fill="none" stroke="url(#ai-rim)" stroke-width="2.2"/>
+      </g>
+    </symbol>
+    <symbol id="i-appicon-bars" viewBox="0 0 100 100">
+      <g fill="url(#ai-bar)" filter="url(#ai-bar-shadow)">
+        <rect x="29.2" y="43.5" width="5.6" height="15" rx="2.8"/>
+        <rect x="38.2" y="36.5" width="5.6" height="29" rx="2.8"/>
+        <rect x="47.2" y="30.5" width="5.6" height="41" rx="2.8"/>
+        <rect x="56.2" y="36.5" width="5.6" height="29" rx="2.8"/>
+        <rect x="65.2" y="43.5" width="5.6" height="15" rx="2.8"/>
+      </g>
+    </symbol>
+    <symbol id="i-appicon" viewBox="0 0 100 100">
+      <use href="#i-appicon-base"/>
+      <use href="#i-appicon-bars"/>
+    </symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.6v12.8a1 1 0 0 0 1.52.86l10.4-6.4a1 1 0 0 0 0-1.72L9.52 4.74A1 1 0 0 0 8 5.6z"/></symbol>
     <symbol id="i-pause" viewBox="0 0 24 24"><g fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/></g></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.2 4.2L19 7"/></symbol>
@@ -86,7 +147,12 @@
   <header class="nav" id="nav">
     <div class="nav__inner">
       <a class="brand" href="#top" aria-label="Velora — back to top">
-        <span class="app-icon app-icon--xs" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+        <svg class="app-icon app-icon--xs" viewBox="0 0 100 100" aria-hidden="true" data-eq>
+          <use href="#i-appicon-base"/>
+          <g class="eq" fill="url(#ai-bar)" filter="url(#ai-bar-shadow)">
+            <rect x="29.2" y="43.5" width="5.6" height="15" rx="2.8"/><rect x="38.2" y="36.5" width="5.6" height="29" rx="2.8"/><rect x="47.2" y="30.5" width="5.6" height="41" rx="2.8"/><rect x="56.2" y="36.5" width="5.6" height="29" rx="2.8"/><rect x="65.2" y="43.5" width="5.6" height="15" rx="2.8"/>
+          </g>
+        </svg>
         <span class="brand__name">Velora <span class="brand__sub">SFX</span></span>
       </a>
       <nav class="nav__links" aria-label="Sections">
@@ -104,7 +170,14 @@
     <!-- ───────── Hero ───────── -->
     <section class="hero" id="top">
       <div class="container hero__inner">
-        <span class="app-icon app-icon--xl reveal" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+        <div class="hero-icon reveal" aria-hidden="true">
+          <svg class="app-icon app-icon--xl hero-icon__svg" viewBox="0 0 100 100" data-eq data-eq-idle>
+            <use href="#i-appicon-base"/>
+            <g class="eq" fill="url(#ai-bar)" filter="url(#ai-bar-shadow)">
+              <rect x="29.2" y="43.5" width="5.6" height="15" rx="2.8"/><rect x="38.2" y="36.5" width="5.6" height="29" rx="2.8"/><rect x="47.2" y="30.5" width="5.6" height="41" rx="2.8"/><rect x="56.2" y="36.5" width="5.6" height="29" rx="2.8"/><rect x="65.2" y="43.5" width="5.6" height="15" rx="2.8"/>
+            </g>
+          </svg>
+        </div>
 
         <p class="eyebrow reveal">
           <span class="eyebrow__pill">New</span>
@@ -189,15 +262,24 @@
     <section class="works" aria-labelledby="works-title">
       <div class="container">
         <p class="works__title" id="works-title">Drag-and-drop ready for every editor</p>
-        <ul class="works__list">
-          <li>Premiere Pro</li>
-          <li>Final Cut Pro</li>
-          <li>DaVinci Resolve</li>
-          <li>After Effects</li>
-          <li>CapCut</li>
-          <li>VN Editor</li>
-          <li>Filmora</li>
-        </ul>
+      </div>
+      <!-- Two gently scrolling rows. Logos live in assets/logos/ — swap a file to update one. -->
+      <div class="marquee" data-marquee>
+        <div class="marquee__row">
+          <ul class="marquee__set">
+            <li class="logo-chip"><img src="assets/logos/premiere-pro.svg" alt="" width="40" height="40"><span>Premiere Pro</span></li>
+            <li class="logo-chip"><img src="assets/logos/final-cut-pro.png" alt="" width="40" height="40"><span>Final Cut Pro</span></li>
+            <li class="logo-chip"><img src="assets/logos/davinci-resolve.svg" alt="" width="40" height="40"><span>DaVinci Resolve</span></li>
+            <li class="logo-chip"><img src="assets/logos/after-effects.svg" alt="" width="40" height="40"><span>After Effects</span></li>
+          </ul>
+        </div>
+        <div class="marquee__row marquee__row--reverse">
+          <ul class="marquee__set">
+            <li class="logo-chip"><img src="assets/logos/capcut.svg" alt="" width="40" height="40"><span>CapCut</span></li>
+            <li class="logo-chip"><img src="assets/logos/filmora.svg" alt="" width="40" height="40"><span>Filmora</span></li>
+            <li class="logo-chip"><img src="assets/logos/kdenlive.svg" alt="" width="40" height="40"><span>Kdenlive</span></li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -322,7 +404,7 @@
 
         <article class="price-card reveal" data-cta-watch>
           <span class="price-card__ribbon">Launch offer · <span data-discount>50% off</span></span>
-          <span class="app-icon app-icon--lg" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+          <svg class="app-icon app-icon--lg" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-appicon"/></svg>
           <h3 class="price-card__name">Velora SFX Pack</h3>
           <p class="price-card__desc">The complete sound effects pack for video editors.</p>
 
@@ -391,7 +473,7 @@
     <section class="section section--tight">
       <div class="container">
         <div class="cta-card reveal" data-cta-watch>
-          <span class="app-icon app-icon--lg app-icon--glass" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+          <svg class="app-icon app-icon--lg" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-appicon"/></svg>
           <h2>Make your next edit<br>sound expensive.</h2>
           <p>Get the full Velora SFX Pack for <s data-price-original>₹199</s> <strong data-price>₹99</strong>.</p>
           <button class="btn btn--lg btn--white" type="button" data-buy>Buy now</button>
@@ -404,7 +486,7 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <span class="app-icon app-icon--xs" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+        <svg class="app-icon app-icon--xs" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-appicon"/></svg>
         <span>Velora Media</span>
       </div>
       <nav class="footer__links" aria-label="Footer">
@@ -433,7 +515,7 @@
       <button class="sheet__close" type="button" data-sheet-close aria-label="Close"><svg class="ico"><use href="#i-close"/></svg></button>
 
       <div class="sheet__head">
-        <span class="app-icon app-icon--md" aria-hidden="true"><svg><use href="#i-logo"/></svg></span>
+        <svg class="app-icon app-icon--md" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-appicon"/></svg>
         <div>
           <h2 id="sheet-title">Velora SFX Pack</h2>
           <p>Sound effects for video editors</p>
