@@ -15,6 +15,8 @@
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch { /* private mode */ } },
   };
+  // Analytics (analytics.js). Does nothing if that script didn't load.
+  const track = (name, tags) => { if (typeof window.track === "function") window.track(name, tags); };
   const escapeHTML = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   /* ======================================================================
@@ -137,7 +139,11 @@
     function set(cur, { save = true } = {}) {
       if (cur !== "INR" && cur !== "USD") return;
       state.currency = cur;
-      if (save) { state.how = "saved"; store.set(KEY_CUR, cur); }
+      if (save) {
+        state.how = "saved";
+        store.set(KEY_CUR, cur);
+        track("currency_switch", { currency: cur });
+      }
       render();
       if (cur === "USD") loadRate();
     }
@@ -695,6 +701,7 @@
     btn.addEventListener("click", async () => {
       if (reel.classList.contains("is-playing")) { Player.stopAll(); return; }
       if (!Player.audio()) return;
+      track("play_the_edit");
       setUI(true);
       let buffers;
       try { buffers = await Promise.all(clips.map((c) => Synth.render(c.key))); } catch { setUI(false); return; }
@@ -806,7 +813,11 @@
       if (buy) {
         e.preventDefault();
         const url = urls[Pricing.currency] || urls.INR || urls.USD;
-        if (url) window.location.href = url; else open();
+        const where = [["#nav", "menu"], [".hero", "hero"], [".price-card", "price_card"], [".cta-card", "final_cta"],
+          ["[data-buybar]", "phone_bar"], ["#buy-sheet", "sheet"]].find(([sel]) => buy.closest(sel));
+        track("buy_click", { buy_button: where ? where[1] : "other", currency: Pricing.currency });
+        // A short pause lets analytics send the click before the checkout page loads.
+        if (url) setTimeout(() => { window.location.href = url; }, 150); else open();
         return;
       }
       if (e.target.closest("[data-sheet-close]")) close();
