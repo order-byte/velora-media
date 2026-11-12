@@ -71,6 +71,11 @@ window.STORE_CONFIG = {
    */
   testMode: false,
 
+  /* Microsoft Clarity project ID (clarity.microsoft.com). Empty turns analytics off. */
+  analytics: {
+    clarityId: "zcdbl4gl9m",
+  },
+
   /* Optional contact links shown in the footer and the checkout sheet. */
   contact: {
     email: "",      // e.g. "hello@yourdomain.com"

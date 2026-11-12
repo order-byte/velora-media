@@ -105,7 +105,9 @@
   }
 
   async function init() {
-    if (new URLSearchParams(location.search).has("test")) $("[data-test-banner]").hidden = false;
+    const isTest = new URLSearchParams(location.search).has("test");
+    if (isTest) $("[data-test-banner]").hidden = false;
+    if (typeof window.track === "function") window.track("thank_you_page", { test_purchase: isTest });
     $$("[data-year]").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
 
     const contact = C.contact || {};

@@ -35,6 +35,7 @@ There is no framework and no build step. The site is plain HTML, CSS and JS, ser
 | `delivery.method` | `"platform"` (live): the payment platform delivers the pack. `"link"`: a button to `delivery.fullPackUrl`, which is publicly visible. `"zip"`: ZIPs built by `tools/build_pack.py`. |
 | `testMode` | `true` adds a "Test purchase" button to the checkout sheet. Keep `false` on the live site. |
 | `contact` | Optional email / WhatsApp / Instagram links for the footer and help text. |
+| `analytics.clarityId` | Microsoft Clarity project ID. Empty turns analytics off. |
 
 All page text (headlines, features, FAQ, license wording) is in `index.html`.
 
@@ -46,6 +47,20 @@ and keep the same name. Each logo gets a glossy finish and an occasional glint a
 Sources: Premiere Pro from Wikimedia Commons and After Effects from the Iconify "logos" set. Final Cut Pro,
 DaVinci Resolve, CapCut, Alight Motion and Filmora are cut-outs of icon images supplied by the site owner.
 All logos are trademarks of their owners and are shown only to say which apps the pack works with.
+
+## Analytics
+
+Microsoft Clarity (https://clarity.microsoft.com, project `zcdbl4gl9m`) shows visitors, devices, countries,
+heatmaps and session replays. These moments are recorded as custom events:
+
+| Event | When | Tags |
+| --- | --- | --- |
+| `buy_click` | Any Buy button | `buy_button` (menu, hero, price_card, final_cta, phone_bar), `currency` |
+| `play_the_edit` | The demo edit is played | — |
+| `currency_switch` | Visitor picks ₹ or $ | `currency` |
+| `thank_you_page` | download.html is opened | `test_purchase` |
+
+In Clarity, filter by these under **Custom events** / **Custom tags**. Sales and checkout views are in the SuperProfile dashboard.
 
 ## Updating the live site
 
@@ -68,6 +83,7 @@ assets/css/styles.css  Design system and layout
 assets/js/config.js    Prices, checkout link, delivery settings
 assets/js/main.js      Currency, demo edit audio, buy flow, animations
 assets/js/download.js  Thank-you page behaviour
+assets/js/analytics.js Microsoft Clarity + event tracking
 assets/logos/          Editor app logos
 assets/favicon.svg     App icon
 tools/build_pack.py    Optional: builds ZIPs + manifest from pack/ (for delivery.method "zip")
