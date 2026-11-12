@@ -77,23 +77,4 @@ window.STORE_CONFIG = {
     instagram: "",  // e.g. "https://instagram.com/yourhandle"
     whatsapp: "",   // e.g. "https://wa.me/91XXXXXXXXXX"
   },
-
-  /*
-   * Sound previews on the page.
-   *  - `src`: path or URL to a real preview file (mp3/wav/m4a), e.g. "assets/audio/whoosh.mp3".
-   *  - While `src` is empty, a demo sound is generated in the browser (`synth`)
-   *    and a small "demo previews" note is shown under the grid.
-   *    Available synths: whoosh, impact, riser, glitch, swish, subdrop, pop, click.
-   *  - `icon`: wind, burst, rise, glitch, swish, drop, sparkle, tap.
-   */
-  previews: [
-    { name: "Whoosh",           category: "Transitions", synth: "whoosh",  icon: "wind",    src: "" },
-    { name: "Cinematic Impact", category: "Impacts",     synth: "impact",  icon: "burst",   src: "" },
-    { name: "Tension Riser",    category: "Risers",      synth: "riser",   icon: "rise",    src: "" },
-    { name: "Digital Glitch",   category: "Glitches",    synth: "glitch",  icon: "glitch",  src: "" },
-    { name: "Quick Swish",      category: "Transitions", synth: "swish",   icon: "swish",   src: "" },
-    { name: "Sub Drop",         category: "Bass",        synth: "subdrop", icon: "drop",    src: "" },
-    { name: "Text Pop",         category: "Pops",        synth: "pop",     icon: "sparkle", src: "" },
-    { name: "UI Tap",           category: "Interface",   synth: "click",   icon: "tap",     src: "" },
-  ],
 };

@@ -1,8 +1,7 @@
 /* ==========================================================================
    Aminur Rex SFX Pack — page behaviour
    - Currency: ₹ INR in India, $ USD elsewhere (time-zone based, switchable)
-   - Sound previews (real files from config, or demo sounds synthesised in-browser)
-   - Hero timeline "Play the edit" demo
+   - Hero timeline "Play the edit" demo (UI-style sounds synthesised in the browser)
    - Buy flow, sticky mobile buy bar, reveal animations
    ========================================================================== */
 (() => {
@@ -526,6 +525,71 @@
           n.start(0);
         },
       },
+      // Keyboard typing: short bright clicks with a soft low "thock", irregular rhythm.
+      keys: {
+        dur: 1.1,
+        build(ctx, out) {
+          const r = rng(7);
+          let t = 0.01;
+          for (let i = 0; i < 9; i++) {
+            const n = noiseSrc(ctx, 0.03, 100 + i);
+            n.connect(filter(ctx, "bandpass", 2600 + r() * 1800, 1.4))
+              .connect(gainEnv(ctx, [[t, 0.0001], [t + 0.001, 0.9], [t + 0.022, 0.0001]])).connect(out);
+            n.start(t);
+            const o = ctx.createOscillator();
+            o.frequency.setValueAtTime(170 + r() * 40, t);
+            o.connect(gainEnv(ctx, [[t, 0.0001], [t + 0.002, 0.35], [t + 0.03, 0.0001]])).connect(out);
+            o.start(t);
+            o.stop(t + 0.04);
+            t += 0.07 + r() * 0.08;
+          }
+        },
+      },
+      // Data blips: quick, bright sine blips in a little melody.
+      blips: {
+        dur: 0.8,
+        build(ctx, out) {
+          [1318.5, 1760, 1174.7, 1568, 2093].forEach((f, i) => {
+            const t = 0.01 + i * 0.085;
+            const o = ctx.createOscillator();
+            o.type = i % 2 ? "triangle" : "sine";
+            o.frequency.setValueAtTime(f, t);
+            o.connect(gainEnv(ctx, [[t, 0.0001], [t + 0.003, 0.8], [t + 0.06, 0.0001]])).connect(out);
+            o.start(t);
+            o.stop(t + 0.07);
+          });
+        },
+      },
+      // Confirm: a soft rising two-note success chime.
+      confirm: {
+        dur: 1.0,
+        build(ctx, out) {
+          [[1046.5, 0.01], [1568, 0.1]].forEach(([f, t]) => {
+            [[1, 1], [2, 0.25], [3, 0.08]].forEach(([mult, amp]) => {
+              const o = ctx.createOscillator();
+              o.frequency.setValueAtTime(f * mult, t);
+              o.connect(gainEnv(ctx, [[t, 0.0001], [t + 0.006, amp], [t + 0.75, 0.0001]])).connect(out);
+              o.start(t);
+              o.stop(t + 0.8);
+            });
+          });
+        },
+      },
+      // Notification ding: bell-like partials, two notes.
+      ding: {
+        dur: 1.5,
+        build(ctx, out) {
+          [[1318.5, 0.01, 0.8], [1760, 0.14, 1]].forEach(([f, t, v]) => {
+            [[1, 1], [2.76, 0.32], [5.4, 0.1]].forEach(([mult, amp]) => {
+              const o = ctx.createOscillator();
+              o.frequency.setValueAtTime(f * mult, t);
+              o.connect(gainEnv(ctx, [[t, 0.0001], [t + 0.004, v * amp], [t + 1.2 / mult ** 0.5, 0.0001]])).connect(out);
+              o.start(t);
+              o.stop(t + 1.3);
+            });
+          });
+        },
+      },
     };
 
     function finish(buf) {
@@ -588,106 +652,6 @@
 
     return { render, decode, peaks };
   })();
-
-  const bufferFor = (item) => (item.src ? Synth.decode(item.src) : Synth.render(item.synth));
-
-  /* ======================================================================
-     Sound preview cards
-     ====================================================================== */
-  function initSounds() {
-    const grid = $("#sound-grid");
-    if (!grid) return;
-    const items = Array.isArray(C.previews) ? C.previews : [];
-    const tints = ["#1A8CFF", "#5E5CE6", "#FF9F0A", "#FF375F", "#30B0C7", "#BF5AF2", "#34C759", "#FF6B3D"];
-    const BARS = 48;
-    const flatBars = Array.from({ length: BARS }, (_, i) => `<i style="--h:${12 + Math.round(Math.abs(Math.sin(i * 0.7)) * 18)}%"></i>`).join("");
-
-    const note = $("[data-demo-note]");
-    if (note) note.hidden = !items.some((p) => !p.src);
-
-    const cards = items.map((item, i) => {
-      const card = document.createElement("article");
-      card.className = "sound-card reveal";
-      card.style.setProperty("--tint", item.tint || tints[i % tints.length]);
-      const name = escapeHTML(item.name || "Sound");
-      card.innerHTML = `
-        <div class="sound-card__top">
-          <span class="sound-card__icon" aria-hidden="true"><svg><use href="#s-${escapeHTML(item.icon || "wind")}"/></svg></span>
-          <div class="sound-card__meta">
-            <h3>${name}</h3>
-            <p><span>${escapeHTML(item.category || "")}</span><span data-dur></span></p>
-          </div>
-          <button class="sound-card__play" type="button" aria-label="Play ${name}">
-            <svg class="i-play" aria-hidden="true"><use href="#i-play"/></svg>
-            <svg class="i-pause" aria-hidden="true"><use href="#i-pause"/></svg>
-          </button>
-        </div>
-        <div class="wave" aria-hidden="true">
-          <div class="wave__bars">${flatBars}</div>
-          <div class="wave__bars wave__bars--progress">${flatBars}</div>
-        </div>`;
-      grid.appendChild(card);
-      return { card, item };
-    });
-
-    function paint({ card, item }) {
-      bufferFor(item).then((buf) => {
-        const heights = Synth.peaks(buf, BARS);
-        $$(".wave__bars", card).forEach((row) => {
-          Array.from(row.children).forEach((bar, j) => { bar.style.setProperty("--h", `${Math.round(heights[j] * 100)}%`); });
-        });
-        const dur = $("[data-dur]", card);
-        if (dur) dur.textContent = ` · ${buf.duration.toFixed(1)}s`;
-        card.classList.add("is-ready");
-      }).catch(() => { card.classList.add("is-error", "is-ready"); });
-    }
-
-    // Prepare waveforms once the section is close to the viewport.
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((entries) => {
-        if (entries.some((e) => e.isIntersecting)) { cards.forEach(paint); io.disconnect(); }
-      }, { rootMargin: "600px 0px" });
-      io.observe(grid);
-    } else {
-      cards.forEach(paint);
-    }
-
-    let request = 0;
-    cards.forEach(({ card, item }) => {
-      const btn = $(".sound-card__play", card);
-      const label = `Play ${item.name || "sound"}`;
-
-      btn.addEventListener("click", async () => {
-        if (card.classList.contains("is-playing")) { Player.stopAll(); return; }
-        if (!Player.audio()) return; // unlock audio inside the tap
-        const mine = ++request;
-        card.classList.add("is-loading");
-        let buf;
-        try { buf = await bufferFor(item); } catch { card.classList.remove("is-loading"); card.classList.add("is-error"); return; }
-        card.classList.remove("is-loading");
-        if (mine !== request) return; // another sound was tapped meanwhile
-
-        const reset = () => {
-          card.classList.remove("is-playing");
-          card.style.setProperty("--p", "0");
-          btn.setAttribute("aria-label", label);
-        };
-        const session = Player.play([{ buffer: buf }], reset);
-        if (!session) return;
-        card.classList.add("is-playing");
-        btn.setAttribute("aria-label", `Stop ${item.name || "sound"}`);
-
-        const tick = () => {
-          if (!Player.isCurrent(session)) return;
-          const p = Player.elapsed(session) / buf.duration;
-          card.style.setProperty("--p", String(clamp01(p)));
-          if (p >= 1) { Player.stopAll(); return; }
-          requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      });
-    });
-  }
 
   /* ======================================================================
      Hero timeline demo
@@ -905,7 +869,6 @@
 
   /* ====================================================================== */
   Pricing.init();
-  initSounds();
   initChrome();
   initReel();
   initEqualiser();
