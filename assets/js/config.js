@@ -39,8 +39,9 @@ window.STORE_CONFIG = {
    * for both currencies.
    */
   checkoutUrl: {
-    INR: "",
-    USD: "",
+    // SuperProfile product page: UPI, cards and netbanking in India; buyers abroad pay in their own currency.
+    INR: "https://superprofile.bio/vp/aminur-rex-sfx-pack",
+    USD: "",  // empty: buyers outside India use the same SuperProfile link
   },
 
   /*
@@ -58,7 +59,7 @@ window.STORE_CONFIG = {
    */
   delivery: {
     method: "platform",
-    platformName: "",  // e.g. "Instamojo"; shown on the thank-you page
+    platformName: "SuperProfile",  // shown on the thank-you page
     manifest: "downloads/manifest.json",
     fullPackUrl: "",
   },

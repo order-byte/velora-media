@@ -94,7 +94,7 @@
         const converted = cur === "USD" && !(C.fixedUSD && C.fixedUSD.price);
         el.hidden = !converted;
         if (converted) {
-          el.textContent = `Converted from ${fmt(price.inr, "INR")} at ${state.live ? "today's" : "an approximate"} exchange rate. Your bank may round it slightly.`;
+          el.textContent = `About ${fmt(price.inr, "INR")} at ${state.live ? "today's" : "an approximate"} exchange rate. Checkout shows the exact amount in your currency.`;
         }
       });
 
