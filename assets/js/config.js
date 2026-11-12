@@ -44,24 +44,31 @@ window.STORE_CONFIG = {
   },
 
   /*
-   * After payment. In your payment provider, set the "success / redirect URL" to the
-   * download page, e.g. https://your-site.com/download.html
-   * The page lists the pack from downloads/manifest.json (built by tools/build_pack.py).
-   * To host the big full-pack zip elsewhere (Google Drive, Dropbox), paste its link
-   * in fullPackUrl; the category downloads keep using the files in downloads/.
+   * After payment: how buyers get the pack. Buyers land on download.html
+   * (set it as the "redirect after payment" URL in your payment platform).
+   *
+   *   method: "platform"  The payment platform gives the download link (on its
+   *                        confirmation screen and email). Nothing secret is in
+   *                        this public code. Use this for the live store.
+   *   method: "link"      download.html shows a button to fullPackUrl
+   *                        (e.g. a Google Drive link). Anyone who reads this file
+   *                        can see that link, so it's not private.
+   *   method: "zip"       download.html offers the ZIPs in downloads/
+   *                        (built by tools/build_pack.py from pack/).
    */
   delivery: {
+    method: "platform",
+    platformName: "",  // e.g. "Instamojo"; shown on the thank-you page
     manifest: "downloads/manifest.json",
-    // The pack in Google Drive (folder shared as "Anyone with the link").
-    fullPackUrl: "https://drive.google.com/drive/folders/1mwBhxkkKt74TQOyBpvkO95EfA0b6Fk-p?usp=sharing",
+    fullPackUrl: "",
   },
 
   /*
    * Test mode: while no payment link is set, the checkout sheet offers a
    * "Test purchase" button that goes straight to the download page.
-   * Set to false before launch.
+   * Keep false on the live site.
    */
-  testMode: true,
+  testMode: false,
 
   /* Optional contact links shown in the footer and the checkout sheet. */
   contact: {

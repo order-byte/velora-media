@@ -40,13 +40,13 @@ Until a preview has a `src`, the page plays a demo sound generated in the browse
 
 Buyers land on `download.html` after paying.
 
-**Current setup: Google Drive.** `delivery.fullPackUrl` in `assets/js/config.js` points to the pack's Drive folder.
-The page then shows one **Open your pack in Google Drive** button (opens in a new tab) and how to save it
-from Drive. The folder must stay shared as "Anyone with the link". To switch back to the ZIPs in
-`downloads/`, set `fullPackUrl` to `""`.
+How the page behaves depends on `delivery.method` in `assets/js/config.js`:
 
-With `fullPackUrl` empty, the page shows a **Download full pack** button and one download per category,
-all read from `downloads/manifest.json`.
+| method | What buyers get |
+| --- | --- |
+| `"platform"` (live setting) | The payment platform shows and emails the download link. `download.html` thanks the buyer and explains where to find it. No private link is in the public code. |
+| `"link"` | A button to `delivery.fullPackUrl`, e.g. a Google Drive link. Anyone can read that link in the site's code. |
+| `"zip"` | A full-pack ZIP and one ZIP per category, from `downloads/manifest.json`. |
 
 **Updating the pack**
 
@@ -93,6 +93,31 @@ These are written as sensible defaults. Change them if they don't match your act
 - "Free future updates"
 - "Instant download link" (depends on your payment provider)
 - If you charge a fixed dollar amount at checkout, set `fixedUSD` so the page shows the same price.
+
+## Going live
+
+**1. Hosting (GitHub Pages)**
+
+1. Merge this branch into `main`.
+2. In the repo, open **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**,
+   then select `main` and `/ (root)`, and click **Save**.
+3. After a minute or two the site is live at `https://order-byte.github.io/velora-media/`.
+
+`.nojekyll` tells GitHub Pages to serve the files exactly as they are.
+
+**2. Payments (creator platform, e.g. Instamojo, Cosmofeed or Superprofile)**
+
+1. Create an account and finish KYC (PAN + bank account).
+2. Create a digital product, *Aminur Rex SFX Pack*, priced at ₹99 (₹199 as the original price, if the platform supports it).
+3. As the product's content, add the pack: a Google Drive link that only buyers receive, or an uploaded ZIP.
+4. If the platform can redirect after payment, use `https://order-byte.github.io/velora-media/download.html`.
+5. Put the product's payment link in `checkoutUrl.INR` in `assets/js/config.js`. Visitors outside India
+   use the same link unless you add a separate `checkoutUrl.USD`.
+
+**3. Before announcing**
+
+- `testMode` is `false`.
+- Do a real ₹99 purchase yourself and confirm the download link arrives.
 
 ## Run locally
 

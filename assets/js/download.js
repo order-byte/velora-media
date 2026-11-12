@@ -89,6 +89,21 @@
     }
   }
 
+  /* The payment platform hands out the download link; this page only thanks and guides. */
+  function renderPlatform() {
+    const from = delivery.platformName ? `${delivery.platformName}` : "the payment page";
+    $("[data-pack-meta]").textContent = `Your download link is on the payment confirmation screen and in the email from ${from}.`;
+    const button = $("[data-full-download]");
+    if (button) button.hidden = true;
+    $("[data-full-note]").textContent = "Can't find the email? Check Spam and Promotions, or message us with your payment ID and we'll send the link.";
+    const section = $("[data-category-section]");
+    if (section) section.hidden = true;
+    const step = $("[data-step-get]");
+    if (step) {
+      step.innerHTML = "<strong>Open your download link.</strong> Download the pack from it, then unzip it on your computer or phone.";
+    }
+  }
+
   async function init() {
     if (new URLSearchParams(location.search).has("test")) $("[data-test-banner]").hidden = false;
     $$("[data-year]").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
@@ -99,7 +114,12 @@
       help.innerHTML = `Message <a href="${escapeHTML(contact.instagram)}" target="_blank" rel="noopener">Aminur Rex on Instagram</a>.`;
     }
 
-    if (delivery.fullPackUrl && isExternal(delivery.fullPackUrl)) {
+    const method = delivery.method || (delivery.fullPackUrl ? "link" : "zip");
+    if (method === "platform") {
+      renderPlatform();
+      return;
+    }
+    if (method === "link" && delivery.fullPackUrl && isExternal(delivery.fullPackUrl)) {
       renderExternal(delivery.fullPackUrl);
       return;
     }
