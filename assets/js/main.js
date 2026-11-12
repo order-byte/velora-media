@@ -584,7 +584,6 @@
       const card = document.createElement("article");
       card.className = "sound-card reveal";
       card.style.setProperty("--tint", item.tint || tints[i % tints.length]);
-      card.style.setProperty("--d", String(i % 4));
       const name = escapeHTML(item.name || "Sound");
       card.innerHTML = `
         <div class="sound-card__top">
@@ -784,18 +783,6 @@
 
     $$("[data-year]").forEach((el) => { el.textContent = String(new Date().getFullYear()); });
 
-    const reveals = $$(".reveal");
-    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
-        });
-      }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-      reveals.forEach((el) => io.observe(el));
-    } else {
-      reveals.forEach((el) => el.classList.add("is-in"));
-    }
-
     // Mobile buy bar: shown while no other Buy button is on screen.
     const bar = $("[data-buybar]");
     const watched = $$("[data-cta-watch]");
@@ -822,7 +809,7 @@
 
   /* ====================================================================== */
   Pricing.init();
-  initSounds(); // before initChrome so the new cards get reveal animations
+  initSounds();
   initChrome();
   initReel();
   initBuy();
