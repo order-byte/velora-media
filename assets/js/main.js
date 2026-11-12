@@ -825,6 +825,9 @@
     const sheet = $("#buy-sheet");
     const urls = C.checkoutUrl || {};
 
+    // Test mode: let the owner walk through "buy → download" before payments are live.
+    if (C.testMode) $$("[data-test-buy]").forEach((el) => { el.hidden = false; });
+
     const open = () => {
       if (!sheet) return;
       if (typeof sheet.showModal === "function") sheet.showModal(); else sheet.setAttribute("open", "");

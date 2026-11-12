@@ -43,6 +43,25 @@ window.STORE_CONFIG = {
     USD: "",
   },
 
+  /*
+   * After payment. In your payment provider, set the "success / redirect URL" to the
+   * download page, e.g. https://your-site.com/download.html
+   * The page lists the pack from downloads/manifest.json (built by tools/build_pack.py).
+   * To host the big full-pack zip elsewhere (Google Drive, Dropbox), paste its link
+   * in fullPackUrl; the category downloads keep using the files in downloads/.
+   */
+  delivery: {
+    manifest: "downloads/manifest.json",
+    fullPackUrl: "",
+  },
+
+  /*
+   * Test mode: while no payment link is set, the checkout sheet offers a
+   * "Test purchase" button that goes straight to the download page.
+   * Set to false before launch.
+   */
+  testMode: true,
+
   /* Optional contact links shown in the footer and the checkout sheet. */
   contact: {
     email: "",      // e.g. "hello@yourdomain.com"
