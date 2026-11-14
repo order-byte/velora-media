@@ -6,9 +6,12 @@ A 22-second, 1920×1080, 30 fps motion-graphics promo. It follows the reference 
 
 | File | What it is |
 |---|---|
-| `out/aminur_rex_promo_sfx.mp4` | The video with the sound effects. No voice or music yet. |
+| `out/aminur_rex_promo_with_voice.mp4` | **Final:** the video with the ElevenLabs voice and the sound effects. No music yet. |
+| `out/aminur_rex_promo_sfx.mp4` | The video with the sound effects only. |
 | `out/aminur_rex_promo_silent.mp4` | The same video with no audio. |
 | `audio/sfx_track.wav` | The sound effects alone, 22 s, 48 kHz, 24-bit. Drop it on the timeline at 0:00. |
+| `audio/voice_aligned.wav` | The voice alone, already placed in time. Drop it on the timeline at 0:00. |
+| `audio/final_mix_voice_sfx.wav` | Voice + SFX mixed at -14 LUFS, the audio of the final video. |
 | `SCRIPT.md` | The voiceover script, the ElevenLabs voice and settings, and each line's time slot. |
 | `logo.png` | The profile-photo logo, square. The video crops it to a circle. |
 | `index.html` | The animation. Open `index.html#play` in a browser for a live preview. |
