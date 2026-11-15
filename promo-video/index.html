@@ -83,37 +83,44 @@
   .site-nav .brand small { display: block; font-size: 18px; font-weight: 500; opacity: .85; letter-spacing: .02em; }
   .site-nav .links { margin-left: auto; display: flex; gap: 46px; align-items: center; font-size: 26px; font-weight: 500; }
   .site-nav .buy { background: #fff; color: #0a74e6; font-weight: 700; padding: 12px 26px; border-radius: 30px; }
-  .banner { left: 30px; top: 140px; width: 800px; height: 680px; border-radius: 22px; overflow: hidden; color: #fff;
-    background: radial-gradient(120% 80% at 90% 100%, #0a4fc0 0%, rgba(10,79,192,0) 60%), linear-gradient(160deg, #5cc2ff 0%, #1a8cff 42%, #0a5bd3 100%); }
-  .banner .new { position: absolute; right: 34px; top: 30px; background: #d4ff3a; color: #0b1a33; font-weight: 900;
-    font-size: 30px; padding: 8px 18px; border-radius: 10px; transform: rotate(4deg); letter-spacing: .04em; }
-  .banner h3 { position: absolute; left: 44px; top: 44px; font-weight: 900; line-height: .9; transform: skewX(-7deg);
-    letter-spacing: -0.02em; text-shadow: 0 8px 22px rgba(0,30,90,.35); }
-  .banner h3 .l1 { display: block; font-size: 70px; }
-  .banner h3 .l2 { display: block; font-size: 128px; color: #d4ff3a; }
-  .banner .sub { position: absolute; left: 48px; top: 300px; font-size: 27px; font-weight: 600; opacity: .95; }
-  .banner .price { position: absolute; left: 48px; top: 360px; display: flex; align-items: baseline; gap: 18px; }
-  .banner .price s { font-size: 40px; opacity: .6; font-weight: 600; }
-  .banner .price b { font-size: 112px; font-weight: 800; letter-spacing: -0.03em; }
-  .banner .off { position: absolute; left: 50px; top: 500px; background: #d4ff3a; color: #0b1a33; font-weight: 800; font-size: 26px;
-    padding: 10px 20px; border-radius: 30px; }
-  .banner .cta { position: absolute; left: 50px; top: 580px; background: #fff; color: #0a74e6; font-weight: 800; font-size: 30px;
-    padding: 18px 40px; border-radius: 40px; box-shadow: 0 12px 26px rgba(0,30,90,.3); }
-  .banner .appicon { position: absolute; right: 52px; top: 300px; width: 290px; height: 290px; transform: rotate(9deg);
-    filter: drop-shadow(0 30px 40px rgba(0,25,80,.45)); }
-  .banner .bars { position: absolute; left: 0; right: 0; bottom: 0; height: 110px; display: flex; align-items: flex-end; gap: 7px; padding: 0 20px; opacity: .28; }
-  .banner .bars i { flex: 1; background: #fff; border-radius: 6px 6px 0 0; }
-  .tile { left: 860px; width: 410px; height: 330px; border-radius: 22px; overflow: hidden; }
-  .tile.t1 { top: 140px; background: linear-gradient(180deg, #f5f9ff, #e8f2ff); color: #0b1a33; padding: 32px 30px; }
-  .tile.t1 p { font-size: 22px; font-weight: 600; color: #5d6b80; }
-  .tile.t1 h4 { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; margin-top: 4px; }
-  .tile.t1 .lg { display: grid; grid-template-columns: repeat(4, 66px); gap: 18px 22px; margin-top: 30px; }
-  .tile.t1 .lg img { width: 66px; height: 66px; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(0,0,0,.15)); }
-  .tile.t2 { top: 490px; background: linear-gradient(160deg, #142235, #070d16); color: #fff; padding: 34px 30px; }
-  .tile.t2 h4 { font-size: 46px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.02; }
+  .story { left: 30px; top: 140px; width: 544px; height: 680px; border-radius: 22px; overflow: hidden;
+    background: #f0eff2 url(story.webp) center / cover no-repeat;
+    box-shadow: 0 18px 40px rgba(10,40,90,.16), inset 0 0 0 1px rgba(0,0,0,.05); }
+  .story .sweep { position: absolute; top: -20%; height: 140%; left: 0; width: 34%; opacity: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.55) 50%, rgba(255,255,255,0)); }
+  .tile { left: 598px; width: 672px; height: 330px; border-radius: 22px; overflow: hidden; }
+  .tile.t1 { top: 140px; background: linear-gradient(180deg, #f5f9ff, #e8f2ff); color: #0b1a33; padding: 34px 36px; }
+  .tile.t1 p { font-size: 24px; font-weight: 600; color: #5d6b80; }
+  .tile.t1 h4 { font-size: 50px; font-weight: 800; letter-spacing: -0.02em; margin-top: 4px; }
+  .tile.t1 .lg { display: flex; gap: 22px; margin-top: 46px; }
+  .tile.t1 .lg img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 8px 12px rgba(0,0,0,.18)); }
+  .tile.t2 { top: 490px; background: radial-gradient(90% 120% at 100% 0%, #1d3b66 0%, rgba(29,59,102,0) 60%), linear-gradient(160deg, #142235, #070d16);
+    color: #fff; padding: 34px 36px; }
+  .tile.t2 .tag { display: inline-block; background: #d4ff3a; color: #0b1a33; font-weight: 800; font-size: 18px; padding: 8px 15px; border-radius: 20px; letter-spacing: .04em; }
+  .tile.t2 h4 { font-size: 46px; font-weight: 900; line-height: .98; margin-top: 18px; letter-spacing: -0.02em; }
   .tile.t2 h4 span { color: #d4ff3a; }
-  .tile.t2 .folders { display: flex; gap: 18px; margin-top: 34px; }
-  .tile.t2 .folders svg { width: 98px; height: 78px; }
+  .tile.t2 .pr { position: absolute; left: 36px; bottom: 26px; display: flex; align-items: baseline; gap: 14px; }
+  .tile.t2 .pr s { font-size: 30px; opacity: .55; font-weight: 600; }
+  .tile.t2 .pr b { font-size: 88px; font-weight: 800; letter-spacing: -0.03em; line-height: .9; }
+  .tile.t2 .cta { position: absolute; right: 34px; bottom: 34px; background: #fff; color: #0a74e6; font-weight: 800; font-size: 26px;
+    padding: 16px 30px; border-radius: 36px; box-shadow: 0 12px 26px rgba(0,0,0,.35); }
+  .tile.t2 .ic { position: absolute; right: 44px; top: 30px; width: 132px; height: 132px; transform: rotate(8deg);
+    filter: drop-shadow(0 18px 22px rgba(0,0,0,.55)) drop-shadow(0 3px 4px rgba(0,0,0,.3)); }
+
+  /* Premium app icons: layered gradient, gloss, inner depth, embossed glyph, light sweep */
+  .ic { position: relative; }
+  .ic .th { position: absolute; inset: 0; border-radius: 26%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(130% 95% at 22% -8%, rgba(255,255,255,.50) 0%, rgba(255,255,255,0) 52%),
+      radial-gradient(90% 70% at 80% 115%, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 60%),
+      linear-gradient(165deg, var(--c1) 0%, var(--c2) 100%);
+    box-shadow: inset 0 3px 2px -1px rgba(255,255,255,.65), inset 0 -10px 20px rgba(0,0,0,.18), inset 0 0 0 1px rgba(255,255,255,.14); }
+  .ic .th::before { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,.32) 0%, rgba(255,255,255,.10) 40%, rgba(255,255,255,0) 52%),
+                linear-gradient(0deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 16%); }
+  .ic .th svg { position: relative; width: 50%; height: 50%; filter: drop-shadow(0 3px 2px rgba(0,0,0,.28)) drop-shadow(0 0 6px rgba(255,255,255,.25)); }
+  .ic .gl { position: absolute; top: -40%; height: 180%; left: 0; width: 42%; opacity: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.18) 30%, rgba(255,255,255,.9) 50%, rgba(255,255,255,.18) 70%, rgba(255,255,255,0) 100%); }
 
   /* Scene E — grid */
   .blob { position: absolute; border-radius: 50%; filter: blur(60px); }
@@ -122,9 +129,8 @@
   .grid .hdr { position: absolute; left: 40px; top: 30px; display: flex; align-items: center; gap: 14px; }
   .grid .hdr .t { font-size: 22px; font-weight: 700; letter-spacing: .32em; color: #1a8cff; }
   .item { position: absolute; width: 256px; height: 222px; transform-origin: 50% 60%; }
-  .item .th { position: absolute; left: 53px; top: 0; width: 150px; height: 150px; border-radius: 38px; display: flex;
-    align-items: center; justify-content: center; box-shadow: 0 14px 26px rgba(0,0,0,.16), inset 0 2px 0 rgba(255,255,255,.35); }
-  .item .th svg { width: 74px; height: 74px; }
+  .item .ic { position: absolute; left: 53px; top: 0; width: 150px; height: 150px;
+    filter: drop-shadow(0 16px 16px var(--sh)) drop-shadow(0 3px 4px rgba(0,0,0,.18)); }
   .item .nm { position: absolute; left: 0; right: 0; top: 160px; text-align: center; font-size: 19px; font-weight: 600; color: #222; }
   .item .bt { position: absolute; left: 53px; top: 190px; width: 150px; height: 34px; border-radius: 17px; color: #fff;
     font-size: 15px; font-weight: 800; letter-spacing: .08em; display: flex; align-items: center; justify-content: center; gap: 7px;
@@ -137,8 +143,8 @@
   .phone .ph { position: absolute; left: 0; right: 0; top: 46px; text-align: center; font-size: 26px; font-weight: 700; letter-spacing: .38em; color: #fff; }
   .row { position: absolute; left: 52px; width: 496px; height: 88px; border-radius: 24px; display: flex; align-items: center; gap: 20px; padding: 0 14px;
     background: linear-gradient(180deg, #67676c, #535357); box-shadow: 0 10px 22px rgba(0,0,0,.35), inset 0 1.5px 0 rgba(255,255,255,.22); }
-  .row .th { width: 62px; height: 62px; border-radius: 17px; display: flex; align-items: center; justify-content: center; flex: none; }
-  .row .th svg { width: 34px; height: 34px; }
+  .row .ic { width: 62px; height: 62px; flex: none; filter: drop-shadow(0 6px 8px var(--sh)) drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+  .row .ic .th svg { width: 56%; height: 56%; }
   .row .tx { font-size: 25px; font-weight: 600; color: #fff; white-space: nowrap; }
   .row .tx small { font-weight: 500; opacity: .7; }
 
@@ -281,16 +287,7 @@
           <div class="brand">Aminur Rex<small>SFX Pack</small></div>
           <div class="links"><span>Inside</span><span>Features</span><span>Pricing</span><span class="buy">Buy ₹99</span></div>
         </div>
-        <div class="banner abs">
-          <div class="new">NEW</div>
-          <h3><span class="l1">THE ULTIMATE</span><span class="l2">SFX PACK</span></h3>
-          <div class="sub">200+ sounds · 14 folders · every editor</div>
-          <div class="price"><s>₹199</s><b>₹99</b></div>
-          <div class="off">LAUNCH OFFER · 50% OFF</div>
-          <div class="cta">Buy now →</div>
-          <svg class="appicon"><use href="#appicon"/></svg>
-          <div class="bars" id="dBars"></div>
-        </div>
+        <div class="story abs" id="dStory"><i class="sweep" id="dStorySweep"></i></div>
         <div class="tile t1 abs">
           <p>Works with</p><h4>every editor.</h4>
           <div class="lg">
@@ -299,8 +296,11 @@
           </div>
         </div>
         <div class="tile t2 abs">
-          <h4>14 folders.<br><span>All sorted.</span></h4>
-          <div class="folders"><svg><use href="#folder"/></svg><svg><use href="#folder"/></svg><svg><use href="#folder"/></svg></div>
+          <div class="tag">LAUNCH OFFER · 50% OFF</div>
+          <h4>The Ultimate<br><span>SFX Pack</span></h4>
+          <div class="pr"><s>₹199</s><b>₹99</b></div>
+          <div class="cta">Buy now →</div>
+          <div id="dAppIcon"></div>
         </div>
       </div>
     </div>
@@ -430,14 +430,46 @@ const G = {
   buzz: '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
   plus: '<path d="M12 4.5v15M4.5 12h15"/>',
 };
-const svgGlyph = g => `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="color:#fff">${G[g]}</svg>`;
+const svgGlyph = (g, w = 2.1) => `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" style="color:#fff">${G[g]}</svg>`;
 const GRAD = {
   blue: ['#5ac8fa', '#0a6fe0'], indigo: ['#8b8af5', '#4b49d8'], pink: ['#ff7aa2', '#e3245f'], orange: ['#ffc24a', '#ff7a00'],
   green: ['#5ee08a', '#16a34a'], teal: ['#4fe0d3', '#0e9488'], purple: ['#c08bff', '#8b3ff0'], red: ['#ff7b6e', '#e3241b'],
   yellow: ['#ffe36b', '#f2b400'], lime: ['#e2ff6b', '#8fcc00'], sky: ['#9fdcff', '#3a9bff'], slate: ['#9aa6b8', '#4b5568'],
   mint: ['#8ff5c7', '#1fbf7f'], rose: ['#ffb1c8', '#ff4f86'], navy: ['#5a7bd8', '#1c3a8f'],
 };
-const thumbBg = c => `linear-gradient(160deg, ${GRAD[c][0]}, ${GRAD[c][1]})`;
+const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+const iconHTML = (g, c, w = 2.4) => `<div class="ic" style="--c1:${GRAD[c][0]};--c2:${GRAD[c][1]};--sh:${rgba(GRAD[c][1], .42)}"><div class="th">${svgGlyph(g, w)}<i class="gl"></i></div></div>`;
+// light sweep across one icon: active during [start, start+dur] for any start in `starts`
+function glint(gl, t, starts, dur = 0.62, maxA = 1) {
+  for (const st of starts) {
+    if (t >= st && t <= st + dur) {
+      const p = E.ioC((t - st) / dur);
+      gl.style.opacity = maxA * Math.sin(Math.PI * Math.min(1, p * 1.15));
+      gl.style.transform = `translateX(${lerp(-170, 270, p)}%) rotate(22deg)`;
+      return;
+    }
+  }
+  gl.style.opacity = 0;
+}
+// Smooth path through keyframes: monotone cubic Hermite (no overshoot), eases in at the first key and out at the last.
+// With log=true it interpolates in log space (for zoom scales, so zooms feel even).
+function KS(t, keys, log = false) {
+  const n = keys.length, T = keys.map(k => k[0]), V = keys.map(k => log ? Math.log(k[1]) : k[1]);
+  const out = v => log ? Math.exp(v) : v;
+  if (t <= T[0]) return out(V[0]);
+  if (t >= T[n - 1]) return out(V[n - 1]);
+  const d = []; for (let i = 0; i < n - 1; i++) d.push((V[i + 1] - V[i]) / (T[i + 1] - T[i]));
+  const m = new Array(n).fill(0);
+  for (let i = 1; i < n - 1; i++) {
+    if (d[i - 1] * d[i] > 0) {
+      const h0 = T[i] - T[i - 1], h1 = T[i + 1] - T[i], w1 = 2 * h1 + h0, w2 = h1 + 2 * h0;
+      m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]);
+    }
+  }
+  let i = 0; while (t > T[i + 1]) i++;
+  const h = T[i + 1] - T[i], u = (t - T[i]) / h, u2 = u * u, u3 = u2 * u;
+  return out((2 * u3 - 3 * u2 + 1) * V[i] + (u3 - 2 * u2 + u) * h * m[i] + (-2 * u3 + 3 * u2) * V[i + 1] + (u3 - u2) * h * m[i + 1]);
+}
 
 const GRID_ITEMS = [
   ['Whooshes', 'whoosh', 'blue'], ['Impacts', 'impact', 'red'], ['Risers', 'riser', 'orange'], ['Glitches', 'glitch', 'purple'], ['Pops', 'pop', 'pink'],
@@ -485,20 +517,23 @@ async function init() {
   $('cQ').innerHTML = [...q].map(c => `<i>${c}</i>`).join('') + '<span class="qc" id="cCaret"></span>';
   S.cChars = [...$('cQ').querySelectorAll('i')];
   // D bars
-  $('dBars').innerHTML = Array.from({ length: 46 }, (_, i) => `<i style="height:${18 + Math.round(80 * Math.abs(Math.sin(i * 0.9) * Math.cos(i * 0.37)))}px"></i>`).join('');
+  $('dAppIcon').outerHTML = iconHTML('wave', 'blue', 2.6);
+  S.dAppGl = document.querySelector('.tile.t2 .gl');
   // E grid
   const grid = $('eGrid');
   GRID_ITEMS.forEach(([nm, g, c], i) => {
     const col = i % 5, row = Math.floor(i / 5);
     grid.insertAdjacentHTML('beforeend', `<div class="item trk" style="left:${40 + col * 276}px;top:${108 + row * 228}px">
-      <div class="th" style="background:${thumbBg(c)}">${svgGlyph(g)}</div><div class="nm">${nm}</div>
+      ${iconHTML(g, c)}<div class="nm">${nm}</div>
       <div class="bt"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 1l9 5-9 5z" fill="#fff"/></svg>PLAY</div></div>`);
   });
   S.eItems = [...grid.querySelectorAll('.item')];
+  S.eGl = S.eItems.map(it => it.querySelector('.gl'));
   // G list
   $('gList').innerHTML = LIST_ITEMS.map(([a, b, g, c], i) => `<div class="row trk" style="top:${128 + i * 106}px">
-     <div class="th" style="background:${thumbBg(c)}">${svgGlyph(g)}</div><div class="tx">${a} <small>· ${b}</small></div></div>`).join('');
+     ${iconHTML(g, c, 2.5)}<div class="tx">${a} <small>· ${b}</small></div></div>`).join('');
   S.gRows = [...$('gList').querySelectorAll('.row')];
+  S.gGl = S.gRows.map(r => r.querySelector('.gl'));
   // F
   S.fWords = buildKinetic($('fLine'), ['Punchy', 'sounds', 'that', 'hit', 'just', 'right.']);
   // H
@@ -541,7 +576,7 @@ function sceneA(t) {
   $('aGlow').style.opacity = K(t, [0.72, 0], [1.08, 1]);
   // camera: left-aligned big → centred small
   const p = E.ioC(P(t, 0.6, 1.42));
-  const s = lerp(1, 0.5, p) * K(t, [1.42, 1], [1.62, 0.96, E.lin]);
+  const s = KS(t, [[0.6, 1], [1.42, 0.5], [1.62, 0.475]], true);
   const cx = lerp(960 - 92, S.aW / 2, p);
   const exitDx = K(t, [1.53, 0], [1.8, -1900, E.inC]);
   cam($('aCam'), cx, 0, s, { dx: exitDx });
@@ -609,7 +644,7 @@ function sceneC(t) {
   let follow = 0; for (let i = 0; i < 12; i++) follow += Math.max(950, caretWorldX(t - i * 0.03) - 70); follow /= 12;
   const wp = P(t, 5.36, 5.68, E.inC);
   const cx = lerp(960, follow, w) + 2400 * wp;
-  const s = lerp(1, 2.55, w) * (1 + 0.35 * wp);
+  const s = Math.exp(lerp(0, Math.log(2.55), w)) * (1 + 0.35 * wp);
   cam($('cCam'), cx, lerp(540, 548, w), s);
   // discs
   const p = P(t, 3.76, 4.04, E.outC);
@@ -649,12 +684,14 @@ function sceneD(t) {
   card.style.left = slide + 'px'; card.style.top = '0px';
   const cb = K(t, [5.9, 740], [6.22, 0, E.ioC]);
   card.style.clipPath = `inset(0 0 ${cb}px 0 round 28px)`;
-  const s = K(t, [5.9, 1], [6.25, 0.84], [6.85, 0.87, E.lin], [7.12, 2.15], [8.0, 2.2, E.ioQ], [8.32, 0.78], [8.62, 0.74, E.lin]);
-  const cx = K(t, [6.85, 650], [7.12, 340], [8.0, 1010, E.ioQ], [8.32, 650]);
-  const cy = K(t, [5.9, 55], [6.25, 425], [6.85, 425], [7.12, 160], [8.0, 560, E.ioQ], [8.32, 425]);
-  const ry = K(t, [6.25, 0], [6.85, -6, E.lin], [7.12, -14], [8.0, -8, E.ioQ], [8.32, -3]);
-  const rx = K(t, [6.85, 0], [7.12, 8], [8.0, 5, E.ioQ], [8.32, 2]);
-  cam($('dCam'), cx, cy, s, { rx, ry, dy: K(t, [6.25, 0], [6.85, -10, E.lin]) });
+  const s = KS(t, [[5.9, 1], [6.25, 0.84], [6.85, 0.875], [7.14, 2.15], [8.0, 2.22], [8.34, 0.78], [8.62, 0.74]], true);
+  const cx = KS(t, [[6.85, 650], [7.14, 330], [8.0, 1000], [8.34, 650]]);
+  const cy = KS(t, [[5.9, 55], [6.25, 425], [6.85, 418], [7.14, 170], [8.0, 560], [8.34, 425]]);
+  const ry = KS(t, [[6.25, 0], [6.85, -6], [7.14, -14], [8.0, -8], [8.34, -3]]);
+  const rx = KS(t, [[6.85, 0], [7.14, 8], [8.0, 5], [8.34, 2]]);
+  cam($('dCam'), cx, cy, s, { rx, ry, dy: KS(t, [[6.25, 0], [6.85, -10], [7.14, 0]]) });
+  glint($('dStorySweep'), t, [6.32], 0.9, 0.9);
+  glint(S.dAppGl, t, [6.55, 7.75]);
   const b = K(t, [8.36, 0], [8.6, 24, E.inQ]);
   card.style.filter = b > 0.05 ? `blur(${b}px)` : '';
   card.style.opacity = K(t, [8.42, 1], [8.62, 0]);
@@ -663,11 +700,11 @@ function sceneD(t) {
 function sceneE(t) {
   const on = t > 8.4 && t < 12.98; vis($('sE'), on); if (!on) return;
   $('sE').style.opacity = K(t, [8.4, 0], [8.56, 1]);
-  const s = K(t, [8.56, 1.85], [9.3, 0.9], [9.6, 0.92, E.lin], [10.0, 1.9], [10.45, 1.9, E.lin], [10.62, 2.05], [12.4, 2.12, E.lin]);
-  const cx = K(t, [8.56, 380], [9.3, 720], [9.6, 720], [10.0, 1010], [10.45, 560], [10.62, 700], [12.4, 1030, E.ioQ]);
-  const cy = K(t, [8.56, 230], [9.3, 400], [9.6, 400], [10.0, 270], [10.45, 330], [10.62, 575], [12.4, 600, E.ioQ]);
-  const ry = K(t, [9.6, 0], [10.0, 16], [10.45, 12, E.lin], [10.62, 7], [12.4, 4, E.lin]);
-  const rx = K(t, [9.6, 0], [10.0, 10], [10.45, 8, E.lin], [10.62, 6], [12.4, 5, E.lin]);
+  const s = KS(t, [[8.56, 1.85], [9.3, 0.9], [9.6, 0.93], [10.0, 1.9], [10.45, 1.95], [10.62, 2.05], [12.4, 2.12]], true);
+  const cx = KS(t, [[8.56, 380], [9.3, 720], [9.6, 735], [10.0, 1010], [10.45, 560], [10.62, 690], [12.4, 1030]]);
+  const cy = KS(t, [[8.56, 230], [9.3, 400], [9.6, 398], [10.0, 270], [10.45, 330], [10.62, 575], [12.4, 600]]);
+  const ry = KS(t, [[9.6, 0], [10.0, 16], [10.45, 12], [10.62, 7], [12.4, 4]]);
+  const rx = KS(t, [[9.6, 0], [10.0, 10], [10.45, 8], [10.62, 6], [12.4, 5]]);
   const wdx = K(t, [12.42, 0], [12.8, -700, E.inC]);
   cam($('eCam'), cx, cy, s, { rx, ry, dx: wdx });
   $('eCam').style.filter = t > 12.42 ? `brightness(${K(t, [12.42, 1], [12.8, 0.35])})` : '';
@@ -677,12 +714,14 @@ function sceneE(t) {
     const a = t - (8.6 + i * 0.058);
     if (a < 0) { it.style.opacity = 0; return; }
     tr(it, { s: E.outB(clamp(a / 0.3)), o: clamp(a / 0.08) });
+    const col = i % 5, row = Math.floor(i / 5);
+    glint(S.eGl[i], t, [8.78 + i * 0.058, 9.72 + col * 0.08 + row * 0.06, 11.15 + col * 0.08 + row * 0.06].concat(i === 13 ? [12.22] : []));
   });
   // cursor (world coords inside the grid card)
   const cu = $('eCursor');
   // cursor box is 64px; the fingertip sits ~(22,7) from its top-left. Buttons (row 3) are centred at y=771.
-  const cxw = K(t, [10.62, 330], [11.3, 706, E.ioC], [11.6, 722, E.lin], [12.04, 984, E.ioC]);
-  const cyw = K(t, [10.62, 880], [11.3, 772, E.ioC], [11.6, 768, E.lin], [12.04, 770, E.ioC]);
+  const cxw = KS(t, [[10.62, 330], [11.3, 706], [11.6, 722], [12.04, 984]]);
+  const cyw = KS(t, [[10.62, 880], [11.3, 772], [11.6, 768], [12.04, 770]]);
   const press = (t > 12.1 && t < 12.3) ? Math.sin(P(t, 12.1, 12.3) * Math.PI) : 0;
   cu.style.left = cxw + 'px'; cu.style.top = cyw + 'px';
   tr(cu, { s: 1 - 0.18 * press, o: K(t, [10.6, 0], [10.72, 1]) });
@@ -708,7 +747,7 @@ function sceneF(t) {
   const on = t > 12.76 && t < 15.3; vis($('sF'), on); if (!on) return;
   $('fGlow').style.opacity = K(t, [13.7, 0], [14.1, 1]);
   const p = E.ioC(P(t, 13.55, 14.3));
-  const s = lerp(1, 0.47, p) * K(t, [14.3, 1], [15.0, 0.8, E.lin]);
+  const s = KS(t, [[13.55, 1], [14.3, 0.47], [15.0, 0.376]], true);
   const cx = lerp(960 - 130, S.fW / 2, p);
   cam($('fCam'), cx, 0, s);
   $('fLine').style.transform = 'translate(0,-50%)';
@@ -719,8 +758,8 @@ function sceneF(t) {
 
 function sceneG(t) {
   const on = t > 14.96 && t < 16.56; vis($('sG'), on); if (!on) return;
-  const s = K(t, [15.24, 0.88], [15.56, 1.58], [16.5, 1.64, E.lin]);
-  const cy = K(t, [15.24, 0], [15.56, -170]);
+  const s = KS(t, [[15.24, 0.88], [15.56, 1.58], [16.5, 1.66]], true);
+  const cy = KS(t, [[15.24, 0], [15.56, -170], [16.5, -180]]);
   const dy = K(t, [14.98, 1250], [15.26, 0, E.outE]);
   cam($('gCam'), 0, cy, s, { dy });
   $('gList').style.transform = `translateY(${K(t, [15.56, 0], [16.06, -470])}px)`;
@@ -730,6 +769,7 @@ function sceneG(t) {
     if (a < 0) { r.style.opacity = 0; return; }
     const e = E.outE(clamp(a / 0.3));
     tr(r, { x: lerp(i % 2 ? 160 : -160, jit[i], e), o: clamp(a / 0.08) });
+    glint(S.gGl[i], t, [15.36 + i * 0.05, 15.98 + i * 0.05], 0.55);
   });
 }
 

@@ -1,17 +1,21 @@
 # Aminur Rex SFX Pack — promo video
 
-A 22-second, 1920×1080, 30 fps motion-graphics promo. It follows the reference ad beat for beat, with Aminur Rex brand elements in place of the reference's.
+A 22-second, 1920×1080, 60 fps motion-graphics promo. It follows the reference ad beat for beat, with Aminur Rex brand elements in place of the reference's.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| `out/aminur_rex_promo_with_voice.mp4` | **Final:** the video with the ElevenLabs voice and the sound effects. No music yet. |
+| `out/aminur_rex_promo_FINAL.mp4` | **Final:** video + ElevenLabs voice + SFX + music ("G Eazy NBA Type" by Arulo, Mixkit), -14 LUFS. |
+| `out/aminur_rex_promo_with_voice.mp4` | Video + voice + SFX, no music. |
 | `out/aminur_rex_promo_sfx.mp4` | The video with the sound effects only. |
 | `out/aminur_rex_promo_silent.mp4` | The same video with no audio. |
 | `audio/sfx_track.wav` | The sound effects alone, 22 s, 48 kHz, 24-bit. Drop it on the timeline at 0:00. |
 | `audio/voice_aligned.wav` | The voice alone, already placed in time. Drop it on the timeline at 0:00. |
-| `audio/final_mix_voice_sfx.wav` | Voice + SFX mixed at -14 LUFS, the audio of the final video. |
+| `audio/final_mix_voice_sfx.wav` | Voice + SFX mixed at -14 LUFS. |
+| `audio/final_mix_voice_sfx_music.wav` | Voice + SFX + music, the audio of the final video. |
+| `audio/music_g_eazy_nba_type_cut.wav` | The 22 s music cut used, already on the beat grid, before ducking. Drop it at 0:00. |
+| `story.webp` | The Instagram story shown on the website card, cropped to 4:5. |
 | `SCRIPT.md` | The voiceover script, the ElevenLabs voice and settings, and each line's time slot. |
 | `logo.png` | The profile-photo logo, square. The video crops it to a circle. |
 | `index.html` | The animation. Open `index.html#play` in a browser for a live preview. |
@@ -27,12 +31,17 @@ A 22-second, 1920×1080, 30 fps motion-graphics promo. It follows the reference 
 | 1.6–2.5 | Headphone emoji rolls in, "Say hello to...", the frame flies off as a card |
 | 2.4–3.8 | Logo reveal: photo logo + AMINUR REX / SFX PACK, whip exit |
 | 3.8–5.7 | Vinyl and CD spin in, the search bar types "Best SFX pack for video editors", camera follows |
-| 5.6–8.6 | The store page builds from its nav bar, then a 3D zoom and pan across the hero |
-| 8.6–12.8 | 15 sound-folder tiles pop in, 3D camera moves, the cursor clicks PLAY |
+| 5.6–8.6 | The store page builds from its nav bar (story, editor logos, ₹99 offer), then a 3D zoom and pan |
+| 8.6–12.8 | 15 app-style sound icons pop in with light sweeps, 3D camera moves, the cursor clicks PLAY |
 | 12.8–15.0 | "Punchy sounds that hit just right." |
 | 15.0–16.5 | Phone list of sounds scrolls |
 | 16.5–19.9 | "Drag. Drop. Done." → "You can't say [logo] without saying..." → line wipe |
 | 19.9–22.0 | End card: logo + @aminurrex |
+
+## Music
+
+"G Eazy NBA Type" by Arulo, from Mixkit (free license, no credit needed): https://assets.mixkit.co/music/403/403.mp3.
+`mix_music.py` starts it on the beat at 16.18 s, shifted onto the reference edit's 129 BPM grid, and ducks it under the voice.
 
 ## Changing things
 
@@ -44,7 +53,7 @@ A 22-second, 1920×1080, 30 fps motion-graphics promo. It follows the reference 
 Needs Node with Playwright and Chromium, Python 3 with numpy and Pillow, and ffmpeg.
 
 ```bash
-./build.sh /tmp/work out/aminur_rex_promo_silent.mp4
+FPS=60 ./build.sh /tmp/work out/aminur_rex_promo_silent.mp4
 ```
 
 Then add the sound effects:
