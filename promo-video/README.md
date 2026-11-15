@@ -17,6 +17,7 @@ A 22-second, 1920×1080, 30 fps motion-graphics promo. It follows the reference 
 | `index.html` | The animation. Open `index.html#play` in a browser for a live preview. |
 | `render.js`, `accumulate.py`, `build.sh` | The renderer. It draws several sub-frames per frame and averages them for real motion blur. |
 | `fit_vo.py` | Cuts the ElevenLabs voiceover into its 8 lines, places each in its slot, and mixes it with the SFX. |
+| `mix_music.py` | Adds a music track under voice + SFX, on the reference's 129 BPM beat grid, ducked under the voice. |
 
 ## Scenes
 
